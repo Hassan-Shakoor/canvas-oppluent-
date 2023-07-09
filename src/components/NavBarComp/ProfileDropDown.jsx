@@ -1,24 +1,26 @@
 import React , {useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
 
-function ProfileDropDown() {
+function ProfileDropDown(props) {
     const [darkMode, setDarkMode] = useState(false);
+    const dropdownStyle = {
+        top: props.position.top + 'px',
+        left: props.position.left + 'px',
+        "min-width": props.width,
+      };
 
     const handleDarkModeToggle = () => {
         setDarkMode(!darkMode);
-        console.log("Called");
       };
     
     useEffect(() => {
     document.body.className = darkMode ? "theme_dark" : "";
     }, [darkMode]);
-      
-      console.log(darkMode);
   return ReactDOM.createPortal(
     <div className="profile-drop-down">
     <div style={{ position: 'absolute', top: '0px', left: '0px', width: '100%' }}>
         <div>
-            <div className="rc-dropdown rc-dropdown-placement-bottomRight" style={{ minWidth: '109px', left: '1540px', top: '60px' }}>
+            <div className="rc-dropdown rc-dropdown-placement-bottomRight" style={dropdownStyle}>
                 <ul className="rc-menu rc-menu-root rc-menu-vertical" role="menu" tabIndex="0">
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                         <a className="btn btn_menu-item text-uppercase" rel="" href="/profile">

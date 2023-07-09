@@ -2,11 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 function SupportDropDown(props) {
+  
+  const dropdownStyle = {
+    top: props.position.top + 'px',
+    left: props.position.left + 'px',
+    "min-width": props.width,
+  };
+
   return ReactDOM.createPortal(
     <div className="support-drop-down">
-      <div style={{ position: 'absolute', top: '0px', left: '0px', width: '100%' }}>
+      <div className="styleSDD" style={{ position: 'absolute', top: '0px', left: '0px', width: '100%' }}>
           <div>
-            <div className="rc-dropdown rc-dropdown-placement-bottomLeft" style={{ minWidth: '73px', left: '1510px', top: '55px' }}>
+            <div className="rc-dropdown rc-dropdown-placement-bottomLeft" style={dropdownStyle}>
               <div className="header__dropdown header__dropdown_support">
                 <header className="support-overlay__header">
                   <div className="support-overlay__name text-uppercase">support</div>
@@ -25,5 +32,4 @@ function SupportDropDown(props) {
     document.body
   );
 }
-
 export default SupportDropDown;

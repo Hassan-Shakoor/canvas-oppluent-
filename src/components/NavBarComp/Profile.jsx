@@ -3,12 +3,25 @@ import ProfileDropDown from './ProfileDropDown';
 
 function Profile(props){
     const [isSecondDropDownOpen,setIsSecondDropdownOpen] = useState(false);
+    const [profileButtonPosition, setProfileButtonPosition] = useState(null);
 
     const handleSecondButtonClick = () => {
     setIsSecondDropdownOpen(!isSecondDropDownOpen);
+    updateProfileButtonPosition();
     }
 
-    
+    const updateProfileButtonPosition = () => {
+        const buttonElement = document.querySelector('.avatar-button');
+        if (buttonElement) {
+          const buttonRect = buttonElement.getBoundingClientRect();
+        //   console.log(buttonRect);
+          setProfileButtonPosition({
+            top: buttonRect.bottom + window.scrollY,
+            left:buttonRect.left - (buttonRect.right - buttonRect.left) + window.scrollY + 10,
+          });
+        }
+      };
+
     return(
         <div>
             <div className={`${isSecondDropDownOpen ? "avatar-button rc-dropdown-open" : "avatar-button"}`} onClick={handleSecondButtonClick}>
@@ -19,7 +32,7 @@ function Profile(props){
                 {isSecondDropDownOpen ? <i className="icon fa-solid fa-chevron-up header__text-button_icon-chevron"/> : <i className="icon fa-solid fa-chevron-down header__text-button_icon-chevron"/>}
             </div>
             {isSecondDropDownOpen && (
-                <ProfileDropDown />
+                <ProfileDropDown position={profileButtonPosition}/>
             )}
         </div>
     )

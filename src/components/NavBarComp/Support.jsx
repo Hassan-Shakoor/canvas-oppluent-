@@ -1,12 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import SupportDropDown from './SupportDropDown';
 
 function Support(){
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [supportButtonPosition, setSupportButtonPosition] = useState(null);
+
 
     const handleSupportButtonClick = () => {
         setIsDropdownOpen(!isDropdownOpen);
+        updateSupportButtonPosition();
       };
+
+    const updateSupportButtonPosition = () => {
+        const buttonElement = document.querySelector('[data-test="support-button"]');
+        if (buttonElement) {
+            const buttonRect = buttonElement.getBoundingClientRect();
+            setSupportButtonPosition({
+            top: buttonRect.bottom + window.scrollY,
+            left: buttonRect.left + window.scrollX,
+            width: buttonRect.width
+            });
+        }
+    };
 
     return(
         <div>
@@ -15,7 +30,7 @@ function Support(){
                 Support <i className="icon fa-solid fa-chevron-down header__text-button_icon-chevron"></i>
                 </li>
             </ul>
-            {isDropdownOpen && (<SupportDropDown click={handleSupportButtonClick}/>)}
+            {isDropdownOpen && (<SupportDropDown position={supportButtonPosition} click={handleSupportButtonClick}/>)}
         </div>
             
     )
