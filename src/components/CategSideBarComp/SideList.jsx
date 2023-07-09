@@ -12,13 +12,14 @@ function SideList(props){
         props.onItemClick(props.ListName);
     }
 
+    // Handling both State of Which Sub Item is open and also parsing placeholder name using placeholder function
     function handleSubItemClick(item) {
         setActiveSubItem(item);
-        props.placeHolderName(item)
+        props.placeholder(item)
         // props.tabTitle(item)
       }
 
-    if (props.listTitle === "Digital" && props.ListName === "Instagram Stories"){
+    if (props.groupTitle === "Digital" && props.ListName === "Instagram Stories"){
         return(
             <li className="groups__category animation-appear-sub-menu-appear-done animation-appear-sub-menu-enter-done" >
                 <span className={props.active ? "groups__category-title groups__category-title_selected" :"groups__category-title"} onClick={handleClick}>

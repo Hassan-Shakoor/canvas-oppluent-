@@ -8,7 +8,8 @@ function Category() {
     <div>
     <Header name="Faizan"/>
     <div className='page page_without-animation page_with-container page_with-sidebar page_show-sidebar'>
-      <CategorySideBar/>
+      <CategorySideBar
+      />
     </div>
     </div>
   );

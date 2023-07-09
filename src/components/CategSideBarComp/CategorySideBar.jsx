@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SideTitle from "./SideTitle";
+import Group from "./Group";
 
 const categories = [
     {
@@ -56,16 +56,21 @@ const categories = [
   ];
   
   function CategorySideBar(){
+    // Store the state of which list item is selected inside List Category
+    const [activeList, setActiveList] = useState(null);
     // React State in which we can store value of selected item title so can be placed in search PlaceHolder.
     const [isSelected,setSelected] = useState(null);
     // Handler for Above State
     function handleSelected(item){
       setSelected(item)
     }
+    function handleSelectedList(item){
+      setActiveList(item)
+    }
 
   // Render the SideTitle components dynamically using map()
   const sideTitles = categories.map((category, index) => (
-    <SideTitle key={index} titleName={category.title} subTitle={category.subTitle} tabTitle={handleSelected} />
+    <Group key={index} titleName={category.title} subTitle={category.subTitle} placeholder={handleSelected} handleSelectedList={handleSelectedList} selectedList={activeList}/>
   ));
 
 
