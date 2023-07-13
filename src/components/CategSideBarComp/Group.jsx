@@ -15,7 +15,8 @@ function Group(props){
         props.placeholder(item);
       }
 
-    var titles = props.subTitle
+    var titlesArray = props.subTitle
+    console.log(titlesArray);
 
         return(
             <div className="groups__item">
@@ -24,14 +25,15 @@ function Group(props){
                     <use href="#v2-icon-chevron-right" xlinkHref="#v2-icon-chevron-right" />
                 </svg>{props.titleName} </span>
                 <ul>
-                {isGroupOpen && titles.map((title, index) => (
+                {isGroupOpen && props.subTitle.map((item, index) => (
                     <SideList
                         key={index}
-                        ListName={title}
-                        active={props.selectedList === title}
+                        ListName={item.name}
+                        active={props.selectedList === item.name}
                         onItemClick={handleItemClick}
                         groupTitle = {props.titleName}
                         placeholder = {props.placeholder}
+                        id = {item.id}
                     />
                     ))}
                 </ul>

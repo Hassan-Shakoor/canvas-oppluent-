@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { auth } from './components/FirebaseAuthComp/firebase';
 import Login from './components/Login';
 import Category from './components/Category';
+import CategoryContent from './components/CategContentComponent/CategoryContent';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,11 +22,13 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route
           path="/categories"
-          element={isAuthenticated ? <Category /> : <Navigate to="/" replace />}
-        />
+          element={<Category />}>
+          <Route path=':id' element={<CategoryContent />}/>
+        </Route>
+        {/* <Route path="/categories/:id" component={CategoryContent} /> */}
       </Routes>
     </Router>
   );
 }
-
+// element={isAuthenticated ? (<Category />) : <Navigate to="/" replace />}>
 export default App;

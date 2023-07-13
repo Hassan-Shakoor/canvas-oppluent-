@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getAnalytics } from "firebase/analytics";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAK9qTAirpx9Pi9cSbQ9XKbrWfutoyW7hA",
   authDomain: "clarious-f4f45.firebaseapp.com",
