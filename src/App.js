@@ -4,6 +4,13 @@ import { auth } from './components/FirebaseAuthComp/firebase';
 import Login from './components/Login';
 import Category from './components/Category';
 import CategoryContent from './components/CategContentComponent/CategoryContent';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+
+library.add(fas)
+library.add(far)
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

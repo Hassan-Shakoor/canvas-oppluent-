@@ -2335,8 +2335,11 @@
     content: "ï„‘";
   }
   .icon.icon-column:before {
-    content: "";
-  }
+    content: "\25AE";
+    display: inline-block;
+    width: 9px;
+    font-size: 26px;
+}
   .icon.icon-comments:before {
     content: "ï„“";
   }

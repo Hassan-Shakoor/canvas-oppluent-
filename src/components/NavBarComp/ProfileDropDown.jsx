@@ -2,20 +2,15 @@ import React , {useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
 
 function ProfileDropDown(props) {
-    const [darkMode, setDarkMode] = useState(false);
     const dropdownStyle = {
         top: props.position.top + 'px',
         left: props.position.left + 'px',
         "min-width": props.width,
       };
-
-    const handleDarkModeToggle = () => {
-        setDarkMode(!darkMode);
-      };
     
     useEffect(() => {
-    document.body.className = darkMode ? "theme_dark" : "";
-    }, [darkMode]);
+    document.body.className = props.darkStatus ? "theme_dark" : "";
+    }, [props.darkStatus]);
   return ReactDOM.createPortal(
     <div className="profile-drop-down">
     <div style={{ position: 'absolute', top: '0px', left: '0px', width: '100%' }}>
@@ -49,7 +44,7 @@ function ProfileDropDown(props) {
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                         <label className="toggle avatar-button__menu-toggle-item" >
-                            <input type="checkbox" className="toggle__input" checked={darkMode} onChange={handleDarkModeToggle}/>
+                            <input type="checkbox" className="toggle__input" checked={props.darkStatus} onChange={props.darkModeHandle}/>
                             <span className="toggle__background">
                                 <span className="toggle__dot"></span>
                             </span>
