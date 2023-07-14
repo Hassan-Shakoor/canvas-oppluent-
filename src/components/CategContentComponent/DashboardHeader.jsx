@@ -171,7 +171,7 @@ function DashboardHeader(){
                             <div className="design-card">
                                 <a
                                 className="design-card__preview"
-                                href="/emails/html-email-newsletter-63841d36-0fef-4bcd-b997-baaaec705198/edit"
+                                href="/property-search"
                                 >
                                 <img
                                     alt="HTML Email Newsletter"
@@ -245,7 +245,7 @@ function DashboardHeader(){
                             <div className="design-card">
                                 <a
                                 className="design-card__preview"
-                                href="/emails/html-email-newsletter-7a073655-d929-4449-9d3b-397d5204307a/edit"
+                                href="/property-search"
                                 >
                                 <img
                                     alt="HTML Email Newsletter"
@@ -319,7 +319,7 @@ function DashboardHeader(){
                             <div className="design-card">
                                 <a
                                 className="design-card__preview"
-                                href="/emails/email-signature-2b52d6fd-1b0b-4726-a729-9025fb072d73/edit"
+                                href="/property-search"
                                 >
                                 <img
                                     alt="Email Signature"
@@ -393,7 +393,7 @@ function DashboardHeader(){
                             <div className="design-card">
                                 <a
                                 className="design-card__preview"
-                                href="/designs/magnetic-sign-f4c4851d-1349-4bdd-b83a-52e1a6cf7274/edit"
+                                href="/property-search"
                                 >
                                 <img
                                     alt="Magnetic Sign"
