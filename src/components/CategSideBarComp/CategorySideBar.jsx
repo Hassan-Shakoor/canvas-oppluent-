@@ -73,6 +73,7 @@ const categories = [
 
     function handleDesignClick(){
       setDesignClicked(true)
+      setActiveList(null);
     }
   // Render the SideTitle components dynamically using map()
   const sideTitles = categories.map((category, index) => (

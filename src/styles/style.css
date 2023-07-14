@@ -2335,7 +2335,7 @@
     content: "ï„‘";
   }
   .icon.icon-column:before {
-    content: "ï„’";
+    content: "";
   }
   .icon.icon-comments:before {
     content: "ï„“";

@@ -27,13 +27,11 @@ function SideList(props){
         { id: 44, name: 'Horizontal - 3.5" x 2"' },
         { id: 45, name: 'Vertical - 3.5" x 2"' }
       ];
-
     const PostcardsTitles = [
         { id: 46, name: "Browse All" },
         { id: 47, name: '6" x 11"' },
         { id: 48, name: '6" x 9"' }
     ];
-
     const PropertyFlyersTitles = [
         { id: 49, name: "Browse All" },
         { id: 50, name: 'Double Sided' },

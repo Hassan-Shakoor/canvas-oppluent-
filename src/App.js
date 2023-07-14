@@ -25,7 +25,6 @@ function App() {
           element={<Category />}>
           <Route path=':id' element={<CategoryContent />}/>
         </Route>
-        {/* <Route path="/categories/:id" component={CategoryContent} /> */}
       </Routes>
     </Router>
   );
