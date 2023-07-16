@@ -1,3 +1,9 @@
+// Importing FontAwesomeIcon
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { far } from '@fortawesome/free-regular-svg-icons';
+// Importing Modules
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { auth } from './components/FirebaseAuthComp/firebase';
@@ -6,6 +12,9 @@ import Category from './components/Category';
 import CategoryContent from './components/CategContentComponent/CategoryContent';
 import Edit from './components/Edit';
 import PropertySearch from './components/PropertySearch';
+// Intialising FontAwesomeIcon
+library.add(far);
+library.add(fas)
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

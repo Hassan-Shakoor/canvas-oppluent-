@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 function ColumnMLS(){
     return(
@@ -42,9 +43,12 @@ function ColumnMLS(){
                     <button type="button" className="btn btn_border">
                     <span className="btn__text">Back</span>
                     </button>
-                    <button type="submit" className="btn">
-                    <span className="btn__text">Create</span>
-                    </button>
+                    <Link to="/edit">
+                        <button type="submit" className="btn">
+                            <span className="btn__text">Create</span>
+                        </button>
+                    </Link>
+
                 </div>
                 </div>
             </div>
