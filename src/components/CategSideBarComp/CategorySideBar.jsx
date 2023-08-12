@@ -2,14 +2,20 @@ import React, { useState } from "react";
 import Group from "./Group";
 import { Link } from "react-router-dom";
 
-const categories = [
+const categoryJSON = [
+  {
+    title: "Favorites",
+    subTitle: [
+      {id : 52, name: "Most Popular Templates"}
+    ]
+  },
   {
     title: "Brand Assets",
     subTitle: [
       { id: 1, name: "Logos" },
       { id: 2, name: "Magnetic Signs" },
       { id: 3, name: "Name Tags" }
-    ],
+    ]
   },
   {
     title: "Digital",
@@ -17,11 +23,28 @@ const categories = [
       { id: 4, name: "Email Signatures" },
       { id: 5, name: "HTML Email Newsletters" },
       { id: 6, name: "HTML Email Signatures" },
-      { id: 7, name: "Instagram Stories" },
+      { id: 32, name: "Instagram Stories", 
+          subList: [
+              { id: 32, name: "Browse All" },
+              { id: 33, name: "Branding" },
+              { id: 34, name: "Holidays" },
+              { id: 35, name: "Listing" },
+              { id: 36, name: "Recognition" }
+          ]
+      },
       { id: 8, name: "Office Social Media" },
-      { id: 9, name: "Social Media Banners" },
+      { id: 37, name: "Social Media Banners",
+          subList: [
+              { id: 37, name: "Browse All" },
+              { id: 38, name: "Branding" },
+              { id: 39, name: "Holidays" },
+              { id: 40, name: "Listing" },
+              { id: 41, name: "Real Estate Tips" },
+              { id: 42, name: "Recognition" }
+            ]
+      },
       { id: 10, name: "Social Media Posts" }
-    ],
+    ]
   },
   {
     title: "Luxury",
@@ -34,37 +57,114 @@ const categories = [
       { id: 16, name: "Property Brochure" },
       { id: 17, name: "Property Flyers" },
       { id: 18, name: "Social Media" }
-    ],
+    ]
   },
   {
     title: "Print",
     subTitle: [
-      { id: 19, name: "Business Cards" },
+      { id: 43, name: "Business Cards",
+          subList: [
+              { id: 43, name: "Browse All" },
+              { id: 44, name: "Horizontal - 3.5\" x 2\"" },
+              { id: 45, name: "Vertical - 3.5\" x 2\"" }
+            ]
+      },
       { id: 20, name: "Buyer's Guides" },
       { id: 21, name: "Door Hangers" },
       { id: 22, name: "For Sale Signs" },
       { id: 23, name: "Letterheads" },
       { id: 24, name: "Open House Signs" },
-      { id: 25, name: "Postcards" },
+      { id: 46, name: "Postcards",
+          subList: [
+              { id: 46, name: "Browse All" },
+              { id: 47, name: "6\" x 11\"" },
+              { id: 48, name: "6\" x 9\"" }
+            ]
+      },
       { id: 26, name: "Property Brochures" },
-      { id: 27, name: "Property Flyers" },
+      { id: 49, name: "Property Flyers",
+          subList: [
+              { id: 49, name: "Browse All" },
+              { id: 50, name: "Double Sided" },
+              { id: 51, name: "Single Sided" }
+            ]
+      },
       { id: 28, name: "Recruiting Packet" },
       { id: 29, name: "Sign Rider" },
       { id: 30, name: "Thank You Cards" },
       { id: 31, name: "Tri-Folds" }
-    ],
-  },
+    ]
+  }
 ];
-  
+
+function addObjectToFavorites(categories, id) {
+  // Find the index of the "Favorites" category
+  const favoritesIndex = categories.findIndex(item => item.title === "Favorites");
+  // Find the index of the object with the provided id in any category
+  const sourceCategoryIndex = categories.findIndex(item => item.subTitle.some(subItem => subItem.id === id));
+  const sourceSubItemIndex = categories[sourceCategoryIndex].subTitle.findIndex(subItem => subItem.id === id);
+  if (favoritesIndex !== -1 && sourceCategoryIndex !== -1 && sourceSubItemIndex !== -1) {
+    // Create a deep copy of the object with the provided id
+    const copiedObject = JSON.parse(JSON.stringify(categories[sourceCategoryIndex].subTitle[sourceSubItemIndex]));
+    // Append the copied object to the "subTitle" array of the "Favorites" category
+    categories[favoritesIndex].subTitle.push(copiedObject);
+  } else {
+    console.log("Category or object not found.");
+  }
+  return categories;
+}
+
+function removeObjectFromFavorites(categories, idToRemove) {
+  // Find the index of the "Favorites" category
+  const favoritesIndex = categories.findIndex(item => item.title === "Favorites");
+
+  if (favoritesIndex !== -1) {
+    // Find the index of the object to remove in the "subTitle" array of the "Favorites" category
+    const itemIndex = categories[favoritesIndex].subTitle.findIndex(subItem => subItem.id === idToRemove);
+
+    if (itemIndex !== -1) {
+      // Remove the object from the "subTitle" array of the "Favorites" category
+      categories[favoritesIndex].subTitle.splice(itemIndex, 1);
+    } else {
+      console.log(`Item with id ${idToRemove} not found in the Favorites.`);
+    }
+  } else {
+    console.log("Favorites category not found.");
+  }
+
+  return categories;
+}
+
+
   function CategorySideBar(){
+    // Categories JSON State
+    const [categories, setCategories] = useState(categoryJSON);
+    // State for Side List which are added to Favorites
+    const [isFavorite, setFavorite] = useState([])
+    // State For My Designs
     const [isDesignClicked , setDesignClicked] = useState(true)
     // Store the state of which list item is selected inside List Category
     const [activeList, setActiveList] = useState(null);
     // React State in which we can store value of selected item title so can be placed in search PlaceHolder.
-    const [isSelected,setSelected] = useState(null);
+    const [isPlaceholder,setPlaceholder] = useState(null);
+
+    // Function to add an item to favorites
+    function addToFavorites(itemId){
+      setFavorite([...isFavorite, itemId]);
+      // Copy the categories and update the state
+      const updatedCategories = addObjectToFavorites([...categories], itemId);
+      setCategories(updatedCategories);
+    }
+    // Function to remove an item from favorites
+    const removeFromFavorites = (itemId) => {
+      setFavorite(isFavorite.filter(id => id !== itemId));
+      const updatedCategories = removeObjectFromFavorites([...categories], itemId);
+      setCategories(updatedCategories);
+    };
+
     // Handler for Above State
-    function handleSelected(item){
-      setSelected(item)
+    function handlePlaceholder(item){
+      setPlaceholder(item)
     }
     function handleSelectedList(item){
       setActiveList(item)
@@ -79,11 +179,14 @@ const categories = [
   const sideTitles = categories.map((category, index) => (
     <Group
     key={index}
-    titleName={category.title}
+    groupTitle={category.title}
     subTitle={category.subTitle}
-    placeholder={handleSelected}
+    handlePlaceholder={handlePlaceholder}
     handleSelectedList={handleSelectedList}
-    selectedList={activeList}
+    activeList={activeList}
+    isFavorite={isFavorite}
+    addToFavorites={addToFavorites}
+    removeFromFavorites={removeFromFavorites}
   />
   ));
 
@@ -114,7 +217,7 @@ const categories = [
                           </svg>
                       </label>
                       <div className>
-                          <input autoComplete="off" id="search" name="search" placeholder={isSelected === null ? "Search" : "Search in " + isSelected} type="search" className="search-input__input"  />
+                          <input autoComplete="off" id="search" name="search" placeholder={isPlaceholder === null ? "Search" : "Search in " + isPlaceholder} type="search" className="search-input__input"  />
                       </div>
                       </div>
                   </div>
@@ -122,17 +225,6 @@ const categories = [
                   <div className="sidebar-dashboard__categories">
                   <div className="groups groups_scrollable">
                       <div className="container">
-                      <div className="groups__item">
-                          <span className="groups__title groups__title_cursor-text">Favorites</span>
-                          <ul>
-                          <li className="groups__category">
-                              <a className="groups__category-title" href="/categories/popular">
-                              <svg className="icon v2-icon v2-icon-folder">
-                                  <use href="#v2-icon-folder" xlinkHref="#v2-icon-folder" />
-                              </svg>Most Popular Templates </a>
-                          </li>
-                          </ul>
-                      </div>
                       {/* Rendering All The Components of Side title */}
                       <>{sideTitles}</>
                       </div>
