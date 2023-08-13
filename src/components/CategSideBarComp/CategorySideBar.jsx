@@ -135,7 +135,6 @@ function removeObjectFromFavorites(categories, idToRemove) {
   return categories;
 }
 
-
   function CategorySideBar(){
     // Categories JSON State
     const [categories, setCategories] = useState(categoryJSON);
@@ -161,7 +160,6 @@ function removeObjectFromFavorites(categories, idToRemove) {
       const updatedCategories = removeObjectFromFavorites([...categories], itemId);
       setCategories(updatedCategories);
     };
-
     // Handler for Above State
     function handlePlaceholder(item){
       setPlaceholder(item)
@@ -170,7 +168,6 @@ function removeObjectFromFavorites(categories, idToRemove) {
       setActiveList(item)
       setDesignClicked(false)
     }
-
     function handleDesignClick(){
       setDesignClicked(true)
       setActiveList(null);
@@ -189,8 +186,6 @@ function removeObjectFromFavorites(categories, idToRemove) {
     removeFromFavorites={removeFromFavorites}
   />
   ));
-
-  
 
     return(
           <aside className="page__sidebar">

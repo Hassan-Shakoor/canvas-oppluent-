@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "./NavBarComp/Header";
-import PropertyDashboardHeader from "./PropertySearchComp/PropertyDashboardHeader";
-import ColumnMLS from "./PropertySearchComp/ColumnMLS";
-import ColumnDesign from "./PropertySearchComp/ColumnDesign";
+import Header from "../components/NavBarComp/Header";
+import PropertyDashboardHeader from "../components/PropertySearchComp/PropertyDashboardHeader";
+import ColumnMLS from "../components/PropertySearchComp/ColumnMLS";
+import ColumnDesign from "../components/PropertySearchComp/ColumnDesign";
 
 function PropertySearch(){
     return(

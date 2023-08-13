@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from './NavBarComp/Header';
-import CategorySideBar from './CategSideBarComp/CategorySideBar';
-import CategoryContent from './CategContentComponent/CategoryContent';
+import Header from '../components/NavBarComp/Header';
+import CategorySideBar from '../components/CategSideBarComp/CategorySideBar';
+import CategoryContent from '../components/CategContentComponent/CategoryContent';
 
 
 

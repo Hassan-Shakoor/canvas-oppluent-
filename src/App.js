@@ -7,11 +7,11 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { auth } from './components/FirebaseAuthComp/firebase';
-import Login from './components/Login';
-import Category from './components/Category';
+import Login from './pages/Login';
+import Category from './pages/Category';
 import CategoryContent from './components/CategContentComponent/CategoryContent';
-import Edit from './components/Edit';
-import PropertySearch from './components/PropertySearch';
+import Edit from './pages/Edit';
+import PropertySearch from './pages/PropertySearch';
 // Intialising FontAwesomeIcon
 library.add(far);
 library.add(fas)
