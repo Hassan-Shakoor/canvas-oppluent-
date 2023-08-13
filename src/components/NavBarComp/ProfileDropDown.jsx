@@ -1,5 +1,7 @@
 import React , {useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../FirebaseAuthComp/firebase';
 
 function ProfileDropDown(props) {
     const dropdownStyle = {
@@ -7,7 +9,19 @@ function ProfileDropDown(props) {
         left: props.position.left + 'px',
         "min-width": props.width,
       };
-    
+      const navigate = useNavigate();
+      const handleLogout = () => {
+        auth.signOut()
+          .then(() => {
+            // Successful logout
+            console.log('Logged out');
+            navigate('/'); // Redirect to the login page after logout
+          })
+          .catch((error) => {
+            // Handle logout error
+            console.error('Logout error:', error);
+          });
+      };
     useEffect(() => {
     document.body.className = props.darkStatus ? "theme_dark" : "";
     }, [props.darkStatus]);
@@ -38,7 +52,7 @@ function ProfileDropDown(props) {
                         </a>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <button type="button" className="btn btn_menu-item text-uppercase">
+                        <button type="button" className="btn btn_menu-item text-uppercase" onClick={handleLogout}>
                             <span className="btn__text">Log Out</span>
                         </button>
                     </li>
