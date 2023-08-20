@@ -61,7 +61,8 @@ function Template(props){
     }
   
     return(
-      <div className="template" style={{width: '280px'}}>
+      // Change the size of templete depending upon grid column state
+      <div className="template" style={{ width: props.gridColumn === 3 ? "380px" : "280px" }}>
         <div className="template__preview-wrapper">
           <div className="template__preview">
             <img
