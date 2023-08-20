@@ -22,8 +22,7 @@ function SubList(props){
 function SideList(props){
 
     // Storing SubList Data in Variable
-    let sublistData = props.sideListData.subList
-    console.log(sublistData);
+    let sublistData = props.sideListData.subList;
 
     const [activeSubItem, setActiveSubItem] = useState(null);
 

@@ -31277,4 +31277,23 @@
     transform: translateX(100vw);
   }
   
- 
+/* ------------------- Category Content CSS ------------------- */
+
+.template-grid-container{
+  display: grid;
+  gap: 60px;
+  align-items: start;
+}
+
+.template{
+}
+
+.fill-red{
+  color:red;
+}
+
+.template-dropdown{
+  display:flex;
+  flex-flow: column wrap;
+  z-index:10000
+}
