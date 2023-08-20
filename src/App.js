@@ -18,25 +18,30 @@ library.add(fas)
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setIsAuthenticated(!!user);
+      setIsAuthChecked(true);
     });
 
     return () => unsubscribe();
   }, []);
-
+  if (!isAuthChecked) {
+    return <div>Loading...</div>;
+  }
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route
-          path="/categories"
-          element={<Category />}>
-          <Route path=':id' element={<CategoryContent />}/>
+        {/* Categories Page */}
+        <Route path="/categories"  element={isAuthenticated ? <Category /> : <Navigate to="/" replace />}>
+          <Route path=':id' element={<CategoryContent />} />
         </Route>
+        {/* Edit Page */}
         <Route path="/edit" element={<Edit />} />
+        {/* Property Search Page */}
         <Route path="/property-search" element={<PropertySearch />} />
       </Routes>
     </Router>
