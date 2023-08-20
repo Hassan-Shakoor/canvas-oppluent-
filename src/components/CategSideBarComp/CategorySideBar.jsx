@@ -113,7 +113,7 @@ const categoryJSON = [];
 ];*/
 
 function addObjectToFavorites(categories, id) {
-  debugger;
+
   // Find the index of the "Favorites" category
   const favoritesIndex = categories.findIndex(item => item.title === "Favorites");
   // Find the index of the object with the provided id in any category
@@ -131,7 +131,6 @@ function addObjectToFavorites(categories, id) {
 }
 
 function removeObjectFromFavorites(categories, idToRemove) {
-  debugger;
   // Find the index of the "Favorites" category
   const favoritesIndex = categories.findIndex(item => item.title === "Favorites");
 
@@ -210,7 +209,7 @@ function fetchCategoryJSONFromFirebase(userId) {
 
     // Function to add an item to favorites
     function addToFavorites(itemId) {
-      debugger;
+  
       if (isFavorite.includes(itemId)) {
         console.log("yes item included in fv alroeady: "+itemId);
         // Item is already in favorites, remove it
