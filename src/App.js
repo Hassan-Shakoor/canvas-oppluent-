@@ -33,26 +33,18 @@ function App() {
   }
   return (
     <Router>
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route
-        path="/categories"
-        element={isAuthenticated ? <Category /> : <Navigate to="/" replace />}
-      />
-      <Route
-        path="/categories/:id"
-        element={isAuthenticated ? <CategoryContent /> : <Navigate to="/" replace />}
-      />
-      <Route
-        path="/edit"
-        element={isAuthenticated ? <Edit /> : <Navigate to="/" replace />}
-      />
-      <Route
-        path="/property-search"
-        element={isAuthenticated ? <PropertySearch /> : <Navigate to="/" replace />}
-      />
-    </Routes>
-  </Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        {/* Categories Page */}
+        <Route path="/categories"  element={isAuthenticated ? <Category /> : <Navigate to="/" replace />}>
+          <Route path=':id' element={<CategoryContent />} />
+        </Route>
+        {/* Edit Page */}
+        <Route path="/edit" element={<Edit />} />
+        {/* Property Search Page */}
+        <Route path="/property-search" element={<PropertySearch />} />
+      </Routes>
+    </Router>
   );
 }
 // element={isAuthenticated ? (<Category />) : <Navigate to="/" replace />}>

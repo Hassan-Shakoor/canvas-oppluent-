@@ -1,8 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Group from "./Group";
 import { Link } from "react-router-dom";
+import { getAuth,onAuthStateChanged  } from 'firebase/auth';
+import { auth } from '../FirebaseAuthComp/firebase';
+import axios from 'axios';
+import { getDatabase, ref, set, get, onValue } from "firebase/database";
 
-const categoryJSON = [
+
+let userId = null;
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    userId = user.uid; // User ID
+    // Now you can use this `userId` to store or retrieve data in your Realtime Database
+  } else {
+    // User is signed out
+  }
+});
+const categoryJSON = [];
+/*const categoryJSON = [
   {
     title: "Favorites",
     subTitle: [
@@ -95,9 +110,10 @@ const categoryJSON = [
       { id: 31, name: "Tri-Folds" }
     ]
   }
-];
+];*/
 
 function addObjectToFavorites(categories, id) {
+  debugger;
   // Find the index of the "Favorites" category
   const favoritesIndex = categories.findIndex(item => item.title === "Favorites");
   // Find the index of the object with the provided id in any category
@@ -115,13 +131,14 @@ function addObjectToFavorites(categories, id) {
 }
 
 function removeObjectFromFavorites(categories, idToRemove) {
+  debugger;
   // Find the index of the "Favorites" category
   const favoritesIndex = categories.findIndex(item => item.title === "Favorites");
 
   if (favoritesIndex !== -1) {
     // Find the index of the object to remove in the "subTitle" array of the "Favorites" category
     const itemIndex = categories[favoritesIndex].subTitle.findIndex(subItem => subItem.id === idToRemove);
-
+    console.log(itemIndex);
     if (itemIndex !== -1) {
       // Remove the object from the "subTitle" array of the "Favorites" category
       categories[favoritesIndex].subTitle.splice(itemIndex, 1);
@@ -134,8 +151,52 @@ function removeObjectFromFavorites(categories, idToRemove) {
 
   return categories;
 }
+function fetchCategoryJSONFromFirebase(userId) {
+  const database = getDatabase();
+  const categoryRef = ref(database, `userJson/${userId}`);
+  
+  return get(categoryRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      console.log("No data available");
+      return null;
+    }
+  }).catch((error) => {
+    console.error("Error fetching data:", error);
+    return null;
+  });
+}
 
   function CategorySideBar(){
+
+    useEffect(() => {
+      // Reference to the user's category data in the database
+      const database = getDatabase();
+      const userJsonRef = ref(database, 'userJson/' + userId);
+    
+      // Set up the onValue listener to update the state when data changes
+      const unsubscribe = onValue(userJsonRef, (snapshot) => {
+        const updatedCategories = snapshot.val();
+        if (updatedCategories) {
+          setCategories(updatedCategories);
+    
+          // Update the isFavorite state based on fetched data
+          const favorites = updatedCategories.find(category => category.title === 'Favorites');
+          if (favorites) {
+            const favoriteIds = favorites.subTitle.map(subItem => subItem.id);
+            setFavorite(favoriteIds);
+          }
+        }
+      });
+    
+      // Cleanup the listener when the component unmounts
+      return () => {
+        unsubscribe();
+      };
+    }, [userId]); // Only run the effect when userId changes
+    
+  
     // Categories JSON State
     const [categories, setCategories] = useState(categoryJSON);
     // State for Side List which are added to Favorites
@@ -148,18 +209,63 @@ function removeObjectFromFavorites(categories, idToRemove) {
     const [isPlaceholder,setPlaceholder] = useState(null);
 
     // Function to add an item to favorites
-    function addToFavorites(itemId){
-      setFavorite([...isFavorite, itemId]);
-      // Copy the categories and update the state
-      const updatedCategories = addObjectToFavorites([...categories], itemId);
-      setCategories(updatedCategories);
+    function addToFavorites(itemId) {
+      debugger;
+      if (isFavorite.includes(itemId)) {
+        console.log("yes item included in fv alroeady: "+itemId);
+        // Item is already in favorites, remove it
+        const updatedFavorites = isFavorite.filter(id => id !== itemId);
+        setFavorite(updatedFavorites);
+        
+        // Remove the item from the "Favorites" category
+        const updatedCategories = removeObjectFromFavorites([...categories], itemId);
+        setCategories(updatedCategories);
+        
+        // Update the favorites in Firebase Realtime Database
+        const database = getDatabase();
+        set(ref(database, 'userJson/' + userId), updatedCategories).then(() => {
+          // Success.
+        }).catch((error) => {
+          console.log(error);
+        });
+      } else {
+        console.log("no item included in fv alroeady: "+itemId);
+        // Item is not in favorites, add it
+        setFavorite(prevFavorites => [...prevFavorites, itemId]);
+        
+        // Copy the categories and update the state
+        const updatedCategories = addObjectToFavorites([...categories], itemId);
+        setCategories(updatedCategories);
+        
+        // Update the favorites in Firebase Realtime Database
+        const database = getDatabase();
+        set(ref(database, 'userJson/' + userId), updatedCategories).then(() => {
+          // Success.
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
     }
+    
+
     // Function to remove an item from favorites
     const removeFromFavorites = (itemId) => {
-      setFavorite(isFavorite.filter(id => id !== itemId));
-      const updatedCategories = removeObjectFromFavorites([...categories], itemId);
-      setCategories(updatedCategories);
+      if (isFavorite.includes(itemId)) {
+        console.log("included in favourites: "+itemId);
+        setFavorite(isFavorite.filter(id => id !== itemId));
+        const updatedCategories = removeObjectFromFavorites([...categories], itemId);
+        setCategories(updatedCategories);
+        
+        // Update the favorites in Firebase Realtime Database
+        const database = getDatabase();
+        set(ref(database, 'userJson/' + userId), updatedCategories).then(() => {
+          // Success.
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
     };
+    
     // Handler for Above State
     function handlePlaceholder(item){
       setPlaceholder(item)
