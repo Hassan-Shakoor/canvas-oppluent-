@@ -1,5 +1,6 @@
 import React, { useState }  from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import EditPopUp from "./EditPopUp";
 
 function MoreDropDown(){
     return(
@@ -54,10 +55,15 @@ function MoreDropDown(){
 }
 
 function Template(props){
+    const [isCreateDesignOpen,setCreateDesginOpen] = useState(null)
     const [isMoreDropDown, setMoreDropDown] = useState(false);
   
     function dropdownHandler(){
       setMoreDropDown(!isMoreDropDown)
+    }
+
+    function handleCreateDesign(id){
+      setCreateDesginOpen(id)
     }
   
     return(
@@ -68,11 +74,12 @@ function Template(props){
             <img
               alt="Email Signature"
               className="template__preview-image"
-              src= {props.imageUrl}
+              src= {props.item.imageUrl}
             />
-            <button type="button" className="btn btn_no-min-width template__edit-btn">
+            <button type="button" className="btn btn_no-min-width template__edit-btn" onClick={() => handleCreateDesign(props.item.id)}>
               <span className="btn__text">Create Design</span>
             </button>
+            {isCreateDesignOpen && <EditPopUp item={props.item} handleCreateDesign={handleCreateDesign}/>}
           </div>
           <div className="template__menu">
             <div className="template__menu-btn-set">
@@ -105,7 +112,7 @@ function Template(props){
             className="template__title template__title_editable"
             title="Email Signature"
           >
-            {props.cardTitle}
+            {props.item.cardTitle}
           </div>
         </div>
       </div>

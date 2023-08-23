@@ -198,7 +198,7 @@ function CategoryContent() {
               {/* Change the number of Grid Column depending upon grid column state */}
               <div className="template-grid-container" style={{ gridTemplateColumns: "repeat(" + gridColumn + ", auto)" }}>
                 {category.template.map((item, index) => (
-                  <Template key={index} cardTitle = {item.cardTitle} imageUrl = {item.imageUrl} gridColumn={gridColumn}/>
+                  <Template key={index} item = {item} gridColumn={gridColumn}/>
                 ))}
               </div>
               </span>
