@@ -10,28 +10,12 @@ const categoriesData = [
     "subHeading": "",
     "template": [
       {
-        "id": 1,
+        "id": 7,
         "cardTitle": "TCG Logos",
         "favorite": false,
         "imageUrl": "/images/logo.png",
         "modified": "2023-08-17", // Add the modified date here
         "created": "2023-08-16"  // Add the created date here
-      },
-      {
-        "id": 2,
-        "cardTitle": "Email Signature",
-        "favorite": true,
-        "imageUrl": "/images/Email_Signature-0 (1).jpg",
-        "modified": "2023-08-19", // Add the modified date here
-        "created": "2023-08-15"  // Add the created date here
-      },
-      {
-        "id": 3,
-        "cardTitle": "Email Signature",
-        "favorite": false,
-        "imageUrl": "/images/Email_Signature-0 (2).jpg",
-        "modified": "2023-08-20", // Add the modified date here
-        "created": "2023-08-14"  // Add the created date here
       }
     ]
   },
@@ -106,6 +90,16 @@ function CategoryContent() {
   const [category , setCategory] = useState(null)
   const [isLoading, setIsLoading] = useState(true);
 
+  // Update Template Favorite Status
+  function updateFavorite(id){
+    let tempArr = category
+    const templateIndex = tempArr.template.findIndex(template => template.id === id);
+    if (templateIndex !== -1) {
+      tempArr.template[templateIndex].favorite = !tempArr.template[templateIndex].favorite;
+    }
+    setCategory({...category,template: tempArr.template})
+  }
+
   function handleColumn(number){
     setGridColumn(number)
 }
@@ -151,7 +145,6 @@ function CategoryContent() {
       const fetchCategoryData = async () => {
         try {
           const fetchedCategory = await categoriesData.find(category => category.id === parseInt(id));
-          
           if (fetchedCategory) {
             setCategory(fetchedCategory);
             setIsLoading(false);
@@ -160,7 +153,6 @@ function CategoryContent() {
           console.error("Error fetching data:", error);
         }
       };
-      
       fetchCategoryData();
     }else if(sortTemplate === 'Name A - Z'){
       let tempHold = [...category.template].sort((a, b) => a.cardTitle.localeCompare(b.cardTitle));
@@ -198,7 +190,7 @@ function CategoryContent() {
               {/* Change the number of Grid Column depending upon grid column state */}
               <div className="template-grid-container" style={{ gridTemplateColumns: "repeat(" + gridColumn + ", auto)" }}>
                 {category.template.map((item, index) => (
-                  <Template key={index} item = {item} gridColumn={gridColumn}/>
+                  <Template key={index} item = {item} gridColumn={gridColumn} updateFavorite={updateFavorite}/>
                 ))}
               </div>
               </span>

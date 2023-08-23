@@ -86,9 +86,10 @@ function Template(props){
               <button
                 type="button"
                 className="btn btn_black btn_no-text template__menu-btn"
+                onClick={() => props.updateFavorite(props.item.id)}
               >
                 <span className="btn__text">
-                  <FontAwesomeIcon icon="fa-regular fa-heart" style={{color: "#7a7a7a",}} />
+                  {props.item.favorite ? <FontAwesomeIcon icon="fa-solid fa-heart" style={{color: "#FF6661",}} /> : <FontAwesomeIcon icon="fa-regular fa-heart" style={{color: "#7a7a7a",}} />}
                 </span>
               </button>
             </div>
