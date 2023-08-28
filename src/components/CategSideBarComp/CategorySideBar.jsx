@@ -5,8 +5,7 @@ import { getAuth,onAuthStateChanged  } from 'firebase/auth';
 import { auth } from '../FirebaseAuthComp/firebase';
 import axios from 'axios';
 import { getDatabase, ref, set, get, onValue } from "firebase/database";
-
-
+import CategoryContent from '../CategContentComponent/CategoryContent';
 let userId = null;
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -56,29 +55,12 @@ function removeObjectFromFavorites(categories, idToRemove) {
 
   return categories;
 }
-function fetchCategoryJSONFromFirebase(userId) {
-  const database = getDatabase();
-  const categoryRef = ref(database, `userJson/${userId}`);
-  
-  return get(categoryRef).then((snapshot) => {
-    if (snapshot.exists()) {
-      return snapshot.val();
-    } else {
-      console.log("No data available");
-      return null;
-    }
-  }).catch((error) => {
-    console.error("Error fetching data:", error);
-    return null;
-  });
-}
-
   function CategorySideBar(){
 
     useEffect(() => {
       // Reference to the user's category data in the database
       const database = getDatabase();
-      const userJsonRef = ref(database, 'userJson/' + userId);
+      const userJsonRef = ref(database, userId +'/userJson');
     
       // Set up the onValue listener to update the state when data changes
       const unsubscribe = onValue(userJsonRef, (snapshot) => {
@@ -128,7 +110,7 @@ function fetchCategoryJSONFromFirebase(userId) {
         
         // Update the favorites in Firebase Realtime Database
         const database = getDatabase();
-        set(ref(database, 'userJson/' + userId), updatedCategories).then(() => {
+        set(ref(database, userId +'/userJson'), updatedCategories).then(() => {
           // Success.
         }).catch((error) => {
           console.log(error);
@@ -144,15 +126,14 @@ function fetchCategoryJSONFromFirebase(userId) {
         
         // Update the favorites in Firebase Realtime Database
         const database = getDatabase();
-        set(ref(database, 'userJson/' + userId), updatedCategories).then(() => {
+        set(ref(database, userId +'/userJson'), updatedCategories).then(() => {
           // Success.
         }).catch((error) => {
           console.log(error);
         });
       }
     }
-    
-
+  
     // Function to remove an item from favorites
     const removeFromFavorites = (itemId) => {
       if (isFavorite.includes(itemId)) {
@@ -163,7 +144,7 @@ function fetchCategoryJSONFromFirebase(userId) {
         
         // Update the favorites in Firebase Realtime Database
         const database = getDatabase();
-        set(ref(database, 'userJson/' + userId), updatedCategories).then(() => {
+        set(ref(database, userId +'/userJson'), updatedCategories).then(() => {
           // Success.
         }).catch((error) => {
           console.log(error);

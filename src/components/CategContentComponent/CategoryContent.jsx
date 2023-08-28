@@ -3,83 +3,21 @@ import { useParams } from 'react-router-dom';
 import DashboardHeader from './DashboardHeader';
 import Template from './Template';
 import TemplateSort from './TemplateSort';
+import { getAuth,onAuthStateChanged  } from 'firebase/auth';
+import { auth } from '../FirebaseAuthComp/firebase';
+import axios from 'axios';
+import { getDatabase, ref, set, get, onValue } from "firebase/database";
 
-const categoriesData = [
-  {
-    "id": 1,
-    "subHeading": "",
-    "template": [
-      {
-        "id": 7,
-        "cardTitle": "TCG Logos",
-        "favorite": false,
-        "imageUrl": "/images/logo.png",
-        "modified": "2023-08-17", // Add the modified date here
-        "created": "2023-08-16"  // Add the created date here
-      }
-    ]
-  },
-  {
-    "id": 4,
-    "subHeading": "500 x 125",
-    "template": [
-      {
-        "id": 1,
-        "cardTitle": "Email Signature",
-        "favorite": false,
-        "imageUrl": "/images/Email_Signature-0.jpg",
-        "modified": "2023-08-17", // Add the modified date here
-        "created": "2023-08-16"  // Add the created date here
-      },
-      {
-        "id": 2,
-        "cardTitle": "Email Signature",
-        "favorite": true,
-        "imageUrl": "/images/Email_Signature-0 (1).jpg",
-        "modified": "2023-08-17", // Add the modified date here
-        "created": "2023-08-15"  // Add the created date here
-      },
-      {
-        "id": 3,
-        "cardTitle": "Email Signature",
-        "favorite": false,
-        "imageUrl": "/images/Email_Signature-0 (2).jpg",
-        "modified": "2023-08-17", // Add the modified date here
-        "created": "2023-08-14"  // Add the created date here
-      }
-    ]
-  },
-  {
-    "id": 5,
-    "subHeading": "HTML Email Newsletters are now available! HTML Email Newsletter Templates are built with code to be pasted or exported to your favorite email sender or CRM instead of just an image.",
-    "template": [
-      {
-        "id": 4,
-        "cardTitle": "HTML Email Newsletter",
-        "favorite": true,
-        "imageUrl": "/images/HTML_Email_Newsletter.jpg",
-        "modified": "2023-08-17", // Add the modified date here
-        "created": "2023-08-13"  // Add the created date here
-      },
-      {
-        "id": 5,
-        "cardTitle": "HTML Email Newsletter",
-        "favorite": false,
-        "imageUrl": "/images/HTML_Email_Newsletter (1).jpg",
-        "modified": "2023-08-17", // Add the modified date here
-        "created": "2023-08-12"  // Add the created date here
-      },
-      {
-        "id": 6,
-        "cardTitle": "Just Listed HTML Email Newsletter",
-        "favorite": false,
-        "imageUrl": "/images/Just_Listed_HTML_Email_Newsletter.jpg",
-        "modified": "2023-08-17", // Add the modified date here
-        "created": "2023-08-11"  // Add the created date here
-      }
-    ]
+let userId = null;
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    userId = user.uid; // User ID
+    // Now you can use this `userId` to store or retrieve data in your Realtime Database
+  } else {
+    // User is signed out
   }
-];
+});
+
 
 function CategoryContent() {
   // Id Passed to the component from URL Parameter
@@ -87,19 +25,105 @@ function CategoryContent() {
   const [sortTemplate,setSortTemplate] = useState('Default')
   const { id } = useParams();
   // Keeping the State of JSON. So, whenever JSON changes it rerender.
-  const [category , setCategory] = useState(null)
+  const [userJson, setUserJson] = useState([]);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [categories, setCategories] = useState();
+  const [category, setCategory] = useState({
+    id: 0,
+    subHeading: '',
+    template: [],
+  });
   const [isLoading, setIsLoading] = useState(true);
-
-  // Update Template Favorite Status
-  function updateFavorite(id){
-    let tempArr = category
-    const templateIndex = tempArr.template.findIndex(template => template.id === id);
-    if (templateIndex !== -1) {
-      tempArr.template[templateIndex].favorite = !tempArr.template[templateIndex].favorite;
+  
+  const fetchDataFromDatabase = () => {
+    const database = getDatabase();
+    const userJsonRef = ref(database, userId + '/templateData');
+  
+    onValue(userJsonRef, (snapshot) => {
+      const updatedCategories = snapshot.val();
+      if (updatedCategories) {
+        setCategoriesData(updatedCategories);
+        //console.log("Template Data: ", updatedCategories);
+      }
+    });
+  };
+  
+  const fetchUserJsonDataFromDatabase = () => {
+    const database = getDatabase();
+    const userJsonRef = ref(database, userId + '/userJson');
+  
+    onValue(userJsonRef, (snapshot) => {
+      const updatedCategories = snapshot.val();
+      if (updatedCategories) {
+        setUserJson(updatedCategories);
+      }
+    });
+  };
+  useEffect(() => {
+    fetchDataFromDatabase();
+    fetchUserJsonDataFromDatabase();
+  }, [userId]); 
+  
+  function updateFavorite(id) {
+    const updatedCategoriesData = [...categoriesData]; // Create a copy of categoriesData
+    const updatedUserJson = [...userJson];
+    console.log("updated User Json: "+ updatedUserJson);
+    // Find the template in the categoriesData and update its favorite status
+    let isFavoriteAdded = false;
+    updatedCategoriesData.forEach(category => {
+      const template = category.template?.find(template => template.id === id);
+      if (template) {
+        const originalFavoriteStatus = template.favorite; // Store the original favorite status
+        template.favorite = !template.favorite;
+  
+        // If the template is now marked as favorite and was previously not in id:53, move it to the category with id 53
+        if (template.favorite && category.id !== 53) {
+          const targetCategory = updatedCategoriesData.find(cat => cat.id === 53);
+          if (targetCategory) {
+            targetCategory.template = targetCategory.template || []; // Create an empty array if template is undefined
+            targetCategory.template.push(template);
+            isFavoriteAdded = true;
+            //targetCategory.template?.push(template);
+          }
+        } else if (!template.favorite && originalFavoriteStatus) { // If the template is marked as not favorite and was previously favorite
+          // Remove the template from the category with id 53
+          const targetCategory = updatedCategoriesData.find(cat => cat.id === 53);
+          if (targetCategory) {
+            targetCategory.template = targetCategory.template.filter(tmpl => tmpl.id !== id);
+          }
+          //const idfiftyThree = template = category.template?.find(template => template.id === 53);
+          const template = category.template?.find(template => template.id === 53);
+          if(!template){
+            console.log("undefined id no 53");
+          }
+        }
+      }
+    });
+    const favoritesTitle = updatedUserJson.find(cat => cat.title === "Favorites");
+    const favoriteTemplatesSubtitle = {
+      id: 53,
+      name: "Favorite Templates"
+    };
+    // Update the state with the modified categoriesData
+    if (favoritesTitle) {
+      if (isFavoriteAdded) {
+        if (!favoritesTitle.subTitle.some(sub => sub.id === favoriteTemplatesSubtitle.id)) {
+          favoritesTitle.subTitle = [...favoritesTitle.subTitle, favoriteTemplatesSubtitle];
+        }
+      } else {
+        favoritesTitle.subTitle = favoritesTitle.subTitle.filter(sub => sub.id !== favoriteTemplatesSubtitle.id);
+      }
     }
-    setCategory({...category,template: tempArr.template})
+    setUserJson(updatedUserJson);
+    setCategoriesData(updatedCategoriesData);
+    // Update the templateData in the Firebase Realtime Database
+    const database = getDatabase();
+    const templateDataref = ref(database, userId + '/templateData');
+    const userJsonRef = ref(database, userId + '/userJson');
+    set(templateDataref, updatedCategoriesData); // Update the templateData in the database
+    set(userJsonRef, updatedUserJson); // Update the userJson in the database
   }
-
+  
   function handleColumn(number){
     setGridColumn(number)
 }
@@ -108,35 +132,24 @@ function CategoryContent() {
     setSortTemplate(order)
   }
 
-  // Whenever it detect that id changes it fetch object according to that JSON
+  // Fetch the template data based on the id parameter
   useEffect(() => {
-    const fetchCategoryData = async () => {
-      try {
-        const fetchedCategory = await categoriesData.find(category => category.id === parseInt(id));
-        
-        if (fetchedCategory) {
-          setCategory(fetchedCategory);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    const fetchedCategory = categoriesData.find(category => category.id === parseInt(id));
     
-    fetchCategoryData();
-  }, [id]);
+    if (fetchedCategory) {
+      setCategory(fetchedCategory);
+      setIsLoading(false);
+    }
+  }, [id, categoriesData]);
 
   // Sorting Effect
   useEffect(()=>{
     if (sortTemplate === 'Modified'){
-      console.log("Modified");
       let tempHold = [...category.template].sort((a, b) => new Date(b.modified) - new Date(a.modified));
       setCategory(prevCategory => ({
         ...prevCategory,
         template: tempHold}))
     }else if(sortTemplate === 'Created'){
-      console.log("Created");
-      console.log(...category.template);
       let tempHold = [...category.template].sort((a, b) => new Date(a.created) - new Date(b.created));
       setCategory(prevCategory => ({
         ...prevCategory,
@@ -189,7 +202,7 @@ function CategoryContent() {
               <span>
               {/* Change the number of Grid Column depending upon grid column state */}
               <div className="template-grid-container" style={{ gridTemplateColumns: "repeat(" + gridColumn + ", auto)" }}>
-                {category.template.map((item, index) => (
+                {category.template && category.template.map((item, index) => (
                   <Template key={index} item = {item} gridColumn={gridColumn} updateFavorite={updateFavorite}/>
                 ))}
               </div>
