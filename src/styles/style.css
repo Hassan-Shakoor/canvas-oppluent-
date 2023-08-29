@@ -31433,3 +31433,9 @@ svg.icon.v2-icon.v2-icon-chevron-down {
 .extra-right-padding{
   margin-right:20px !important;
 }
+
+
+
+.theme_dark .font-icon{
+  color: #2F2F2F !important;
+}

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import EditSidebarButton from "./EditSidebarButton";
+import EditSideModuleBar from "./EditSideModuleBar";
 
 let SidebarButtonData = [
   { name: "Uploads", iconClass: "fa-solid fa-cloud-arrow-up" },
@@ -12,12 +12,40 @@ let SidebarButtonData = [
   { name: "Settings", iconClass: "fa-solid fa-gear" }
 ];
 
+function EditSidebarButton(props){
+  return(
+      <div className={props.openDrawer === props.title ? "sidebar__button sidebar__button_active" : "sidebar__button"} data-test="image-module-button" onClick={() => props.handleToggleDrawer(props.title)}>
+          <i className="icon"><FontAwesomeIcon icon={props.icon} style={{color: "#ffffff",}} /></i>
+          <div className="sidebar__button-text">{props.title}</div>
+      </div>
+  )
+}
+
 function EditSidebar() {
+  // ** State
+  const [openDrawer, setDrawerOpen] = useState(null)
+
+
+  // ** Handlers
+  const handleToggleDrawer = (tabName) => {
+    if (openDrawer === tabName){
+      setDrawerOpen(null)
+      console.log('closed');
+    }else{
+      setDrawerOpen(tabName)
+      console.log('Settings' === tabName);
+      console.log("("+tabName+")");
+      console.log(tabName + ' opened');
+    }
+  }
+
+
+  
   return (
     <div className="sidebar">
       <aside className="sidebar__button-bar">
         {SidebarButtonData.map(({ name, iconClass }) => (
-          <EditSidebarButton title={name} icon={iconClass} key={name} />
+          <EditSidebarButton title={name} icon={iconClass} key={name} handleToggleDrawer={handleToggleDrawer} openDrawer={openDrawer}/>
         ))}
         <div className="sidebar__divider" />
         <div className="sidebar__button_rounded-icon sidebar__button" data-test="support-button">
@@ -28,6 +56,7 @@ function EditSidebar() {
           <div className="support-overlay__tooltip-anchor" />
         </div>
       </aside>
+      {openDrawer !== null && <EditSideModuleBar openDrawer={openDrawer}/>}
     </div>
   );
 }
