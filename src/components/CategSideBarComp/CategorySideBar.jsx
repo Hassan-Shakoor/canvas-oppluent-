@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Group from "./Group";
 import { Link } from "react-router-dom";
-import { getAuth,onAuthStateChanged  } from 'firebase/auth';
+import { onAuthStateChanged  } from 'firebase/auth';
 import { auth } from '../FirebaseAuthComp/firebase';
-import axios from 'axios';
-import { getDatabase, ref, set, get, onValue } from "firebase/database";
-import CategoryContent from '../CategContentComponent/CategoryContent';
+import { getDatabase, ref, set, onValue } from "firebase/database";
+
+
 let userId = null;
 onAuthStateChanged(auth, (user) => {
   if (user) {

@@ -51,7 +51,7 @@ function SideList(props){
                     <use xlinkHref={props.active ? "#v2-icon-folder-open" : "#v2-icon-folder"} />
                 </svg>
                 {props.sideListData.name}
-                {props.sideListData.name !== "Most Popular Templates" && 
+                {props.sideListData.id !== 52  && props.sideListData.id !== 53 && 
                     <svg className={props.isFavorite.includes(props.id)?"icon v2-icon v2-icon-heart-solid groups__category-favorite-btn groups__category-favorite-btn_active":"icon v2-icon v2-icon-heart-solid groups__category-favorite-btn"}
                         onClick={props.isFavorite.includes(props.id) ? removeFavorite : addFavorite}>
                         <use xlinkHref="#v2-icon-heart-solid" />

@@ -3,10 +3,9 @@ import { useParams } from 'react-router-dom';
 import DashboardHeader from './DashboardHeader';
 import Template from './Template';
 import TemplateSort from './TemplateSort';
-import { getAuth,onAuthStateChanged  } from 'firebase/auth';
+import { onAuthStateChanged  } from 'firebase/auth';
 import { auth } from '../FirebaseAuthComp/firebase';
-import axios from 'axios';
-import { getDatabase, ref, set, get, onValue } from "firebase/database";
+import { getDatabase, ref, set, onValue } from "firebase/database";
 
 let userId = null;
 onAuthStateChanged(auth, (user) => {
@@ -27,7 +26,6 @@ function CategoryContent() {
   // Keeping the State of JSON. So, whenever JSON changes it rerender.
   const [userJson, setUserJson] = useState([]);
   const [categoriesData, setCategoriesData] = useState([]);
-  const [categories, setCategories] = useState();
   const [category, setCategory] = useState({
     id: 0,
     subHeading: '',
