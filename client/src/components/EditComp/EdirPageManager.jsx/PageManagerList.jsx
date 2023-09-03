@@ -2,7 +2,6 @@ import React from "react";
 
 function PageManagerList(props) {
 
-    console.log(props.id)
   return (
     <li
       draggable="true"

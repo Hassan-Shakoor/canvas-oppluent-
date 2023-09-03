@@ -32,12 +32,8 @@ function EditSidebar() {
   const handleToggleDrawer = (tabName) => {
     if (openDrawer === tabName){
       setDrawerOpen(null)
-      console.log('closed');
     }else{
       setDrawerOpen(tabName)
-      console.log('Settings' === tabName);
-      console.log("("+tabName+")");
-      console.log(tabName + ' opened');
     }
   }
 

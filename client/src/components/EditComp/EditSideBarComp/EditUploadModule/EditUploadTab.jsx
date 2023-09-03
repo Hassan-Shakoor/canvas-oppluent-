@@ -9,6 +9,7 @@ import { Icon } from "@iconify/react";
 // ** Custom Components Import
 import {UploadImageBox,UploadImageLinear} from "./EditUploadImage";
 import EditGrid from "./EditGrid";
+import EditUploadSearch from "./EditUploadSearch";
 
 // ** Vars
 const multiMediaBtnJSON = [
@@ -46,22 +47,8 @@ function EditUploadTab(props) {
     setShowPanel('default')
     setImgContainer([])
   }
-
-  const searchChangeHandler = async (event) => {
-    const inputValue = event.target.value;
-    if (event.target.name === 'default') {
-        const formattedInput = _.replace(_.trim(inputValue), /\s+/g, '+')
-        try {
-          const imagesResponse = await fetchImagesPixabay(formattedInput);
-          setImgContainer(imagesResponse.data.hits);
-          setShowPanel('pixabay');
-        } catch (error) {
-          console.error('Error fetching images:', error);
-        }
-    }
-  };
   
-  console.log(imgContainer);
+  // console.log(imgContainer);
 
   return (
     <div
@@ -69,7 +56,7 @@ function EditUploadTab(props) {
       ? "sidebar-module vertical-switch-content-enter-done"
       : "sidebar-module vertical-switch-content-exit-done"}>
       <div className="media-library">
-        {showPanel !== 'default'
+        {showPanel !== 'default' && showPanel !== 'pixabay' 
           ? <button type="button" className="btn btn_gray btn_back-button mb-2" onClick={handleBack}>
             <svg className="icon v1-icon v1-icon-chevron-left-light">
                 <use
@@ -79,23 +66,7 @@ function EditUploadTab(props) {
               <span className="btn__text">Back</span>
             </button>
           : <UploadImageBox/>}
-        <div className="input-group input-group_without-separators mb-2">
-          <div className="small-search small-search_bordered">
-            <div className="small-search__icon-wrapper">
-              <Icon icon="ph:magnifying-glass" />
-            </div>
-            <div className="small-search__input">
-              <input
-                autoComplete="off"
-                id="small-search"
-                name={showPanel}
-                placeholder={searchMap[showPanel].placeholder}
-                type="search"
-                className="simple-input"
-                onChange={searchChangeHandler}/>
-            </div>
-          </div>
-        </div>
+        <EditUploadSearch showPanel={showPanel}  searchMap={searchMap}  setShowPanel={setShowPanel} setImgContainer={setImgContainer} />
         {showPanel === 'default' && <div className="sidebar-module__title">Multimedia</div>}
         {showPanel !== 'default' && showPanel !== 'pixabay' && <UploadImageLinear/>}
         <div className="sidebar-module__divider"/>

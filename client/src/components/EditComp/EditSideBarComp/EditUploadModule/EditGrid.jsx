@@ -25,8 +25,8 @@ function EditGrid({searchMap, showPanel, setShowPanel}) {;
         )
         : (
           <div
-            className="media-library__item-container">
-            <div className="media-library__image" key={item.id}>
+            className="media-library__item-container" key={item.id}>
+            <div className="media-library__image" >
               <img
                 className="media-library__image-thumbnail"
                 src={item.webformatURL}

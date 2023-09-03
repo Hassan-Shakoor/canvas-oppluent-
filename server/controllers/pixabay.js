@@ -6,7 +6,7 @@ dotenv.config();
 
 export const getImages = async(req,res) => {
         try{
-            const q = req.query;
+            const {q} = req.query;
             const apiKey = process.env.PIXABAY_API_KEY;
             const url = `https://pixabay.com/api/?key=${apiKey}&q=${q}&image_type=photo`
             const response = await axios.get(url)
