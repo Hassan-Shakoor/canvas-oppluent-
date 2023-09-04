@@ -4,7 +4,7 @@ import EditTextTab from "./EditTextTab";
 import EditLayerTab from "./EditLayerTab"
 import EditShapeTab from "./EditShapeTab";
 import EditToolTab from "./EditToolTab";
-import EditIntegrationTab from "./EditIntegrationTab";
+import EditIntegrationTab from "./EditIntegrationModule/EditIntegrationTab";
 import EditSettingTab from "./EditSettingTab";
 
 function EditSideModuleBar(props) {

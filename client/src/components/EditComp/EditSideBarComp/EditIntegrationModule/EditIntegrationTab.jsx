@@ -1,7 +1,18 @@
-import React from "react";
+// ** Import React
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+// ** Custom Component
+import EditPropertySearchModal from "./EditPropertySearchModal";
+
 function EditIntegrationTab(props) {
+  // ** State
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen)
+  }
+
   return (
     <div
       className={props.openDrawer === 'Integrations'
@@ -10,7 +21,7 @@ function EditIntegrationTab(props) {
       <div className="sidebar-module__title">Integrations</div>
       <div className="sidebar-module__divider"/>
       <div className="sidebar-tiles">
-        <div className="sidebar-tiles__item sidebar-tiles__item_disabled">
+        <div className="sidebar-tiles__item" onClick={toggleModal}>
           <div className="sidebar-tiles__tile">
             <FontAwesomeIcon icon="fa-solid fa-house" className="sidebar-tiles__tile-icon"/>
             <div className="sidebar-tiles__tile-title">Property Search</div>
@@ -23,6 +34,7 @@ function EditIntegrationTab(props) {
           </div>
         </div>
       </div>
+      {isModalOpen && <EditPropertySearchModal isModalOpen={isModalOpen} toggleModal={toggleModal}/>}
     </div>
   )
 }
