@@ -14,6 +14,7 @@ function UploadImageBox(){
         if(!selectedUploadFile){console.log("No File Chosen")
         }else{
             console.log("File Chosen")
+            saveFileinDB(selectedUploadFile);
             const fd = new FormData();
             fd.append('file',selectedUploadFile)
             axios.post('https://httpbin.org/post',fd ,{
@@ -23,7 +24,6 @@ function UploadImageBox(){
             .catch(error => console.log(error ))
         }
     },[selectedUploadFile])
-
     return(
         <label className="dropzone media-library__dropbox mb-2">
           <div className="media-library__dropbox-icon-wrapper">
@@ -52,7 +52,9 @@ function UploadImageBox(){
         </label>
     )
 }
-
+async function saveFileinDB(file){
+  //const saveUploadedFile = await saveUploadedFile(file);
+}
 function UploadImageLinear () {
   return(
     <label
