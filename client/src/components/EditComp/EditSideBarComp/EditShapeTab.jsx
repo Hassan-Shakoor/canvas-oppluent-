@@ -1,9 +1,16 @@
 import React from "react";
 
-function EditShapeTab(props) {
+// ** Store
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { selectOpenDrawer } from "../../../store/app/Edit/EditSidebar/EditDrawer";
+
+function EditShapeTab() {
+  // ** Hooks
+  const openDrawer = useSelector(selectOpenDrawer)
+
   return (
     <div
-      className={props.openDrawer === 'Shapes'
+      className={openDrawer === 'Shapes'
       ? "sidebar-module vertical-switch-content-enter-done"
       : "sidebar-module vertical-switch-content-exit-done"}>
       <div className="media-library media-library_full-height">

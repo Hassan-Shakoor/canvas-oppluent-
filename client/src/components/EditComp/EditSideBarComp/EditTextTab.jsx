@@ -1,9 +1,15 @@
 import React from "react";
 
-function EditTextTab(props) {
+// ** Store
+import { useSelector} from 'react-redux'
+import {selectOpenDrawer} from '../../../store/app/Edit/EditSidebar/EditDrawer/index'
+
+function EditTextTab() {
+  // ** Hooks 
+  const openDrawer = useSelector(selectOpenDrawer)
   return (
     <form
-      className={props.openDrawer === 'Text'
+      className={openDrawer === 'Text'
       ? "text-module vertical-switch-content-enter-done"
       : "sidebar-module vertical-switch-content-exit-done"}>
       <div className="mb-1">

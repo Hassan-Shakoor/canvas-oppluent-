@@ -1,10 +1,16 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function EditToolTab(props) {
+// ** Store
+import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
+import { selectOpenDrawer } from "../../../store/app/Edit/EditSidebar/EditDrawer";
+
+function EditToolTab() {
+  const openDrawer = useSelector(selectOpenDrawer)
+
   return (
     <div
-      className={props.openDrawer === 'Tools'
+      className={openDrawer === 'Tools'
       ? "sidebar-module vertical-switch-content-enter-done"
       : "sidebar-module vertical-switch-content-exit-done"}>
       <div className="sidebar-module__title">Tools</div>

@@ -1,11 +1,18 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function EditLayerTab(props) {
+// ** Store
+import { useSelector } from "react-redux";
+import { selectOpenDrawer } from "../../../store/app/Edit/EditSidebar/EditDrawer";
+
+function EditLayerTab() {
+  // ** Hooks
+  const openDrawer = useSelector(selectOpenDrawer)
+
   return (
     <div
       className=
-      {props.openDrawer === 'Layers' ? "layers-module vertical-switch-content-enter-done" : "layers-module vertical-switch-content-exit-done"}>
+      {openDrawer === 'Layers' ? "layers-module vertical-switch-content-enter-done" : "layers-module vertical-switch-content-exit-done"}>
       <div className="layers">
         <div className="layers__search-box">
           <div className="small-search small-search_bordered">

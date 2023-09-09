@@ -5,7 +5,7 @@ import EditLayerTab from "./EditLayerTab"
 import EditShapeTab from "./EditShapeTab";
 import EditToolTab from "./EditToolTab";
 import EditIntegrationTab from "./EditIntegrationModule/EditIntegrationTab";
-import EditSettingTab from "./EditSettingTab";
+import EditSettingTab from "./EditSettingModule/EditSettingTab";
 
 function EditSideModuleBar(props) {
   return (
@@ -13,13 +13,13 @@ function EditSideModuleBar(props) {
       <aside
         className="sidebar__module-bar sidebar__module-bar_show animate-mounting__sidebar-enter-done">
         <div className="sidebar__module-block">
-          <EditUploadTab openDrawer={props.openDrawer}/>
-          <EditTextTab openDrawer={props.openDrawer}/>
-          <EditLayerTab openDrawer={props.openDrawer}/>
-          <EditShapeTab openDrawer={props.openDrawer}/>
-          <EditToolTab openDrawer={props.openDrawer}/>
-          <EditIntegrationTab openDrawer={props.openDrawer}/>
-          <EditSettingTab openDrawer={props.openDrawer}/>
+          <EditUploadTab/>
+          <EditTextTab/>
+          <EditLayerTab/>
+          <EditShapeTab/>
+          <EditToolTab/>
+          <EditIntegrationTab/>
+          <EditSettingTab/>
         </div>
       </aside>
     </div>

@@ -1,15 +1,16 @@
 // ** React Import
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import _ from 'lodash'
 import { fetchImagesPixabay } from "../../../../api/pixabay";
-
-// ** Icon Import
-import { Icon } from "@iconify/react";
 
 // ** Custom Components Import
 import {UploadImageBox,UploadImageLinear} from "./EditUploadImage";
 import EditGrid from "./EditGrid";
 import EditUploadSearch from "./EditUploadSearch";
+
+// ** Store
+import { useSelector} from 'react-redux'
+import { selectOpenDrawer } from "../../../../store/app/Edit/EditSidebar/EditDrawer";
 
 // ** Vars
 const multiMediaBtnJSON = [
@@ -28,10 +29,13 @@ const multiMediaBtnJSON = [
   }
 ]
 
-function EditUploadTab(props) {
+function EditUploadTab() {
   // ** States
   const [showPanel,setShowPanel] = useState('default')
   const [imgContainer,setImgContainer] = useState([])
+
+  // ** Hooks
+  const openDrawer = useSelector(selectOpenDrawer)
 
   // ** Vars
   const searchMap = {
@@ -47,12 +51,10 @@ function EditUploadTab(props) {
     setShowPanel('default')
     setImgContainer([])
   }
-  
-  // console.log(imgContainer);
 
   return (
     <div
-      className={props.openDrawer === 'Uploads'
+      className={openDrawer === 'Uploads'
       ? "sidebar-module vertical-switch-content-enter-done"
       : "sidebar-module vertical-switch-content-exit-done"}>
       <div className="media-library">

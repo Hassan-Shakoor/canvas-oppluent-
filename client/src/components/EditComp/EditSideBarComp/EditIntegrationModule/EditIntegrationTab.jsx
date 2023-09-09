@@ -5,9 +5,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // ** Custom Component
 import EditPropertySearchModal from "./EditPropertySearchModal";
 
+// ** Store
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { selectOpenDrawer } from "../../../../store/app/Edit/EditSidebar/EditDrawer";
+
 function EditIntegrationTab(props) {
   // ** State
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // ** Hooks
+  const openDrawer = useSelector(selectOpenDrawer)
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
@@ -15,7 +22,7 @@ function EditIntegrationTab(props) {
 
   return (
     <div
-      className={props.openDrawer === 'Integrations'
+      className={openDrawer === 'Integrations'
       ? "sidebar-module vertical-switch-content-enter-done"
       : "sidebar-module vertical-switch-content-exit-done"}>
       <div className="sidebar-module__title">Integrations</div>

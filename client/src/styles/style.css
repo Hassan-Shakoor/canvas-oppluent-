@@ -31471,3 +31471,15 @@ svg.icon.v2-icon.v2-icon-chevron-down {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.rc-slider-handle{
+  margin-top: -1px !important;
+}
+
+.react-colorful {
+  width: 100% !important;
+}
+
+.theme_dark .font-icon-black{
+  color: white;
+}

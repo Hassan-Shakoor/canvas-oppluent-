@@ -1,9 +1,18 @@
+// ** Import Libraries
 import React, { useState } from "react";
+
+// ** Icons
+import { Icon } from "@iconify/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+// Import Custom Components
 import EditSideModuleBar from "./EditSideModuleBar";
 
-import { Icon } from "@iconify/react";
+// ** Store
+import { useSelector, useDispatch } from 'react-redux'
+import { selectOpenDrawer, updateOpenDrawer } from "../../../store/app/Edit/EditSidebar/EditDrawer";
 
+// ** Vars
 let SidebarButtonData = [
   { name: "Uploads", iconClass: "clarity:upload-cloud-line" },
   { name: "Text", iconClass: "bi:filetype-ai" },
@@ -24,16 +33,16 @@ function EditSidebarButton(props){
 }
 
 function EditSidebar() {
-  // ** State
-  const [openDrawer, setDrawerOpen] = useState(null)
-
+  // ** Hooks
+  const openDrawer = useSelector(selectOpenDrawer)
+  const dispatch = useDispatch()
 
   // ** Handlers
   const handleToggleDrawer = (tabName) => {
     if (openDrawer === tabName){
-      setDrawerOpen(null)
+      dispatch(updateOpenDrawer(null))
     }else{
-      setDrawerOpen(tabName)
+      dispatch(updateOpenDrawer(tabName))
     }
   }
 

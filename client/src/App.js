@@ -12,6 +12,8 @@ import Category from './pages/Category';
 import CategoryContent from './components/CategContentComponent/CategoryContent';
 import Edit from './pages/Edit';
 import PropertySearch from './pages/PropertySearch';
+import {store} from'./store/store'
+import { Provider } from 'react-redux';
 // Intialising FontAwesomeIcon
 library.add(far);
 library.add(fas)
@@ -32,19 +34,21 @@ function App() {
     return <div>Loading...</div>;
   }
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        {/* Categories Page */}
-        <Route path="/categories"  element={isAuthenticated ? <Category /> : <Navigate to="/" replace />}>
-          <Route path=':id' element={<CategoryContent />} />
-        </Route>
-        {/* Edit Page */}
-        <Route path="/edit" element={<Edit />} />
-        {/* Property Search Page */}
-        <Route path="/property-search" element={<PropertySearch />} />
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          {/* Categories Page */}
+          <Route path="/categories"  element={isAuthenticated ? <Category /> : <Navigate to="/" replace />}>
+            <Route path=':id' element={<CategoryContent />} />
+          </Route>
+          {/* Edit Page */}
+          <Route path="/edit" element={<Edit />} />
+          {/* Property Search Page */}
+          <Route path="/property-search" element={<PropertySearch />} />
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 // element={isAuthenticated ? (<Category />) : <Navigate to="/" replace />}>
