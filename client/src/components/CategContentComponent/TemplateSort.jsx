@@ -45,7 +45,6 @@ function TemplateSort(props){
     function gridColumnHander(){
         setGridDropDownOpen(!isGridDropDownOpen)
     }
-    console.log(props.gridColumn);
 
     return(
         <div className="dashboard-header__top-panel">

@@ -1,8 +1,14 @@
+// ** Import Libraries
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+
+// ** Import Custom Components
 import DashboardHeader from './DashboardHeader';
 import Template from './Template';
 import TemplateSort from './TemplateSort';
+import SpinnerOverlay from '../EditComp/EditSideBarComp/EditUploadModule/SpinnerOverlay';
+
+// ** Firebase
 import { onAuthStateChanged  } from 'firebase/auth';
 import { auth } from '../FirebaseAuthComp/firebase';
 import { getDatabase, ref, set, onValue } from "firebase/database";
@@ -10,7 +16,7 @@ import { getDatabase, ref, set, onValue } from "firebase/database";
 let userId = null;
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    userId = user.uid; // User ID
+    userId = user.uid;
     // Now you can use this `userId` to store or retrieve data in your Realtime Database
   } else {
     // User is signed out
@@ -19,11 +25,10 @@ onAuthStateChanged(auth, (user) => {
 
 
 function CategoryContent() {
-  // Id Passed to the component from URL Parameter
+  // ** States
   const [gridColumn, setGridColumn] = useState(4)
   const [sortTemplate,setSortTemplate] = useState('Default')
   const { id } = useParams();
-  // Keeping the State of JSON. So, whenever JSON changes it rerender.
   const [userJson, setUserJson] = useState([]);
   const [categoriesData, setCategoriesData] = useState([]);
   const [category, setCategory] = useState({
@@ -33,6 +38,8 @@ function CategoryContent() {
   });
   const [isLoading, setIsLoading] = useState(true);
   
+  console.log(useParams())
+
   const fetchDataFromDatabase = () => {
     const database = getDatabase();
     const userJsonRef = ref(database, userId + '/templateData');
@@ -132,12 +139,12 @@ function CategoryContent() {
 
   // Fetch the template data based on the id parameter
   useEffect(() => {
-    const fetchedCategory = categoriesData.find(category => category.id === parseInt(id));
+    if (id !== undefined){const fetchedCategory = categoriesData.find(category => category.id === parseInt(id));
     
     if (fetchedCategory) {
       setCategory(fetchedCategory);
       setIsLoading(false);
-    }
+    }}
   }, [id, categoriesData]);
 
   // Sorting Effect
@@ -178,13 +185,13 @@ function CategoryContent() {
     }
   },[sortTemplate])
   
-  if (isLoading) {
-    return <h1>Loading</h1>;
-  }
+  // if (isLoading) {
+  //   <SpinnerOverlay/>
+  // }
 
   return (
     <div className="page__content">
-      {id ? 
+      {id &&
         <div className="container">
         {/* Top Header */}
             <div className="dashboard-header">
@@ -208,10 +215,8 @@ function CategoryContent() {
             </div>
           </div>
         </div>
-        </div>
-        :
-        <DashboardHeader/>
-      }
+        </div>}
+        {!id && <DashboardHeader/>}
     </div>
     );
 }
