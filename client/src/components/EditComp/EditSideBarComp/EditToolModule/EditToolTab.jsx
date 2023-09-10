@@ -1,5 +1,13 @@
+// ** Import Libraries
 import React, { useState } from "react";
+
+ // ** Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+// ** Import Custom Components
+import QrCodeModule from "./QrCodeModule";
+import AiTextModule from "./AiTextModule";
+import ChartModule from "./ChartModule"
 
 // ** Store
 import { useSelector } from "react-redux/es/hooks/useSelector";
@@ -34,7 +42,7 @@ function EditToolTab() {
         </svg>
         <span className="btn__text">Back</span>
       </button>}
-      <div className="sidebar-module__divider"/>
+      {showPanel === 'default' && <div className="sidebar-module__divider"/>}
       <div className="sidebar-tiles">
       {showPanel === 'default' && toolsBtn.map((btn, index) => (
         <div className="sidebar-tiles__item" data-test="qr-code-module-button" key={index} onClick={() => setShowPanel(btn.title)}>
@@ -44,6 +52,10 @@ function EditToolTab() {
           </div>
         </div>
       ))}
+
+      {showPanel === 'QR Code' && <QrCodeModule/>}
+      {showPanel === 'AI Writer' && <AiTextModule/>}
+      {showPanel === 'Chart' && <ChartModule/>}
       </div>
     </div>
   )

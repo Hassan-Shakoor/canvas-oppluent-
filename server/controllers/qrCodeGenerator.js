@@ -2,7 +2,7 @@ import QRCode from 'qrcode';
 
 export const getQRCode = async (req, res) => {
   try {
-    const { url } = req.query;
+    const url = req.query.url;
     const qrCodeDataURL = await QRCode.toDataURL(url); // Await the result
     res.json({ qrCodeDataURL }); // Send it as JSON
     // res.send(`
