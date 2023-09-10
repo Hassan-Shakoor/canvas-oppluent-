@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+
+// ** Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Icon } from "@iconify/react";
 
 const SortJSON = [{sort:0,"title":"Default"},{sort:1,"title":"Created"},{sort:2,"title":"Modified"},{sort:3,"title":"Name A - Z"},{sort:4,"title":"Name Z - A"}]
 
@@ -20,17 +23,12 @@ function SortDropDown(props){
 
 function GridDropDown(props){
     return(
-        <div className="grid-dropdown-container">
-            <li className="grid-dropdown-list" data-value={3} onClick={() => {props.handleColumn(3)}}>
-                <i className="icon icon-column" />
-                <i className="icon icon-column" />
-                <i className="icon icon-column" />
+        <div className="grid-dropdown-container" style={{paddingTop:'10px'}}>
+            <li className="grid-dropdown-list" style={{padding:'5px 0px'}} data-value={3} onClick={() => {props.handleColumn(3)}}>
+                <Icon icon='tdesign:view-column' width='1.5rem' height='1.5rem'/>
             </li>
-            <li className="grid-dropdown-list" data-value={4} onClick={() => {props.handleColumn(4)}}>
-                <i className="icon icon-column" />
-                <i className="icon icon-column" />
-                <i className="icon icon-column" />
-                <i className="icon icon-column" />
+            <li className="grid-dropdown-list" style={{padding:'5px 0px'}} data-value={4} onClick={() => {props.handleColumn(4)}}>
+                <Icon icon='teenyicons:view-column-outline' width='1.5rem' height='1.5rem'/>
             </li>
         </div>
     )
@@ -47,7 +45,7 @@ function TemplateSort(props){
     function gridColumnHander(){
         setGridDropDownOpen(!isGridDropDownOpen)
     }
-
+    console.log(props.gridColumn);
 
     return(
         <div className="dashboard-header__top-panel">
@@ -56,12 +54,10 @@ function TemplateSort(props){
                 {/* Grid Column DropDown */}
                 <div className="select-container select-container_with-icons me-2 select-container_has-value extra-right-padding">
                     <div className="select-container css-2b097c-container" onClick={gridColumnHander}>
-                        <div className="select__control css-yk16xz-control background-template-sort">
+                        <div className="select__control css-yk16xz-control background-template-sort" style={{padding:'5px'}}>
                             <div className="select__value-container select__value-container--has-value css-1tnzi8j">
-                                <div className="select__single-value css-ah2eo0-singleValue" style={{top: '-3px', left:'-3px'}}>
-                                {Array.from({ length: props.gridColumn }, (_, index) => (
-                                    <i key={index} className="icon icon-column"/>
-                                ))}
+                                <div className="select__single-value css-ah2eo0-singleValue" style={{textAlign:'center'}}>
+                                {props.gridColumn === 3 ? <Icon icon='tdesign:view-column' width='1.5rem' height='1.5rem'/> : <Icon icon='teenyicons:view-column-outline' width='1.5rem' height='1.5rem'/>}
                                 </div>
                             </div>
                         </div>
