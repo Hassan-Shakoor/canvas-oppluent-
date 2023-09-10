@@ -1,4 +1,8 @@
+// ** Import Libraries 
 import React, { useState} from 'react';
+import { Link } from 'react-router-dom';
+
+// ** Import Custom Component
 import Support from './Support';
 import Profile from './Profile'
 import LanguageDropDown from './LanguageDropDown'
@@ -31,9 +35,9 @@ function Header(props) {
 
   return (
     <div className="header" style={{ background: 'linear-gradient(90deg, rgb(202, 182, 125), rgb(31, 31, 31))' }}>
-      <div className="header__image-box">
+      <Link className="header__image-box" to='/categories'>
         <img className="header__logo" alt="Claircius Group International" src="https://dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/account/platform_logo/original/platform_logo_login_1-1-1.png?1661778656" />
-      </div>
+      </Link>
       <div className="header__divider"></div>
       <Support/>
       <Profile name="Faizan"/>

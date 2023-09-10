@@ -3,7 +3,7 @@ import EditUploadTab from "./EditUploadModule/EditUploadTab";
 import EditTextTab from "./EditTextTab";
 import EditLayerTab from "./EditLayerTab"
 import EditShapeTab from "./EditShapeTab";
-import EditToolTab from "./EditToolTab";
+import EditToolTab from "./EditToolModule/EditToolTab";
 import EditIntegrationTab from "./EditIntegrationModule/EditIntegrationTab";
 import EditSettingTab from "./EditSettingModule/EditSettingTab";
 
