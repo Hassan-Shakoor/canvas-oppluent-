@@ -72,11 +72,13 @@ function CategoryContent() {
   function updateFavorite(id) {
     const updatedCategoriesData = [...categoriesData]; // Create a copy of categoriesData
     const updatedUserJson = [...userJson];
-    console.log("updated User Json: "+ updatedUserJson);
+  
     // Find the template in the categoriesData and update its favorite status
     let isFavoriteAdded = false;
+  
     updatedCategoriesData.forEach(category => {
       const template = category.template?.find(template => template.id === id);
+  
       if (template) {
         const originalFavoriteStatus = template.favorite; // Store the original favorite status
         template.favorite = !template.favorite;
@@ -88,7 +90,6 @@ function CategoryContent() {
             targetCategory.template = targetCategory.template || []; // Create an empty array if template is undefined
             targetCategory.template.push(template);
             isFavoriteAdded = true;
-            //targetCategory.template?.push(template);
           }
         } else if (!template.favorite && originalFavoriteStatus) { // If the template is marked as not favorite and was previously favorite
           // Remove the template from the category with id 53
@@ -96,31 +97,36 @@ function CategoryContent() {
           if (targetCategory) {
             targetCategory.template = targetCategory.template.filter(tmpl => tmpl.id !== id);
           }
-          //const idfiftyThree = template = category.template?.find(template => template.id === 53);
-          const template = category.template?.find(template => template.id === 53);
-          if(!template){
-            console.log("undefined id no 53");
-          }
         }
       }
     });
-    const favoritesTitle = updatedUserJson.find(cat => cat.title === "Favorites");
-    const favoriteTemplatesSubtitle = {
-      id: 53,
-      name: "Favorite Templates"
-    };
-    // Update the state with the modified categoriesData
-    if (favoritesTitle) {
-      if (isFavoriteAdded) {
-        if (!favoritesTitle.subTitle.some(sub => sub.id === favoriteTemplatesSubtitle.id)) {
-          favoritesTitle.subTitle = [...favoritesTitle.subTitle, favoriteTemplatesSubtitle];
-        }
-      } else {
-        favoritesTitle.subTitle = favoritesTitle.subTitle.filter(sub => sub.id !== favoriteTemplatesSubtitle.id);
+  
+    // Check if there are any favorite templates left in the "Favorite Templates" folder
+    const favoriteTemplatesCategory = updatedCategoriesData.find(cat => cat.id === 53);
+  
+    if (favoriteTemplatesCategory) {
+      // If there are favorite templates, add or update the "Favorite Templates" subtitle in userJson
+      const favoritesTitle = updatedUserJson.find(cat => cat.title === "Favorites");
+      const favoriteTemplatesSubtitle = {
+        id: 53,
+        name: "Favorite Templates"
+      };
+  
+      if (isFavoriteAdded && !favoritesTitle.subTitle.some(sub => sub.id === favoriteTemplatesSubtitle.id)) {
+        favoritesTitle.subTitle = [...favoritesTitle.subTitle, favoriteTemplatesSubtitle];
+      } else if (!isFavoriteAdded && favoritesTitle.subTitle.some(sub => sub.id === favoriteTemplatesSubtitle.id)) {
+         // Check if there are any remaining favorite templates
+        const areFavoriteTemplatesRemaining = favoriteTemplatesCategory.template && favoriteTemplatesCategory.template.length > 0;
+        if (!areFavoriteTemplatesRemaining) {
+          // Remove the "Favorite Templates" subtitle from userJson
+          favoritesTitle.subTitle = favoritesTitle.subTitle.filter(sub => sub.id !== favoriteTemplatesSubtitle.id);
       }
+        }
     }
+  
     setUserJson(updatedUserJson);
     setCategoriesData(updatedCategoriesData);
+  
     // Update the templateData in the Firebase Realtime Database
     const database = getDatabase();
     const templateDataref = ref(database, userId + '/templateData');
