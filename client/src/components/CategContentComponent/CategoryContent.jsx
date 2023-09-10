@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import DashboardHeader from './DashboardHeader';
 import Template from './Template';
 import TemplateSort from './TemplateSort';
-import SpinnerOverlay from '../EditComp/EditSideBarComp/EditUploadModule/SpinnerOverlay';
+import SpinnerOverlay from '../Loader/SpinnerOverlay';
 
 // ** Firebase
 import { onAuthStateChanged  } from 'firebase/auth';

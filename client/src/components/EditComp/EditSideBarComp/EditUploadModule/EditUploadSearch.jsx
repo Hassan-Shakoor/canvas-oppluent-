@@ -5,7 +5,7 @@ import { fetchImagesPixabay } from "../../../../api/pixabay";
 
 // ** Icon Import
 import { Icon } from "@iconify/react";
-import SpinnerOverlay from "./SpinnerOverlay";
+import SpinnerOverlay from "../../../Loader/SpinnerOverlay";
 
 function EditUploadSearch ({showPanel , searchMap , setShowPanel, setImgContainer}){
   // ** States

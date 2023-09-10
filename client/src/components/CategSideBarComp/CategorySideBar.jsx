@@ -1,6 +1,12 @@
+// ** Import Libraries
 import React, { useState, useEffect } from "react";
-import Group from "./Group";
 import { Link } from "react-router-dom";
+
+// ** Custom Component
+import Group from "./Group";
+import SpinnerOverlay from "../Loader/SpinnerOverlay";
+
+// ** Firebase
 import { onAuthStateChanged  } from 'firebase/auth';
 import { auth } from '../FirebaseAuthComp/firebase';
 import { getDatabase, ref, set, onValue } from "firebase/database";
@@ -56,34 +62,7 @@ function removeObjectFromFavorites(categories, idToRemove) {
   return categories;
 }
   function CategorySideBar(){
-
-    useEffect(() => {
-      // Reference to the user's category data in the database
-      const database = getDatabase();
-      const userJsonRef = ref(database, userId +'/userJson');
-    
-      // Set up the onValue listener to update the state when data changes
-      const unsubscribe = onValue(userJsonRef, (snapshot) => {
-        const updatedCategories = snapshot.val();
-        if (updatedCategories) {
-          setCategories(updatedCategories);
-    
-          // Update the isFavorite state based on fetched data
-          const favorites = updatedCategories.find(category => category.title === 'Favorites');
-          if (favorites) {
-            const favoriteIds = favorites.subTitle.map(subItem => subItem.id);
-            setFavorite(favoriteIds);
-          }
-        }
-      });
-    
-      // Cleanup the listener when the component unmounts
-      return () => {
-        unsubscribe();
-      };
-    }, [userId]); // Only run the effect when userId changes
-    
-  
+    // ** States
     // Categories JSON State
     const [categories, setCategories] = useState(categoryJSON);
     // State for Side List which are added to Favorites
@@ -94,7 +73,8 @@ function removeObjectFromFavorites(categories, idToRemove) {
     const [activeList, setActiveList] = useState(null);
     // React State in which we can store value of selected item title so can be placed in search PlaceHolder.
     const [isPlaceholder,setPlaceholder] = useState(null);
-
+    const [isLoading, setIsLoading] = useState(true)
+    
     // Function to add an item to favorites
     function addToFavorites(itemId) {
   
@@ -179,7 +159,37 @@ function removeObjectFromFavorites(categories, idToRemove) {
   />
   ));
 
+  useEffect(() => {
+    setIsLoading(true)
+    // Reference to the user's category data in the database
+    const database = getDatabase();
+    const userJsonRef = ref(database, userId +'/userJson');
+  
+    // Set up the onValue listener to update the state when data changes
+    const unsubscribe = onValue(userJsonRef, (snapshot) => {
+      const updatedCategories = snapshot.val();
+      if (updatedCategories) {
+        setCategories(updatedCategories);
+  
+        // Update the isFavorite state based on fetched data
+        const favorites = updatedCategories.find(category => category.title === 'Favorites');
+        if (favorites) {
+          const favoriteIds = favorites.subTitle.map(subItem => subItem.id);
+          setFavorite(favoriteIds);
+        }
+      }
+      setIsLoading(false)
+    });
+  
+    // Cleanup the listener when the component unmounts
+    return () => {
+      unsubscribe();
+    };
+  }, [userId]); // Only run the effect when userId changes
+
     return(
+      <>
+      <SpinnerOverlay loading={isLoading}/>
           <aside className="page__sidebar">
               <div className="sidebar-dashboard">
                   <div className="groups">
@@ -226,7 +236,8 @@ function removeObjectFromFavorites(categories, idToRemove) {
                   </div>
                   </div>
               </div>
-              </aside>
+            </aside>
+            </>
     )
 }
 
