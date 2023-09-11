@@ -14,7 +14,6 @@ function Login() {
       .then((userCredential) => {
         // Login successful
         const user = userCredential.user;
-        console.log('Logged in:', user);
         // Redirect the user to the desired page
         // e.g., history.push('/categories');
          // Redirect the user to the desired page

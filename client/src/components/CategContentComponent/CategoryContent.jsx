@@ -46,7 +46,6 @@ function CategoryContent() {
       const updatedCategories = snapshot.val();
       if (updatedCategories) {
         setCategoriesData(updatedCategories);
-        //console.log("Template Data: ", updatedCategories);
       }
     });
   };
@@ -70,20 +69,19 @@ function CategoryContent() {
   function updateFavorite(id) {
     const updatedCategoriesData = [...categoriesData]; // Create a copy of categoriesData
     const updatedUserJson = [...userJson];
-  
     // Find the template in the categoriesData and update its favorite status
     let isFavoriteAdded = false;
-  
     updatedCategoriesData.forEach(category => {
       const template = category.template?.find(template => template.id === id);
-  
       if (template) {
+        console.log(template.favorite);
         const originalFavoriteStatus = template.favorite; // Store the original favorite status
         template.favorite = !template.favorite;
   
         // If the template is now marked as favorite and was previously not in id:53, move it to the category with id 53
         if (template.favorite && category.id !== 53) {
           const targetCategory = updatedCategoriesData.find(cat => cat.id === 53);
+          console.log(targetCategory);
           if (targetCategory) {
             targetCategory.template = targetCategory.template || []; // Create an empty array if template is undefined
             targetCategory.template.push(template);
@@ -193,10 +191,6 @@ function CategoryContent() {
         template: tempHold}))
     }
   },[sortTemplate])
-
-  console.log(category.template);
-
-  console.log(category.template);
   return (
     <div className="page__content">
       {id &&
