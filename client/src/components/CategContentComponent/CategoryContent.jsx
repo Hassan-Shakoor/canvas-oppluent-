@@ -37,8 +37,6 @@ function CategoryContent() {
     template: [],
   });
   const [isLoading, setIsLoading] = useState(true);
-  
-  console.log(useParams())
 
   const fetchDataFromDatabase = () => {
     const database = getDatabase();
@@ -145,6 +143,11 @@ function CategoryContent() {
 
   // Fetch the template data based on the id parameter
   useEffect(() => {
+    setCategory({
+      id: 0,
+      subHeading: '',
+      template: [],
+    })
     if (id !== undefined){const fetchedCategory = categoriesData.find(category => category.id === parseInt(id));
     
     if (fetchedCategory) {
@@ -190,11 +193,10 @@ function CategoryContent() {
         template: tempHold}))
     }
   },[sortTemplate])
-  
-  // if (isLoading) {
-  //   <SpinnerOverlay/>
-  // }
 
+  console.log(category.template);
+
+  console.log(category.template);
   return (
     <div className="page__content">
       {id &&
@@ -211,12 +213,23 @@ function CategoryContent() {
           <div className='infinite-scroll-component' style={{ height: "auto", overflow: "auto" }}>
             <div className='waterfall-component'>
               <span>
-              {/* Change the number of Grid Column depending upon grid column state */}
+              {category?.template?.length>0 ? 
               <div className="template-grid-container" style={{ gridTemplateColumns: "repeat(" + gridColumn + ", auto)" }}>
-                {category.template && category.template.map((item, index) => (
+                {category.template?.map((item, index) => (
                   <Template key={index} item = {item} gridColumn={gridColumn} updateFavorite={updateFavorite}/>
-                ))}
+                )) }
               </div>
+              :
+              <div className="empty-data-set" data-test="empty-data-set" style={{paddingTop:'20%'}}>
+                <div className="empty-data-set__icon-wrapper">
+                  <img
+                    src="https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/512dae34bbe771ada018.svg"
+                    alt="designs"
+                    className="empty-data-set__icon"
+                  />
+                </div>
+                <div className="empty-data-set__label">No Templates</div>
+              </div>}
               </span>
             </div>
           </div>
