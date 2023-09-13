@@ -1,6 +1,6 @@
 import React from "react";
 import EditUploadTab from "./EditUploadModule/EditUploadTab";
-import EditTextTab from "./EditTextTab";
+import EditTextTab from "./EditTextModule/EditTextTab";
 import EditLayerTab from "./EditLayerTab"
 import EditShapeTab from "./EditShapeTab";
 import EditToolTab from "./EditToolModule/EditToolTab";
