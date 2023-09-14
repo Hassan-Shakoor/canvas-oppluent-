@@ -3,12 +3,14 @@ import { configureStore } from '@reduxjs/toolkit'
 
 // ** Import Reducers
 import editDrawer from './app/Edit/EditSidebar/EditDrawer/index'
-import backgroundColor from './app/Edit/EditSidebar/EditSetting/backgroundColor'
+import background  from './app/Edit/EditSidebar/EditSetting/background'
+import preference from './app/Edit/EditSidebar/EditSetting/preference'
 
 
 export const store = configureStore({
     reducer:{
         editDrawer,
-        backgroundColor
+        background,
+        preference
     }
 })

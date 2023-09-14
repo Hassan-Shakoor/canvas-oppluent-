@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 
+// Store
+import {useDispatch} from 'react-redux/es/hooks/useDispatch'
+import { useSelector } from "react-redux/es/hooks/useSelector";
+
 // ** Third Party Comp
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css';
+import { selectMagnetRange, selectSafeZoneAndBleed, selectScaleSensitive, updateMagnetRange, updateSafeZoneAndBleed, updateScaleSensitive } from "../../../../store/app/Edit/EditSidebar/EditSetting/preference";
 
 function EditPreference ({setShowPanel}){
-    // ** States
-    const [sliderValue, setSliderValue] = useState(15);
-    const [isSafeZone, setIsSafeZone] = useState(true)
-    const [isMagneticRange, setIsMagneticRange] = useState(true)
+    // ** Hooks
+    const dispatch = useDispatch()
+    const sliderValue = useSelector(selectScaleSensitive);
+    const isSafeZone = useSelector(selectSafeZoneAndBleed)
+    const isMagneticRange = useSelector(selectMagnetRange)
 
     const handleSliderChange = (value) => {
-        setSliderValue(value)
+        dispatch(updateScaleSensitive(value))
     }
     return (
         <>
@@ -25,7 +31,7 @@ function EditPreference ({setShowPanel}){
             <span className="btn__text">Back</span>
         </button>            
         <label className="toggle">
-            <input type="checkbox" className="toggle__input" onChange={() => {setIsSafeZone(!isSafeZone)}} checked={isSafeZone}/>
+            <input type="checkbox" className="toggle__input" onChange={() => {dispatch(updateSafeZoneAndBleed())}} checked={isSafeZone}/>
             <span className="toggle__background">
                 <span className="toggle__dot" />
             </span>
@@ -35,7 +41,7 @@ function EditPreference ({setShowPanel}){
         </label>
         <div className="sidebar-module__divider" />
         <label className="toggle mb-3">
-            <input type="checkbox" className="toggle__input" onChange={() => {setIsMagneticRange(!isMagneticRange)}} checked={isMagneticRange}/>
+            <input type="checkbox" className="toggle__input" onChange={() => {dispatch(updateMagnetRange())}} checked={isMagneticRange}/>
             <span className="toggle__background">
                 <span className="toggle__dot" />
             </span>

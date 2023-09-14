@@ -10,9 +10,9 @@ import { Icon } from "@iconify/react";
 
 // ** Store
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { selectBrandColor, selectStandardColor, selectUserColor } from "../../../../store/app/Edit/EditSidebar/EditSetting/backgroundColor";
+import { selectBrandColor, selectStandardColor, selectUserColor } from "../../../../store/app/Edit/EditSidebar/EditSetting/background";
 import { useDispatch } from "react-redux/es/hooks/useDispatch";
-import {updateUserColor} from "../../../../store/app/Edit/EditSidebar/EditSetting/backgroundColor"
+import {updateUserColor} from "../../../../store/app/Edit/EditSidebar/EditSetting/background"
 
 function BackgroundColorPicker() {
   // ** State

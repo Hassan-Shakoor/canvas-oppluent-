@@ -62,11 +62,12 @@ const initialState = {
     [4]:"rgba(51, 51, 51,1)",
     [5]:"rgba(255, 255, 255,1)"
   },
-  userColor : {}
+  userColor : {},
+  backgroundImage : {}
 }
 
-export const backgroundColor = createSlice({
-    name: 'backgroundColor',
+export const background = createSlice({
+    name: 'background',
     initialState,
     reducers:{
         updateUserColor: (state,action) => {
@@ -75,8 +76,8 @@ export const backgroundColor = createSlice({
     }
 })
 
-export const {updateUserColor} = backgroundColor.actions;
-export const selectStandardColor = (state) => state.backgroundColor.standardColor;
-export const selectBrandColor = (state) => state.backgroundColor.brandColor;
-export const selectUserColor = (state) => state.backgroundColor.userColor;
-export default backgroundColor.reducer;
+export const {updateUserColor} = background.actions;
+export const selectStandardColor = (state) => state.background.standardColor;
+export const selectBrandColor = (state) => state.background.brandColor;
+export const selectUserColor = (state) => state.background.userColor;
+export default background.reducer;
