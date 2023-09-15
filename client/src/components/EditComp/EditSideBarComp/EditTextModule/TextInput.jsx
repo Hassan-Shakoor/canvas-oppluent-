@@ -1,11 +1,16 @@
 // ** Import Library
 import React from "react";
-import { useState } from "react";
+
+// ** Store
+import { useDispatch } from "react-redux/es/hooks/useDispatch";
+import { selectText, selectUrl, updateText, updateUrl } from "../../../../store/app/Edit/EditSidebar/EditText/text";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 
 function TextInput(){
-    // ** States
-    const [text,setText] = useState('')
-    const [hyperLink, setHyperLink] = useState('')
+    // ** Hooks
+    const dispatch = useDispatch()
+    const text = useSelector(selectText)
+    const hyperLink = useSelector(selectUrl)
 
     const addTextBtn = () => {
         if (hyperLink.length > 0){
@@ -26,7 +31,7 @@ function TextInput(){
           className="textarea__field textarea"
           spellCheck="false"
           value={text}
-          onChange={(event) => setText(event.target.value)}/>
+          onChange={(event) => dispatch(updateText(event.target.value))}/>
         <grammarly-extension
           data-grammarly-shadow-root="true"
           style={{
@@ -46,7 +51,7 @@ function TextInput(){
           type="text"
           className="simple-input"
           value={hyperLink}
-          onChange={(event) => setHyperLink(event.target.value)}/>
+          onChange={(event) => dispatch(updateUrl(event.target.value))}/>
       </label>
       <div className="button-set button-set_padding" onClick={text.length > 0 ? addTextBtn : undefined}>
         <span className={text.length > 0 ? "btn btn_wide" : "btn btn_disabled btn_wide"} data-test="add-text-button">
