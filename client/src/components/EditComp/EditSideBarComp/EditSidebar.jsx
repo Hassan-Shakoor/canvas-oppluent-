@@ -10,7 +10,7 @@ import EditSideModuleBar from "./EditSideModuleBar";
 
 // ** Store
 import { useSelector, useDispatch } from 'react-redux'
-import { selectOpenDrawer, updateOpenDrawer } from "../../../store/app/Edit/EditSidebar/EditDrawer";
+import { selectOpenDrawer, updateOpenDrawer } from "../../../store/app/Edit/EditDrawer";
 
 // ** Vars
 let SidebarButtonData = [

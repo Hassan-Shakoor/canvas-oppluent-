@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // ** Store
 import { useSelector } from "react-redux";
-import { selectOpenDrawer } from "../../../store/app/Edit/EditSidebar/EditDrawer";
+import { selectOpenDrawer } from "../../../store/app/Edit/EditDrawer";
 
 function EditLayerTab() {
   // ** Hooks

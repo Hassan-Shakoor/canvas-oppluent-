@@ -11,7 +11,7 @@ import ChartModule from "./ChartModule"
 
 // ** Store
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { selectOpenDrawer } from "../../../../store/app/Edit/EditSidebar/EditDrawer/index"
+import { selectOpenDrawer } from "../../../../store/app/Edit/EditDrawer"
 
 // ** Vars
 const toolsBtn = [

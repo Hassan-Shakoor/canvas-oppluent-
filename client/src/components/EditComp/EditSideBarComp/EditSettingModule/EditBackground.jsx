@@ -6,7 +6,7 @@ import BackgroundColorPicker from "./BackgroundColorPicker";
 
 // ** Store
 import {useDispatch} from 'react-redux/es/hooks/useDispatch'
-import { updateOpenDrawer } from "../../../../store/app/Edit/EditSidebar/EditDrawer";
+import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 
 function EditBackground({setShowPanel}){
     // ** Hooks

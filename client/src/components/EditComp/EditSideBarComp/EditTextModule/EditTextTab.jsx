@@ -7,7 +7,7 @@ import AiTextInput from "./AiTextInput";
 
 // ** Store
 import { useSelector} from 'react-redux'
-import {selectOpenDrawer} from '../../../../store/app/Edit/EditSidebar/EditDrawer/index'
+import {selectOpenDrawer} from '../../../../store/app/Edit/EditDrawer/index'
 
 function EditTextTab() {
   // States

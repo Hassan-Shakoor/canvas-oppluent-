@@ -2,7 +2,7 @@ import React from "react";
 
 // ** Store
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { selectOpenDrawer } from "../../../store/app/Edit/EditSidebar/EditDrawer";
+import { selectOpenDrawer } from "../../../store/app/Edit/EditDrawer";
 
 function EditShapeTab() {
   // ** Hooks

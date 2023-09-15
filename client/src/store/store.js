@@ -2,10 +2,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 // ** Import Reducers
-import editDrawer from './app/Edit/EditSidebar/EditDrawer/index'
+import editDrawer from './app/Edit/EditDrawer/index'
 import background  from './app/Edit/EditSidebar/EditSetting/background'
 import preference from './app/Edit/EditSidebar/EditSetting/preference'
 import text from './app/Edit/EditSidebar/EditText/text'
+import uploads from './app/Edit/EditSidebar/EditUploads/uploads'
 
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
         editDrawer,
         background,
         preference,
-        text
+        text,
+        uploads
     }
 })

@@ -7,7 +7,7 @@ import EditPropertySearchModal from "./EditPropertySearchModal";
 
 // ** Store
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { selectOpenDrawer } from "../../../../store/app/Edit/EditSidebar/EditDrawer";
+import { selectOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 
 function EditIntegrationTab(props) {
   // ** State

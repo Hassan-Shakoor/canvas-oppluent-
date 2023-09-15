@@ -10,7 +10,7 @@ import EditUploadSearch from "./EditUploadSearch";
 
 // ** Store
 import { useSelector} from 'react-redux'
-import { selectOpenDrawer } from "../../../../store/app/Edit/EditSidebar/EditDrawer";
+import { selectOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 
 // ** Vars
 const multiMediaBtnJSON = [
