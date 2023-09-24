@@ -1,6 +1,45 @@
-import React from "react";
+// ** Import Library
+import React, {useCallback, useEffect, useState} from "react";
+import {fabric} from 'fabric';
+
+// ** Import Store
+import {useDispatch, useSelector} from 'react-redux'
+import { selectCanvasContainer, selectCanvasCount, selectHeight, selectSelectedCanvas, selectWidth, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
 
 function Canvas() {
+  // ** States
+
+  // ** Hooks
+  const dispatch = useDispatch()
+  const selectedCanvas = useSelector(selectSelectedCanvas)
+  const canvasCount = useSelector(selectCanvasCount)
+  const canvasContainer = useSelector(selectCanvasContainer)
+  const width = useSelector(selectWidth)
+  const height = useSelector(selectHeight)
+
+  // ** Vars
+  const stageHeight = canvasCount * height
+
+  useEffect(() => {
+    if (document.getElementById('canvas-1')) {
+      const newCanvases = [];
+      for (let i = 0; i < canvasCount; i++) {
+        const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
+          width: width,
+          height: height
+        });
+
+        newCanvases.push(canvas);
+        canvas.on("mouse:down", () => {
+          dispatch(updateSelectedCanvas(canvas))
+        })
+      }
+      dispatch(updateCanvasContainer([...newCanvases]));
+    }
+    dispatch(updateSelectedCanvas(canvasContainer[0]))
+
+  }, [canvasCount]);
+  console.log(selectedCanvas);
   return (
     <div
       id="canvases"
@@ -11,45 +50,30 @@ function Canvas() {
           id="fpd-product-stage"
           className="fpd-product-stage"
           style={{
-          height: "793.277px"
+          height: {stageHeight}
         }}>
-          <div
+          {Array.from({ length: canvasCount }).map((_, i) => (
+            <div
             className="fpd-view-stage rendered"
             style={{
-            width: "1020.36px",
-            height: "793.277px",
+            width: width,
+            height: height,
             position: "relative",
             userSelect: "none",
             top: 0
           }}>
             <canvas
-              className="lower-canvas canvas-img"
-              width={1020}
-              height={793}
+              key={i}
+              id={`canvas-${i+1}`}
               style={{
               position: "absolute",
-              width: "1020.36px",
-              height: "793.277px",
               left: 0,
               top: 0,
               touchAction: "none",
               userSelect: "none"
             }}/>
-            <canvas
-              className="upper-canvas "
-              width={1020}
-              height={793}
-              style={{
-              position: "absolute",
-              width: "1020.36px",
-              height: "793.277px",
-              left: 0,
-              top: 0,
-              touchAction: "none",
-              userSelect: "none",
-              cursor: "pointer"
-            }}/>
           </div>
+          ))}
         </div>
       </div>
     </div>
