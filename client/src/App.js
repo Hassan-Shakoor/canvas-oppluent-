@@ -14,6 +14,7 @@ import Edit from './pages/Edit';
 import PropertySearch from './pages/PropertySearch';
 import {store} from'./store/store'
 import { Provider } from 'react-redux';
+import ColumnMLS from './components/PropertySearchComp/ColumnMLS';
 // Intialising FontAwesomeIcon
 library.add(far);
 library.add(fas)
@@ -43,9 +44,11 @@ function App() {
             <Route path=':id' element={<CategoryContent />} />
           </Route>
           {/* Edit Page */}
-          <Route path="/edit" element={<Edit />} />
+          <Route path="/edit/:id" element={<Edit />} />
           {/* Property Search Page */}
-          <Route path="/property-search" element={<PropertySearch />} />
+          <Route path='/property-search' element={<PropertySearch/>}>
+            <Route path=':id' element={<ColumnMLS/>}/>
+          </Route>
         </Routes>
       </Router>
     </Provider>
