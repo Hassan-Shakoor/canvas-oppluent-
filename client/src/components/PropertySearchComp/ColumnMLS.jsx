@@ -1,60 +1,142 @@
-import React from "react";
-import { Link } from 'react-router-dom';
+// ** Import Libraries
+import React, {useCallback, useEffect, useState} from "react";
+import {Link, useParams} from 'react-router-dom';
+import _, {debounce, set} from 'lodash'
+import {fetchProperty} from "../../api/mls";
+import { useNavigate } from "react-router-dom";
 
-function ColumnMLS(){
-    return(
-        <div className="col-md-8 page__column">
-            <ul className="tabs">
-                <li className="tabs__item tabs__item_active">Property Search</li>
-            </ul>
-            <div className="pt-4">
-                <h4 className="mb-3 text-info">
-                Search and populate a property's information into your design here.
-                </h4>
-                <div className="mb-3 search-input_full-width search-input">
-                <div className="">
-                    <input
-                    autoComplete="off"
-                    id="search"
-                    name="search"
-                    placeholder="Enter Address or MLS # here"
-                    type="search"
-                    className="search-input__simple-input"
-                    defaultValue=""
-                    />
-                </div>
-                </div>
-                <div className="mb-3 property-search__list">
-                <div className="empty-data-set" data-test="empty-data-set">
-                    <div className="empty-data-set__icon-wrapper">
-                    <img
-                        src="https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/512dae34bbe771ada018.svg"
-                        alt="properties"
-                        className="empty-data-set__icon"
-                    />
-                    </div>
-                    <div className="empty-data-set__label">
-                    Your search results will be here
-                    </div>
-                </div>
-                </div>
-                <div className="button-set">
-                <div className="button-set button-set_flex-end">
-                    <button type="button" className="btn btn_border">
-                    <span className="btn__text">Back</span>
-                    </button>
-                    <Link to="/edit">
-                        <button type="submit" className="btn">
-                            <span className="btn__text">Create</span>
-                        </button>
-                    </Link>
+// ** Custom Component
+import SpinnerContainer from "../Loader/SpinnerContainer";
+import PropertySearchList from "./PropertySearchList";
+import PropertyResult from "./PropertyResult";
+import WarningModal from "../Modal/WarningModal";
 
-                </div>
-                </div>
-            </div>
+// ** Store
+import {useDispatch, useSelector} from "react-redux"
+import { selectSelectedProperty, updateSelectedProperty } from "../../store/app/PropertySearch/property";
+
+// ** Vars
+const messageMap = {
+  default: "Your search results will be here",
+  notFound: "Properties Not Found"
+}
+
+function ColumnMLS() {
+  // ** State
+  const [searchFeedback, setSearchFeedback] = useState(messageMap.default)
+  const [searchedProperty,setSearchedProperty] = useState("")
+  const [searchedResults, setSearchedResults] = useState([])
+  const [loading,setLoading] = useState(false)
+  const [showWarnModal, setShowWarnModal] = useState(false)
+
+  // ** Vars
+  const navigate = useNavigate();
+  const {id} = useParams()
+  const dispatch = useDispatch()
+  const selectedProperty = useSelector(selectSelectedProperty)
+
+  const searchProperty = async(value) => {
+    const formattedInput = _.replace(_.trim(value), /\s+/g, '+');
+    if (formattedInput.length >= 4) {
+      try {
+        setLoading(true);
+        const response = await fetchProperty(formattedInput);
+        setSearchedResults([])
+        if (response.length > 0){
+          setSearchedResults(response)
+        }else{
+          setSearchFeedback(messageMap.notFound)
+        }
+      } catch (error) {
+        console.error('Error Fetching Properties:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }
+
+  const nonMlsCreate = (event) => {
+    event.preventDefault()
+    navigate(`/edit/${id}`);
+  }
+
+  const handleSelectedProperty = (index) => {
+    dispatch(updateSelectedProperty(searchedResults[index]))
+  }
+
+  const debouncesPropertySearch = useCallback(debounce(async(value) => searchProperty(value), 1500), [])
+
+  useEffect(() => {
+    if(searchedProperty.length === 0){
+      setSearchFeedback(messageMap.default)
+      setSearchedResults([])
+    }
+    debouncesPropertySearch(searchedProperty)
+  }, [searchedProperty])
+
+  return (
+    <div className="col-md-8 page__column">
+      <ul className="tabs">
+        <li className="tabs__item tabs__item_active">Property Search</li>
+      </ul>
+      {selectedProperty === null ? <div className="pt-4">
+        <h4 className="mb-3 text-info">
+          Search and populate a property's information into your design here.
+        </h4>
+        <div className="mb-3 search-input_full-width search-input">
+          <div className="">
+            <input
+              autoComplete="off"
+              id="search"
+              name="search"
+              placeholder="Enter Address or MLS # here"
+              type="search"
+              className="search-input__simple-input"
+              value={searchedProperty}
+              onChange={(e) => setSearchedProperty(e.target.value)}/>
+          </div>
         </div>
+        {showWarnModal && 
+        <WarningModal
+        title={"Add Properties"}
+        body={"This design hosts 1 property. Do you want to add property or continue as is?"}
+        secondayBtnTxt={"Add Property"}
+        primaryBtnTxt={"Create Design"}
+        onClose={() => setShowWarnModal(false)}
+        handleSecodnaryBtn={() => setShowWarnModal(false)}
+        handlePrimaryBtn={(event) => nonMlsCreate(event)}/>}
+        <div className="mb-3 property-search__list">
+          {searchedResults.length > 0 ? searchedResults.map((property,index) => (
+              <PropertySearchList property={property} index={index} handleSelectedProperty={handleSelectedProperty} key={index}/>
+          )) : !loading && <div className="empty-data-set" data-test="empty-data-set">
+              <div className="empty-data-set__icon-wrapper">
+                <img
+                  src="https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/512dae34bbe771ada018.svg"
+                  alt="properties"
+                  className="empty-data-set__icon"/>
+              </div>
+              <div className="empty-data-set__label">
+                {searchFeedback}
+              </div>
+            </div>
+          }
+          <SpinnerContainer loading={loading}/>
+        </div>
+        <div className="button-set">
+          <div className="button-set button-set_flex-end">
+            <button type="button" className="btn btn_border">
+              <span className="btn__text">Back</span>
+            </button>
+              <button type="submit" className="btn" onClick={() => setShowWarnModal(true)}>
+                <span className="btn__text">Create</span>
+              </button>
+          </div>
+        </div>
+      </div> : 
+      <PropertyResult templateId = {id}/>}
+    </div>
 
-    )
+  )
 }
 
 export default ColumnMLS;

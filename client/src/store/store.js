@@ -7,6 +7,7 @@ import background  from './app/Edit/EditSidebar/EditSetting/background'
 import preference from './app/Edit/EditSidebar/EditSetting/preference'
 import text from './app/Edit/EditSidebar/EditText/text'
 import uploads from './app/Edit/EditSidebar/EditUploads/uploads'
+import property from './app/PropertySearch/property'
 
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
         background,
         preference,
         text,
-        uploads
+        uploads,
+        property
     }
 })

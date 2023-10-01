@@ -1,15 +1,17 @@
 import axios from 'axios';
+import _ from 'lodash'
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file
 dotenv.config();
 
-const auth = btoa("simplyrets:simplyrets");
-console.log(`Auth:  ${auth}`);
+const auth = btoa(`${process.env.SIMPLY_RETS_API_KEY}:${process.env.SIMPLY_RETS_API_SECRET}`);
 
 export const getProperty = async (req, res) => {
   try {
-    const response = await axios.get("https://api.simplyrets.com/properties", {
+    const mlsSearch = req.query.search
+    const formattedInput = _.replace(_.trim(mlsSearch), /\s+/g, '+');
+    const response = await axios.get(`https://api.simplyrets.com/properties?q=${formattedInput}`, {
       headers: {
         "Authorization": "Basic " + auth
       }

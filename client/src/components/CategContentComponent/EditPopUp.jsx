@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function EditPopUp(props){
     
     const id = props.item.id; // Replace with the actual ID value
-    const url = `/property-search?id=${id}`;
+    const url = `/property-search/${id}`;
 
     function handleClose(){
         props.handleCreateDesign(null)

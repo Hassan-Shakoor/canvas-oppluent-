@@ -3,7 +3,7 @@ import { APIS } from '../shared/routes';
 
 export const fetchProperty = async (data) => {
   try {
-    const response = await axios.get(APIS.fetchProperty, {
+    const response = await axios.get(APIS.searchMLS, {
       params: {
         search: data,
       },
