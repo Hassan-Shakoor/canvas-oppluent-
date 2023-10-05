@@ -1,30 +1,42 @@
-import React , {useState,useEffect} from 'react';
+import React , {useEffect} from 'react';
+// ** import React and Dependencies
 import ReactDOM from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+
+// ** Store
+import {useDispatch, useSelector} from 'react-redux'
+import { selectDarkMode, updateDarkMode } from '../../store/app/User/userPreference';
+
+// ** Firebase
 import { auth } from '../FirebaseAuthComp/firebase';
 
-function ProfileDropDown(props) {
+function ProfileDropDown({position}) {
+    // ** Vars
+    const darkMode = useSelector(selectDarkMode)
+    const dispatch = useDispatch()
+    
     const dropdownStyle = {
-        top: props.position.top + 'px',
-        left: props.position.left + 'px',
-        "min-width": props.width,
+        top: position.top + 'px',
+        left: position.left + 'px'
       };
+
       const navigate = useNavigate();
+
       const handleLogout = () => {
         auth.signOut()
           .then(() => {
-            // Successful logout
             console.log('Logged out');
-            navigate('/'); // Redirect to the login page after logout
+            navigate('/'); 
           })
           .catch((error) => {
-            // Handle logout error
             console.error('Logout error:', error);
           });
       };
+
     useEffect(() => {
-    document.body.className = props.darkStatus ? "theme_dark" : "";
-    }, [props.darkStatus]);
+    document.body.className = darkMode ? "theme_dark" : "";
+    }, [darkMode]);
+    
   return ReactDOM.createPortal(
     <div className="profile-drop-down">
     <div style={{ position: 'absolute', top: '0px', left: '0px', width: '100%' }}>
@@ -58,7 +70,7 @@ function ProfileDropDown(props) {
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                         <label className="toggle avatar-button__menu-toggle-item" >
-                            <input type="checkbox" className="toggle__input" checked={props.darkStatus} onChange={props.darkModeHandle}/>
+                            <input type="checkbox" className="toggle__input" checked={darkMode} onChange={() => dispatch(updateDarkMode(!darkMode))}/>
                             <span className="toggle__background">
                                 <span className="toggle__dot"></span>
                             </span>

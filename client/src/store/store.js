@@ -9,6 +9,7 @@ import text from './app/Edit/EditSidebar/EditText/text'
 import uploads from './app/Edit/EditSidebar/EditUploads/uploads'
 import property from './app/PropertySearch/property'
 import canvas from './app/Edit/Canvas/canvas'
+import userPreference from './app/User/userPreference'
 
 export const store = configureStore({
     reducer:{
@@ -18,7 +19,8 @@ export const store = configureStore({
         text,
         uploads,
         property,
-        canvas
+        canvas,
+        userPreference
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck: {

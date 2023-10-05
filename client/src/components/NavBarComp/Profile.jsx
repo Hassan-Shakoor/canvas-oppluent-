@@ -2,7 +2,6 @@ import React, { useState} from 'react';
 import ProfileDropDown from './ProfileDropDown';
 
 function Profile(props){
-  const [darkMode, setDarkMode] = useState(false);
   const [isSecondDropDownOpen,setIsSecondDropdownOpen] = useState(false);
   const [profileButtonPosition, setProfileButtonPosition] = useState(null);
 
@@ -10,10 +9,6 @@ function Profile(props){
   setIsSecondDropdownOpen(!isSecondDropDownOpen);
   updateProfileButtonPosition();
   }
-
-  const handleDarkModeToggle = () => {
-    setDarkMode(!darkMode);
-  };
 
   const updateProfileButtonPosition = () => {
       const buttonElement = document.querySelector('.avatar-button');
@@ -37,7 +32,7 @@ function Profile(props){
               {isSecondDropDownOpen ? <i className="icon fa-solid fa-chevron-up header__text-button_icon-chevron"/> : <i className="icon fa-solid fa-chevron-down header__text-button_icon-chevron"/>}
           </div>
           {isSecondDropDownOpen && (
-              <ProfileDropDown position={profileButtonPosition} darkModeHandle={handleDarkModeToggle} darkStatus={darkMode}/>
+              <ProfileDropDown position={profileButtonPosition}/>
           )}
       </div>
   )

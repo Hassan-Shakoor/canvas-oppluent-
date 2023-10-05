@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../components/FirebaseAuthComp/firebase';
 import { useNavigate } from "react-router-dom";
+import { ToastContainer} from 'react-toastify';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -28,6 +29,7 @@ function Login() {
 
   return (
     <div id="LogIn">
+    <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme='light'/>
       <div className="login-page">
         <div className="login-page__content">
           <div
