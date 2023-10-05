@@ -5,7 +5,7 @@ import { fetchImagesPixabay } from "../../../../api/pixabay";
 
 // ** Icon Import
 import { Icon } from "@iconify/react";
-import SpinnerOverlay from "../../../Loader/SpinnerOverlay";
+import SpinnerContainer from "../../../Loader/SpinnerContainer";
 
 function EditUploadSearch ({showPanel , searchMap , setShowPanel, setImgContainer}){
   // ** States
@@ -31,7 +31,7 @@ function EditUploadSearch ({showPanel , searchMap , setShowPanel, setImgContaine
     }
   };  
 
-  const debouncedSearchChangeHandler = useCallback( debounce(async (value) => getImages(value), 1500),[])
+  const debouncedSearchChangeHandler = useCallback( debounce(async (value) => getImages(value), 1500),[showPanel])
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
@@ -44,6 +44,7 @@ function EditUploadSearch ({showPanel , searchMap , setShowPanel, setImgContaine
   };
 
     return (
+      <>{loading ? <SpinnerContainer loading={loading}/> :
         <div className="input-group input-group_without-separators mb-2">
           <div className="small-search small-search_bordered">
             <div className="small-search__icon-wrapper">
@@ -61,8 +62,8 @@ function EditUploadSearch ({showPanel , searchMap , setShowPanel, setImgContaine
                 onChange={handleInputChange}/>
             </div>
           </div>
-          <SpinnerOverlay loading={loading}/>
-        </div>
+        </div>}
+      </>
     )
 }
 

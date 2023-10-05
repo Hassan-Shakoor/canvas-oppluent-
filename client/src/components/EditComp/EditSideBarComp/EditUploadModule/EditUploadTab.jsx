@@ -1,19 +1,18 @@
 // ** React Import
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
-import { fetchImagesPixabay } from "../../../../api/pixabay";
+import { getUploads } from "../../../../api/getUploads";
 
 // ** Custom Components Import
 import { UploadImageBox, UploadImageLinear } from "./EditUploadImage";
-import EditGrid, { ImageGrid } from "./EditGrid";
+import EditGrid from "./EditGrid";
 import EditUploadSearch from "./EditUploadSearch";
+import SpinnerContainer from "../../../Loader/SpinnerContainer";
 
 // ** Store
 import { useSelector } from "react-redux";
 import { selectOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
-
-import { list, ref, getDownloadURL } from "firebase/storage";
-import { storage } from "../../../FirebaseAuthComp/firebase";
+import { selectMlsPropertyInfo, selectUseMlsInfo } from "../../../../store/app/PropertySearch/property";
 
 // ** Vars
 const multiMediaBtnJSON = [
@@ -32,72 +31,114 @@ const multiMediaBtnJSON = [
   {
     title: "Social Media Icons",
     icon: "ph:folder-open",
-  },
+  }
 ];
+const Modes = {
+  Pixabay:'pixabay',
+  Main: 'default',
+  MyUploads: 'My Uploads',
+  Shapes: 'Shapes',
+  Icons: 'Social Media Icons',
+  Logo: "Claircius Logo"
+}
 
 function EditUploadTab() {
   // ** States
-  const [showPanel, setShowPanel] = useState("default");
+  const [showPanel, setShowPanel] = useState(Modes.Main);
   const [imgContainer, setImgContainer] = useState([]);
-  const [imageUrls, setImageUrls] = useState([]);
-  const storageRef = ref(storage);
+  const [loading, setLoading] = useState(false)
+  const [searchMap, setSearchMap] = useState({
+    [Modes.Pixabay]: {
+      placeholder: "Search Pixabay for Copyright Free Media",
+      data: imgContainer,
+    },
+    [Modes.Main]: {
+      placeholder: "Search Pixabay for Copyright Free Media",
+      data: multiMediaBtnJSON,
+    },
+    [Modes.MyUploads]: {
+      placeholder: "Search in My Uploads",
+      data: imgContainer,
+    },
+    [Modes.Shapes]: { placeholder: "Search in Shapes", data: multiMediaBtnJSON },
+    [Modes.Logo]: {
+      placeholder: "Search in Claircius Logo",
+      data: multiMediaBtnJSON,
+    },
+    [Modes.Icons]: {
+      placeholder: "Search in Social Media Icons",
+      data: multiMediaBtnJSON,
+    },
+  })
 
   // ** Hooks
   const openDrawer = useSelector(selectOpenDrawer);
 
   // ** Vars
-  const searchMap = {
-    ["pixabay"]: {
-      placeholder: "Search Pixabay for Copyright Free Media",
-      data: imgContainer,
-    },
-    ["default"]: {
-      placeholder: "Search Pixabay for Copyright Free Media",
-      data: multiMediaBtnJSON,
-    },
-    ["My Uploads"]: {
-      placeholder: "Search in My Uploads",
-      data: multiMediaBtnJSON,
-    },
-    ["Shapes"]: { placeholder: "Search in Shapes", data: multiMediaBtnJSON },
-    ["Claircius Logo"]: {
-      placeholder: "Search in Claircius Logo",
-      data: multiMediaBtnJSON,
-    },
-    ["Social Media Icons"]: {
-      placeholder: "Search in Social Media Icons",
-      data: multiMediaBtnJSON,
-    },
-  };
+  const useMlsInfo = useSelector(selectUseMlsInfo)
+  const mlsPropertyInfo = useSelector(selectMlsPropertyInfo)
+
 
   const handleBack = () => {
-    setShowPanel("default");
+    setShowPanel(Modes.Main);
     setImgContainer([]);
   };
 
   useEffect(() => {
-    // List all files in the storage bucket
-    list(storageRef)
-      .then((res) => {
-        const imagePromises = res.items.map((itemRef) =>
-          getDownloadURL(itemRef)
-        );
-        // Wait for all download URLs to resolve
-        Promise.all(imagePromises)
-          .then((urls) => {
-            // Set the image URLs in the state
-            setImageUrls(urls);
-          })
-          .catch((error) => {
-            console.error("Error getting download URLs:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error listing files:", error);
-      });
+    const fetchData = async () => {
+      if (showPanel === Modes.MyUploads) {
+        try {
+          const urls = await getUploads();
+          setImgContainer(urls);
+          setLoading(false)
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+      setLoading(false)
+    };
+
+    setLoading(true)
+    fetchData();
   }, [showPanel]);
 
+  useEffect(() => {
+
+    const exists = !!multiMediaBtnJSON.some((item) => item.title === mlsPropertyInfo.street)
+
+    if (useMlsInfo && !exists){
+      multiMediaBtnJSON.push({
+        title:mlsPropertyInfo.street,
+        icon:"ph:house"})
+     const updatedSearchMap = {...searchMap}
+    
+    updatedSearchMap[mlsPropertyInfo.street] = {
+      placeholder: `Search in ${mlsPropertyInfo.street}`,
+      data: mlsPropertyInfo.selectedImages,
+    };
+
+    setSearchMap(updatedSearchMap)
+    }
+
+  }, [useMlsInfo])
+
+  //  Update Search Map with new imgContainer
+  useEffect(() => {
+    setSearchMap(prevSearchMap => ({
+      ...prevSearchMap,
+      [Modes.Pixabay]: {
+        ...prevSearchMap[Modes.Pixabay],
+        data: imgContainer,
+      },[Modes.MyUploads]: {
+        placeholder: "Search in My Uploads",
+        data: imgContainer,
+      },
+    }))
+  },[imgContainer])
+
   return (
+    <>
+    {loading ? <SpinnerContainer loading={loading}/> :
     <div
       className={
         openDrawer === "Uploads"
@@ -106,7 +147,7 @@ function EditUploadTab() {
       }
     >
       <div className="media-library">
-        {showPanel !== "default" && showPanel !== "pixabay" ? (
+        {showPanel !== Modes.Main && showPanel !== Modes.Pixabay ? (
           <button
             type="button"
             className="btn btn_gray btn_back-button mb-2"
@@ -126,13 +167,14 @@ function EditUploadTab() {
         <EditUploadSearch
           showPanel={showPanel}
           searchMap={searchMap}
+          setLoading = {setLoading}
           setShowPanel={setShowPanel}
           setImgContainer={setImgContainer}
         />
-        {showPanel === "default" && (
+        {showPanel === Modes.Main && (
           <div className="sidebar-module__title">Multimedia</div>
         )}
-        {showPanel !== "default" && showPanel !== "pixabay" && (
+        {showPanel !== Modes.Main && showPanel !== Modes.Pixabay && (
           <UploadImageLinear />
         )}
         <div className="sidebar-module__divider" />
@@ -143,15 +185,15 @@ function EditUploadTab() {
           >
             <span>
               <div className="m-auto mb-3 upload-multimedia-container">
-                {showPanel == "My Uploads" && imageUrls.length > 0 ? (
+                {/* {showPanel == "My Uploads" && imageUrls.length > 0 ? (
                   <ImageGrid imageUrls={imageUrls} />
-                ) : (
-                  <EditGrid
-                    searchMap={searchMap}
-                    showPanel={showPanel}
-                    setShowPanel={setShowPanel}
-                  />
-                )}
+                ) : ( */}
+                <EditGrid
+                  searchMap={searchMap}
+                  showPanel={showPanel}
+                  setShowPanel={setShowPanel}
+                />
+                {/* )} */}
               </div>
             </span>
           </div>
@@ -176,7 +218,8 @@ function EditUploadTab() {
           and does not infringe any third party rights.
         </div>
       </div>
-    </div>
+    </div>}
+    </>
   );
 }
 

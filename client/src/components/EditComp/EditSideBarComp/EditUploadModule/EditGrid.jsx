@@ -5,6 +5,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 
 function EditGrid({ searchMap, showPanel, setShowPanel }) {
+
   return searchMap[showPanel].data?.map((item, index) => {
     return showPanel === "default" ? (
       <div
@@ -22,33 +23,21 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
         </div>
       </div>
     ) : (
-      <div className="media-library__item-container" key={item.id}>
+      <div className="media-library__item-container" key={index}>
         <div className="media-library__image">
+          {showPanel !== 'pixabay' && <label className="checkbox media-library__image-select">
+            <input className="checkbox__input" type="checkbox" />
+            <div className="checkbox__box">
+              <div className="checkbox__tick">
+                <i className="icon icon-checkbox-regular" />
+              </div>
+            </div>
+          </label>}
           <img
             className="media-library__image-thumbnail"
-            src={item.webformatURL}
+            src={item.webformatURL || item}
             alt="spring bird, bird, tit"
           />
-        </div>
-      </div>
-    );
-  });
-}
-
-export function ImageGrid({ imageUrls }) {
-  return imageUrls?.map((url, index) => {
-    return (
-      <div key={index} className="media-library__item-container">
-        <div className="media-library__folder">
-          <div className="media-library__folder-preview">
-            <img
-              style={{
-                maxWidth: "100%",
-                height: "auto",
-              }}
-              src={url}
-            />
-          </div>
         </div>
       </div>
     );
