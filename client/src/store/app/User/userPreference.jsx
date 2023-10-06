@@ -22,8 +22,6 @@ export const fetchUserInfo = createAsyncThunk(
               resolve({ uid: uid, userData: userDataFromDB });
             }
           });
-          unsubscribeAuth();
-          unsubscribeValue();
         }
       });
     });

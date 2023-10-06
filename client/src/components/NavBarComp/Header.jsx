@@ -7,19 +7,11 @@ import Support from './Support';
 import Profile from './Profile'
 import LanguageDropDown from './LanguageDropDown'
 
-// ** Store()
-import { fetchUserInfo } from '../../store/app/User/userPreference';
-import { useDispatch } from 'react-redux';
-
 function Header(props) {
   // ** Stats
   const [isDropdownOpen,setIsDropdownOpen] = useState(false);
   const [isFlag, setIsFlag] = useState('url("https://tcgimarketing.com/images/flags/en.svg")');
   const [languageButtonPosition, setlanguageButtonPosition] = useState(null)
-
-  // ** Vars
-  const dispatch = useDispatch()
-  dispatch(fetchUserInfo())
 
   
   const handleFlag = (backgroundImage) => {
