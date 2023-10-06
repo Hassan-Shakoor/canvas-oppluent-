@@ -1,15 +1,26 @@
+// ** Import React and Dependency
 import React from "react";
+
+// ** Store
+import { useSelector } from 'react-redux';
+import {selectUID, selectUserData} from "../../store/app/User/userPreference"
+
+// ** Icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function DashboardHeader(){
+    // ** Vars
+    const uid = useSelector(selectUID)
+    const userData = useSelector(selectUserData)
+    const userName = userData[uid]
 
     return (
         <div className="container">
-            <h1 className="dashboard-title">Welcome to Your Dashboard, Faizan </h1>
+            <h1 className="dashboard-title">Welcome to Your Dashboard, {userName} </h1>
             <div className="announcement__slider">
                 <div className="react-slider">
                     <div>
-                    <div className="slick-slider slick-initialized">
+                    {/* <div className="slick-slider slick-initialized">
                         <div className="slick-list">
                         <div
                             className="slick-track"
@@ -33,14 +44,6 @@ function DashboardHeader(){
                                     <div className="announcement__title">
                                         Direct Mail Scheduling
                                     </div>
-                                    <div className="announcement__notification-icon">
-                                        <svg className="icon v2-icon v2-icon-bell-regular">
-                                        <use
-                                            href="#v2-icon-bell-regular"
-                                            xlinkHref="#v2-icon-bell-regular"
-                                        />
-                                        </svg>
-                                    </div>
                                     </div>
                                     <div className="announcement__short-description pt-1">
                                     Create &amp; schedule a mailing campaign with your farming
@@ -52,7 +55,7 @@ function DashboardHeader(){
                             </div>
                         </div>
                         </div>
-                    </div>
+                    </div> */}
                     </div>
                     <div className="react-slider__btn react-slider__btn_next react-slider__btn_disabled">
                     <svg className="icon v2-icon v2-icon-chevron-right-light">

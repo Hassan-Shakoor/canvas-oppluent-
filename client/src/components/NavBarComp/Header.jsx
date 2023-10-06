@@ -1,5 +1,5 @@
 // ** Import Libraries 
-import React, { useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import { Link } from 'react-router-dom';
 
 // ** Import Custom Component
@@ -7,47 +7,20 @@ import Support from './Support';
 import Profile from './Profile'
 import LanguageDropDown from './LanguageDropDown'
 
-// ** Firebase
-import { onAuthStateChanged  } from 'firebase/auth';
-import { auth } from '../FirebaseAuthComp/firebase';
-import { getDatabase, ref, set, onValue } from "firebase/database";
+// ** Store()
+import { fetchUserInfo } from '../../store/app/User/userPreference';
+import { useDispatch } from 'react-redux';
 
 function Header(props) {
   // ** Stats
   const [isDropdownOpen,setIsDropdownOpen] = useState(false);
   const [isFlag, setIsFlag] = useState('url("https://tcgimarketing.com/images/flags/en.svg")');
   const [languageButtonPosition, setlanguageButtonPosition] = useState(null)
-  const [userId, setUserId] = useState("");
-  const [userData, setUserData] = useState("");
 
-  useEffect(() => {
-    const database = getDatabase();
+  // ** Vars
+  const dispatch = useDispatch()
+  dispatch(fetchUserInfo())
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setUserId(uid);
-        
-        // Fetch user data from the Realtime Database
-        const userJsonRef = ref(database, `${uid}/userData`);
-        onValue(userJsonRef, (snapshot) => {
-          const userDataFromDB = snapshot.val();
-          if (userDataFromDB) {
-            setUserData(userDataFromDB);
-          }
-        });
-      } else {
-        // User is signed out
-        setUserId(""); // Reset userId when the user signs out
-        setUserData(""); // Clear user data
-      }
-    });
-
-    // Clean up the listener when the component unmounts.
-    return () => {
-      unsubscribe();
-    };
-  }, []);
   
   const handleFlag = (backgroundImage) => {
     setIsFlag(backgroundImage);
@@ -77,7 +50,7 @@ function Header(props) {
       </Link>
       <div className="header__divider"></div>
       <Support/>
-      <Profile name={userData && userData[userId]}/>
+      <Profile/>
       {/* Language Section */}
       <i className={`${isDropdownOpen ? "language-switcher language-switcher__flag ms-2 rc-dropdown-open" : "language-switcher language-switcher__flag ms-2"}`} style={{backgroundImage:isFlag}} onClick={handleLanguageButtonClick}/>
       {isDropdownOpen && (<LanguageDropDown flag={handleFlag} position={languageButtonPosition} />)}
