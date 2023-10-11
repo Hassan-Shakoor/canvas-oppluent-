@@ -55,7 +55,7 @@ function EditUploadSearch ({showPanel , searchMap , setShowPanel, setImgContaine
                 autoComplete="off"
                 id="small-search"
                 name={showPanel}
-                placeholder={searchMap[showPanel].placeholder}
+                placeholder={searchMap[showPanel]?.placeholder}
                 type="search"
                 className="simple-input"
                 value={inputValue}

@@ -103,11 +103,10 @@ function EditUploadTab() {
   }, [showPanel]);
 
   useEffect(() => {
-
-    const exists = !!multiMediaBtnJSON.some((item) => item.title === mlsPropertyInfo.street)
-
-    if (useMlsInfo && !exists){
-      multiMediaBtnJSON.push({
+    const mlsBtnExists = multiMediaBtnJSON.some((item) => item.title === mlsPropertyInfo.street)
+    
+    if (useMlsInfo){
+      !mlsBtnExists && multiMediaBtnJSON.push({
         title:mlsPropertyInfo.street,
         icon:"ph:house"})
      const updatedSearchMap = {...searchMap}
@@ -120,7 +119,7 @@ function EditUploadTab() {
     setSearchMap(updatedSearchMap)
     }
 
-  }, [useMlsInfo])
+  }, [useMlsInfo, openDrawer])
 
   //  Update Search Map with new imgContainer
   useEffect(() => {

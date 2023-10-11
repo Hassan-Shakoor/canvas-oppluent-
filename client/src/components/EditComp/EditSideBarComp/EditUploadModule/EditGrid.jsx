@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react";
 
 function EditGrid({ searchMap, showPanel, setShowPanel }) {
 
-  return searchMap[showPanel].data?.map((item, index) => {
+  return searchMap[showPanel]?.data?.map((item, index) => {
     return showPanel === "default" ? (
       <div
         key={index}
