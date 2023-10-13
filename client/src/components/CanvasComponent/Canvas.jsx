@@ -1,10 +1,10 @@
 // ** Import Library
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {fabric} from 'fabric';
 
 // ** Import Store
 import {useDispatch, useSelector} from 'react-redux'
-import { selectCanvasContainer, selectCanvasCount, selectHeight, selectSelectedCanvas, selectWidth, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
+import { selectCanvasContainer, selectFabricData, selectHeight, selectSelectedCanvas, selectWidth, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
 
 function Canvas() {
   // ** States
@@ -12,34 +12,36 @@ function Canvas() {
   // ** Hooks
   const dispatch = useDispatch()
   const selectedCanvas = useSelector(selectSelectedCanvas)
-  const canvasCount = useSelector(selectCanvasCount)
+  const fabricData = useSelector(selectFabricData)
   const canvasContainer = useSelector(selectCanvasContainer)
   const width = useSelector(selectWidth)
   const height = useSelector(selectHeight)
 
   // ** Vars
-  const stageHeight = canvasCount * height
+  const stageHeight = fabricData.length * height
 
   useEffect(() => {
     if (document.getElementById('canvas-1')) {
       const newCanvases = [];
-      for (let i = 0; i < canvasCount; i++) {
+      for (let i = 0; i < fabricData.length; i++) {
+        const canvasData = JSON.parse(fabricData[i])
         const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
           width: width,
           height: height
         });
-
-        newCanvases.push(canvas);
+        canvas.loadFromJSON(canvasData,function(){
+          canvas.renderAll()
+          newCanvases.push(canvas);
+        })
         canvas.on("mouse:down", () => {
-          dispatch(updateSelectedCanvas(canvas))
+          dispatch(updateSelectedCanvas(Number(i)))
         })
       }
       dispatch(updateCanvasContainer([...newCanvases]));
     }
-    dispatch(updateSelectedCanvas(canvasContainer[0]))
 
-  }, [canvasCount]);
-  console.log(selectedCanvas);
+  }, [fabricData]);
+  console.log(canvasContainer);
   return (
     <div
       id="canvases"
@@ -52,7 +54,7 @@ function Canvas() {
           style={{
           height: {stageHeight}
         }}>
-          {Array.from({ length: canvasCount }).map((_, i) => (
+          {Array.from({ length: fabricData.length }).map((_, i) => (
             <div
             className="fpd-view-stage rendered"
             style={{

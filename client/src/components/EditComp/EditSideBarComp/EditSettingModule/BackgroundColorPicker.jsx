@@ -1,9 +1,10 @@
 // ** Import Libraries
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {RgbaColorPicker} from 'react-colorful'
 
 // ** Import Utils
 import { getRgbaCSS, getHexColor, getRgbaColor, getRGBAtoSet } from "../../../../utils/color";
+import { render } from "../../../../utils/fabric";
 
 // ** Icon
 import { Icon } from "@iconify/react";
@@ -13,15 +14,18 @@ import { useSelector } from "react-redux/es/hooks/useSelector";
 import { selectBrandColor, selectStandardColor, selectUserColor } from "../../../../store/app/Edit/EditSidebar/EditSetting/background";
 import { useDispatch } from "react-redux/es/hooks/useDispatch";
 import {updateUserColor} from "../../../../store/app/Edit/EditSidebar/EditSetting/background"
+import { selectCanvasContainer, selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
 
 function BackgroundColorPicker() {
   // ** State
   const [selectedColor , setSelectedColor] = useState(undefined)
-  const [color, setColor] = useState({ r: 200, g: 150, b: 35, a: 1 })
+  const [color, setColor] = useState({ r: 51, g: 51, b: 51, a: 1 })
   const [colorInput, setColorInput] = useState(getHexColor(color))
 
   // ** Hooks
   const dispatch = useDispatch()
+  const selectedCanvas = useSelector(selectSelectedCanvas)
+  const canvasContainer = useSelector(selectCanvasContainer)
   const standardColor = useSelector(selectStandardColor)
   const brandColor = useSelector(selectBrandColor)
   const userColor = useSelector(selectUserColor)
@@ -84,6 +88,8 @@ function BackgroundColorPicker() {
       alert('Eye Dropper Not Supported in your Browser Current Version.\nPlease Update your Browser to use this feature')
     }
   }
+
+  
 
   return (
     <div className="color-picker">
