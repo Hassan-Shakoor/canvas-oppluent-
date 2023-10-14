@@ -89,7 +89,11 @@ function BackgroundColorPicker() {
     }
   }
 
-  
+  useEffect(() => {
+    if(color){
+      canvasContainer[selectedCanvas].setBackgroundColor(getRgbaCSS(color),render(selectedCanvas,canvasContainer))
+    }
+  },[color])
 
   return (
     <div className="color-picker">
