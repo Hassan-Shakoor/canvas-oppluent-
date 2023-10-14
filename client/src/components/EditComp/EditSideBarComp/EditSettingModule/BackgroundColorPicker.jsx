@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import {RgbaColorPicker} from 'react-colorful'
 
-// ** Import Utils
+// ** Utils
 import { getRgbaCSS, getHexColor, getRgbaColor, getRGBAtoSet } from "../../../../utils/color";
 import { render } from "../../../../utils/fabric";
 

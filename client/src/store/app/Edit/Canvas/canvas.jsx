@@ -16,6 +16,9 @@ export const canvas = createSlice({
     name: 'canvas',
     initialState,
     reducers: {
+        updateFabricData: (state,action) => {
+            state.fabricData = action.payload
+        },
         updateSelectedCanvas: (state, action) => {
             state.selectedCanvas = action.payload
         },
@@ -25,7 +28,7 @@ export const canvas = createSlice({
     }
 })
 
-export const { updateSelectedCanvas, updateCanvasContainer } = canvas.actions;
+export const { updateFabricData, updateSelectedCanvas, updateCanvasContainer } = canvas.actions;
 export const selectFabricData = (state) => state.canvas.fabricData;
 export const selectSelectedCanvas = (state) => state.canvas.selectedCanvas;
 export const selectWidth = (state) => state.canvas.width;

@@ -1,9 +1,37 @@
-import React from "react";
+// ** Import Libraries
+import React from "react" 
+import { useState } from "react"
+
+// ** Custom Components
+import ConfirmationModal from '../../Modal/ConfirmationModal'
+
+// ** Store
+import {useDispatch, useSelector} from 'react-redux'
+import {selectCanvasContainer, updateFabricData} from '../../../store/app/Edit/Canvas/canvas'
+
+// ** Utils
+import { serializeCanvasContainer } from "../../../utils/fabric"
 
 function PageManagerButtonSet(){
+    // ** State
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+
+    // ** Vars
+    const dispatch = useDispatch()
+    const canvasContainer = useSelector(selectCanvasContainer)
+
+    const handleAddPageClick = (event) => {
+        event.preventDefault()
+        const serialized = serializeCanvasContainer(canvasContainer)
+        serialized.push("{\"version\":\"5.3.0\",\"objects\":[]}")
+        dispatch(updateFabricData(serialized))
+        setShowConfirmDialog(false)
+    }
+
     return (
+        <>
         <div className="page-manager__button-set">
-            <div className="page-manager__button" data-test="add-page">
+            <div className="page-manager__button" data-test="add-page" onClick={() => setShowConfirmDialog(true)}>
                 <div className="page-manager__button-background page-manager__button-background_circle">
                 <svg className="icon v2-icon v2-icon-plus">
                     <use href="#v2-icon-plus" xlinkHref="#v2-icon-plus" />
@@ -39,6 +67,16 @@ function PageManagerButtonSet(){
                 <p className="page-manager__button-title">Display</p>
             </div>
         </div>
+        {showConfirmDialog && 
+        <ConfirmationModal
+            title={"Add Page Confirmation"}
+            body={"You have exceeded the allowed number of pages: 2. Do you want to continue?"}
+            secondaryBtnTxt={"Cancel"}
+            primaryBtnTxt={"Submit"}
+            close={() => {setShowConfirmDialog(false)}}
+            submit={(event) => handleAddPageClick(event)}
+        />}
+        </>
     )
 }
 

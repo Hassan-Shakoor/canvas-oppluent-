@@ -41,7 +41,7 @@ function Canvas() {
     }
 
   }, [fabricData]);
-  console.log(canvasContainer);
+  console.log(canvasContainer)
   return (
     <div
       id="canvases"
