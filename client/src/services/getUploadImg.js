@@ -1,8 +1,8 @@
 // ** Firebase
 import { list, ref, getDownloadURL } from "firebase/storage";
-import { storage } from "../components/FirebaseAuthComp/firebase";
+import { storage } from '../configs/firebase';
 
-export const getUploads = async () => {
+export const getUploadImg = async () => {
   try {
     const storageRef = ref(storage);
     const res = await list(storageRef);

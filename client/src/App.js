@@ -3,10 +3,14 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { far } from '@fortawesome/free-regular-svg-icons';
+
+// ** Firebase
+import { auth } from '../src/configs/firebase';
+
+
 // Importing Modules
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { auth } from './components/FirebaseAuthComp/firebase';
 import Login from './pages/Login';
 import Category from './pages/Category';
 import CategoryContent from './components/CategContentComponent/CategoryContent';
@@ -15,6 +19,7 @@ import PropertySearch from './pages/PropertySearch';
 import {store} from'./store/store'
 import { Provider } from 'react-redux';
 import ColumnMLS from './components/PropertySearchComp/ColumnMLS';
+
 // Intialising FontAwesomeIcon
 library.add(far);
 library.add(fas)

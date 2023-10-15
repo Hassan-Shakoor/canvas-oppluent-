@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // ** Firebase
 import { onAuthStateChanged  } from 'firebase/auth';
-import { auth } from '../../../components/FirebaseAuthComp/firebase';
+import { auth } from '../../../configs/firebase';
 import { getDatabase, ref, onValue } from "firebase/database";
 
 

@@ -1,7 +1,9 @@
 // ** React Import
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
-import { getUploads } from "../../../../api/getUploads";
+
+// ** Service
+import { getUploadImg } from "../../../../services/getUploadImg";
 
 // ** Custom Components Import
 import { UploadImageBox, UploadImageLinear } from "./EditUploadImage";
@@ -88,7 +90,7 @@ function EditUploadTab() {
     const fetchData = async () => {
       if (showPanel === Modes.MyUploads) {
         try {
-          const urls = await getUploads();
+          const urls = await getUploadImg();
           setImgContainer(urls);
           setLoading(false)
         } catch (error) {

@@ -8,7 +8,7 @@ import SpinnerOverlay from "../Loader/SpinnerOverlay";
 
 // ** Firebase
 import { onAuthStateChanged  } from 'firebase/auth';
-import { auth } from '../FirebaseAuthComp/firebase';
+import { auth } from '../../configs/firebase';
 import { getDatabase, ref, set, onValue } from "firebase/database";
 
 

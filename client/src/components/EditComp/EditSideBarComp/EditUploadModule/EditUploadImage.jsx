@@ -6,7 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import g
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Icon } from "@iconify/react";
 
-import { storage } from "../../../FirebaseAuthComp/firebase";
+import { storage } from "../../../../configs/firebase";
 
 // ** Function to upload file and return its download URL
 async function uploadFileAndGetURL(file) {

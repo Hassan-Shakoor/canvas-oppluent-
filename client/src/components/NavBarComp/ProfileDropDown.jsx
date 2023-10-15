@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import { selectDarkMode, updateDarkMode } from '../../store/app/User/userPreference';
 
 // ** Firebase
-import { auth } from '../FirebaseAuthComp/firebase';
+import { auth } from '../../configs/firebase';
 
 function ProfileDropDown({position}) {
     // ** Vars
