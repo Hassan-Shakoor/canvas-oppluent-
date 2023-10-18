@@ -2,9 +2,12 @@
 import React, {useEffect} from "react";
 import {fabric} from 'fabric';
 
+// ** Custom Component
+import FabricCanvas from "./FabricCanvas";
+
 // ** Import Store
 import {useDispatch, useSelector} from 'react-redux'
-import { selectCanvasContainer, selectFabricData, selectHeight, selectSelectedCanvas, selectWidth, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
+import { selectCanvasContainer, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
 
 function Canvas() {
   // ** States
@@ -13,12 +16,11 @@ function Canvas() {
   const dispatch = useDispatch()
   const selectedCanvas = useSelector(selectSelectedCanvas)
   const fabricData = useSelector(selectFabricData)
-  const canvasContainer = useSelector(selectCanvasContainer)
-  const width = useSelector(selectWidth)
-  const height = useSelector(selectHeight)
+  const canvasContainer = useSelector(selectCanvasContainer) 
+  const resolution = useSelector(selectResolution)
 
   // ** Vars
-  const stageHeight = fabricData.length * height
+  const stageHeight = fabricData.length * resolution.height
 
   useEffect(() => {
     if (document.getElementById('canvas-1')) {
@@ -26,8 +28,8 @@ function Canvas() {
       for (let i = 0; i < fabricData.length; i++) {
         const canvasData = JSON.parse(fabricData[i])
         const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
-          width: width,
-          height: height
+          width: resolution.width,
+          height: resolution.height
         });
         canvas.loadFromJSON(canvasData,function(){
           canvas.renderAll()
@@ -55,26 +57,7 @@ function Canvas() {
           height: {stageHeight}
         }}>
           {Array.from({ length: fabricData.length }).map((_, i) => (
-            <div
-            className="fpd-view-stage rendered"
-            style={{
-            width: width,
-            height: height,
-            position: "relative",
-            userSelect: "none",
-            top: 0
-          }}>
-            <canvas
-              key={i}
-              id={`canvas-${i+1}`}
-              style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              touchAction: "none",
-              userSelect: "none"
-            }}/>
-          </div>
+            <FabricCanvas index={i}/>
           ))}
         </div>
       </div>
