@@ -4,7 +4,6 @@ import _ from "lodash";
 
 // ** Service
 import { getUploadImg } from "../../../../services/getUploadImg";
-import {getTemplateJsonData} from "../../../../services/getTemplateData"
 
 // ** Custom Components Import
 import { UploadImageBox, UploadImageLinear } from "./EditUploadImage";
