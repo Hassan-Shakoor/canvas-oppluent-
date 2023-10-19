@@ -4,7 +4,9 @@ import React, { useState } from "react";
 // ** Store
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCanvasContainer, selectResolution, updateFabricData, updateResolution }from '../../store/app/Edit/Canvas/canvas'
-import { serializeCanvasContainer } from "../../utils/fabric";
+
+// ** Shared
+import { serializeCanvasContainer } from "../../shared/utils/fabric";
 
 function EditZoom(){
     // ** State

@@ -7,10 +7,11 @@ import ConfirmationModal from '../../Modal/ConfirmationModal'
 
 // ** Store
 import {useDispatch, useSelector} from 'react-redux'
-import {selectCanvasContainer, updateFabricData} from '../../../store/app/Edit/Canvas/canvas'
+import {selectCanvasContainer, selectDisplayDirection, updateDisplayDirection, updateFabricData} from '../../../store/app/Edit/Canvas/canvas'
 
-// ** Utils
-import { serializeCanvasContainer } from "../../../utils/fabric"
+// ** Shared
+import { serializeCanvasContainer } from "../../../shared/utils/fabric"
+import { DISPLAY_DIRECTION } from "../../../shared/constant"
 
 function PageManagerButtonSet(){
     // ** State
@@ -19,6 +20,7 @@ function PageManagerButtonSet(){
     // ** Vars
     const dispatch = useDispatch()
     const canvasContainer = useSelector(selectCanvasContainer)
+    const displayDirection = useSelector(selectDisplayDirection)
 
     const handleAddPageClick = (event) => {
         event.preventDefault()
@@ -26,6 +28,14 @@ function PageManagerButtonSet(){
         serialized.push("{\"version\":\"5.3.0\",\"objects\":[]}")
         dispatch(updateFabricData(serialized))
         setShowConfirmDialog(false)
+    }
+
+    const handleDisplayDirectionClick = () => {
+        if (displayDirection === DISPLAY_DIRECTION.VERTICAL){
+            dispatch(updateDisplayDirection(DISPLAY_DIRECTION.HORIZONTAL))
+        }else{
+            dispatch(updateDisplayDirection(DISPLAY_DIRECTION.VERTICAL))
+        }
     }
 
     return (
@@ -52,17 +62,17 @@ function PageManagerButtonSet(){
                 <p className="page-manager__button-title">Rotate</p>
                 </div>
             </div>
-            <div className="page-manager__toggle">
+            <div className={displayDirection === DISPLAY_DIRECTION.HORIZONTAL ? "page-manager__toggle page-manager__toggle_horizontal-view" : "page-manager__toggle"} onClick = {handleDisplayDirectionClick}>
                 <div
                 className="page-manager__button-background page-manager__button-background_rect"
                 data-test="display"
                 >
-                <svg className="icon v2-icon v2-icon-left-right-arrows">
-                    <use
-                    href="#v2-icon-left-right-arrows"
-                    xlinkHref="#v2-icon-left-right-arrows"
-                    />
-                </svg>
+                    <svg className="icon v2-icon v2-icon-left-right-arrows">
+                        <use
+                        href="#v2-icon-left-right-arrows"
+                        xlinkHref="#v2-icon-left-right-arrows"
+                        />
+                    </svg>
                 </div>
                 <p className="page-manager__button-title">Display</p>
             </div>

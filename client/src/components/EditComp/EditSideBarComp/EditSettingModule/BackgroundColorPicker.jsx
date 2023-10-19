@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 import {RgbaColorPicker} from 'react-colorful'
 
-// ** Utils
-import { getRgbaCSS, getHexColor, getRgbaColor, getRGBAtoSet } from "../../../../utils/color";
-import { render } from "../../../../utils/fabric";
+// ** Shared
+import { getRgbaCSS, getHexColor, getRgbaColor, getRGBAtoSet } from "../../../../shared/utils/color";
+import { render } from "../../../../shared/utils/fabric";
 
 // ** Icon
 import { Icon } from "@iconify/react";

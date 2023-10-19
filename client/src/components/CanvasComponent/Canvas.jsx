@@ -5,12 +5,14 @@ import {fabric} from 'fabric';
 // ** Custom Component
 import FabricCanvas from "./FabricCanvas";
 
-// ** Import Store
+// ** Shared
+import { DISPLAY_DIRECTION } from "../../shared/constant";
+
+// ** Store
 import {useDispatch, useSelector} from 'react-redux'
-import { selectCanvasContainer, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
+import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
 
 function Canvas() {
-  // ** States
 
   // ** Hooks
   const dispatch = useDispatch()
@@ -21,6 +23,7 @@ function Canvas() {
 
   // ** Vars
   const stageHeight = fabricData.length * resolution.height
+  const displayDirection = useSelector(selectDisplayDirection)
 
   useEffect(() => {
     if (document.getElementById('canvas-1')) {
@@ -48,7 +51,7 @@ function Canvas() {
     <div
       id="canvases"
       aria-label="backgroundWorkArea"
-      className="canvases canvases_bottom-panel-open fpd-container">
+      className={displayDirection === DISPLAY_DIRECTION.HORIZONTAL ? "canvases canvases_horizontal canvases_bottom-panel-open fpd-container" : "canvases canvases_bottom-panel-open fpd-container"}>
       <div id="fpd-main-wrapper" className="fpd-main-wrapper">
         <div
           id="fpd-product-stage"
