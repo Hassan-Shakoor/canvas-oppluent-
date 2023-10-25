@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {selectCanvasContainer, selectDisplayDirection, updateDisplayDirection, updateFabricData} from '../../../store/app/Edit/Canvas/canvas'
 
 // ** Shared
-import { serializeCanvasContainer } from "../../../shared/utils/fabric"
+import { getCanvasRef, serializeCanvasContainer } from "../../../shared/utils/fabric"
 import { DISPLAY_DIRECTION } from "../../../shared/constant"
 
 function PageManagerButtonSet(){
@@ -24,7 +24,7 @@ function PageManagerButtonSet(){
 
     const handleAddPageClick = (event) => {
         event.preventDefault()
-        const serialized = serializeCanvasContainer(canvasContainer)
+        const serialized = serializeCanvasContainer(getCanvasRef())
         serialized.push("{\"version\":\"5.3.0\",\"objects\":[]}")
         dispatch(updateFabricData(serialized))
         setShowConfirmDialog(false)

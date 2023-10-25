@@ -1,15 +1,16 @@
 // ** Import Libraries
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectHeight, selectResolution, selectWidth } from "../../store/app/Edit/Canvas/canvas";
+import { selectResolution, selectSelectedCanvas} from "../../store/app/Edit/Canvas/canvas";
 
 const FabricCanvas = ({index}) => {
     // ** Vars
     const resolution = useSelector(selectResolution)
+    const selectedCanvas = useSelector(selectSelectedCanvas)
 
     return (
         <div
-            className="fpd-view-stage rendered"
+            className={selectedCanvas === index ? "fpd-view-stage rendered" : "fpd-view-stage rendered fpd-hidden" }
             style={{
             width: resolution.width,
             height: resolution.height,

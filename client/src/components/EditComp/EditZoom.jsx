@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectCanvasContainer, selectResolution, updateFabricData, updateResolution }from '../../store/app/Edit/Canvas/canvas'
 
 // ** Shared
-import { serializeCanvasContainer } from "../../shared/utils/fabric";
+import { getCanvasRef, serializeCanvasContainer } from "../../shared/utils/fabric";
 
 function EditZoom(){
     // ** State
@@ -14,18 +14,17 @@ function EditZoom(){
 
     // ** Vars
     const dispatch = useDispatch()
-    const canvasContainer = useSelector(selectCanvasContainer)
     const resolution = useSelector(selectResolution)
     const {height, width} = resolution
     const handleZoomIn = () => {
-        const serialized = serializeCanvasContainer(canvasContainer)
+        const serialized = serializeCanvasContainer(getCanvasRef())
         dispatch(updateFabricData(serialized))
         dispatch(updateResolution({height:(height + (height*0.05)), width:(width + (width*0.05))}))
         setZoomPercentage(zoomPercentage+5)
     }
 
     const handleZoomOut = () => {
-        const serialized = serializeCanvasContainer(canvasContainer)
+        const serialized = serializeCanvasContainer(getCanvasRef())
         dispatch(updateFabricData(serialized))
         dispatch(updateResolution({height:(height - (height*0.05)), width:(width - (width*0.05))}))
         setZoomPercentage(zoomPercentage-5)

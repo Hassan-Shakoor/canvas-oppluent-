@@ -11,6 +11,7 @@ import { DISPLAY_DIRECTION } from "../../shared/constant";
 // ** Store
 import {useDispatch, useSelector} from 'react-redux'
 import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
+import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
 
 function Canvas() {
 
@@ -36,13 +37,21 @@ function Canvas() {
         });
         canvas.loadFromJSON(canvasData,function(){
           canvas.renderAll()
-          newCanvases.push(canvas);
         })
         canvas.on("mouse:down", () => {
           dispatch(updateSelectedCanvas(Number(i)))
         })
+        newCanvases.push(canvas);
       }
-      dispatch(updateCanvasContainer([...newCanvases]));
+      setCanvasRef([...newCanvases])
+
+      return () => {
+        const canvases = getCanvasRef()
+        canvases.forEach(canvas => {
+          canvas.dispose()
+        });
+        console.log('Canvas Disposed');
+      }
     }
 
   }, [fabricData]);

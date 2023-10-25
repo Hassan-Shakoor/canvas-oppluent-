@@ -8,8 +8,7 @@ import { DISPLAY_DIRECTION } from "../../../../shared/constant";
 // ** TODO: When Retreive Data of Tempate from DB, width and height should be 30% of actual template resolution.
 
 const initialState = {
-    fabricData :
-    [
+    fabricData : [
         "{\"version\":\"5.3.0\",\"objects\":[]}",
         "{\"version\":\"5.3.0\",\"objects\":[]}"
     ],
