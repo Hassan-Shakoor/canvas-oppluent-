@@ -40,6 +40,13 @@ function Login() {
     } 
   };
 
+  const handleModeSwitch = () => {
+    setEmail("")
+    setPassword("")
+    setResetEmail("")
+    setMode(mode === SCREEN_MODES.LOGIN ? SCREEN_MODES.RESET_PASSWORD : SCREEN_MODES.LOGIN )
+  }
+
   return (
     <div id="LogIn">
     <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme='light'/>
@@ -64,7 +71,7 @@ function Login() {
                 <button type="submit" className="btn btn_wide" >
                   <span className="btn__text">{mode === SCREEN_MODES.LOGIN ? "Log In" : "Reset Password"}</span>
                 </button>
-                <button type="button" className="btn btn_transparent btn_wide" onClick={() => setMode(mode === SCREEN_MODES.LOGIN ? SCREEN_MODES.RESET_PASSWORD : SCREEN_MODES.LOGIN )}>
+                <button type="button" className="btn btn_transparent btn_wide" onClick={handleModeSwitch}>
                 {mode === SCREEN_MODES.RESET_PASSWORD && 
                   <svg className="icon v1-icon v1-icon-chevron-left-light">
                     <use
