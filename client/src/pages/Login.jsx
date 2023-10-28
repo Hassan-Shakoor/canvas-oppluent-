@@ -1,30 +1,43 @@
+// ** Import Dependecies
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../configs/firebase';
 import { useNavigate } from "react-router-dom";
+
+// ** Firebase
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../configs/firebase';
+
+// ** Custom Component
+import LoginInputs from '../components/LoginComponent/LoginInputs';
 import { ToastContainer} from 'react-toastify';
+import ResetPasswordInputs from '../components/LoginComponent/ResetPasswordInputs';
+
+const SCREEN_MODES = {
+  LOGIN: 'login',
+  RESET_PASSWORD: "resetPassword"
+}
 
 function Login() {
+  const [mode, setMode] = useState(SCREEN_MODES.LOGIN)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [resetEmail, setResetEmail] = useState("")
   const navigate = useNavigate();
+
   const handleLogin = (e) => {
     e.preventDefault();
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Login successful
-        const user = userCredential.user;
-        // Redirect the user to the desired page
-        // e.g., history.push('/categories');
-         // Redirect the user to the desired page
-      
-        navigate('/categories');
-      })
-      .catch((error) => {
-        // Handle login error
-        console.error('Login error:', error);
-      });
+    const submittedOn = e.target.getAttribute("data-custom-attribute")
+    if (submittedOn === SCREEN_MODES.LOGIN){
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigate('/categories');
+        })
+        .catch((error) => {
+          console.error('Login error:', error);
+        })
+    } else {
+      console.log(resetEmail)
+    } 
   };
 
   return (
@@ -40,54 +53,30 @@ function Login() {
             <div className="login-page__firm-banner">
               <img src="images/login_logo.png" alt="account logo" className="login-page__account-logo" />
             </div>
-            <form className="login-page__form" onSubmit={handleLogin}>
+            <form className="login-page__form" onSubmit={handleLogin} data-custom-attribute={mode === SCREEN_MODES.LOGIN ? SCREEN_MODES.LOGIN : SCREEN_MODES.RESET_PASSWORD}>
               <div className="login-page__form-header">
-                <p className="login-page__title">Log In</p>
-                <p className="login-page__description">Let's start creating custom marketing!</p>
+                <p className="login-page__title">{mode === SCREEN_MODES.LOGIN ? "Log In" : "Reset Password"}</p>
+                {mode === SCREEN_MODES.LOGIN && <p className="login-page__description">Let's start creating custom marketing!</p>}
               </div>
-              <div className="mb-3">
-                <label className="input">
-                  <span className="input__label">Email</span>
-                  <input
-                    autoComplete="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    type="text"
-                    className="simple-input"
-                    id="myInput"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div className="mb-3">
-                <div className="password-input">
-                  <label className="input">
-                    <span className="input__label">Password</span>
-                    <input
-                      autoComplete="password"
-                      name="password"
-                      placeholder="Enter your password"
-                      type="password"
-                      id="myInput"
-                      className="simple-input"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <span className="password-input__icon-wrapper">
-                      <svg className="icon v1-icon v1-icon-eye password-input__icon">
-                        <use href="#v1-icon-eye"></use>
-                      </svg>
-                    </span>
-                  </label>
-                </div>
-              </div>
+              {mode === SCREEN_MODES.LOGIN && <LoginInputs email={email} setEmail={setEmail} password={password} setPassword={setPassword}/>}
+              {mode === SCREEN_MODES.RESET_PASSWORD && <ResetPasswordInputs resetEmail={resetEmail} setResetEmail={setResetEmail}/>}
               <div className="login-page__button-set">
-                <button type="submit" className="btn btn_wide">
-                  <span className="btn__text">Log In</span>
+                <button type="submit" className="btn btn_wide" >
+                  <span className="btn__text">{mode === SCREEN_MODES.LOGIN ? "Log In" : "Reset Password"}</span>
                 </button>
-                <button type="button" className="btn btn_transparent btn_wide">
-                  <span className="btn__text">Forgot Password?</span>
+                <button type="button" className="btn btn_transparent btn_wide" onClick={() => setMode(mode === SCREEN_MODES.LOGIN ? SCREEN_MODES.RESET_PASSWORD : SCREEN_MODES.LOGIN )}>
+                {mode === SCREEN_MODES.RESET_PASSWORD && 
+                  <svg className="icon v1-icon v1-icon-chevron-left-light">
+                    <use
+                      href="#v1-icon-chevron-left-light"
+                      xlinkHref="#v1-icon-chevron-left-light"
+                    />
+                  </svg>}
+                  <span className="btn__text">{mode === SCREEN_MODES.LOGIN
+                   ? 
+                   "Forgot Password?"
+                   :
+                    "Back to Log In"}</span>
                 </button>
               </div>
             </form>
