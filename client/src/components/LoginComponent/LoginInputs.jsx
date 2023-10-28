@@ -1,4 +1,11 @@
+import { useState } from "react"
+
 function LoginInputs({email, setEmail, password, setPassword}) {
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    }
     return (
         <>
             <div className="mb-3">
@@ -26,13 +33,13 @@ function LoginInputs({email, setEmail, password, setPassword}) {
                     autoComplete="password"
                     name="password"
                     placeholder="Enter your password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     id="myInput"
                     className="simple-input"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     />
-                    <span className="password-input__icon-wrapper">
+                    <span className="password-input__icon-wrapper" onClick={togglePasswordVisibility}>
                     <svg className="icon v1-icon v1-icon-eye password-input__icon">
                         <use href="#v1-icon-eye"></use>
                     </svg>

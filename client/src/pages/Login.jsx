@@ -1,9 +1,10 @@
 // ** Import Dependecies
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 // ** Firebase
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth';
 import { auth } from '../configs/firebase';
 
 // ** Custom Component
@@ -27,19 +28,40 @@ function Login() {
     e.preventDefault();
     const submittedOn = e.target.getAttribute("data-custom-attribute")
     if (submittedOn === SCREEN_MODES.LOGIN){
+      if (!email || !password) {
+        toast.error("Email and password are required")
+      }
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           navigate('/categories');
         })
         .catch((error) => {
-          console.error('Login error:', error);
+          toast.error("Invalid email or password")
         })
     } else {
       console.log(resetEmail)
     } 
   };
 
+  const handlePasswordReset = () => {
+    if (!resetEmail.trim()) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+  
+    sendPasswordResetEmail(auth, resetEmail)
+      .then(() => {
+        toast.success("Password reset email sent. Check your inbox.");
+      })
+      .catch((error) => {
+        toast.error("An error occurred. Please check the email address.");
+      });
+  };
+  
+  
+
+  
   const handleModeSwitch = () => {
     setEmail("")
     setPassword("")
@@ -68,7 +90,7 @@ function Login() {
               {mode === SCREEN_MODES.LOGIN && <LoginInputs email={email} setEmail={setEmail} password={password} setPassword={setPassword}/>}
               {mode === SCREEN_MODES.RESET_PASSWORD && <ResetPasswordInputs resetEmail={resetEmail} setResetEmail={setResetEmail}/>}
               <div className="login-page__button-set">
-                <button type="submit" className="btn btn_wide" >
+                <button type="submit" className="btn btn_wide" onClick={handlePasswordReset}>
                   <span className="btn__text">{mode === SCREEN_MODES.LOGIN ? "Log In" : "Reset Password"}</span>
                 </button>
                 <button type="button" className="btn btn_transparent btn_wide" onClick={handleModeSwitch}>
