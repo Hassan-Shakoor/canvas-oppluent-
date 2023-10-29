@@ -19,6 +19,7 @@ import PropertySearch from './pages/PropertySearch';
 import {store} from'./store/store'
 import { Provider } from 'react-redux';
 import ColumnMLS from './components/PropertySearchComp/ColumnMLS';
+import AccountInformation from './pages/AccountInformation';
 
 // Intialising FontAwesomeIcon
 library.add(far);
@@ -54,6 +55,7 @@ function App() {
           <Route path='/property-search' element={<PropertySearch/>}>
             <Route path=':id' element={<ColumnMLS/>}/>
           </Route>
+          <Route path='/profile' element={isAuthenticated ? <AccountInformation/> : <Navigate to="/" replace/>} />
         </Routes>
       </Router>
     </Provider>

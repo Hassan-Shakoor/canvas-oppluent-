@@ -31276,6 +31276,30 @@
   .mobile-designer-switch-bars-exit-done {
     transform: translateX(100vw);
   }
+
+  .tabs__item-child {
+    text-decoration: inherit;
+    letter-spacing: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    color: inherit;
+  }
+
+  .new-select-container {
+    background-color: var(--secondary-bg-color);
+    border: 1px solid var(--input-border-color);
+    border-radius: 4px;
+    width: 100%;
+    padding: 0 10px;
+    min-height: var(--input-height);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    color: inherit
+  }
+
+
   
 /* ------------------- Category Content CSS ------------------- */
 
@@ -31508,4 +31532,10 @@ svg.icon.v2-icon.v2-icon-chevron-down {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* DropDown Account Information */
+
+.select__option:hover{
+  background-color: var(--primary-color-light);
 }

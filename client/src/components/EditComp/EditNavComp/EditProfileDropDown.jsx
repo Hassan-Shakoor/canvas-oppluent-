@@ -1,5 +1,6 @@
 import React , {useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 
 function EditProfileDropDown(props) {
     const dropdownStyle = {
@@ -18,14 +19,14 @@ function EditProfileDropDown(props) {
             <div className="rc-dropdown rc-dropdown-placement-bottomRight" style={dropdownStyle}>
                 <ul className="rc-menu rc-menu-root rc-menu-vertical" role="menu" tabIndex="0">
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <a className="btn btn_menu-item text-uppercase" rel="" href="/">
+                        <Link className="btn btn_menu-item text-uppercase" rel="" to="/">
                             <span className="btn__text">Dashboard</span>
-                        </a>
+                        </Link>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <a className="btn btn_menu-item text-uppercase" rel="" href="/profile">
+                        <Link className="btn btn_menu-item text-uppercase" rel="" to="/profile">
                             <span className="btn__text">Account Information</span>
-                        </a>
+                        </Link>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                         <a className="btn btn_menu-item text-uppercase" href="https://20923924.hs-sites.com/knowledge" target="_blank">
