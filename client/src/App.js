@@ -7,19 +7,22 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 // ** Firebase
 import { auth } from '../src/configs/firebase';
 
+// ** Pages
+import Login from './pages/Login';
+import Category from './pages/Category';
+import TermsOfUse from './pages/TermsOfUse';
+import Edit from './pages/Edit';
+import PropertySearch from './pages/PropertySearch';
+import AccountInformation from './pages/AccountInformation';
+
 
 // Importing Modules
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
-import Category from './pages/Category';
 import CategoryContent from './components/CategContentComponent/CategoryContent';
-import Edit from './pages/Edit';
-import PropertySearch from './pages/PropertySearch';
 import {store} from'./store/store'
 import { Provider } from 'react-redux';
 import ColumnMLS from './components/PropertySearchComp/ColumnMLS';
-import AccountInformation from './pages/AccountInformation';
 
 // Intialising FontAwesomeIcon
 library.add(far);
@@ -56,6 +59,7 @@ function App() {
             <Route path=':id' element={<ColumnMLS/>}/>
           </Route>
           <Route path='/profile' element={isAuthenticated ? <AccountInformation/> : <Navigate to="/" replace/>} />
+          <Route path='/terms_of_use' element= {<TermsOfUse/>}/>
         </Routes>
       </Router>
     </Provider>
