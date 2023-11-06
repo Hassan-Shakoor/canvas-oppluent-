@@ -54,9 +54,9 @@ function ProfileDropDown({position}) {
                         </a>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <a className="btn btn_menu-item text-uppercase" rel="" href="/partners">
+                        <Link className="btn btn_menu-item text-uppercase" rel="" to="/partners">
                             <span className="btn__text">Partners</span>
-                        </a>
+                        </Link>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                         <a className="btn btn_menu-item text-uppercase" href="/terms_of_use" target="_blank">
