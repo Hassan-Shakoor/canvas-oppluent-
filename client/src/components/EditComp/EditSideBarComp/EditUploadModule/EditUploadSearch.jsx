@@ -31,6 +31,7 @@ function EditUploadSearch ({showPanel , searchMap , setShowPanel, setImgContaine
     }
   };  
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearchChangeHandler = useCallback( debounce(async (value) => getImages(value), 1500),[showPanel])
 
   const handleInputChange = (event) => {

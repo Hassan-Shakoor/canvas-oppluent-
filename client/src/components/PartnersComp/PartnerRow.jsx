@@ -28,7 +28,7 @@ function PartnerRow({partner,id, checked, handleSelect}) {
 
     const handleDelete = (event,id) => {
         event.preventDefault()
-        dispatch(updatePartnerList(partnerList.filter((partner,index) => index!=id)))
+        dispatch(updatePartnerList(partnerList.filter((partner,index) => index !== id)))
         setConfirmDelete(false)
         toast.success("Partner successfully deleted.")
     }

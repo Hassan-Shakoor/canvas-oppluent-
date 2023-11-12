@@ -173,7 +173,10 @@ function SettingsBody () {
                             {dropdownActive && <div className="select__menu css-26l3qy-menu">
                                 <div className="select__menu-list css-a8xhzo">
                                     <div
-                                    onClick={() => (setLanguage(LANGUAGE.ENGLISH), setDropdownActive(false))}
+                                    onClick={() => {
+                                        setLanguage(LANGUAGE.ENGLISH);
+                                        setDropdownActive(false)
+                                    }}
                                     className= {language === LANGUAGE.ENGLISH ? "select__option select__option--is-selected css-z06zfw-option": "select__option css-z06zfw-option"}
                                     id="react-select-2-option-0"
                                     tabIndex={-1}
@@ -181,7 +184,10 @@ function SettingsBody () {
                                         {LANGUAGE.ENGLISH}
                                     </div>
                                     <div
-                                    onClick={() => (setLanguage(LANGUAGE.ESPANOL), setDropdownActive(false))}
+                                    onClick={() => {
+                                        setLanguage(LANGUAGE.ESPANOL);
+                                        setDropdownActive(false)
+                                    }}
                                     className= {language === LANGUAGE.ESPANOL ? "select__option select__option--is-selected css-z06zfw-option": "select__option css-z06zfw-option"}
                                     id="react-select-2-option-1"
                                     tabIndex={-1}

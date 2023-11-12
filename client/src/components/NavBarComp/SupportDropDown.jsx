@@ -20,7 +20,7 @@ function SupportDropDown(props) {
                 </header>
                 <div className="support-overlay__panel">
                   <div className="support-overlay__description">Platform Customer Service:</div>
-                  <a className="btn support-overlay__email btn_link" href="mailto:support@maxadesigns.com" target="_blank">
+                  <a className="btn support-overlay__email btn_link" href="mailto:support@maxadesigns.com" target="_blank" rel="noopener noreferrer">
                     <span onClick={props.click} className="btn__text">support@maxadesigns.com</span>
                   </a>
                 </div>

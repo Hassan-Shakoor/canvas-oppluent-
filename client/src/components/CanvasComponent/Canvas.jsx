@@ -10,13 +10,12 @@ import { DISPLAY_DIRECTION } from "../../shared/constant";
 
 // ** Store
 import {useDispatch, useSelector} from 'react-redux'
-import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
+import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
 
 function Canvas() {
 
   // ** Hooks
   const dispatch = useDispatch()
-  const selectedCanvas = useSelector(selectSelectedCanvas)
   const fabricData = useSelector(selectFabricData)
   const canvasContainer = useSelector(selectCanvasContainer) 
   const resolution = useSelector(selectResolution)
@@ -45,7 +44,7 @@ function Canvas() {
       dispatch(updateCanvasContainer([...newCanvases]));
     }
 
-  }, [fabricData]);
+  }, [dispatch, fabricData, resolution]);
   console.log(canvasContainer)
   return (
     <div

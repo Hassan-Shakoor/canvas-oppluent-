@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import DashboardHeader from './DashboardHeader';
 import Template from './Template';
 import TemplateSort from './TemplateSort';
-import SpinnerOverlay from '../Loader/SpinnerOverlay';
 
 // ** Firebase
 import { onAuthStateChanged  } from 'firebase/auth';
@@ -36,7 +35,6 @@ function CategoryContent() {
     subHeading: '',
     template: [],
   });
-  const [isLoading, setIsLoading] = useState(true);
 
   const fetchDataFromDatabase = () => {
     const database = getDatabase();
@@ -150,7 +148,6 @@ function CategoryContent() {
     
     if (fetchedCategory) {
       setCategory(fetchedCategory);
-      setIsLoading(false);
     }}
   }, [id, categoriesData]);
 
@@ -172,7 +169,6 @@ function CategoryContent() {
           const fetchedCategory = await categoriesData.find(category => category.id === parseInt(id));
           if (fetchedCategory) {
             setCategory(fetchedCategory);
-            setIsLoading(false);
           }
         } catch (error) {
           console.error("Error fetching data:", error);

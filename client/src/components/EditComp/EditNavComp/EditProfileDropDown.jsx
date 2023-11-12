@@ -1,4 +1,4 @@
-import React , {useState,useEffect} from 'react';
+import React , {useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 
@@ -29,9 +29,14 @@ function EditProfileDropDown(props) {
                         </Link>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <a className="btn btn_menu-item text-uppercase" href="https://20923924.hs-sites.com/knowledge" target="_blank">
-                            <span className="btn__text">Knowledge Center</span>
-                        </a>
+                    <a
+                        className="btn btn_menu-item text-uppercase"
+                        href="https://20923924.hs-sites.com/knowledge"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >
+                        <span className="btn__text">Knowledge Center</span>
+                    </a>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                         <Link className="btn btn_menu-item text-uppercase" rel="" to="/partners">

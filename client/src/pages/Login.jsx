@@ -33,6 +33,7 @@ function Login() {
       }else{
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
+            // eslint-disable-next-line no-unused-vars
             const user = userCredential.user;
             navigate('/categories');
           })

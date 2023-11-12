@@ -348,7 +348,7 @@ function PropertyResult({templateId}){
                         {isSelected && <div className="picture-box__icon">{selectedIndex}</div>}
                         <img
                             className={`picture-box__image ${isSelected ? 'picture-box__image_selected' : ''}`}
-                            alt="picture"
+                            alt="property images"
                             src={photo}
                         />
                         </div>

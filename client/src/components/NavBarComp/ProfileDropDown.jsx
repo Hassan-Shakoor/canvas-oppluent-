@@ -49,7 +49,7 @@ function ProfileDropDown({position}) {
                         </Link>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <a className="btn btn_menu-item text-uppercase" href="https://20923924.hs-sites.com/knowledge" target="_blank">
+                        <a className="btn btn_menu-item text-uppercase" href="https://20923924.hs-sites.com/knowledge" target="_blank" rel="noopener noreferrer">
                             <span className="btn__text">Knowledge Center</span>
                         </a>
                     </li>

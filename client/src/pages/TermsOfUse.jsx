@@ -13,7 +13,8 @@ function TermsOfUse() {
           <div className="terms-page__content-header">
             <img
               className="terms-page__account-logo"
-              src="https://dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/account/platform_logo/original/platform_logo_login_1-1-1.png?1661778656"/>
+              src="https://dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/account/platform_logo/original/platform_logo_login_1-1-1.png?1661778656"
+              alt="logo"/>
             <h1 className="terms-page__page-title">Terms Of Use</h1>
           </div>
           <div className="terms-page__body">

@@ -49,7 +49,11 @@ function ProfileBody () {
                             type="text"
                             className="simple-input"
                             value={firstName}
-                            onChange={event => (setFirstName(event.target.value), setIsChanged(true))}
+                            onChange={(event) => {
+                                setFirstName(event.target.value);
+                                setIsChanged(true);
+                              }}
+                              
                         />
                         </label>
                     </div>
@@ -66,7 +70,10 @@ function ProfileBody () {
                             type="text"
                             className="simple-input"
                             value={lastName}
-                            onChange={event => (setLastName(event.target.value), setIsChanged(true))}
+                            onChange={event => {
+                                setLastName(event.target.value);
+                                setIsChanged(true);
+                            }}
                         />
                         </label>
                     </div>
@@ -82,7 +89,10 @@ function ProfileBody () {
                         type="text"
                         className="simple-input"
                         value={email}
-                        onChange={event => (setEmail(event.target.value), setIsChanged(true))}
+                        onChange={event => {
+                            setEmail(event.target.value);
+                            setIsChanged(true)
+                        }}
                     />
                     </label>
                 </div>
@@ -98,7 +108,10 @@ function ProfileBody () {
                             type="text"
                             className="simple-input"
                             value={contactNo}
-                            onChange={event => (setContactNo(event.target.value), setIsChanged(true))}
+                            onChange={event => {
+                                setContactNo(event.target.value);
+                                setIsChanged(true)
+                            }}
                         />
                         </label>
                     </div>
@@ -124,7 +137,10 @@ function ProfileBody () {
                             className="image-upload__file-input"
                             accept=".png, .jpg, .jpeg"
                             autoComplete="off"
-                            onChange={(event) => (setSelectedUploadFile(event.target.files[0]), setIsChanged(true))}
+                            onChange={(event) => {
+                                setSelectedUploadFile(event.target.files[0]);
+                                setIsChanged(true);
+                            }}
                             />
                         </label>
                         <div className="image-upload__button-set">
@@ -135,7 +151,10 @@ function ProfileBody () {
                                     className="image-upload__file-input"
                                     accept=".png, .jpg, .jpeg"
                                     autoComplete="off"
-                                    onChange={(event) => (setSelectedUploadFile(event.target.files[0]), setIsChanged(true))}
+                                    onChange={(event) => {
+                                        setSelectedUploadFile(event.target.files[0]);
+                                        setIsChanged(true)
+                                    }}
                                 />
                                 <span className="btn__text">Upload</span>
                             </label>

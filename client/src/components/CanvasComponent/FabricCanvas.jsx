@@ -1,7 +1,7 @@
 // ** Import Libraries
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectHeight, selectResolution, selectWidth } from "../../store/app/Edit/Canvas/canvas";
+import { selectResolution } from "../../store/app/Edit/Canvas/canvas";
 
 const FabricCanvas = ({index}) => {
     // ** Vars

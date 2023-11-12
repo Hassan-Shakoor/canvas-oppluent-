@@ -1,7 +1,7 @@
 // ** Import Libraries
 import React, {useCallback, useEffect, useState} from "react";
-import {Link, useParams} from 'react-router-dom';
-import _, {debounce, set} from 'lodash'
+import {useParams} from 'react-router-dom';
+import _, {debounce} from 'lodash'
 import {fetchProperty} from "../../api/mls";
 import { useNavigate } from "react-router-dom";
 
@@ -64,6 +64,7 @@ function ColumnMLS() {
     dispatch(updateSelectedProperty(searchedResults[index]))
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncesPropertySearch = useCallback(debounce(async(value) => searchProperty(value), 1500), [])
 
   useEffect(() => {
@@ -72,7 +73,7 @@ function ColumnMLS() {
       setSearchedResults([])
     }
     debouncesPropertySearch(searchedProperty)
-  }, [searchedProperty])
+  }, [debouncesPropertySearch, searchedProperty])
 
   return (
     <div className="col-md-8 page__column">

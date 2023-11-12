@@ -5,9 +5,6 @@ import React from "react";
 import { useSelector } from 'react-redux';
 import {selectUID, selectUserData} from "../../store/app/User/userPreference"
 
-// ** Icon
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 function DashboardHeader(){
     // ** Vars
     const uid = useSelector(selectUID)

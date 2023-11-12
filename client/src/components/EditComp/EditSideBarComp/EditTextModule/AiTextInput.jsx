@@ -1,6 +1,5 @@
 // ** Import Library
 import React from "react";
-import {useState} from "react";
 
 function AiTextInput() {
   return (

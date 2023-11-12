@@ -1,6 +1,5 @@
 // ** React Import
 import React, { useState, useEffect } from "react";
-import _ from "lodash";
 
 // ** Service
 import { getUploadImg } from "../../../../services/getUploadImg";
@@ -121,6 +120,7 @@ function EditUploadTab() {
     setSearchMap(updatedSearchMap)
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useMlsInfo, openDrawer])
 
   //  Update Search Map with new imgContainer
