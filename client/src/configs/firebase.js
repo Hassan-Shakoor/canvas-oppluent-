@@ -3,13 +3,13 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyAK9qTAirpx9Pi9cSbQ9XKbrWfutoyW7hA",
+  authDomain: "clarious-f4f45.firebaseapp.com",
+  projectId: "clarious-f4f45",
+  storageBucket: "clarious-f4f45.appspot.com",
+  messagingSenderId: "427609388747",
+  appId: "1:427609388747:web:c1de4f8128634a273d4d4e",
+  measurementId: "G-EZV6DTFQPM",
 };
 
 // Initialize Firebase

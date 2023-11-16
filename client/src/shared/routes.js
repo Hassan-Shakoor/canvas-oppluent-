@@ -1,4 +1,4 @@
-const baseUrl = process.env.REACT_APP_BACKEND_URL
+const baseUrl = "https://claircius-backend.vercel.app"
 
 console.log(baseUrl)
 export const APIS = {
