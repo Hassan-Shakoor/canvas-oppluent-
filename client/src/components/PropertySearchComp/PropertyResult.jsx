@@ -95,30 +95,34 @@ function PropertyResult({templateId}){
     }
     
     const handleCreate = () => {
+        if (!isConfirm){
+            toast.error("Oop Something went wrong in Property Search.")
+            setIsWarn(true)
+            return 
+        }
         if(handleValidation()){
             toast.error("Oop Something went wrong in Property Search.")
             setIsWarn(true)
             setShowWarnModal(true)
-        }else{
-            dispatch(updateUseMlsInfo(true))
-            const data = {
-                headline: headline,
-                street: street,
-                city: city,
-                state: state,
-                postalCode: postalCode,
-                descriptions:descriptions,
-                price: price,
-                mlsNo: mlsNo,
-                sqft: sqft,
-                bedrooms: bedrooms,
-                halfBaths: halfBaths,
-                fullBaths: fullBaths,
-                selectedImages: isAllImage ? selectedProperty.photos : selectedImages
-            }
-            dispatch(updateMlsPropertyInfo(data))
-            navigate(`/edit/${templateId}`)
+            return
         }
+        dispatch(updateUseMlsInfo(true))
+        dispatch(updateMlsPropertyInfo({
+            headline: headline,
+            street: street,
+            city: city,
+            state: state,
+            postalCode: postalCode,
+            descriptions:descriptions,
+            price: price,
+            mlsNo: mlsNo,
+            sqft: sqft,
+            bedrooms: bedrooms,
+            halfBaths: halfBaths,
+            fullBaths: fullBaths,
+            selectedImages: isAllImage ? selectedProperty.photos : selectedImages
+        }))
+        navigate(`/edit/${templateId}`)
     }
 
     return (
