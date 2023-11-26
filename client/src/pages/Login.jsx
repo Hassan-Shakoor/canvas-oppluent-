@@ -1,8 +1,17 @@
+// ** Library
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../configs/firebase';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer} from 'react-toastify';
+
+// ** Configs
+import { auth } from '../configs/firebase';
+
+// ** Services
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { setLocalStorage } from '../services/localStorage';
+
+// ** Constant
+import { LOCAL_STORAGE } from '../shared/constant';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -13,16 +22,14 @@ function Login() {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Login successful
         const user = userCredential.user;
-        // Redirect the user to the desired page
-        // e.g., history.push('/categories');
-         // Redirect the user to the desired page
-      
+        setLocalStorage(LOCAL_STORAGE.USER_DATA,{
+          uid:user.uid,
+          email: user.email,
+        })
         navigate('/categories');
       })
       .catch((error) => {
-        // Handle login error
         console.error('Login error:', error);
       });
   };
