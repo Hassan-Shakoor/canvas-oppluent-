@@ -39,14 +39,14 @@ function Profile(){
 
   useEffect(() => {
     dispatch(fetchUserInfo())
-  },[])
+  },[dispatch])
 
   useEffect(() => {
     if (userData) {
       setUserName(userData[uid])
       setLetterName(userData[uid][0])
     }
-  },[userData])
+  },[uid, userData])
 
   return(
       <div>

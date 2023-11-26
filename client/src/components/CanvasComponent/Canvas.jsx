@@ -17,7 +17,6 @@ function Canvas() {
 
   // ** Hooks
   const dispatch = useDispatch()
-  const selectedCanvas = useSelector(selectSelectedCanvas)
   const fabricData = useSelector(selectFabricData)
   const canvasContainer = useSelector(selectCanvasContainer) 
   const resolution = useSelector(selectResolution)
@@ -54,7 +53,7 @@ function Canvas() {
       }
     }
 
-  }, [fabricData]);
+  }, [dispatch, fabricData, resolution]);
   console.log(canvasContainer)
   return (
     <div
