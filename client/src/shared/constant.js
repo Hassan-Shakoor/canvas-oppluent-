@@ -3,6 +3,15 @@ export const DISPLAY_DIRECTION = {
     HORIZONTAL: 'horizontal'
 };
 
+export const ACCOUNT_INFORMATION = {
+    PROFILE: 'profile',
+    SETTINGS: 'settings'
+}
+
+export const LANGUAGE = {
+    ENGLISH: "English",
+    ESPANOL: "Español"
+=======
 export const LOCAL_STORAGE = {
     USER_DATA: 'userData'
 }

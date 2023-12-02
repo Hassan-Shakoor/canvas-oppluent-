@@ -95,30 +95,34 @@ function PropertyResult({templateId}){
     }
     
     const handleCreate = () => {
+        if (!isConfirm){
+            toast.error("Oop Something went wrong in Property Search.")
+            setIsWarn(true)
+            return 
+        }
         if(handleValidation()){
             toast.error("Oop Something went wrong in Property Search.")
             setIsWarn(true)
             setShowWarnModal(true)
-        }else{
-            dispatch(updateUseMlsInfo(true))
-            const data = {
-                headline: headline,
-                street: street,
-                city: city,
-                state: state,
-                postalCode: postalCode,
-                descriptions:descriptions,
-                price: price,
-                mlsNo: mlsNo,
-                sqft: sqft,
-                bedrooms: bedrooms,
-                halfBaths: halfBaths,
-                fullBaths: fullBaths,
-                selectedImages: isAllImage ? selectedProperty.photos : selectedImages
-            }
-            dispatch(updateMlsPropertyInfo(data))
-            navigate(`/edit/${templateId}`)
+            return
         }
+        dispatch(updateUseMlsInfo(true))
+        dispatch(updateMlsPropertyInfo({
+            headline: headline,
+            street: street,
+            city: city,
+            state: state,
+            postalCode: postalCode,
+            descriptions:descriptions,
+            price: price,
+            mlsNo: mlsNo,
+            sqft: sqft,
+            bedrooms: bedrooms,
+            halfBaths: halfBaths,
+            fullBaths: fullBaths,
+            selectedImages: isAllImage ? selectedProperty.photos : selectedImages
+        }))
+        navigate(`/edit/${templateId}`)
     }
 
     return (
@@ -348,7 +352,7 @@ function PropertyResult({templateId}){
                         {isSelected && <div className="picture-box__icon">{selectedIndex}</div>}
                         <img
                             className={`picture-box__image ${isSelected ? 'picture-box__image_selected' : ''}`}
-                            alt="picture"
+                            alt="property images"
                             src={photo}
                         />
                         </div>

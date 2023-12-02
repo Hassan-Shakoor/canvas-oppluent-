@@ -1,7 +1,7 @@
 import React , {useEffect} from 'react';
 // ** import React and Dependencies
 import ReactDOM from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // ** Store
 import {useDispatch, useSelector} from 'react-redux'
@@ -44,19 +44,19 @@ function ProfileDropDown({position}) {
             <div className="rc-dropdown rc-dropdown-placement-bottomRight" style={dropdownStyle}>
                 <ul className="rc-menu rc-menu-root rc-menu-vertical" role="menu" tabIndex="0">
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <a className="btn btn_menu-item text-uppercase" rel="" href="/profile">
+                        <Link className="btn btn_menu-item text-uppercase" rel="" to="/profile">
                             <span className="btn__text">Account Information</span>
-                        </a>
+                        </Link>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <a className="btn btn_menu-item text-uppercase" href="https://20923924.hs-sites.com/knowledge" target="_blank">
+                        <a className="btn btn_menu-item text-uppercase" href="https://20923924.hs-sites.com/knowledge" target="_blank" rel="noopener noreferrer">
                             <span className="btn__text">Knowledge Center</span>
                         </a>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
-                        <a className="btn btn_menu-item text-uppercase" rel="" href="/partners">
+                        <Link className="btn btn_menu-item text-uppercase" rel="" to="/partners">
                             <span className="btn__text">Partners</span>
-                        </a>
+                        </Link>
                     </li>
                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                         <a className="btn btn_menu-item text-uppercase" href="/terms_of_use" target="_blank">

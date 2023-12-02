@@ -10,6 +10,7 @@ import uploads from './app/Edit/EditSidebar/EditUploads/uploads'
 import property from './app/PropertySearch/property'
 import canvas from './app/Edit/Canvas/canvas'
 import userPreference from './app/User/userPreference'
+import partner from './app/Partner/partner'
 
 export const store = configureStore({
     reducer:{
@@ -20,7 +21,8 @@ export const store = configureStore({
         uploads,
         property,
         canvas,
-        userPreference
+        userPreference,
+        partner
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck: {

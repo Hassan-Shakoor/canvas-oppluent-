@@ -93,7 +93,7 @@ function BackgroundColorPicker() {
     if(color){
       canvasContainer[selectedCanvas].setBackgroundColor(getRgbaCSS(color),render(selectedCanvas,canvasContainer))
     }
-  },[color])
+  },[canvasContainer, color, selectedCanvas])
 
   return (
     <div className="color-picker">
