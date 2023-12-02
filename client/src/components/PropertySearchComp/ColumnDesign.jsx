@@ -14,12 +14,7 @@ import { LOCAL_STORAGE } from "../../shared/constant";
 function ColumnDesign() {
     // ** State
     const [showPreview, setShowPreview] = useState(false)
-    const [images, setImages] = useState([
-      '//dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/design_view_pictures/1610/image/original/4-Paged_Property_Brochure-0.jpg?1677558956',
-      '//dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/design_view_pictures/1611/image/original/4-Paged_Property_Brochure-1.jpg?1677558957',
-      '//dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/design_view_pictures/1612/image/original/4-Paged_Property_Brochure-2.jpg?1677558957',
-      '//dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/design_view_pictures/1613/image/original/4-Paged_Property_Brochure-3.jpg?1677558958'
-  ])
+    const [images, setImages] = useState([])
 
   // ** Vars
   const {id} = useParams()
@@ -28,7 +23,7 @@ function ColumnDesign() {
     const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
     const response = await getTemplateJsonData(userData.uid,id)
     if(response){
-      setImages([response.imageUrl])
+      setImages(response.storage_url)
     }
   },[id])
 

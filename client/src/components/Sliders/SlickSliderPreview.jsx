@@ -48,7 +48,7 @@ function SlickSliderPreview({ images }) {
           />
         </div>)}
       </Slider>
-      {images.length > 0 && <>
+      {images.length > 1 && <>
       <div className="react-slider__btn react-slider__btn_next" onClick={slideNext}>
         <svg className="icon v2-icon v2-icon-chevron-right-light">
           <use
