@@ -1,4 +1,4 @@
-// ** Import Dependecies
+// ** Library
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -17,6 +17,16 @@ const SCREEN_MODES = {
   RESET_PASSWORD: "resetPassword"
 }
 
+// ** Configs
+import { auth } from '../configs/firebase';
+
+// ** Services
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { setLocalStorage } from '../services/localStorage';
+
+// ** Constant
+import { LOCAL_STORAGE } from '../shared/constant';
+
 function Login() {
   const [mode, setMode] = useState(SCREEN_MODES.LOGIN)
   const [email, setEmail] = useState('');
@@ -33,8 +43,11 @@ function Login() {
       }else{
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
-            // eslint-disable-next-line no-unused-vars
             const user = userCredential.user;
+            setLocalStorage(LOCAL_STORAGE.USER_DATA,{
+              uid:user.uid,
+              email: user.email,
+            })
             navigate('/categories');
           })
           .catch((error) => {

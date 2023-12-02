@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 // ** Service
-import { getUploadImg } from "../../../../services/getUploadImg";
+import getUploadImage from '../../../../services/firebase/getUploadImg'
 
 // ** Custom Components Import
 import { UploadImageBox, UploadImageLinear } from "./EditUploadImage";
@@ -89,7 +89,7 @@ function EditUploadTab() {
     const fetchData = async () => {
       if (showPanel === Modes.MyUploads) {
         try {
-          const urls = await getUploadImg(); 
+          const urls = await getUploadImage(); 
           setImgContainer(urls);
           setLoading(false)
         } catch (error) {

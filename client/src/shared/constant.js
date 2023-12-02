@@ -11,4 +11,7 @@ export const ACCOUNT_INFORMATION = {
 export const LANGUAGE = {
     ENGLISH: "English",
     ESPANOL: "Español"
+=======
+export const LOCAL_STORAGE = {
+    USER_DATA: 'userData'
 }

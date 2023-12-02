@@ -1,7 +1,6 @@
 import { get, ref, getDatabase } from "firebase/database";
 
 export async function getTemplateJsonData(authId, id) {
-  // Convert the string 'id' to an integer
   id = parseInt(id, 10);
 
   const database = getDatabase();

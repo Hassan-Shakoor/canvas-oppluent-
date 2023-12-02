@@ -1,8 +1,8 @@
 // ** Firebase
 import { list, ref, getDownloadURL } from "firebase/storage";
-import { storage } from '../configs/firebase';
+import { storage } from '../../configs/firebase';
 
-export const getUploadImg = async () => {
+const getUploadImg = async () => {
   try {
     const storageRef = ref(storage);
     const res = await list(storageRef);
@@ -16,3 +16,5 @@ export const getUploadImg = async () => {
     throw error;
   }
 };
+
+export default getUploadImg
