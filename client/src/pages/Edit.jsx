@@ -13,6 +13,7 @@ import EditZoom from "../components/EditComp/EditZoom";
 import PageManagerStage from "../components/EditComp/EdirPageManager.jsx/PageManagerStage";
 import PageManagerButtonSet from "../components/EditComp/EdirPageManager.jsx/PageManagerButtonSet";
 import Canvas from "../components/CanvasComponent/Canvas";
+import EditToobar from "../components/EditComp/EditToolbarComp/EditToolbar";
 
 function Edit(){
     // ** Vars
@@ -22,6 +23,7 @@ function Edit(){
         <div>
             <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme={darkMode ? 'dark' : 'light'}/>
             <EditHeader/>
+            <EditToobar/>
             <EditSidebar/>
             <EditZoom/>
             <div className="page-manager">
