@@ -9,10 +9,12 @@ function Template(props){
     const [isCreateDesignOpen,setCreateDesginOpen] = useState(null)
 
     const dropdownTitle = ['Download', 'Copy Website Link', 'Open In New Tab']
-  
+    
     function handleCreateDesign(id){
       setCreateDesginOpen(id)
     }
+
+    console.log({props})
   
     return(
       // Change the size of templete depending upon grid column state
@@ -43,12 +45,12 @@ function Template(props){
             </div>
             <Dropdown
                 trigger={['click']}
-                overlay={<MoreDropDown dropdown={dropdownTitle} />}
+                overlay={<MoreDropDown dropdown={dropdownTitle} dropdownLinks={props} />}
             >      
-                <button type="button" className="btn btn_icon" >
-                    <svg className="icon v2-icon v2-icon-option-vertical">
-                    <use href="#v2-icon-option-vertical" xlinkHref="#v2-icon-option-vertical"/>
-                    </svg>
+                <button type="button" className="btn btn_black btn_no-text template__menu-dropdown" >
+                <svg className="icon v2-icon v2-icon-ellipsis-h">
+                <use href="#v2-icon-ellipsis-h" xlinkHref="#v2-icon-ellipsis-h" />
+              </svg>
                     <span className="btn__text"/>
                 </button>
             </Dropdown>

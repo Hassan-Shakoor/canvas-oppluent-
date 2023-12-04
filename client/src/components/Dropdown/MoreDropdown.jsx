@@ -1,5 +1,12 @@
+import { Link } from "react-router-dom";
+import {toast} from 'react-toastify'
 
-function MoreDropDown({dropdown}){
+
+function MoreDropDown({dropdown, dropdownLinks}){
+    const copyLinkHanlde = () => {
+
+        toast.success("Link Copied")
+    }
     return(
         <div
             className="rc-dropdown rc-dropdown-placement-bottomLeft"
@@ -24,7 +31,12 @@ function MoreDropDown({dropdown}){
                         key={index}
                     >
                         <button type="button" className="btn btn_menu-item">
-                            <span className="btn__text">{item}</span>
+                             {index === 0 && <a href={`${dropdownLinks.item.imageUrl}`} download target="_blank"><span className="btn__text">{item}</span></a>}
+                             {index === 1 && <a onClick={()=> {
+                                navigator.clipboard.writeText(`${dropdownLinks.item.imageUrl}`)
+                                toast.success("Link Copied")
+                                }}><span className="btn__text">{item}</span></a>}
+                             {index === 2 && <Link to={`${dropdownLinks.item.imageUrl}`} ><span className="btn__text">{item}</span></Link>}
                         </button>
                     </li>
                 ))}

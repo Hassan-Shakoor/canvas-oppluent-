@@ -31539,3 +31539,53 @@ svg.icon.v2-icon.v2-icon-chevron-down {
 .select__option:hover{
   background-color: var(--primary-color-light);
 }
+
+/* Share Template */
+
+.design-public-share{
+    min-height: 100vh;
+    padding: 20px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+}
+
+.design-public-share__content{
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 5%;
+  padding: 15px 15px 15px 25px;
+  background: var(--secondary-bg-color);
+  border-radius: 10px;
+  box-shadow: 0 23px 31px rgba(0,0,0,.09)
+}
+
+.design-public-share__left-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 100%;
+  background: var(--primary-color);
+  border-bottom-left-radius: inherit;
+  border-top-left-radius: inherit;
+}
+
+.design-public-share__design-image {
+  margin-bottom: 5px;
+  -o-object-fit: contain;
+  object-fit: contain;
+  width: 100%;
+}
+
+.button-set_right {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.button-set {
+  display: flex;
+  align-items: center;
+}
