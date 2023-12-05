@@ -24,7 +24,7 @@ function ColumnDesign({setLoading}) {
     const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
     const response = await getTemplateJsonData(userData.uid,id)
     if(response){
-      setImages(response.storage_url)
+      setImages(response.storage_url ?? [])
     }
     setLoading(false)
   },[id])
