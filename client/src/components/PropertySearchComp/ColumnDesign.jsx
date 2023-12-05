@@ -11,7 +11,7 @@ import { getTemplateJsonData } from "../../services/firebase/getTemplateData";
 import { getLocalStorage } from "../../services/localStorage";
 import { LOCAL_STORAGE } from "../../shared/constant";
 
-function ColumnDesign() {
+function ColumnDesign({setLoading}) {
     // ** State
     const [showPreview, setShowPreview] = useState(false)
     const [images, setImages] = useState([])
@@ -20,11 +20,13 @@ function ColumnDesign() {
   const {id} = useParams()
   
   const fetchData = useCallback(async() => {
+    setLoading(true)
     const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
     const response = await getTemplateJsonData(userData.uid,id)
     if(response){
-      setImages(response.storage_url)
+      setImages(response.storage_url ?? [])
     }
+    setLoading(false)
   },[id])
 
   useEffect(() => {

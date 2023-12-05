@@ -10,7 +10,7 @@ import { DISPLAY_DIRECTION } from "../../shared/constant";
 
 // ** Store
 import {useDispatch, useSelector} from 'react-redux'
-import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
+import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
 import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
 
 function Canvas() {
@@ -37,7 +37,13 @@ function Canvas() {
         canvas.loadFromJSON(canvasData,function(){
           canvas.renderAll()
         })
-        canvas.on("mouse:down", () => {
+        canvas.on("mouse:down", (event) => {
+          // Check if the clicked area have object and set it active
+          const target = event.target
+          if(target){
+            canvas.setActiveObject(target)
+          }
+          // Update the selected canvas
           dispatch(updateSelectedCanvas(Number(i)))
         })
         newCanvases.push(canvas);
