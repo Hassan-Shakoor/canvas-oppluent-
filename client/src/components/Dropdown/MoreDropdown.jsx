@@ -31,12 +31,12 @@ function MoreDropDown({dropdown, dropdownLinks}){
                         key={index}
                     >
                         <button type="button" className="btn btn_menu-item">
-                             {index === 0 && <a href={`${dropdownLinks.item.imageUrl}`} download target="_blank"><span className="btn__text">{item}</span></a>}
+                             {index === 0 && <a href={`${dropdownLinks.item.imageUrl}`} download target="_blank" className="text-no-decoration"><span className="btn__text">{item}</span></a>}
                              {index === 1 && <a onClick={()=> {
                                 navigator.clipboard.writeText(`${dropdownLinks.item.imageUrl}`)
                                 toast.success("Link Copied")
                                 }}><span className="btn__text">{item}</span></a>}
-                             {index === 2 && <Link to={`${dropdownLinks.item.imageUrl}`} ><span className="btn__text">{item}</span></Link>}
+                             {index === 2 && <Link to={`${dropdownLinks.item.imageUrl}`} className="text-no-decoration"><span className="btn__text ">{item}</span></Link>}
                         </button>
                     </li>
                 ))}
