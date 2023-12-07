@@ -1,12 +1,9 @@
 import { Link } from "react-router-dom";
 import {toast} from 'react-toastify'
+import { BASE_URL } from "../../shared/constant";
 
 
-function MoreDropDown({dropdown, dropdownLinks}){
-    const copyLinkHanlde = () => {
-
-        toast.success("Link Copied")
-    }
+function MoreDropDown({dropdown, dropdownLinks, id, userId, catId}){
     return(
         <div
             className="rc-dropdown rc-dropdown-placement-bottomLeft"
@@ -33,10 +30,10 @@ function MoreDropDown({dropdown, dropdownLinks}){
                         <button type="button" className="btn btn_menu-item">
                              {index === 0 && <a href={`${dropdownLinks.item.imageUrl}`} download target="_blank" className="text-no-decoration"><span className="btn__text">{item}</span></a>}
                              {index === 1 && <a onClick={()=> {
-                                navigator.clipboard.writeText(`${dropdownLinks.item.imageUrl}`)
+                                navigator.clipboard.writeText(`${BASE_URL}/share/template/${userId}/${catId}/${id}`)
                                 toast.success("Link Copied")
                                 }}><span className="btn__text">{item}</span></a>}
-                             {index === 2 && <Link to={`${dropdownLinks.item.imageUrl}`} className="text-no-decoration"><span className="btn__text ">{item}</span></Link>}
+                             {index === 2 && <Link to={`/share/template/${userId}/${catId}/${id}`} target={'_blank'} className="text-no-decoration"><span className="btn__text ">{item}</span></Link>}
                         </button>
                     </li>
                 ))}

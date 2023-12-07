@@ -16,3 +16,5 @@ export const LANGUAGE = {
 export const LOCAL_STORAGE = {
     USER_DATA: 'userData'
 }
+
+export const BASE_URL = 'http://localhost:3000';

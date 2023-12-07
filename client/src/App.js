@@ -56,14 +56,14 @@ function App() {
           </Route>
           <Route path="/edit/:id" element={<Edit />} />
           <Route path='/property-search' element={<PropertySearch/>}>
-            <Route path=':id' element={<ColumnMLS/>}/>
+            <Route path=':id' element={<ColumnMLS />}/>
           </Route>
           <Route path='/profile' element={isAuthenticated ? <AccountInformation/> : <Navigate to="/" replace/>} />
-          <Route path='/terms_of_use' element= {<TermsOfUse/>}/>
+          <Route path='/terms_of_use' element= {<TermsOfUse />}/>
           <Route path='/partners' element= {isAuthenticated ? <Partners/> : <Navigate to="/" replace/>}/>
           <Route path='/partners/new' element={isAuthenticated ? <NewPartner/> : <Navigate to='/' replace/>}/>
           <Route path='/partners/:id/edit' element={isAuthenticated ? <PartnerEdit/> : <Navigate to='/' replace/>} />
-          <Route path='/:images/:dynamicText' element={isAuthenticated ? <DesignPublicShare/> : <Navigate to='/' replace/>} />
+          <Route path='/share/template/:userId/:categoryId/:templateId' element={isAuthenticated ? <DesignPublicShare/> : <Navigate to='/' replace/>} />
         </Routes>
       </Router>
     </Provider>

@@ -13,8 +13,6 @@ function Template(props){
     function handleCreateDesign(id){
       setCreateDesginOpen(id)
     }
-
-    console.log({props})
   
     return(
       // Change the size of templete depending upon grid column state
@@ -45,7 +43,7 @@ function Template(props){
             </div>
             <Dropdown
                 trigger={['click']}
-                overlay={<MoreDropDown dropdown={dropdownTitle} dropdownLinks={props} />}
+                overlay={<MoreDropDown dropdown={dropdownTitle} dropdownLinks={props} id={props.item.id} userId={props.userId} catId={props.catId} />}
             >      
                 <button type="button" className="btn btn_black btn_no-text template__menu-dropdown" >
                 <svg className="icon v2-icon v2-icon-ellipsis-h">
