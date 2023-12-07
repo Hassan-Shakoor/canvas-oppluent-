@@ -1,6 +1,9 @@
 // ** Import Library
-import {useState} from "react"
+import {useEffect, useState} from "react"
+import { useDispatch, useSelector } from "react-redux";
+
 import {Link} from "react-router-dom"
+import { fetchPartnerData } from "../../store/app/Partner/partner";
 
 // "search-input_button search-input search-input_focused search-input_expanded"
 
@@ -10,6 +13,13 @@ function PartnerDashboard() {
     setSearchFocused] = useState(false)
   const [search,
     setSearch] = useState("")
+
+  const dispatch = useDispatch()
+
+    useEffect(() => {
+      dispatch(fetchPartnerData())
+    }, [dispatch])
+    
 
   return (
     <div className="dashboard-header dashboard-header_margin-bottom">

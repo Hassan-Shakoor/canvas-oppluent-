@@ -14,7 +14,7 @@ import PartnerLists from "../components/PartnersComp/PartnerLists"
 
 function Partners() {
   // ** Vars
-  const partnerList = useSelector(selectPartner)
+    const partnerList = useSelector(selectPartner)
   const darkMode = useSelector(selectDarkMode)
 
   return (
