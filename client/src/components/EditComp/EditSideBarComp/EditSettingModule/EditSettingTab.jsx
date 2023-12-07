@@ -46,7 +46,7 @@ function EditSettingTab() {
       <div className="sidebar-module__title">Settings</div>
       <div className="sidebar-module__divider"/>
       <div className="sidebar-tiles">
-        {settBtns.map((btn,index) => (<SettingsBtn name={btn.name} icon={btn.icon} setShowPanel={setShowPanel}/>))}
+        {settBtns.map((btn,index) => (<SettingsBtn key={index} name={btn.name} icon={btn.icon} setShowPanel={setShowPanel}/>))}
       </div>
       <EditDocSpec designType='Social Media Posts' minPages='1' maxPages='unlimited' divisibleBy='1' resolution='1080 x 1080'/></>}
 
