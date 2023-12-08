@@ -43,7 +43,7 @@ function Template(props){
             </div>
             <Dropdown
                 trigger={['click']}
-                overlay={<MoreDropDown dropdown={dropdownTitle} dropdownLinks={props} id={props.item.id} userId={props.userId} catId={props.catId} />}
+                overlay={<MoreDropDown dropdown={dropdownTitle} dropdownLinks={props} id={props.item.id} userId={props.userId} categoryId={props.categoryId} />}
             >      
                 <button type="button" className="btn btn_black btn_no-text template__menu-dropdown" >
                 <svg className="icon v2-icon v2-icon-ellipsis-h">

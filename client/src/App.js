@@ -25,7 +25,7 @@ import ColumnMLS from './components/PropertySearchComp/ColumnMLS';
 import Partners from './pages/Partners';
 import NewPartner from './pages/NewPartner';
 import PartnerEdit from './pages/PartnerEdit';
-import DesignPublicShare from './components/PublicShareTemplate/ShareTemplate';
+import Share from './pages/Share';
 
 // Intialising FontAwesomeIcon
 library.add(far);
@@ -63,7 +63,7 @@ function App() {
           <Route path='/partners' element= {isAuthenticated ? <Partners/> : <Navigate to="/" replace/>}/>
           <Route path='/partners/new' element={isAuthenticated ? <NewPartner/> : <Navigate to='/' replace/>}/>
           <Route path='/partners/:id/edit' element={isAuthenticated ? <PartnerEdit/> : <Navigate to='/' replace/>} />
-          <Route path='/share/template/:userId/:categoryId/:templateId' element={isAuthenticated ? <DesignPublicShare/> : <Navigate to='/' replace/>} />
+          <Route path='/share/:userId/:categoryId/:templateId' element={isAuthenticated ? <Share/> : <Navigate to='/' replace/>} />
         </Routes>
       </Router>
     </Provider>

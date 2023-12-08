@@ -206,7 +206,7 @@ function CategoryContent() {
               {category?.template?.length>0 ? 
               <div className="template-grid-container" style={{ gridTemplateColumns: "repeat(" + gridColumn + ", auto)" }}>
                 {category.template?.map((item, index) => (
-                  <Template key={index} item = {item} gridColumn={gridColumn} updateFavorite={updateFavorite} userId={userId} catId={category.id} />
+                  <Template key={index} item = {item} gridColumn={gridColumn} updateFavorite={updateFavorite} userId={userId} categoryId={category.id} />
                 )) }
               </div>
               :
