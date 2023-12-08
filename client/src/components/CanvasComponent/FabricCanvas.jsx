@@ -10,6 +10,7 @@ const FabricCanvas = ({index}) => {
 
     return (
         <div
+            key={index}
             className={selectedCanvas === index ? "fpd-view-stage rendered" : "fpd-view-stage rendered fpd-hidden" }
             style={{
             width: resolution.width,

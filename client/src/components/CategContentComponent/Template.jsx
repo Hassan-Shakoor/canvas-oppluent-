@@ -1,67 +1,15 @@
 import React, { useState }  from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Dropdown from 'rc-dropdown'
+// import components
 import EditPopUp from "./EditPopUp";
-
-function MoreDropDown(){
-    return(
-        <div
-            className="rc-dropdown rc-dropdown-placement-bottomLeft"
-            style={{
-            inset: "100% 3% auto auto",
-            boxSizing: "border-box",
-            minWidth: "25.3335px"
-            }}
-        >
-            <ul
-                className="rc-menu rc-menu-root rc-menu-vertical"
-                role="menu"
-                tabIndex="0"
-                data-menu-list="true"
-            >
-                <li
-                    className="rc-menu-item"
-                    role="menuitem"
-                    tabIndex="-1"
-                    data-menu-id="rc-menu-uuid-15312-1-0"
-                >
-                    <button type="button" className="btn btn_menu-item">
-                        <span className="btn__text">Share</span>
-                    </button>
-                </li>
-                <li
-                    className="rc-menu-item"
-                    role="menuitem"
-                    tabIndex="-1"
-                    data-menu-id="rc-menu-uuid-15312-1-1"
-                >
-                    <button type="button" className="btn btn_menu-item">
-                        <span className="btn__text">Share link</span>
-                    </button>
-                </li>
-                <li
-                    className="rc-menu-item"
-                    role="menuitem"
-                    tabIndex="-1"
-                    data-menu-id="rc-menu-uuid-15312-1-2"
-                >
-                    <button type="button" className="btn btn_menu-item">
-                        <span className="btn__text">Edit Master Template</span>
-                    </button>
-                </li>
-            </ul>
-            <div aria-hidden="true" style={{ display: "none" }}></div>
-        </div>
-    )
-}
+import MoreDropDown from "../Dropdown/MoreDropdown";
 
 function Template(props){
     const [isCreateDesignOpen,setCreateDesginOpen] = useState(null)
-    const [isMoreDropDown, setMoreDropDown] = useState(false);
-  
-    function dropdownHandler(){
-      setMoreDropDown(!isMoreDropDown)
-    }
 
+    const dropdownTitle = ['Download', 'Copy Website Link', 'Open In New Tab']
+    
     function handleCreateDesign(id){
       setCreateDesginOpen(id)
     }
@@ -93,19 +41,17 @@ function Template(props){
                 </span>
               </button>
             </div>
-            <button
-              type="button"
-              className="btn btn_black btn_no-text template__menu-dropdown"
-              data-test="design-menu-button"
-              onClick={dropdownHandler}
-            >
-              <svg className="icon v2-icon v2-icon-ellipsis-h">
+            <Dropdown
+                trigger={['click']}
+                overlay={<MoreDropDown dropdown={dropdownTitle} dropdownLinks={props} id={props.item.id} userId={props.userId} categoryId={props.categoryId} />}
+            >      
+                <button type="button" className="btn btn_black btn_no-text template__menu-dropdown" >
+                <svg className="icon v2-icon v2-icon-ellipsis-h">
                 <use href="#v2-icon-ellipsis-h" xlinkHref="#v2-icon-ellipsis-h" />
               </svg>
-              <span className="btn__text" />
-              {/* Dropdown */}
-              {isMoreDropDown && <MoreDropDown/>}
-            </button>
+                    <span className="btn__text"/>
+                </button>
+            </Dropdown>
           </div>
         </div>
         <div className="template__panel">

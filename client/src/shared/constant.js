@@ -12,3 +12,9 @@ export const LANGUAGE = {
     ENGLISH: "English",
     ESPANOL: "Español"
 }
+
+export const LOCAL_STORAGE = {
+    USER_DATA: 'userData'
+}
+
+export const BASE_URL = 'http://localhost:3000';

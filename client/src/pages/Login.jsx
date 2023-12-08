@@ -1,16 +1,24 @@
-// ** Import Dependecies
+// ** Library
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 // ** Firebase
 import { signInWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth';
-import { auth } from '../configs/firebase';
 
 // ** Custom Component
 import LoginInputs from '../components/LoginComponent/LoginInputs';
 import { ToastContainer} from 'react-toastify';
 import ResetPasswordInputs from '../components/LoginComponent/ResetPasswordInputs';
+
+// ** Configs
+import { auth } from '../configs/firebase';
+
+// ** Services
+import { setLocalStorage } from '../services/localStorage';
+
+// ** Constant
+import { LOCAL_STORAGE } from '../shared/constant';
 
 const SCREEN_MODES = {
   LOGIN: 'login',
@@ -26,15 +34,17 @@ function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const submittedOn = e.target.getAttribute("data-custom-attribute")
-    if (submittedOn === SCREEN_MODES.LOGIN){
+    if (mode === SCREEN_MODES.LOGIN){
       if (!email || !password) {
         toast.error("Email or password are required")
       }else{
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
-            // eslint-disable-next-line no-unused-vars
             const user = userCredential.user;
+            setLocalStorage(LOCAL_STORAGE.USER_DATA,{
+              uid:user.uid,
+              email: user.email,
+            })
             navigate('/categories');
           })
           .catch((error) => {

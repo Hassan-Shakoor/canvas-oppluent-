@@ -25,6 +25,7 @@ import ColumnMLS from './components/PropertySearchComp/ColumnMLS';
 import Partners from './pages/Partners';
 import NewPartner from './pages/NewPartner';
 import PartnerEdit from './pages/PartnerEdit';
+import Share from './pages/Share';
 
 // Intialising FontAwesomeIcon
 library.add(far);
@@ -55,13 +56,14 @@ function App() {
           </Route>
           <Route path="/edit/:id" element={<Edit />} />
           <Route path='/property-search' element={<PropertySearch/>}>
-            <Route path=':id' element={<ColumnMLS/>}/>
+            <Route path=':id' element={<ColumnMLS />}/>
           </Route>
           <Route path='/profile' element={isAuthenticated ? <AccountInformation/> : <Navigate to="/" replace/>} />
-          <Route path='/terms_of_use' element= {<TermsOfUse/>}/>
+          <Route path='/terms_of_use' element= {<TermsOfUse />}/>
           <Route path='/partners' element= {isAuthenticated ? <Partners/> : <Navigate to="/" replace/>}/>
           <Route path='/partners/new' element={isAuthenticated ? <NewPartner/> : <Navigate to='/' replace/>}/>
           <Route path='/partners/:id/edit' element={isAuthenticated ? <PartnerEdit/> : <Navigate to='/' replace/>} />
+          <Route path='/share/:userId/:categoryId/:templateId' element={isAuthenticated ? <Share/> : <Navigate to='/' replace/>} />
         </Routes>
       </Router>
     </Provider>

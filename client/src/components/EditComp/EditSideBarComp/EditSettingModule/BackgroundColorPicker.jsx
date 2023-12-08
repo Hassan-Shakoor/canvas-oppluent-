@@ -4,7 +4,7 @@ import {RgbaColorPicker} from 'react-colorful'
 
 // ** Shared
 import { getRgbaCSS, getHexColor, getRgbaColor, getRGBAtoSet } from "../../../../shared/utils/color";
-import { render } from "../../../../shared/utils/fabric";
+import { getCanvasRef, render } from "../../../../shared/utils/fabric";
 
 // ** Icon
 import { Icon } from "@iconify/react";
@@ -25,7 +25,7 @@ function BackgroundColorPicker() {
   // ** Hooks
   const dispatch = useDispatch()
   const selectedCanvas = useSelector(selectSelectedCanvas)
-  const canvasContainer = useSelector(selectCanvasContainer)
+  const canvasContainer = getCanvasRef()
   const standardColor = useSelector(selectStandardColor)
   const brandColor = useSelector(selectBrandColor)
   const userColor = useSelector(selectUserColor)
