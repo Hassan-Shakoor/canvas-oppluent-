@@ -1,5 +1,5 @@
 // ** Import Dependencies
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,11 +8,13 @@ import {toast} from 'react-toastify'
 import SpinnerOverlay from '../Loader/SpinnerOverlay'
 import ValidationError from "../ValidationErrorComp/ValidationError";
 
+
 // ** Store
-import { selectPartner, updatePartnerList } from "../../store/app/Partner/partner";
+import { createPartner, selectPartner, updatePartnerList, fetchPartnerData } from "../../store/app/Partner/partner";
 
 // ** Services
 import uploadFileAndGetURL from "../../services/uploadFileAndGetURL";
+import { selectUID } from "../../store/app/User/userPreference";
 
 function NewPartnerBody() {
     // ** State
@@ -38,7 +40,7 @@ function NewPartnerBody() {
         }
 
         const data = {firstName, lastName, email, contactNumber, profilePhoto: selectedProfilePhoto, primary: partnersList?.length === 0 || false}
-        dispatch(updatePartnerList([...partnersList, data]))
+        dispatch(createPartner([data]))
         toast.success("Partner successfully created")
         navigate('/partners')
       }
@@ -55,7 +57,7 @@ function NewPartnerBody() {
       setLoading(false)
     }
 
-  return (
+      return (
     <>
     {loading && <SpinnerOverlay loading={loading}/>}
     <div className="page__content">
