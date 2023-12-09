@@ -1,41 +1,48 @@
 // ** Import Dependencies
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import {useDispatch, useSelector} from "react-redux"
 
 // ** Constant
 import { toast } from "react-toastify"
 import { LANGUAGE } from "../../shared/constant"
+import { saveUserSetting, fetchUserSetting } from "../../store/app/AccountInformation/setting"
 
 // TODO: link to the backend
 
 
-function SettingsBody () {
+function SettingsBody ({setting}) {
     // ** State
-    const [email, setEmail] = useState("")
+    const [email, setEmail] = useState(setting.email)
     const [newPassword, setNewPassword] = useState("")
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
     const [currentPassword, setCurrentPassword] = useState("")
-    const [language, setLanguage] = useState(LANGUAGE.ENGLISH)
+    const [language, setLanguage] = useState(setting.language)
     const [dropdownActive, setDropdownActive] = useState(false)
 
     // ** Vars
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
     const handleSaveClick = () => {
         if (newPassword === passwordConfirmation) {
             const data = {
                 email,
                 newPassword,
                 passwordConfirmation,
-                currentPassword,
-                language
+                currentPassword, 
+                language  
             }
-    
-            console.log(data)
+            dispatch(saveUserSetting([data]))
+            toast.success("Your setting has been saved")
         } else{
-            toast.error("Password doesn't match.")
+            toast.error("New password and password confirmation must be the same")
         }
+        
     }
+
+    useEffect(() => {
+          dispatch(fetchUserSetting())
+      }, [dispatch])
 
     return (
         <div className="pt-4">
