@@ -6,9 +6,9 @@ import { Link } from "react-router-dom"
 import { Icon } from "@iconify/react"
 
 // ** Store
-import { selectPartner, updatePartnerList } from "../../store/app/Partner/partner"
+import { deletePartner, selectPartner, fetchPartnerData, selectSearchPartner} from "../../store/app/Partner/partner"
 import PartnerRow from "./PartnerRow"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ConfirmationModal from "../Modal/ConfirmationModal"
 
 function PartnerLists() {
@@ -20,6 +20,15 @@ function PartnerLists() {
     // ** vars 
     const dispatch = useDispatch()
     const partnerList = useSelector(selectPartner)
+    const search = useSelector(selectSearchPartner)
+    
+    const filteredPartnerList = partnerList.filter((partner) => {
+        return partner.firstName.toLowerCase().includes(search.toLowerCase()) || 
+        partner.lastName.toLowerCase().includes(search.toLowerCase()) ||
+        partner.email.toLowerCase().includes(search.toLowerCase()) ||
+        partner.contactNumber.toLowerCase().includes(search.toLowerCase())
+      })
+
 
     const handleSelect = (id) => {
         checked.includes(id) ? setChecked(checked.filter(item => item !== id)) : setChecked([...checked,id])
@@ -27,7 +36,7 @@ function PartnerLists() {
 
     const handeDeleteAll = (event) => {
         event.preventDefault()
-        dispatch(updatePartnerList([...partnerList].filter((partner,index) => !checked.includes(index))))
+        dispatch(deletePartner(0))
         setShowConfirmationModal(false)
     }
 
@@ -35,6 +44,10 @@ function PartnerLists() {
         setChecked(!isAllSelected ? Array.from({ length: partnerList.length }, (_, index) => index) : []);
         setIsAllSelected(!isAllSelected);
       };
+
+    useEffect(() => {
+        dispatch(fetchPartnerData())
+    }, [showConfirmationModal])
       
 
   return (
@@ -106,7 +119,7 @@ function PartnerLists() {
                     </div>
                 </div>
                 <div className="rt-tbody" style={{ minWidth: 335 }}>
-                    {[...partnerList].map((partner,index) => <PartnerRow key={index} partner={partner} id={index} checked={checked} handleSelect={handleSelect}/>)}
+                    {[...filteredPartnerList].map((partner,index) => <PartnerRow key={index} partner={partner} id={index} checked={checked} handleSelect={handleSelect}/>)}
                 </div>
             </div>
             </div>

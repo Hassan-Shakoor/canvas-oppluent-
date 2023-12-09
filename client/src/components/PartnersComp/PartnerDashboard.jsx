@@ -3,18 +3,16 @@ import {useEffect, useState} from "react"
 import { useDispatch, useSelector } from "react-redux";
 
 import {Link} from "react-router-dom"
-import { fetchPartnerData } from "../../store/app/Partner/partner";
+import {setSearchPartner ,fetchPartnerData, selectSearchPartner, setIsSearched, selectIsSearched } from "../../store/app/Partner/partner";
 
 // "search-input_button search-input search-input_focused search-input_expanded"
 
 function PartnerDashboard() {
   // ** State
-  const [searchFocused,
-    setSearchFocused] = useState(false)
-  const [search,
-    setSearch] = useState("")
 
   const dispatch = useDispatch()
+  const search = useSelector(selectSearchPartner)
+  const isSearched = useSelector(selectIsSearched)
 
     useEffect(() => {
       dispatch(fetchPartnerData())
@@ -34,7 +32,7 @@ function PartnerDashboard() {
         </div>
         <div className="dashboard-header__right-panel justify-content-end flex-grow-1">
           <div
-            className={searchFocused
+            className={isSearched
             ? "search-input_button search-input search-input_focused search-input_expanded"
             : "search-input_button search-input"}>
             <label htmlFor="search">
@@ -51,9 +49,9 @@ function PartnerDashboard() {
                 type="search"
                 className="search-input__input"
                 value={search}
-                onFocus={() => setSearchFocused(true)}
-                onBlur={() => setSearchFocused(false)}
-                onChange={(event) => setSearch(event.target.value)}/>
+                onFocus={() => dispatch(setIsSearched(true))}
+                onBlur={() => dispatch(setIsSearched(false))}
+                onChange={(event) => dispatch(setSearchPartner(event.target.value))}/>
             </div>
           </div>
         </div>
