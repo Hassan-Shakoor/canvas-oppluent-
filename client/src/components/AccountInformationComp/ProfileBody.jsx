@@ -1,21 +1,26 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import {useDispatch, useSelector} from "react-redux"
 
 // ** Custom Component
 import WarningModal from "../Modal/WarningModal"
 
 
 // TODO: Change this hardcode default value once API for user info implemented.
+import { fetchProfile, saveProfile } from "../../store/app/AccountInformation/profile"
+import {toast} from 'react-toastify'
 
-function ProfileBody () {
+function ProfileBody ({profile}) {
     // ** State
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [email, setEmail] = useState("")
-    const [contactNo, setContactNo] = useState("")
-    const [selectedUploadProfile, setSelectedUploadFile] = useState(null)
+    const [firstName, setFirstName] = useState(profile.firstName)
+    const [lastName, setLastName] = useState(profile.lastName)
+    const [email, setEmail] = useState(profile.email)
+    const [contactNo, setContactNo] = useState(profile.contactNo)
+    const [selectedUploadProfile, setSelectedUploadFile] = useState(profile.profileImage)
     const [isChanged, setIsChanged] = useState(false)
     const [showWarning, setShowWarning] = useState(false)
+
+    const disptach = useDispatch()
 
     // ** Vars
     const navigate = useNavigate();
@@ -28,8 +33,15 @@ function ProfileBody () {
             contactNo,
             profileImage: !!selectedUploadProfile ? URL.createObjectURL(selectedUploadProfile) : ""
         }
-        console.log(data)
+        disptach(saveProfile([data]))
+        toast.success("Profile successfully updated")
+        
     }
+
+    useEffect(() => {
+        disptach(fetchProfile())
+    }
+    , [disptach])
 
     return(
         <>
