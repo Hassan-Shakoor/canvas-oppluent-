@@ -9,7 +9,7 @@ import SpinnerOverlay from '../Loader/SpinnerOverlay'
 import ValidationError from "../ValidationErrorComp/ValidationError";
 
 // ** Store
-import { selectPartner, updatePartnerList } from "../../store/app/Partner/partner";
+import { selectPartner, updatePartner, updatePartnerList } from "../../store/app/Partner/partner";
 
 // ** Services
 import uploadFileAndGetURL from "../../services/uploadFileAndGetURL";
@@ -24,13 +24,11 @@ function EditPartnerBody({id, partner}) {
     const [showValidationError, setShowValidationError] = useState(false)
     const [loading, setLoading] = useState(false)
 
-
-    console.log(partner)
-
     // ** Vars
     const dispatch = useDispatch()
     const partnersList = useSelector(selectPartner)
     const navigate = useNavigate()
+
 
     const handleSavePartnerSubmit = () => {
         if (firstName.length === 0 || lastName.length === 0){
@@ -38,9 +36,10 @@ function EditPartnerBody({id, partner}) {
             toast.error("All required fields must be filled")
             return
         }
-        const tempPartner = [...partnersList]
-        tempPartner[id] = {firstName, lastName, email, contactNumber, profilePhoto: selectedProfilePhoto, primary: partnersList?.length === 0 || false}
-        dispatch(updatePartnerList([...tempPartner]))
+
+        const updatedPartner = {id : partner.id , firstName, lastName, email, contactNumber, profilePhoto: selectedProfilePhoto, primary: partnersList?.length === 0 || false}
+
+        dispatch(updatePartner([updatedPartner]))
         toast.success("Partner successfully updated")
         navigate('/partners')
       }

@@ -30,7 +30,6 @@ function NewPartnerBody() {
     const dispatch = useDispatch()
     const partnersList = useSelector(selectPartner)
     const navigate = useNavigate()
-    console.log(partnersList)
 
     const handleNewPartnerSubmit = () => {
         if (firstName.length === 0 || lastName.length === 0){
