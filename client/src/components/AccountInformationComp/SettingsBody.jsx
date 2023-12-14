@@ -5,11 +5,13 @@ import {useDispatch, useSelector} from "react-redux"
 
 // ** Constant
 import { toast } from "react-toastify"
-import { LANGUAGE } from "../../shared/constant"
-import { saveUserSetting, fetchUserSetting } from "../../store/app/AccountInformation/setting"
+import { LANGUAGE, isEmailValid } from "../../shared/constant"
+
+import { auth } from "../../configs/firebase"
 
 // TODO: link to the backend
-
+import { saveProfile , fetchProfile, saveSetting } from "../../store/app/AccountInformation/profile"
+import { updateEmail , reauthenticateWithCredential, updatePassword, EmailAuthProvider} from "firebase/auth"
 
 function SettingsBody ({setting}) {
     // ** State
@@ -24,24 +26,47 @@ function SettingsBody ({setting}) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const handleSaveClick = () => {
-        if (newPassword === passwordConfirmation) {
-            const data = {
-                email,
-                newPassword,
-                passwordConfirmation,
-                currentPassword, 
-                language  
-            }
-            dispatch(saveUserSetting([data]))
-            toast.success("Your setting has been saved")
-        } else{
-            toast.error("New password and password confirmation must be the same")
+        const user = auth.currentUser
+        const data = {
+            email,
+            language,
         }
-        
+        if(email !== user.email  && email !== "" && isEmailValid.test(email) && language !== setting.language){
+            dispatch(saveSetting(data))
+            toast.success("Your email and language have been changed")
+        } else if(email === "" && language !== setting.language){
+            data.email = user.email
+            dispatch(saveSetting(data))
+            toast.success("Your language has been changed")
+        }
+        if((email && email !== "" && isEmailValid.test(email)) || (currentPassword && currentPassword !== "")){
+            const credential = EmailAuthProvider.credential(
+                user.email,
+                currentPassword
+            );
+            reauthenticateWithCredential(user, credential).then(() => {
+                if(email !== user.email && email !== "" && isEmailValid.test(email)){
+                    updateEmail(user, email).then(() => {
+                        toast.success("Your email has been changed")
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                }
+                if(newPassword !== "" && newPassword === passwordConfirmation && newPassword !== currentPassword && currentPassword !== ""){
+                    updatePassword(user, newPassword).then(() => {
+                        toast.success("Your password has been changed")
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+        }  
     }
 
     useEffect(() => {
-          dispatch(fetchUserSetting())
+          dispatch(fetchProfile())
       }, [dispatch])
 
     return (

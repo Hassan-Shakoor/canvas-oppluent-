@@ -1,5 +1,7 @@
+import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { ACCOUNT_INFORMATION } from "../../shared/constant"
+
 
 function AccountInformationDashboard ({mode}) {
     return (

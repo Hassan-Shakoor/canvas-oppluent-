@@ -7,6 +7,7 @@ import ProfileDropDown from './ProfileDropDown';
 // ** Store
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserInfo, selectUID, selectUserData } from '../../store/app/User/userPreference';
+import { fetchProfile, selectProfile } from '../../store/app/AccountInformation/profile';
 
 function Profile(){
   // ** State
@@ -19,6 +20,7 @@ function Profile(){
   const dispatch = useDispatch()
   const uid  = useSelector(selectUID)
   const userData = useSelector(selectUserData)
+  const userProfileData = useSelector(selectProfile)
 
   const handleSecondButtonClick = () => {
   setIsSecondDropdownOpen(!isSecondDropDownOpen);
@@ -39,14 +41,14 @@ function Profile(){
 
   useEffect(() => {
     dispatch(fetchUserInfo())
+    dispatch(fetchProfile())
   },[dispatch])
 
   useEffect(() => {
-    if (userData) {
-      setUserName(userData[uid])
-      setLetterName(userData[uid][0])
+    if (userProfileData) {
+      setUserName(userProfileData?.firstName)
     }
-  },[uid, userData])
+  },[userProfileData])
 
   return(
       <div>
