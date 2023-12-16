@@ -6,8 +6,9 @@ import { fabric } from "fabric";
 import SpinnerOverlay from '../../../Loader/SpinnerOverlay'
 
 // ** Store
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas"
+import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 
 // ** API
 import { fetchQrCode } from "../../../../api/qrCodeGenerator"
@@ -22,6 +23,7 @@ function QrCodeModule (){
     const [update, setUpdate] = useState(false)
 
     // ** Vars
+    const dispatch = useDispatch()
     const selectedCanvas = useSelector(selectSelectedCanvas)
     const canvasContainer = getCanvasRef()
     const canvas = canvasContainer[selectedCanvas]
@@ -72,6 +74,7 @@ function QrCodeModule (){
             console.log(error)
         }
         setLoading(false)
+        dispatch(updateOpenDrawer(null))
     }
 
     useEffect(() => {

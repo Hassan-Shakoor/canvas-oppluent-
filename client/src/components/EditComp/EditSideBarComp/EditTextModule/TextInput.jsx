@@ -13,6 +13,7 @@ import {
 import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { getCanvasRef } from "../../../../shared/utils/fabric";
+import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 
 function TextInput() {
   // ** Hooks
@@ -30,6 +31,7 @@ function TextInput() {
     });
     canvas.add(fabricText);
     canvas.setActiveObject(fabricText);
+    dispatch(updateOpenDrawer(null))
   };
 
   return (
