@@ -5,16 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 // ** Custom Component
 import WarningModal from "../Modal/WarningModal";
 
-import { auth } from "../../configs/firebase";
-import {
-  updateEmail,
-} from "firebase/auth";
-
 // TODO: Change this hardcode default value once API for user info implemented.
-import { saveProfile, fetchProfile } from "../../store/app/AccountInformation/profile";
+import {
+  saveProfile,
+  fetchProfile,
+} from "../../store/app/AccountInformation/profile";
 import { toast } from "react-toastify";
 import { isEmailValid } from "../../shared/constant";
-
+import { set } from "lodash";
+import InputModal from "../Modal/InputModal";
+import { auth } from "../../configs/firebase";
+import { updateUserEmail } from "../../services/firebase/updateUserInformation";
 
 function ProfileBody({ profile }) {
   // ** State
@@ -22,11 +23,14 @@ function ProfileBody({ profile }) {
   const [lastName, setLastName] = useState(profile.lastName);
   const [email, setEmail] = useState(profile.email);
   const [contactNo, setContactNo] = useState(profile.contactNo);
-  const [selectedUploadProfile, setSelectedUploadFile] = useState(profile.profileImage
-    );
+  const [selectedUploadProfile, setSelectedUploadFile] = useState(
+    profile.profileImage
+  );
   const [isChanged, setIsChanged] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showInputModal, setShowInputModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
 
   const disptach = useDispatch();
 
@@ -34,7 +38,6 @@ function ProfileBody({ profile }) {
   const navigate = useNavigate();
 
   const handleSave = () => {
-    const user = auth.currentUser;
     const data = {
       firstName,
       lastName,
@@ -44,23 +47,17 @@ function ProfileBody({ profile }) {
         ? URL.createObjectURL(selectedUploadProfile)
         : "",
     };
-    disptach(saveProfile(data));
-    toast.success("Profile successfully updated");
-    setLoading(true);
 
-    if (email !== user.email && email !== "" && isEmailValid.test(email)) {
-      updateEmail(user, email)
-        .then(() => {
-          toast.success("Your email has been changed");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    if (email && email !== profile.email && isEmailValid.test(email)) {
+      setShowInputModal(true);
+    } else {
+      disptach(saveProfile(data));
+      toast.success("Profile updated successfully")
     }
   };
   useEffect(() => {
     disptach(fetchProfile());
-  }, [disptach]);
+  }, [disptach, loading]);
   return (
     <>
       <div className="pt-4">
@@ -218,6 +215,50 @@ function ProfileBody({ profile }) {
           onClose={() => setShowWarning(false)}
           handleSecodnaryBtn={() => setShowWarning(false)}
           handlePrimaryBtn={() => navigate("/categories")}
+        />
+      )}
+      {showInputModal && (
+        <InputModal
+          title="Enter your current password"
+          body={
+            <div className="password-input">
+              <label className="input">
+                <span className="input__label">Current Password</span>
+                <input
+                  placeholder="Enter your current password"
+                  type="password"
+                  className="simple-input"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                />
+                <span className="password-input__icon-wrapper">
+                  <i className="icon icon-eye password-input__icon" />
+                </span>
+              </label>
+            </div>
+          }
+          secondayBtnTxt={"Cancel"}
+          primaryBtnTxt={"Submit"}
+          onClose={() => setShowInputModal(false)}
+          handleSecodnaryBtn={() => setShowInputModal(false)}
+          handlePrimaryBtn={async (e) => {
+            e.preventDefault();
+            const response = await updateUserEmail(email, currentPassword);
+            if(response){
+              const data = {
+                firstName,
+                lastName,
+                email,
+                contactNo,
+                profileImage: !!selectedUploadProfile
+                  ? URL.createObjectURL(selectedUploadProfile)
+                  : "",
+              };
+              disptach(saveProfile(data));
+              setShowInputModal(false);
+              toast.success("Profile and email updated successfully")
+            }
+          }}
         />
       )}
     </>

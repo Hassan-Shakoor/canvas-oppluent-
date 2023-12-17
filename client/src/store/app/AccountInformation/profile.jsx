@@ -1,32 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set, onValue, update,  child } from "firebase/database";
-import { auth } from "../../../configs/firebase";
+import { updateUserProfile, updateUserSetting } from "../../../services/firebase/updateUserInformation";
+import { getUserInformation } from "../../../services/firebase/getUserInformation";
 
 export const saveProfile = createAsyncThunk(
   "profile/saveProfile",
   async (userData) => {
-    console.log({ userData });
     return new Promise(async (resolve, reject) => {
       try {
-        const database = getDatabase();
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            const userRef = ref(database, `${uid}/accountInformation/profile`);
-            const firstNameRef = child(userRef, "firstName");
-            const lastNameRef = child(userRef, "lastName");
-            const contactNoRef = child(userRef, "contactNo");
-            const profileImageRef = child(userRef, "profileImage");
-            const emailRef = child(userRef, "email");
-            await set(emailRef, userData?.email);
-            await set(firstNameRef, userData?.firstName);
-            await set(lastNameRef, userData?.lastName);
-            await set(contactNoRef, userData?.contactNo);
-            await set(profileImageRef, userData?.profileImage);
-          }
-        });
-        resolve("success");
+        const response = await updateUserProfile(userData);
+        resolve(response);
       } catch (err) {
         reject(err.message);
       }
@@ -37,21 +19,10 @@ export const saveProfile = createAsyncThunk(
 export const saveSetting = createAsyncThunk(
   "profile/saveSetting",
   async (userData) => {
-    console.log({ userData });
     return new Promise(async (resolve, reject) => {
       try {
-        const database = getDatabase();
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            const userRef = ref(database, `${uid}/accountInformation/profile`);
-            const languageRef = child(userRef, "language");
-            const emailRef = child(userRef, "email");
-            await set(languageRef, userData?.language);
-            await set(emailRef, userData?.email)
-          }
-        });
-        resolve("success");
+        const response = await updateUserSetting(userData);
+        resolve(response);
       } catch (err) {
         reject(err.message);
       }
@@ -64,17 +35,8 @@ export const fetchProfile = createAsyncThunk(
   async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const database = getDatabase();
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            const userRef = ref(database, `${uid}/accountInformation/profile`);
-            onValue(userRef, (snapshot) => {
-              const userData = snapshot.val();
-              resolve({ userData });
-            });
-          }
-        });
+        const response = await getUserInformation()
+        resolve({userData : response});
       } catch (err) {
         reject(err.message);
       }
