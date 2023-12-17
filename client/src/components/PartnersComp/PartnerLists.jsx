@@ -57,7 +57,7 @@ function PartnerLists() {
                 <span className="btn__text">+ Add New Partner</span>
             </Link>
         </div>
-        {checked.length !== 0 && <div className="controls-set controls-set_bulk-actions" onClick={() => setShowConfirmationModal(true)}>
+        {checked.length === partnerList.length && <div className="controls-set controls-set_bulk-actions" onClick={() => setShowConfirmationModal(true)}>
             <div className="controls-set__item">
                 <button type="button" className="btn btn_secondary">
                     <span className="btn__text">Delete All</span>
