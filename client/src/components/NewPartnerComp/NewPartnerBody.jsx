@@ -39,7 +39,7 @@ function NewPartnerBody() {
         }
 
         const data = {firstName, lastName, email, contactNumber, profilePhoto: selectedProfilePhoto, primary: partnersList?.length === 0 || false}
-        dispatch(createPartner([data]))
+        dispatch(createPartner(data))
         toast.success("Partner successfully created")
         navigate('/partners')
       }
