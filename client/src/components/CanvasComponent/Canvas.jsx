@@ -7,11 +7,11 @@ import FabricCanvas from "./FabricCanvas";
 
 // ** Shared
 import { DISPLAY_DIRECTION } from "../../shared/constant";
+import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
 
 // ** Store
 import {useDispatch, useSelector} from 'react-redux'
-import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateSelectedCanvas } from "../../store/app/Edit/Canvas/canvas";
-import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
+import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
 
 function Canvas() {
 
@@ -43,6 +43,7 @@ function Canvas() {
           if(target){
             canvas.setActiveObject(target)
           }
+          dispatch(updateSelectedObject(target))
           // Update the selected canvas
           dispatch(updateSelectedCanvas(Number(i)))
         })

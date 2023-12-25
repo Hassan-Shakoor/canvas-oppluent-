@@ -15,6 +15,7 @@ import { fetchQrCode } from "../../../../api/qrCodeGenerator"
 
 // ** Shared
 import { getCanvasRef } from "../../../../shared/utils/fabric"
+import { generateRandomId } from "../../../../shared/utils";
 
 function QrCodeModule (){
     // ** State
@@ -38,8 +39,10 @@ function QrCodeModule (){
                 scaleX: activeObject.scaleX,
                 scaleY: activeObject.scaleY,
                 angle: activeObject.angle,
-                name: "qrCode",
-                url:url
+                name: url,
+                url:url,
+                isQrCode: true,
+                id: generateRandomId()
             });
             canvas.add(img);
             canvas.renderAll();
@@ -53,9 +56,10 @@ function QrCodeModule (){
               top: 50,
               scaleX: 0.5,
               scaleY: 0.5,
-              name: "qrCode",
-              url:url
-
+              name: url,
+              url:url,
+              isQrCode: true,
+              id: generateRandomId()
             });
             canvas.add(img);
             canvas.renderAll();
@@ -78,7 +82,7 @@ function QrCodeModule (){
     }
 
     useEffect(() => {
-        setUpdate((activeObject?.type === "image" && activeObject?.name === "qrCode") ? true : false)
+        setUpdate((activeObject?.type === "image" && activeObject?.isQrCode) ? true : false)
         setUrl(activeObject?.url ?? "")
     },[])
 

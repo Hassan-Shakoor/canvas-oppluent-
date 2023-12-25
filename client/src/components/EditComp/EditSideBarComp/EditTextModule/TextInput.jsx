@@ -1,6 +1,7 @@
 // ** Import Library
 import React from "react";
 import { fabric } from "fabric";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 
 // ** Store
 import { useDispatch } from "react-redux/es/hooks/useDispatch";
@@ -11,9 +12,11 @@ import {
   updateUrl,
 } from "../../../../store/app/Edit/EditSidebar/EditText/text";
 import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
-import { useSelector } from "react-redux/es/hooks/useSelector";
-import { getCanvasRef } from "../../../../shared/utils/fabric";
 import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
+
+// ** Shared
+import { getCanvasRef } from "../../../../shared/utils/fabric";
+import { generateRandomId } from "../../../../shared/utils";
 
 function TextInput() {
   // ** Hooks
@@ -28,10 +31,12 @@ function TextInput() {
     const fabricText = new fabric.IText(text.trim(), {
       selectable: true,
       hasControls: true,
+      id: generateRandomId()
     });
     canvas.add(fabricText);
     canvas.setActiveObject(fabricText);
-    dispatch(updateOpenDrawer(null))
+    dispatch(updateOpenDrawer(null));
+    dispatch(updateText(''));
   };
 
   return (

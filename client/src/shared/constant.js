@@ -17,4 +17,9 @@ export const LOCAL_STORAGE = {
     USER_DATA: 'userData'
 }
 
+export const OBJECT_TYPE = {
+    ITEXT: 'i-text',
+    IMAGE: 'image'
+}
+
 export const BASE_URL = 'https://claircius-frontend.vercel.app/';

@@ -30,8 +30,8 @@ export const store = configureStore({
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['canvas/updateCanvasContainer','canvas/updateSelectedCanvas'],
-        ignoredPaths: ['canvas.canvasContainer','canvas.selectedCanvas']
+        ignoredActions: ['canvas/updateCanvasContainer','canvas/updateSelectedCanvas', 'canvas/updateSelectedObject'],
+        ignoredPaths: ['canvas.canvasContainer','canvas.selectedCanvas', 'canvas.selectedObject']
     }
   })
 })
