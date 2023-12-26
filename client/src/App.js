@@ -14,6 +14,8 @@ import Edit from './pages/Edit';
 import PropertySearch from './pages/PropertySearch';
 import AccountInformation from './pages/AccountInformation';
 
+import {DndContext} from '@dnd-kit/core';
+
 
 // Importing Modules
 import React, { useEffect, useState } from 'react';

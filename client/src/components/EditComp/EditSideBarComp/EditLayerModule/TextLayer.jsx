@@ -14,8 +14,9 @@ import {
 
 // ** Icon
 import { Icon } from "@iconify/react";
+import { Draggable } from "../../../DragnDrop/Draggable";
 
-const TextLayer = ({ object, updateObjects }) => {
+const TextLayer = ({ object, updateObjects, index }) => {
   const [layer, setLayer] = useState({ title: "", isLocked: false });
 
   // ** Var
@@ -73,6 +74,7 @@ const TextLayer = ({ object, updateObjects }) => {
   }, [object]);
 
   return (
+    <Draggable id={index}>
     <div
       className={`tree__item ${
         object?.id === selectedObject?.id && "tree__item_selected"
@@ -122,6 +124,7 @@ const TextLayer = ({ object, updateObjects }) => {
       </div>
       <div className="tree__children-box" />
     </div>
+    </Draggable>
   );
 };
 
