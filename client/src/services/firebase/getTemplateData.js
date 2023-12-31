@@ -15,7 +15,6 @@ export async function getTemplateJsonData(authId, id) {
         if (item.template) {
           const matchingTemplate = item.template.find((templateItem) => templateItem.id === id);
           if (matchingTemplate) {
-            console.log(matchingTemplate);
             return matchingTemplate;
           }
         }
