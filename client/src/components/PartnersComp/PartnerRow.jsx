@@ -1,6 +1,6 @@
 // ** Import Library
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // ** Icon
 import { Icon } from "@iconify/react";
@@ -17,39 +17,19 @@ import { toast } from "react-toastify";
 import {
   deletePartner,
   fetchPartnerData,
-  selectPartner,
-  updatePartner,
 } from "../../store/app/Partner/partner";
 
-function PartnerRow({ partner, id, checked, handleSelect }) {
-  // ** State
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [isPrimary, setIsPrimary] = useState(partner.primary);
-
-  // ** Vars
-  const dispatch = useDispatch();
-
-  const handleDelete = (event, id) => {
-    event.preventDefault();
-    dispatch(deletePartner(id));
-    setConfirmDelete(false);
-    toast.success("Partner successfully deleted.");
-  };
-
-  const handlePrimary = (event, id) => {
-    event.preventDefault();
-    setIsPrimary(!isPrimary);    
-    toast.success("Partner successfully updated.");
-  };
-
-  useEffect(()=>{
-    const updatedPartner = { ...partner, primary: isPrimary };
-    dispatch(updatePartner([updatedPartner]));
-  },[isPrimary])
-
-  useEffect(() => {
-    dispatch(fetchPartnerData());
-  }, [confirmDelete, isPrimary]);
+function PartnerRow({
+  partner,
+  id,
+  checked,
+  handleSelect,
+  handlePrimary,
+  handleDelete,
+  confirmDelete,
+  setConfirmDelete,
+  isPrimary
+}) {
 
   return (
     <>
@@ -122,9 +102,9 @@ function PartnerRow({ partner, id, checked, handleSelect }) {
               maxWidth: 145,
             }}
           >
-            {isPrimary ? (
+            {isPrimary && partner?.primary ? (
               <button
-                onClick={(event) => handlePrimary(event, partner.id)}
+                onClick={(event) => handlePrimary(event, partner, partner.id)}
                 type="button"
                 className="btn btn_badge btn_no-text-transform me-2"
               >
@@ -132,7 +112,7 @@ function PartnerRow({ partner, id, checked, handleSelect }) {
               </button>
             ) : (
               <button
-                onClick={(event) => handlePrimary(event, partner.id)}
+                onClick={(event) => handlePrimary(event, partner, partner.id)}
                 type="button"
                 className="btn btn_gray btn_no-text-transform me-2"
               >
