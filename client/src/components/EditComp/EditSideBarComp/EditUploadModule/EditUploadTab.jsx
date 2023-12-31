@@ -16,24 +16,6 @@ import { selectOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 import { selectMlsPropertyInfo, selectUseMlsInfo } from "../../../../store/app/PropertySearch/property";
 
 // ** Vars
-const multiMediaBtnJSON = [
-  {
-    title: "My Uploads",
-    icon: "bi:upload",
-  },
-  {
-    title: "Shapes",
-    icon: "fluent-mdl2:shapes",
-  },
-  {
-    title: "Claircius Logo",
-    icon: "ph:folder-open",
-  },
-  {
-    title: "Social Media Icons",
-    icon: "ph:folder-open",
-  }
-];
 const Modes = {
   Pixabay:'pixabay',
   Main: 'default',
@@ -48,6 +30,24 @@ function EditUploadTab() {
   const [showPanel, setShowPanel] = useState(Modes.Main);
   const [imgContainer, setImgContainer] = useState([]);
   const [loading, setLoading] = useState(false)
+  const [multiMediaBtn, setMultiMediaBtn] = useState([
+    {
+      title: "My Uploads",
+      icon: "bi:upload",
+    },
+    {
+      title: "Shapes",
+      icon: "fluent-mdl2:shapes",
+    },
+    {
+      title: "Claircius Logo",
+      icon: "ph:folder-open",
+    },
+    {
+      title: "Social Media Icons",
+      icon: "ph:folder-open",
+    }
+  ])
   const [searchMap, setSearchMap] = useState({
     [Modes.Pixabay]: {
       placeholder: "Search Pixabay for Copyright Free Media",
@@ -55,20 +55,20 @@ function EditUploadTab() {
     },
     [Modes.Main]: {
       placeholder: "Search Pixabay for Copyright Free Media",
-      data: multiMediaBtnJSON,
+      data: multiMediaBtn,
     },
     [Modes.MyUploads]: {
       placeholder: "Search in My Uploads",
       data: imgContainer,
     },
-    [Modes.Shapes]: { placeholder: "Search in Shapes", data: multiMediaBtnJSON },
+    [Modes.Shapes]: { placeholder: "Search in Shapes", data: multiMediaBtn },
     [Modes.Logo]: {
       placeholder: "Search in Claircius Logo",
-      data: multiMediaBtnJSON,
+      data: multiMediaBtn,
     },
     [Modes.Icons]: {
       placeholder: "Search in Social Media Icons",
-      data: multiMediaBtnJSON,
+      data: multiMediaBtn,
     },
   })
 
@@ -104,18 +104,22 @@ function EditUploadTab() {
   }, [showPanel]);
 
   useEffect(() => {
-    const mlsBtnExists = multiMediaBtnJSON.some((item) => item.title === mlsPropertyInfo.street)
-    
+    // Fix for multiMediaBtn not array error
+    if (!Array.isArray(multiMediaBtn)) return
+    // Checking if mls button for property is not already created
+    const mlsBtnExists = multiMediaBtn?.some((item) => item.title === mlsPropertyInfo.street)
+    if (mlsBtnExists) return
     if (useMlsInfo){
-      !mlsBtnExists && multiMediaBtnJSON.push({
+      setMultiMediaBtn(multiMediaBtn.push({
         title:mlsPropertyInfo.street,
-        icon:"ph:house"})
-     const updatedSearchMap = {...searchMap}
+        icon:"ph:house"}))
+
+      const updatedSearchMap = {...searchMap}
     
-    updatedSearchMap[mlsPropertyInfo.street] = {
-      placeholder: `Search in ${mlsPropertyInfo.street}`,
-      data: mlsPropertyInfo.selectedImages,
-    };
+      updatedSearchMap[mlsPropertyInfo.street] = {
+        placeholder: `Search in ${mlsPropertyInfo.street}`,
+        data: mlsPropertyInfo.selectedImages,
+      };
 
     setSearchMap(updatedSearchMap)
     }

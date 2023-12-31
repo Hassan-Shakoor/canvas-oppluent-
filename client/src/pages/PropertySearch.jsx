@@ -1,10 +1,11 @@
 // ** Import React
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer} from 'react-toastify';
 
 // ** Store
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectDarkMode } from "../store/app/User/userPreference";
+import { updateSelectedProperty } from "../store/app/PropertySearch/property";
 
 // ** Custom Components
 import Header from "../components/NavBarComp/Header";
@@ -15,8 +16,13 @@ import SpinnerOverlay from "../components/Loader/SpinnerOverlay";
 
 function PropertySearch(){
     // ** Vars
-    const [loading,setLoading] = useState(false)
-    const darkMode = useSelector(selectDarkMode)
+    const dispatch = useDispatch();
+    const [loading,setLoading] = useState(false);
+    const darkMode = useSelector(selectDarkMode);
+
+    useEffect(() => {
+        dispatch(updateSelectedProperty(null));
+    },[])
 
     return(
         <div>
