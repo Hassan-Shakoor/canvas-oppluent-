@@ -18,3 +18,5 @@ export const LOCAL_STORAGE = {
 }
 
 export const BASE_URL = 'https://claircius-frontend.vercel.app/';
+
+export const isEmailValid = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-]+)(\.[a-zA-Z]{2,5}){1,2}$/;

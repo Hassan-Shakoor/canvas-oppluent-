@@ -12,7 +12,6 @@ import canvas from './app/Edit/Canvas/canvas'
 import userPreference from './app/User/userPreference'
 import partner from './app/Partner/partner'
 import profile from './app/AccountInformation/profile'
-import setting from './app/AccountInformation/setting'
 
 export const store = configureStore({
     reducer:{
@@ -26,7 +25,6 @@ export const store = configureStore({
         userPreference,
         partner,
         profile,
-        setting
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck: {

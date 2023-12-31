@@ -31589,3 +31589,10 @@ svg.icon.v2-icon.v2-icon-chevron-down {
   display: flex;
   align-items: center;
 }
+
+/* User Information Page Error Message */
+
+.error-message {
+  font-size: 10px;
+  margin-left: 8px;
+}

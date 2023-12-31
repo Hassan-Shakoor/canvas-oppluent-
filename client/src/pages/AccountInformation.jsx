@@ -1,5 +1,5 @@
 // ** Import Dependencies
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ** Custom Component
 import AccountInformationDashboard from "../components/AccountInformationComp/AccountInformationDashboard";
@@ -12,15 +12,30 @@ import { ACCOUNT_INFORMATION } from "../shared/constant";
 import AccountInformationBody from "../components/AccountInformationComp/AccountInformationBody";
 
 // ** Store
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectDarkMode } from "../store/app/User/userPreference";
+import { fetchProfile, selectProfile } from "../store/app/AccountInformation/profile"
+import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 
 function AccountInformation () {
     const [mode, setMode] = useState(ACCOUNT_INFORMATION.PROFILE)
+    const navigate = useNavigate();
+
+    const location = useLocation();
+   
+    console.log({location})
 
     // ** Vars
     const darkMode = useSelector(selectDarkMode)
+    const userProfileData = useSelector(selectProfile)
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+            dispatch(fetchProfile())
+    }, [dispatch, location.pathname])
 
     return (
         <>
@@ -30,7 +45,7 @@ function AccountInformation () {
                 <div className="container">
                     <AccountInformationDashboard mode={mode}/>
                     <AccountInformationTab mode={mode} setMode={setMode}/>
-                    <AccountInformationBody mode={mode}/>
+                    <AccountInformationBody mode={mode} userProfileData={userProfileData} />
                 </div>
             </div>
         </>
