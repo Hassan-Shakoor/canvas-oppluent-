@@ -17,3 +17,9 @@ export const serializeCanvasContainer = (canvasContainer) => {
     canvasContainer?.map(canvas => serializedCont.push(JSON.stringify(canvas)))
     return serializedCont
 }
+
+export const updateCanvasRef = (oldCanvas, selectedCanvas, updateCanvas) => {
+    const tempCanvases = [...oldCanvas]
+    tempCanvases[selectedCanvas] = updateCanvas
+    _canvases = tempCanvases
+}

@@ -1,22 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getDatabase, ref, set, onValue, push, increment, child} from "firebase/database";
+import { getDatabase, ref, set, onValue, push, increment, child, runTransaction} from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../configs/firebase";
+import { deletePartnerById, updatePrimaryPartner, updatePartnerInformation , fetchPartner, createPartnerData} from "../../../services/updatePartner"
 
 export const createPartner = createAsyncThunk(
   "partner/createPartner",
   async (partnerData) => {
+    console.log(partnerData)
     return new Promise(async (resolve, reject) => {
       try {
-        const database = getDatabase();
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            const partnerListRef = ref(database, `${uid}/partners`);
-            const newPostRef = push(partnerListRef)
-            await set(newPostRef, partnerData);
-          }
-        });
+        const response = await createPartnerData(partnerData)
+        resolve(response)
       } catch (err) {
         reject(err.message);
       }
@@ -29,25 +24,8 @@ export const fetchPartnerData = createAsyncThunk(
   async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const database = getDatabase();
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            const partnersRef = ref(database, `${uid}/partners`);
-            onValue(partnersRef, (snapshot)=>{
-                let partnerData = []
-                snapshot.forEach((childSanpshot)=>{
-                    const data = childSanpshot.val()[0]
-                    const key = childSanpshot.key
-                    const keyValue = {
-                        id: key,
-                        ...data
-                    }
-                    partnerData.push(keyValue)
-                })
-                resolve({partnerData})
-            })
-          }
+        await fetchPartner((partnerData) => {
+          resolve({partnerData})
         });
       } catch (err) {
         reject(err.message);
@@ -61,20 +39,8 @@ export const deletePartner = createAsyncThunk(
   async (partnerId) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const database = getDatabase();
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            if(partnerId === 0){
-                const partnersRef = ref(database, `${uid}/partners`);
-                await set(partnersRef, null);
-                return
-            }else{
-                const partnerRef = ref(database, `${uid}/partners/${partnerId}`);
-                await set(partnerRef, null);
-            }
-          }
-        });
+        const response = deletePartnerById(partnerId)
+        resolve(response)
       } catch (err) {
         reject(err.message);
       }
@@ -85,16 +51,24 @@ export const deletePartner = createAsyncThunk(
 export const updatePartner = createAsyncThunk(
   "partner/updatePartner",
   async (partnerData) => {
+        return new Promise(async (resolve, reject) => {
+      try {
+       const response = await updatePartnerInformation(partnerData)
+       resolve(response)
+      } catch (err) {
+        reject(err.message);
+      }
+    });
+  }
+);
+
+export const primaryPartner = createAsyncThunk(
+  "partner/updatePrimaryPartner",
+  async (partnerData) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const database = getDatabase();
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const uid = user.uid;
-            const partnerRef = ref(database, `${uid}/partners/${partnerData[0].id}`);
-            await set(partnerRef, partnerData);
-          }
-        });
+        const response = await updatePrimaryPartner(partnerData)
+        resolve(response)
       } catch (err) {
         reject(err.message);
       }
@@ -119,15 +93,26 @@ export const partner = createSlice({
     },
     setIsSearched: (state, action) => {
       state.isSearched = action.payload;
-    }
+    },
+    makePrimary: (state, action) => {
+      const { partnerId } = action.payload;
+
+      state.partnerList.forEach((partner) => {
+        partner.primary = partner.id === partnerId;
+      });
+
+      state.partnerList.sort((a, b) => (b.primary ? 1 : -1));
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPartnerData.fulfilled, (state, action) => {
       state.partnerList = action.payload.partnerData
+      state.partnerList.sort((a, b) => (b.primary ? 1 : -1));
     });
   },
 });
 
+export const { makePrimary } = partner.actions
 export const { updatePartnerList } = partner.actions;
 export const {setSearchPartner} = partner.actions
 export const {setIsSearched} = partner.actions

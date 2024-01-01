@@ -14,7 +14,7 @@ import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 import { fetchQrCode } from "../../../../api/qrCodeGenerator"
 
 // ** Shared
-import { getCanvasRef } from "../../../../shared/utils/fabric"
+import { getCanvasRef, updateCanvasRef } from "../../../../shared/utils/fabric"
 import { generateRandomId } from "../../../../shared/utils";
 
 function QrCodeModule (){
@@ -46,6 +46,7 @@ function QrCodeModule (){
             });
             canvas.add(img);
             canvas.renderAll();
+            updateCanvasRef(canvasContainer, selectedCanvas,canvas)
           });
     }
 
@@ -63,6 +64,7 @@ function QrCodeModule (){
             });
             canvas.add(img);
             canvas.renderAll();
+            updateCanvasRef(canvasContainer, selectedCanvas,canvas)
           });
     }
 

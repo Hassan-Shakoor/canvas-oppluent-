@@ -6,19 +6,17 @@ import ProfileDropDown from './ProfileDropDown';
 
 // ** Store
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUserInfo, selectUID, selectUserData } from '../../store/app/User/userPreference';
+import { fetchUserInfo } from '../../store/app/User/userPreference';
+import { fetchProfile, selectProfile } from '../../store/app/AccountInformation/profile';
 
 function Profile(){
   // ** State
   const [isSecondDropDownOpen,setIsSecondDropdownOpen] = useState(false);
   const [profileButtonPosition, setProfileButtonPosition] = useState(null);
-  const [userName, setUserName] = useState("")
-  const [letterName, setLetterName] = useState("")
-
+  const [userName, setUserName] = useState({fullName: '', firstLetter: ''})
   // ** Vars
   const dispatch = useDispatch()
-  const uid  = useSelector(selectUID)
-  const userData = useSelector(selectUserData)
+  const userProfileData = useSelector(selectProfile)
 
   const handleSecondButtonClick = () => {
   setIsSecondDropdownOpen(!isSecondDropDownOpen);
@@ -39,22 +37,22 @@ function Profile(){
 
   useEffect(() => {
     dispatch(fetchUserInfo())
+    dispatch(fetchProfile())
   },[dispatch])
 
   useEffect(() => {
-    if (userData) {
-      setUserName(userData[uid])
-      setLetterName(userData[uid][0])
+    if (userProfileData?.firstName) {
+      setUserName({fullName: userProfileData?.firstName, firstLetter:userProfileData?.firstName[0]})
     }
-  },[uid, userData])
+  },[userProfileData])
 
   return(
       <div>
           <div className={`${isSecondDropDownOpen ? "avatar-button rc-dropdown-open" : "avatar-button"}`} onClick={handleSecondButtonClick}>
               <div className="avatar-image" style={{ backgroundColor: 'rgb(193, 139, 190)' }}>
-                  <span className="avatar-image__initials">{letterName}</span>
+                  <span className="avatar-image__initials">{userName.firstLetter}</span>
               </div>
-              <p className="avatar-button__username">{userName}</p>
+              <p className="avatar-button__username">{userName.fullName}</p>
               {isSecondDropDownOpen ? <i className="icon fa-solid fa-chevron-up header__text-button_icon-chevron"/> : <i className="icon fa-solid fa-chevron-down header__text-button_icon-chevron"/>}
           </div>
           {isSecondDropDownOpen && (

@@ -1,64 +1,62 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set , onValue} from "firebase/database";
-import { auth } from "../../../configs/firebase";
+import { updateUserProfile, updateUserSetting } from "../../../services/firebase/updateUserInformation";
+import { getUserInformation } from "../../../services/firebase/getUserInformation";
 
 export const saveProfile = createAsyncThunk(
-    'profile/saveProfile',
-    async (userData)=> {
-        console.log({userData})
-        return new Promise(async (resolve, reject) => {
-            try {
-                const database = getDatabase();
-                onAuthStateChanged(auth, async (user)=>{
-                    if(user){
-                        const uid = user.uid
-                        const userRef = ref(database, `${uid}/accountInformation/profile`)
-                        await set(userRef, userData)
-                    }
-                })
-            }catch (err){
-                reject(err.message)
-            }
-        })
-})
+  "profile/saveProfile",
+  async (userData) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await updateUserProfile(userData);
+        resolve(response);
+      } catch (err) {
+        reject(err.message);
+      }
+    });
+  }
+);
+
+export const saveSetting = createAsyncThunk(
+  "profile/saveSetting",
+  async (userData) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await updateUserSetting(userData);
+        resolve(response);
+      } catch (err) {
+        reject(err.message);
+      }
+    });
+  }
+);
 
 export const fetchProfile = createAsyncThunk(
-    'profile/fetchProfile',
-    async () => {
-        return new Promise (async (resolve, reject) => {
-            try {
-                const database = getDatabase();
-                onAuthStateChanged(auth, async (user)=>{
-                    if(user){
-                        const uid = user.uid
-                        const userRef = ref(database, `${uid}/accountInformation/profile`)
-                        onValue(userRef, (snapshot)=>{
-                            const userData = snapshot.val()[0]
-                            resolve({userData})
-                        })
-                    }
-                })
-            }catch (err) {
-                reject(err.message)
-            }
-        })
-    }
-)
+  "profile/fetchProfile",
+  async () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await getUserInformation()
+        resolve({userData : response});
+      } catch (err) {
+        reject(err.message);
+      }
+    });
+  }
+);
 
 const initialState = {
-    userData: []
-}
+  userData: [],
+};
 
 export const profile = createSlice({
-    name: 'profile',
-    initialState,
-    extraReducers: (builder) => {
-        builder.addCase(fetchProfile.fulfilled, (state, action) => {
-            state.userData = action.payload.userData
-    })
-    }
-  });
+  name: "profile",
+  initialState,
+  extraReducers: (builder) => {
+    builder.addCase(fetchProfile.fulfilled, (state, action) => {
+      state.userData = action.payload.userData;
+    });
+  },
+});
 
-  export const selectProfile = (state) => state.profile.userData
-  export default profile.reducer;
+export const selectProfile = (state) => state.profile.userData;
+export default profile.reducer;

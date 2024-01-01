@@ -12465,6 +12465,13 @@
     color: var(--font-color);
     cursor: pointer;
   }
+
+/* Fixing Width Issue on Template Dropdown */
+
+  .rc-menu-width{
+    min-width: 140px !important;
+  }
+
   .rc-menu .rc-menu-item:hover {
     background-color: var(--primary-color-light);
   }
@@ -31588,4 +31595,11 @@ svg.icon.v2-icon.v2-icon-chevron-down {
 .button-set {
   display: flex;
   align-items: center;
+}
+
+/* User Information Page Error Message */
+
+.error-message {
+  font-size: 10px;
+  margin-left: 8px;
 }

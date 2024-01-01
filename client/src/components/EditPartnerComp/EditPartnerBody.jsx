@@ -37,9 +37,9 @@ function EditPartnerBody({id, partner}) {
             return
         }
 
-        const updatedPartner = {id : partner.id , firstName, lastName, email, contactNumber, profilePhoto: selectedProfilePhoto, primary: partnersList?.length === 0 || false}
+        const updatedPartner = {id : partner.id , firstName, lastName, email, contactNumber, profilePhoto: selectedProfilePhoto, primary: partner.primary}
 
-        dispatch(updatePartner([updatedPartner]))
+        dispatch(updatePartner(updatedPartner))
         toast.success("Partner successfully updated")
         navigate('/partners')
       }
