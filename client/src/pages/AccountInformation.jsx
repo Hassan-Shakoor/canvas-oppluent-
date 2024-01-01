@@ -22,10 +22,7 @@ import { useLocation } from 'react-router-dom';
 function AccountInformation () {
     const [mode, setMode] = useState(ACCOUNT_INFORMATION.PROFILE)
     const navigate = useNavigate();
-
     const location = useLocation();
-   
-    console.log({location})
 
     // ** Vars
     const darkMode = useSelector(selectDarkMode)

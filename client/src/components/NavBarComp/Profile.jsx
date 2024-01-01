@@ -6,7 +6,7 @@ import ProfileDropDown from './ProfileDropDown';
 
 // ** Store
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUserInfo, selectUID, selectUserData } from '../../store/app/User/userPreference';
+import { fetchUserInfo } from '../../store/app/User/userPreference';
 import { fetchProfile, selectProfile } from '../../store/app/AccountInformation/profile';
 
 function Profile(){
@@ -14,12 +14,8 @@ function Profile(){
   const [isSecondDropDownOpen,setIsSecondDropdownOpen] = useState(false);
   const [profileButtonPosition, setProfileButtonPosition] = useState(null);
   const [userName, setUserName] = useState("")
-  const [letterName, setLetterName] = useState("")
-
   // ** Vars
   const dispatch = useDispatch()
-  const uid  = useSelector(selectUID)
-  const userData = useSelector(selectUserData)
   const userProfileData = useSelector(selectProfile)
 
   const handleSecondButtonClick = () => {
@@ -54,7 +50,7 @@ function Profile(){
       <div>
           <div className={`${isSecondDropDownOpen ? "avatar-button rc-dropdown-open" : "avatar-button"}`} onClick={handleSecondButtonClick}>
               <div className="avatar-image" style={{ backgroundColor: 'rgb(193, 139, 190)' }}>
-                  <span className="avatar-image__initials">{letterName}</span>
+                  <span className="avatar-image__initials">{userName[0]}</span>
               </div>
               <p className="avatar-button__username">{userName}</p>
               {isSecondDropDownOpen ? <i className="icon fa-solid fa-chevron-up header__text-button_icon-chevron"/> : <i className="icon fa-solid fa-chevron-down header__text-button_icon-chevron"/>}
