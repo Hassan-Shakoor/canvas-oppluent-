@@ -8,10 +8,8 @@ import { DISPLAY_DIRECTION } from "../../../../shared/constant";
 // ** TODO: When Retreive Data of Tempate from DB, width and height should be 30% of actual template resolution.
 
 const initialState = {
-    fabricData : [
-        "{\"version\":\"5.3.0\",\"objects\":[]}",
-        "{\"version\":\"5.3.0\",\"objects\":[]}"
-    ],
+    templateData : {},
+    fabricData : [],
     selectedCanvas: 0,
     canvasContainer: [],
     resolution: {width: 1020, height:793},
@@ -36,14 +34,18 @@ export const canvas = createSlice({
         },
         updateDisplayDirection: (state,action) => {
             state.displayDirection = action.payload
+        },
+        updateTemplateData: (state,action) => {
+            state.templateData = action.payload
         }
     }
 })
 
-export const { updateFabricData, updateSelectedCanvas, updateCanvasContainer, updateResolution, updateDisplayDirection } = canvas.actions;
+export const { updateFabricData, updateSelectedCanvas, updateCanvasContainer, updateResolution, updateDisplayDirection, updateTemplateData } = canvas.actions;
 export const selectFabricData = (state) => state.canvas.fabricData;
 export const selectSelectedCanvas = (state) => state.canvas.selectedCanvas;
 export const selectResolution = (state) => state.canvas.resolution;
 export const selectCanvasContainer = (state) => state.canvas.canvasContainer;
 export const selectDisplayDirection = (state) => state.canvas.displayDirection;
+export const selectTemplateData = (state) => state.canvas.templateData;
 export default canvas.reducer; 

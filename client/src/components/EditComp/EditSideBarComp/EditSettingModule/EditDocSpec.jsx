@@ -1,7 +1,15 @@
 // ** React Imports
 import React from "react"
+import { useSelector } from 'react-redux'
 
-function EditDocSpec({designType, minPages, maxPages, divisibleBy, resolution}){
+// ** Store
+import { selectTemplateData } from "../../../../store/app/Edit/Canvas/canvas"
+
+function EditDocSpec(){
+  // ** Vars
+  const templateData = useSelector(selectTemplateData)
+  const docSpecs = templateData?.docSpecs
+
     return (
     <>
       <div className="sidebar-module__divider mb-3"/>
@@ -9,24 +17,24 @@ function EditDocSpec({designType, minPages, maxPages, divisibleBy, resolution}){
       <div className="settings-sidebar-module__info">
         Design type:{" "}
         <span className="settings-sidebar-module__info-value">
-          {designType}
+          {templateData?.docSpecs?.designType ?? 'Social Media Posts'}
         </span>
       </div>
       <div className="settings-sidebar-module__info">
         Minimum pages:{" "}
-        <span className="settings-sidebar-module__info-value">{minPages}</span>
+        <span className="settings-sidebar-module__info-value">{docSpecs?.minPages ?? '1'}</span>
       </div>
       <div className="settings-sidebar-module__info">
         Maximum pages:{" "}
-        <span className="settings-sidebar-module__info-value">{maxPages}</span>
+        <span className="settings-sidebar-module__info-value">{docSpecs?.maxPages ?? 'unlimited'}</span>
       </div>
       <div className="settings-sidebar-module__info">
         Page count divisible by:{" "}
-        <span className="settings-sidebar-module__info-value">{divisibleBy}</span>
+        <span className="settings-sidebar-module__info-value">{docSpecs?.pageCountDivisible ?? '1'}</span>
       </div>
       <div className="settings-sidebar-module__info">
         Resolution:{" "}
-        <span className="settings-sidebar-module__info-value">{resolution}</span>
+        <span className="settings-sidebar-module__info-value">{`${docSpecs?.resolution?.width ?? '1080'} x ${docSpecs?.resolution?.height ?? '1080'}`}</span>
       </div>
     </>
     )

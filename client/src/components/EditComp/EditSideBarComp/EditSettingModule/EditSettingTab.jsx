@@ -48,7 +48,7 @@ function EditSettingTab() {
       <div className="sidebar-tiles">
         {settBtns.map((btn,index) => (<SettingsBtn key={index} name={btn.name} icon={btn.icon} setShowPanel={setShowPanel}/>))}
       </div>
-      <EditDocSpec designType='Social Media Posts' minPages='1' maxPages='unlimited' divisibleBy='1' resolution='1080 x 1080'/></>}
+      <EditDocSpec/></>}
 
       {/* Settings & Preference Page */}
 

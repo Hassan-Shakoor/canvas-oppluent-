@@ -14,7 +14,7 @@ import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 import { fetchQrCode } from "../../../../api/qrCodeGenerator"
 
 // ** Shared
-import { getCanvasRef } from "../../../../shared/utils/fabric"
+import { getCanvasRef, updateCanvasRef } from "../../../../shared/utils/fabric"
 
 function QrCodeModule (){
     // ** State
@@ -43,6 +43,7 @@ function QrCodeModule (){
             });
             canvas.add(img);
             canvas.renderAll();
+            updateCanvasRef(canvasContainer, selectedCanvas,canvas)
           });
     }
 
@@ -59,6 +60,7 @@ function QrCodeModule (){
             });
             canvas.add(img);
             canvas.renderAll();
+            updateCanvasRef(canvasContainer, selectedCanvas,canvas)
           });
     }
 
