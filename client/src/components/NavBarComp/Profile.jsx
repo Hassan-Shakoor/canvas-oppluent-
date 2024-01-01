@@ -13,7 +13,7 @@ function Profile(){
   // ** State
   const [isSecondDropDownOpen,setIsSecondDropdownOpen] = useState(false);
   const [profileButtonPosition, setProfileButtonPosition] = useState(null);
-  const [userName, setUserName] = useState("")
+  const [userName, setUserName] = useState({fullName: '', firstLetter: ''})
   // ** Vars
   const dispatch = useDispatch()
   const userProfileData = useSelector(selectProfile)
@@ -41,8 +41,8 @@ function Profile(){
   },[dispatch])
 
   useEffect(() => {
-    if (userProfileData) {
-      setUserName(userProfileData?.firstName)
+    if (userProfileData?.firstName) {
+      setUserName({fullName: userProfileData?.firstName, firstLetter:userProfileData?.firstName[0]})
     }
   },[userProfileData])
 
@@ -50,9 +50,9 @@ function Profile(){
       <div>
           <div className={`${isSecondDropDownOpen ? "avatar-button rc-dropdown-open" : "avatar-button"}`} onClick={handleSecondButtonClick}>
               <div className="avatar-image" style={{ backgroundColor: 'rgb(193, 139, 190)' }}>
-                  <span className="avatar-image__initials">{userName[0]}</span>
+                  <span className="avatar-image__initials">{userName.firstLetter}</span>
               </div>
-              <p className="avatar-button__username">{userName}</p>
+              <p className="avatar-button__username">{userName.fullName}</p>
               {isSecondDropDownOpen ? <i className="icon fa-solid fa-chevron-up header__text-button_icon-chevron"/> : <i className="icon fa-solid fa-chevron-down header__text-button_icon-chevron"/>}
           </div>
           {isSecondDropDownOpen && (
