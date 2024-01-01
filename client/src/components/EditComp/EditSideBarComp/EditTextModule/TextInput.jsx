@@ -12,13 +12,10 @@ import {
   updateUrl,
 } from "../../../../store/app/Edit/EditSidebar/EditText/text";
 import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
-
-import { useSelector } from "react-redux/es/hooks/useSelector";
-import { getCanvasRef, setCanvasRef, updateCanvasRef } from "../../../../shared/utils/fabric";
 import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 
 // ** Shared
-import { getCanvasRef } from "../../../../shared/utils/fabric";
+import { getCanvasRef, updateCanvasRef } from "../../../../shared/utils/fabric";
 import { generateRandomId } from "../../../../shared/utils";
 
 function TextInput() {
