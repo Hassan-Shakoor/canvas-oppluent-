@@ -13,7 +13,8 @@ const initialState = {
     selectedCanvas: 0,
     canvasContainer: [],
     resolution: {width: 1020, height:793},
-    displayDirection: DISPLAY_DIRECTION.VERTICAL
+    displayDirection: DISPLAY_DIRECTION.VERTICAL,
+    selectedObject: {}
 }
 
 export const canvas = createSlice({
@@ -35,17 +36,18 @@ export const canvas = createSlice({
         updateDisplayDirection: (state,action) => {
             state.displayDirection = action.payload
         },
+        updateSelectedObject: (state,action) => {
+            state.selectedObject = action.payload
+        },
         updateTemplateData: (state,action) => {
             state.templateData = action.payload
         }
-    }
-})
-
-export const { updateFabricData, updateSelectedCanvas, updateCanvasContainer, updateResolution, updateDisplayDirection, updateTemplateData } = canvas.actions;
+export const { updateFabricData, updateSelectedCanvas, updateCanvasContainer, updateResolution, updateDisplayDirection, updateTemplateData, updateSelectedObject } = canvas.actions;
 export const selectFabricData = (state) => state.canvas.fabricData;
 export const selectSelectedCanvas = (state) => state.canvas.selectedCanvas;
 export const selectResolution = (state) => state.canvas.resolution;
 export const selectCanvasContainer = (state) => state.canvas.canvasContainer;
 export const selectDisplayDirection = (state) => state.canvas.displayDirection;
+export const selectSelectedObject = (state) => state.canvas.selectedObject;
 export const selectTemplateData = (state) => state.canvas.templateData;
 export default canvas.reducer; 
