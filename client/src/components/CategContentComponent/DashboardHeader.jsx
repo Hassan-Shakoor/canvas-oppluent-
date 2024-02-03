@@ -88,9 +88,9 @@ function DashboardHeader(){
                         <div className="select__control css-yk16xz-control">
                             <div className="select__value-container select__value-container--has-value css-1tnzi8j">
                             <div className="select__single-value css-ah2eo0-singleValue">
-                            <i class="icon icon-column"></i>
-                            <i class="icon icon-column"></i>
-                            <i class="icon icon-column"></i>
+                            <i className="icon icon-column"></i>
+                            <i className="icon icon-column"></i>
+                            <i className="icon icon-column"></i>
                         </div>
                             {/* <input
                                 id="react-select-3-input"

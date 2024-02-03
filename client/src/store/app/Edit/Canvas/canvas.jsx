@@ -11,7 +11,7 @@ const initialState = {
   fabricData: [],
   selectedCanvas: 0,
   canvasContainer: [],
-  resolution: { width: 1020, height: 793 },
+  resolution: { width: 'fit-content', height: 'auto' },
   displayDirection: DISPLAY_DIRECTION.VERTICAL,
   selectedObject: {},
 };

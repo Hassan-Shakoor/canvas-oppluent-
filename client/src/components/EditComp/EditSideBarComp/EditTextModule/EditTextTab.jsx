@@ -6,8 +6,9 @@ import TextInput from "./TextInput";
 import AiTextInput from "./AiTextInput";
 
 // ** Store
-import { useSelector} from 'react-redux'
-import {selectOpenDrawer} from '../../../../store/app/Edit/EditDrawer/index'
+import { useSelector } from 'react-redux'
+import { selectOpenDrawer } from '../../../../store/app/Edit/EditDrawer/index'
+import BackgroundColorPicker from "../EditSettingModule/BackgroundColorPicker";
 
 function EditTextTab() {
   // States
@@ -15,14 +16,23 @@ function EditTextTab() {
   // ** Hooks 
   const openDrawer = useSelector(selectOpenDrawer)
   return (
-    <form
-      className={openDrawer === 'Text'
-      ? "text-module vertical-switch-content-enter-done"
-      : "sidebar-module vertical-switch-content-exit-done"}>
+    <>
+      <form
+        className={openDrawer === 'Text'
+          ? "text-module vertical-switch-content-enter-done"
+          : "sidebar-module vertical-switch-content-exit-done"}>
 
-      <TextInput />
-      <AiTextInput/>
-    </form>
+        <TextInput />
+        <AiTextInput />
+      </form>
+
+      <div
+        className={openDrawer === 'TextEdit'
+          ? "colorize-module vertical-switch-content-enter-done"
+          : "colorize-module vertical-switch-content-exit-done"} >
+        <BackgroundColorPicker />
+      </div>
+    </>
   )
 }
 

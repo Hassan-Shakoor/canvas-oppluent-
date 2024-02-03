@@ -65,6 +65,8 @@ const ImageLayer = ({object, updateObjects}) => {
   }
 
   useEffect(() => {
+    console.log("ObjectImageLayer --> ", object)
+
     setLayer({
       title: object?.name ? object?.name : object?.text,
       isLocked: !object?.selectable && !object?.hasControls && object?.lockMovementX && object?.lockMovementY,

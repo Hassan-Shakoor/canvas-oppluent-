@@ -11,7 +11,8 @@ import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
 
 // ** Store
 import {useDispatch, useSelector} from 'react-redux'
-import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
+import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
+import { updateOpenDrawer } from "../../store/app/Edit/EditDrawer";
 
 function Canvas() {
 
@@ -32,16 +33,36 @@ function Canvas() {
         const canvasData = JSON.parse(fabricData[i])
         const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
           width: resolution.width,
-          height: resolution.height
+          height: resolution.height,
+
+          backgroundImageStretch: 'uniform'
+          // width: 634,
+          // height: 634
         });
-        canvas.loadFromJSON(canvasData,function(){
-          canvas.renderAll()
+
+        // console.log("canvas.getZoom(): ", canvas.getZoom())
+        canvas?.loadFromJSON(canvasData,function(){
+          if (canvas.backgroundImage) {
+            canvas.backgroundImage.set({
+              // width: 634,
+              // scaleX: canvas.getZoom(),
+              // scaleY: canvas.getZoom()
+              // height: 634,
+              // backgroundSize: 'cover'
+            });
+            canvas.requestRenderAll();
+          }
+          // canvas.renderAll()
         })
-        canvas.on("mouse:down", (event) => {
+        canvas?.on("mouse:down", (event) => {
           // Check if the clicked area have object and set it active
           const target = event.target
+          console.log("Target: ",target)
           if(target){
             canvas.setActiveObject(target)
+          }
+          else {
+            dispatch(updateOpenDrawer(target))
           }
           dispatch(updateSelectedObject(target))
           // Update the selected canvas
@@ -50,10 +71,11 @@ function Canvas() {
         newCanvases.push(canvas);
       }
       setCanvasRef([...newCanvases])
+      dispatch(updateCanvasContainer([...newCanvases]))
 
       return () => {
         const canvases = getCanvasRef()
-        canvases.forEach(canvas => {
+        canvases?.forEach(canvas => {
           canvas.dispose()
         });
         console.log('Canvas Disposed');
@@ -75,7 +97,7 @@ function Canvas() {
           height: {stageHeight}
         }}>
           {Array.from({ length: fabricData.length }).map((_, i) => (
-            <FabricCanvas index={i}/>
+            <FabricCanvas key={i} index={i}/>
           ))}
         </div>
       </div>

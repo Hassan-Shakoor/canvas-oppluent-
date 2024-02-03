@@ -71,6 +71,7 @@ const TextLayer = ({ object, updateObjects, index }) => {
       title: object?.name ? object?.name : object?.text,
       isLocked: !object?.selectable && !object?.hasControls && object?.lockMovementX && object?.lockMovementY,
     });
+    console.log("Object --> ", object)
   }, [object]);
 
   return (

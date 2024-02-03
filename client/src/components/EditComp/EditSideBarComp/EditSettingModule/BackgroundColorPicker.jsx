@@ -1,6 +1,6 @@
 // ** Import Libraries
 import React, { useEffect, useState } from "react";
-import {RgbaColorPicker} from 'react-colorful'
+import { RgbaColorPicker } from 'react-colorful'
 
 // ** Shared
 import { getRgbaCSS, getHexColor, getRgbaColor, getRGBAtoSet } from "../../../../shared/utils/color";
@@ -13,12 +13,12 @@ import { Icon } from "@iconify/react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { selectBrandColor, selectStandardColor, selectUserColor } from "../../../../store/app/Edit/EditSidebar/EditSetting/background";
 import { useDispatch } from "react-redux/es/hooks/useDispatch";
-import {updateUserColor} from "../../../../store/app/Edit/EditSidebar/EditSetting/background"
-import { selectCanvasContainer, selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
+import { updateUserColor } from "../../../../store/app/Edit/EditSidebar/EditSetting/background"
+import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject } from "../../../../store/app/Edit/Canvas/canvas";
 
 function BackgroundColorPicker() {
   // ** State
-  const [selectedColor , setSelectedColor] = useState(undefined)
+  const [selectedColor, setSelectedColor] = useState(undefined)
   const [color, setColor] = useState({ r: 51, g: 51, b: 51, a: 1 })
   const [colorInput, setColorInput] = useState(getHexColor(color))
 
@@ -27,11 +27,12 @@ function BackgroundColorPicker() {
   const selectedCanvas = useSelector(selectSelectedCanvas)
   const canvasContainer = getCanvasRef()
   const standardColor = useSelector(selectStandardColor)
+  const selectedObject = useSelector(selectSelectedObject)
   const brandColor = useSelector(selectBrandColor)
   const userColor = useSelector(selectUserColor)
-  
+
   const handleColorChange = (value) => {
-    setColorInput(getHexColor(value ))
+    setColorInput(getHexColor(value))
     setColor(value)
   }
 
@@ -52,17 +53,17 @@ function BackgroundColorPicker() {
     setColorInput(getHexColor(getRGBAtoSet(rgba)))
   }
 
-  const handleUserColorBtnClick = (rgba,index) => {
+  const handleUserColorBtnClick = (rgba, index) => {
     setSelectedColor(index)
     getRGBAtoSet(rgba)
     setColor(getRGBAtoSet(rgba))
-    setColorInput(getHexColor(getRGBAtoSet(rgba))) 
+    setColorInput(getHexColor(getRGBAtoSet(rgba)))
   }
 
   const handleNewUserColor = (rgba) => {
     const keys = Object.keys(userColor);
     const lastKey = keys[keys.length - 1] || 0
-    const newColor = {...userColor,[Number(lastKey)+1]:getRgbaCSS(rgba)}
+    const newColor = { ...userColor, [Number(lastKey) + 1]: getRgbaCSS(rgba) }
     dispatch(updateUserColor(newColor))
   }
 
@@ -78,26 +79,83 @@ function BackgroundColorPicker() {
   }
 
   const handleEyeDropper = () => {
-    if('EyeDropper' in window){
+    if ('EyeDropper' in window) {
       const dropper = new window.EyeDropper()
       dropper.open().then((result) => {
         setColor(getRgbaColor(result.sRGBHex));
         setSelectedColor(getRgbaColor(result.sRGBHex));
       })
-    }else{
+    } else {
       alert('Eye Dropper Not Supported in your Browser Current Version.\nPlease Update your Browser to use this feature')
     }
   }
 
   useEffect(() => {
-    if(color){
-      canvasContainer[selectedCanvas].setBackgroundColor(getRgbaCSS(color),render(selectedCanvas,canvasContainer))
+    if (color.r === 51 && color.g === 51 && color.b === 51 && color.a === 1) {
+      if (!selectedObject) {
+        setColor({ r: 51, g: 51, b: 51, a: 1 })
+        console.log('asansjx', canvasContainer[selectedCanvas].getBackgroundColor, "<-->")
+      }
+      else {
+        if (selectedObject.type === 'Text') {
+          // setColor({ r: 51, g: 51, b: 51, a: 1 })
+        }
+        else if (selectedObject.type === 'Shape') {
+          // setColor({ r: 51, g: 51, b: 51, a: 1 })
+        }
+      }
+      return;
     }
-  },[canvasContainer, color, selectedCanvas])
+
+    if (color && !selectedObject) {
+      console.log("color: ", color)
+
+      canvasContainer[selectedCanvas].setBackgroundColor(getRgbaCSS(color), render(selectedCanvas, canvasContainer))
+    }
+    else if (color && selectedObject) {
+      if (selectedObject.type === 'Text') {
+        // selectedObject.fill = getRgbaCSS(color);
+        if (selectedObject.selectionStart !== selectedObject.selectionEnd) {
+          for (let i = selectedObject.selectionStart; i < selectedObject.selectionEnd; i++) {
+            selectedObject.styles[0][i] = {
+              fill: getRgbaCSS(color),
+            };
+          }
+        }
+        else {
+          for (let i = 0; i < selectedObject.text?.length; i++) {
+            selectedObject.styles[0][i] = {
+              fill: getRgbaCSS(color),
+            };
+          }
+        }
+
+        render(selectedCanvas, canvasContainer)
+      }
+      if (selectedObject.type === 'Shape') {
+        // selectedObject.fill = getHexColor((color));;
+        selectedObject.set({ fill: getHexColor(color) });
+        // if (selectedObject.selectionStart !== selectedObject.selectionEnd) {
+        // for (let i = selectedObject.selectionStart; i < selectedObject.selectionEnd; i++) {
+        //   selectedObject.styles[0][i] = {
+        //     fill: getRGBAtoSet(color),
+        //   };
+        //   }
+        // }
+        // selectedObject.styles = {
+        //   0: {
+        //     fill: getRgbaCSS(color),
+        //   }
+      };
+      canvasContainer[selectedCanvas].renderAll()
+      // selectedObject.renderAll();
+      render(selectedCanvas, canvasContainer)
+    }
+  }, [canvasContainer, color, selectedCanvas])
 
   return (
     <div className="color-picker">
-      <RgbaColorPicker color={color} onChange={handleColorChange}/>
+      <RgbaColorPicker color={color} onChange={handleColorChange} />
       <div className="color-picker__different">
         <div className="color-picker__different-color" />
         <div
@@ -128,16 +186,16 @@ function BackgroundColorPicker() {
           Standard Colors
         </p>
         <div className="color-picker__color-list">
-        {Object.keys(standardColor).map((index) => (
-          <i
-            key={index}
-            className="color-picker__color-item"
-            onClick={() => handleColorBtnClick(standardColor[index])}
-            style={{
-              backgroundColor: standardColor[index],
-            }}
-          />
-        ))}
+          {Object.keys(standardColor).map((index) => (
+            <i
+              key={index}
+              className="color-picker__color-item"
+              onClick={() => handleColorBtnClick(standardColor[index])}
+              style={{
+                backgroundColor: standardColor[index],
+              }}
+            />
+          ))}
         </div>
       </div>
       <div className="color-picker__color-palette">
@@ -145,16 +203,16 @@ function BackgroundColorPicker() {
           Brand Colors
         </p>
         <div className="color-picker__color-list">
-        {Object.keys(brandColor).map((index) => (
-          <i
-            key={index}
-            className="color-picker__color-item"
-            onClick={() => handleColorBtnClick(brandColor[index])}
-            style={{
-              backgroundColor: brandColor[index],
-            }}
-          />
-        ))}
+          {Object.keys(brandColor).map((index) => (
+            <i
+              key={index}
+              className="color-picker__color-item"
+              onClick={() => handleColorBtnClick(brandColor[index])}
+              style={{
+                backgroundColor: brandColor[index],
+              }}
+            />
+          ))}
         </div>
       </div>
       <div className="mb-2 color-picker__color-palette">
@@ -163,21 +221,21 @@ function BackgroundColorPicker() {
         </p>
         <div className="color-picker__color-list">
           <button className="color-picker__button" onClick={() => handleNewUserColor(color)}>
-            <Icon icon="grommet-icons:add-circle" className="font-icon-black"/>
+            <Icon icon="grommet-icons:add-circle" className="font-icon-black" />
           </button>
           {Object.keys(userColor).length > 0 && <button className="color-picker__button" onClick={handleDeleteUserColor}>
-          <Icon icon="uiw:delete" className="font-icon-black" style={selectedColor ? { color: '#ff0000' } : {}} />
+            <Icon icon="uiw:delete" className="font-icon-black" style={selectedColor ? { color: '#ff0000' } : {}} />
           </button>}
           {Object.keys(userColor).map((index) => (
-          <i
-            key={index}
-            className="color-picker__color-item"
-            onClick={() => handleUserColorBtnClick(userColor[index],index)}
-            style={{
-              backgroundColor: userColor[index],
-            }}
-          />
-        ))}
+            <i
+              key={index}
+              className="color-picker__color-item"
+              onClick={() => handleUserColorBtnClick(userColor[index], index)}
+              style={{
+                backgroundColor: userColor[index],
+              }}
+            />
+          ))}
         </div>
       </div>
     </div>

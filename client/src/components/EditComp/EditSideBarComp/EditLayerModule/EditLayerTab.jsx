@@ -49,6 +49,7 @@ function EditLayerTab() {
 
   useEffect(() => {
     setObjects(canvasContainer[selectedCanvas].getObjects());
+    console.log("Objects --> ", objects)
   }, [selectedCanvas, canvasContainer]);
 
   return (

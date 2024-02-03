@@ -11,7 +11,7 @@ import {
   updateText,
   updateUrl,
 } from "../../../../store/app/Edit/EditSidebar/EditText/text";
-import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
+import { selectSelectedCanvas, updateSelectedObject } from "../../../../store/app/Edit/Canvas/canvas";
 import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 
 // ** Shared
@@ -31,11 +31,28 @@ function TextInput() {
     const fabricText = new fabric.IText(text.trim(), {
       selectable: true,
       hasControls: true,
-      id: generateRandomId()
+      id: generateRandomId(),
+      type: 'Text',
+      cursorColor: '#000',
+      styles: {
+        0: {
+          0: {
+            fill: 'black',
+          },
+        },
+      },
     });
+    for (let i = 0; i < fabricText.text.length; i++) {
+      // Set color based on the index (even or odd)
+      const color = '#000';
+
+      fabricText.styles[0][i] = { fill: color };
+    }
+
     canvas.add(fabricText);
     canvas.setActiveObject(fabricText);
     dispatch(updateOpenDrawer(null));
+    dispatch(updateSelectedObject(fabricText));
     canvas.renderAll()
     updateCanvasRef(canvasArr, selectedCanvas, canvas)
     dispatch(updateText(''));
