@@ -1,6 +1,6 @@
 // ** Import Library
-import React, {useEffect} from "react";
-import {fabric} from 'fabric';
+import React, { useEffect, useState } from "react";
+import { fabric } from 'fabric';
 
 // ** Custom Component
 import FabricCanvas from "./FabricCanvas";
@@ -10,55 +10,50 @@ import { DISPLAY_DIRECTION } from "../../shared/constant";
 import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
 
 // ** Store
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
 import { updateOpenDrawer } from "../../store/app/Edit/EditDrawer";
 
-function Canvas() {
+function Canvas(props) {
 
   // ** Hooks
   const dispatch = useDispatch()
   const fabricData = useSelector(selectFabricData)
-  const canvasContainer = useSelector(selectCanvasContainer) 
+  const canvasContainer = useSelector(selectCanvasContainer)
   const resolution = useSelector(selectResolution)
+
 
   // ** Vars
   const stageHeight = fabricData.length * resolution.height
   const displayDirection = useSelector(selectDisplayDirection)
 
   useEffect(() => {
+
     if (document.getElementById('canvas-1')) {
       const newCanvases = [];
       for (let i = 0; i < fabricData.length; i++) {
         const canvasData = JSON.parse(fabricData[i])
         const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
-          width: resolution.width,
-          height: resolution.height,
+          width: props.width,
+          height: props.height,
 
           backgroundImageStretch: 'uniform'
           // width: 634,
           // height: 634
-        });
+        },{ crossOrigin: 'Anonymous' });
 
         // console.log("canvas.getZoom(): ", canvas.getZoom())
-        canvas?.loadFromJSON(canvasData,function(){
+        canvas?.loadFromJSON(canvasData, function () {
           if (canvas.backgroundImage) {
-            canvas.backgroundImage.set({
-              // width: 634,
-              // scaleX: canvas.getZoom(),
-              // scaleY: canvas.getZoom()
-              // height: 634,
-              // backgroundSize: 'cover'
-            });
+            canvas.backgroundImage.set({ crossOrigin: 'Anonymous' });
             canvas.requestRenderAll();
           }
-          // canvas.renderAll()
         })
         canvas?.on("mouse:down", (event) => {
           // Check if the clicked area have object and set it active
           const target = event.target
-          console.log("Target: ",target)
-          if(target){
+          console.log("Target: ", target)
+          if (target) {
             canvas.setActiveObject(target)
           }
           else {
@@ -83,6 +78,7 @@ function Canvas() {
     }
 
   }, [dispatch, fabricData, resolution]);
+
   console.log(canvasContainer)
   return (
     <div
@@ -94,10 +90,10 @@ function Canvas() {
           id="fpd-product-stage"
           className="fpd-product-stage"
           style={{
-          height: {stageHeight}
-        }}>
+            height: { stageHeight }
+          }}>
           {Array.from({ length: fabricData.length }).map((_, i) => (
-            <FabricCanvas key={i} index={i}/>
+            <FabricCanvas key={i} index={i} width={props.width} height={props.height} />
           ))}
         </div>
       </div>

@@ -230,9 +230,12 @@ function EditShapeTab() {
     fabric.loadSVGFromURL(shape.url, function (objects, options) {
       const svg = fabric.util.groupSVGElements(objects, options);
       const canvasCenter = canvas.getCenter();
-      const svgCenter = svg.getCenterPoint();
-      const offsetX = canvasCenter.left - svgCenter.x;
-      const offsetY = canvasCenter.top - svgCenter.y;
+      // const svgCenter = svg.getCoords();
+
+      // // Calculate the offset to center the scaled SVG
+      // const offsetX = canvasCenter.left - (svgCenter.left + (svgCenter.width * svg.scaleX) / 2);
+      // const offsetY = canvasCenter.top - (svgCenter.top + (svgCenter.height * svg.scaleY) / 2);
+      
       svg.set({
         left: canvasCenter.left,
         top: canvasCenter.top,
@@ -240,7 +243,9 @@ function EditShapeTab() {
         hasControls: true,
         id: generateRandomId(),
         name: shape.title,
-        type: 'Shape'
+        type: 'Shape',
+        originX: 'left',
+        originY: 'top',
       });
 
       // Adjust the dimensions if needed

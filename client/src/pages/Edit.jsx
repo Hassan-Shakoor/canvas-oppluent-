@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 // ** Store
 import { useDispatch, useSelector } from "react-redux";
 import { selectDarkMode } from "../store/app/User/userPreference";
-import { selectSelectedObject, updateFabricData, updateResolution, updateTemplateData } from "../store/app/Edit/Canvas/canvas"
+import { selectSelectedObject, selectZoomResolution, updateFabricData, updateResolution, updateTemplateData, updateZoom } from "../store/app/Edit/Canvas/canvas"
 
 // ** Utils
 import { getLocalStorage } from "../services/localStorage";
@@ -38,6 +38,10 @@ function Edit() {
     const { id } = useParams();
     const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
+    const [width, setWidth] = useState(1020)
+    const [height, setHeight] = useState(793)
+    const [zoom, setZoom] = useState(1)
+
     // TODO: Remove hardcoded else condition in fetch tempate data
     const fetchTemplateData = useCallback(async () => {
         setLoading(true);
@@ -48,6 +52,11 @@ function Edit() {
             // Will store data of fabric resolution
             const resolution = response?.docSpecs?.resolution
             dispatch(updateResolution({ width: resolution?.width ?? 1020, height: resolution?.height ?? 793 }));
+
+            setWidth(resolution?.width);
+            setHeight(resolution?.height);
+            // dispatch(updateZoom()
+
             // Will store data of fabric canvas
             dispatch(updateFabricData(response.fabricData ? response.fabricData : [
                 "{\"version\":\"5.3.0\",\"objects\":[]}"
@@ -60,6 +69,13 @@ function Edit() {
         fetchTemplateData()
     }, [fetchTemplateData, id])
 
+    const updateZoomResolution = (newWidth, newHeight, newZoom) => {
+        console.log("Zoom Resolution Updated...")
+        setZoom(newZoom);
+        setWidth(newWidth);
+        setHeight(newHeight);
+    }
+
     return (
         <div>
             <SpinnerOverlay loading={loading} />
@@ -68,12 +84,12 @@ function Edit() {
             {/* <button onClick={() => console.log("Edit --- selectedObject --->> ", selectedObject)} style={{ zIndex: 2000, position: 'fixed' }}>Selected Object</button> */}
             <EditToobar />
             <EditSidebar />
-            <EditZoom />
+            <EditZoom width={width} height={height} zoom={zoom} updateZoomResolution={updateZoomResolution} />
             <div className="page-manager">
                 <PageManagerStage />
                 <PageManagerButtonSet />
             </div>
-            <Canvas />
+            <Canvas width={width} height={height} />
         </div>
     )
 }

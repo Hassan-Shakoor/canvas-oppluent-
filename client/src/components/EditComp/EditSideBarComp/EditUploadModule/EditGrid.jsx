@@ -42,7 +42,8 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
     const maxWidth = 350;
     const maxHeight = 350;
 
-    // Create a fabric.Image object with the provided image URL
+    // TO Add the Image to Canvas
+
     fabric.Image.fromURL(image, function (img) {
 
       const scaleToFitWidth = maxWidth / img.width;
@@ -69,7 +70,54 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
       updateCanvasRef(canvasArr, selectedCanvas, canvas);
       dispatch(updateOpenDrawer(null));
       // dispatch(updateText(''));
-    });
+    }, { crossOrigin: 'Anonymous' });
+
+
+    // Set Image Background
+
+    // fabric.Image.fromURL(image, (img) => {
+
+    //   // const imgAspect = img.width / img.height;
+    //   // const canvasAspect = canvas.width / canvas.height;
+
+    //   // let scaleX, scaleY;
+
+    //   // if (imgAspect > canvasAspect) {
+    //   //   // Image is wider, fit to width
+    //   //   scaleX = canvas.width / img.width;
+    //   //   scaleY = canvas.width / img.width;
+    //   // } else {
+    //   //   // Image is taller, fit to height
+    //   //   scaleX = canvas.height / img.height;
+    //   //   scaleY = canvas.height / img.height;
+    //   // }
+
+
+    //   // Set Image Background
+
+    //   const upperCanvasEl = canvas.upperCanvasEl;
+    //   const scaleToFitWidth = upperCanvasEl.width / img.width;
+    //   const scaleToFitHeight = upperCanvasEl.height / img.height;
+    //   const scale = Math.min(scaleToFitWidth, scaleToFitHeight);
+
+    //   // Set the image as the background
+    //   canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+    //     // scaleX,
+    //     // scaleY,
+
+    //     id: generateRandomId(),
+    //     type: 'Image'
+
+    //   });
+
+    //   img.scale(scale);
+    //   // canvas.add(img);
+    //   canvas.renderAll();
+    //   updateCanvasRef(canvasArr, selectedCanvas, canvas);
+    //   dispatch(updateOpenDrawer(null));
+    // }, { crossOrigin: 'Anonymous' });
+
+
   }
 
   return searchMap[showPanel]?.data?.map((item, index) => {

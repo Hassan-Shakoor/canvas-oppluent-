@@ -12,6 +12,7 @@ const initialState = {
   selectedCanvas: 0,
   canvasContainer: [],
   resolution: { width: 'fit-content', height: 'auto' },
+  zoom: 1,
   displayDirection: DISPLAY_DIRECTION.VERTICAL,
   selectedObject: {},
 };
@@ -32,6 +33,9 @@ export const canvas = createSlice({
     updateResolution: (state, action) => {
       state.resolution = action.payload;
     },
+    updateZoom: (state, action) => {
+      state.zoom = action.payload;
+    },
     updateDisplayDirection: (state, action) => {
       state.displayDirection = action.payload;
     },
@@ -49,6 +53,7 @@ export const {
   updateSelectedCanvas,
   updateCanvasContainer,
   updateResolution,
+  updateZoom,
   updateDisplayDirection,
   updateTemplateData,
   updateSelectedObject,
@@ -56,6 +61,7 @@ export const {
 export const selectFabricData = (state) => state.canvas.fabricData;
 export const selectSelectedCanvas = (state) => state.canvas.selectedCanvas;
 export const selectResolution = (state) => state.canvas.resolution;
+export const selectZoom = (state) => state.canvas.zoom;
 export const selectCanvasContainer = (state) => state.canvas.canvasContainer;
 export const selectDisplayDirection = (state) => state.canvas.displayDirection;
 export const selectSelectedObject = (state) => state.canvas.selectedObject;

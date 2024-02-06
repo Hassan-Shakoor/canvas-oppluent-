@@ -1,14 +1,14 @@
 // ** Import Library
 import React, { useEffect, useState } from "react";
-
+import { fabric } from 'fabric'
 // ** Store
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCanvasContainer, selectResolution, selectSelectedCanvas, updateFabricData, updateResolution } from '../../store/app/Edit/Canvas/canvas'
+import { selectCanvasContainer, selectResolution, selectSelectedCanvas, selectZoom, updateFabricData, updateResolution, updateZoom } from '../../store/app/Edit/Canvas/canvas'
 
 // ** Shared
 import { getCanvasRef, serializeCanvasContainer } from "../../shared/utils/fabric";
 
-function EditZoom() {
+function EditZoom(props) {
     // ** State
     const [zoomPercentage, setZoomPercentage] = useState(100)
 
@@ -19,36 +19,48 @@ function EditZoom() {
     // const [canvas, setCanvas] = useState(null);
     const { width, height } = resolution
 
+    const zoom = useSelector(selectZoom);
+
     const canvasContainer = useSelector(selectCanvasContainer);
     // const canvas = canvasContainer[selectedCanvas];
 
+
     useEffect(() => {
-        setTimeout(() => {
-            // setCanvas(canvasContainer[selectedCanvas]);
-        }, 1000);
+
+
+        // return () => {
+        //     console.log('Zoom removed')
+        //     dispatch(updateZoom(1))
+        // }
 
     }, [])
 
-    // const handleZoomIn = () => {
-    //     // const serialized = serializeCanvasContainer(getCanvasRef())
-    //     // dispatch(updateFabricData(serialized))
-    //     // dispatch(updateResolution({ height: (height + (height * 0.05)), width: (width + (width * 0.05)) }))
-    //     zoomCanvas(canvas, 1.1)
-    //     setZoomPercentage(zoomPercentage + 5)
-    // }
+    useEffect(() => {
 
-    // const handleZoomOut = () => {
-    //     if (zoomPercentage <= 0) {
-    //         return;
-    //     }
-    //     const serialized = serializeCanvasContainer(getCanvasRef())
-    //     dispatch(updateFabricData(serialized))
-    //     dispatch(updateResolution({ height: (height - (height * 0.05)), width: (width - (width * 0.05)) }))
-    //     setZoomPercentage(zoomPercentage - 5)
-    // }
+        setTimeout(() => {
+
+            if (canvasContainer && canvasContainer.length > 0) {
+                canvasContainer.map((canvas, index) => {
+                    if (canvas) {
+                        console.log("props.zoom", props.zoom)
+                        canvas?.setZoom(props.zoom);
+                        // canvas.setWidth(canvas.width * zoom)
+                        // canvas.setHeight(canvas.height * zoom)
+                        // const newWidth = props.width * zoom;
+                        // const newHeight = props.height * zoom;
+                        // props.updateZoomResolution(newWidth, newHeight);
+
+
+                        canvas.renderAll();
+                    }
+                })
+            }
+        }, 100);
+    }, [canvasContainer.length])
 
     const handleZoomIn = () => {
-        zoomCanvas(0.1); // Increase the zoom level by 10%
+        // zoomCanvas(0.1); // Increase the zoom level by 10%
+        zoomCanvas(1.1); // Increase the zoom level by 10%
         setZoomPercentage(zoomPercentage + 5);
     };
 
@@ -56,7 +68,8 @@ function EditZoom() {
         if (zoomPercentage <= 0) {
             return;
         }
-        zoomCanvas(-0.1); // Decrease the zoom level by 10%
+        // zoomCanvas(-0.1); // Decrease the zoom level by 10%
+        zoomCanvas(0.9); // Decrease the zoom level by 10%
         setZoomPercentage(zoomPercentage - 5);
     };
 
@@ -68,10 +81,17 @@ function EditZoom() {
             canvasContainer.map((canvas, index) => {
                 if (canvas) {
                     console.log("currentZoom: ", currentZoom)
-                    const newZoom = currentZoom + zoomFactor;
+                    const newZoom = currentZoom * zoomFactor;
                     canvas.setZoom(newZoom);
+                    canvas.setWidth(canvas.width * zoomFactor)
+                    canvas.setHeight(canvas.height * zoomFactor)
+                    const newWidth = props.width * zoomFactor;
+                    const newHeight = props.height * zoomFactor;
+                    props.updateZoomResolution(newWidth, newHeight, newZoom);
+
+                    dispatch(updateZoom(newZoom))
+
                     canvas.renderAll();
-                    // dispatch(updateResolution({ height: (height + (height * zoomFactor)), width: (width + (width * zoomFactor)) }))
                 }
             })
         }

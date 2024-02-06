@@ -17,7 +17,7 @@ function PageManagerStage() {
   return (
     <ul className="page-manager__stages-list">
       {canvasContainer.map((canvas, index) => (
-        <PageManagerList key={index} id={`canvas-${index}`} index={index} page={canvas} />
+        <PageManagerList key={index} id={`canvas-${index}`} index={index} canvas={canvas} />
       ))}
     </ul>
   );
