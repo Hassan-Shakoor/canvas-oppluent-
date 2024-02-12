@@ -4,22 +4,49 @@ import Dropdown from "rc-dropdown";
 // import components
 import EditPopUp from "./EditPopUp";
 import MoreDropDown from "../Dropdown/MoreDropdown";
-import { BASE_URL } from "../../shared/constant";
+import { BASE_URL, LOCAL_STORAGE } from "../../shared/constant";
+import { updateIsMyDesign } from "../../services/firebase/updateIsMyDesign";
+import { getLocalStorage } from "../../services/localStorage";
+import { toast } from "react-toastify";
 
 function Template(props) {
   const [isCreateDesignOpen, setCreateDesginOpen] = useState(null);
+  const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
+
+  const handleAddMyDesign = async () => {
+    try {
+      await updateIsMyDesign(userData?.uid, props.item.id, !props.item.isMyDesign);
+      toast.success('Added to My Design Successfully', { position: toast.POSITION.TOP_RIGHT });
+    } catch (error) {
+      console.error('Error updating design:', error);
+      toast.error('Error updating design', { position: toast.POSITION.TOP_RIGHT });
+    }
+  }
 
   const dropdownMenu = [
-    { key : "download" , title: "Download", link: `${props.item.imageUrl}` },
     {
-      key : "copy",
+      key: "download",
+      iconClass: "fa-solid fa-download",
+      title: "Download",
+      link: `${props.item.storage_url[0]}`
+    },
+    {
+      key: "copy",
+      iconClass: "fa-solid fa-link",
       title: "Copy Website Link",
       link: `/share/${props.userId}/${props.categoryId}/${props.item.id}`,
     },
-    { 
-      key : "open",
-      title: "Open in new Tab", 
-      link: `/share/${props.userId}/${props.categoryId}/${props.item.id}` 
+    {
+      key: "open",
+      iconClass: "fa-solid fa-copy",
+      title: "Open in new Tab",
+      link: `/share/${props.userId}/${props.categoryId}/${props.item.id}`
+    },
+    {
+      key: "add-to-my-design",
+      iconClass: "fa-solid fa-star",
+      title: props.item.isMyDesign ? "Remove from My Designs" : "Add to My Designs",
+      function: handleAddMyDesign
     },
   ];
 
@@ -31,14 +58,14 @@ function Template(props) {
     // Change the size of templete depending upon grid column state
     <div
       className="template"
-      style={{ width: props.gridColumn === 3 ? "380px" : "280px" }}
+      // style={{ width: props.gridColumn === 3 ? "380px" : "280px" }}
     >
       <div className="template__preview-wrapper">
         <div className="template__preview">
           <img
             alt="Email Signature"
             className="template__preview-image"
-            src={props.item.imageUrl}
+            src={props.item.storage_url[0]}
           />
           <button
             type="button"

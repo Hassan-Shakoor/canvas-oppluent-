@@ -262,7 +262,7 @@ function EditShapeTab() {
       canvas.renderAll();
       updateCanvasRef(canvasArr, selectedCanvas, canvas);
       dispatch(updateOpenDrawer(null));
-    });
+    }, { crossOrigin: 'Anonymous' });
   }
 
   return (

@@ -40,14 +40,17 @@ function Canvas(props) {
           backgroundImageStretch: 'uniform'
           // width: 634,
           // height: 634
-        },{ crossOrigin: 'Anonymous' });
+        }, { crossOrigin: 'Anonymous' });
 
         // console.log("canvas.getZoom(): ", canvas.getZoom())
         canvas?.loadFromJSON(canvasData, function () {
-          if (canvas.backgroundImage) {
-            canvas.backgroundImage.set({ crossOrigin: 'Anonymous' });
-            canvas.requestRenderAll();
-          }
+          // if (canvas.backgroundImage) {
+          //   canvas.backgroundImage.set({ crossOrigin: 'Anonymous' });
+          //   canvas.requestRenderAll();
+          // }
+          // canvas?.objects?.set(canvasData.objects);
+          // canvas.requestRenderAll();
+
         })
         canvas?.on("mouse:down", (event) => {
           // Check if the clicked area have object and set it active

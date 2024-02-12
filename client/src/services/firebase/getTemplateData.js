@@ -1,7 +1,7 @@
 import { get, ref, getDatabase } from "firebase/database";
 
 export async function getTemplateJsonData(authId, id) {
-  id = parseInt(id, 10);
+  // id = parseInt(id, 10);
 
   const database = getDatabase();
   const databaseRef = ref(database, `${authId}/templateData`);
@@ -13,7 +13,7 @@ export async function getTemplateJsonData(authId, id) {
 
       for (const item of data) {
         if (item.template) {
-          const matchingTemplate = item.template.find((templateItem) => templateItem.id === id);
+          const matchingTemplate = item.template.find((templateItem) => templateItem.id == id);
           if (matchingTemplate) {
             return matchingTemplate;
           }

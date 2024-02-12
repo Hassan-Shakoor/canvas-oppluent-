@@ -78,7 +78,7 @@ function EditPopUp(props){
                                         <img
                                         className="template-preview__image"
                                         title={props.item.cardTitle}
-                                        src={props.item.imageUrl}
+                                        src={props.item.storage_url[0]}
                                         alt={props.item.cardTitle}
                                         />
                                     </div>

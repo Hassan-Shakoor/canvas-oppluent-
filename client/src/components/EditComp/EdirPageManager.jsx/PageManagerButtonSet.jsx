@@ -69,8 +69,8 @@ function PageManagerButtonSet() {
                     angle: (obj.angle + 180) % 360,
                     originX: obj.originX === 'right' ? 'left' : 'right',
                     originY: obj.originY === 'bottom' ? 'top' : 'bottom',
-                    left: canvasContainer[selectedCanvas].backgroundImage.width - left - obj.width,
-                    top: canvasContainer[selectedCanvas].backgroundImage.height - top - obj.height,
+                    // left: canvasContainer[selectedCanvas].backgroundImage.width - left - obj.width,
+                    // top: canvasContainer[selectedCanvas].backgroundImage.height - top - obj.height,
 
                 });
 
