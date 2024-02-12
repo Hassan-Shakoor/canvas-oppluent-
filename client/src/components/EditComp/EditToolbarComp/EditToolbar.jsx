@@ -161,7 +161,7 @@ function EditToobar() {
                 </svg>
               </div>
             </div>
-            <div className="tool-button">
+            {/* <div className="tool-button">
               <svg className="icon v2-icon v2-icon-text-align-left tool-button__icon">
                 <use
                   href="#v2-icon-text-align-left"
@@ -184,9 +184,9 @@ function EditToobar() {
             </div>
             <div className="tool-button">
               <i className="icon tool-button__icon icon-designer-wrap-text" />
-            </div>
+            </div> */}
           </div>
-          <div className="toolbar__divider" />
+          {/* <div className="toolbar__divider" />
           <div className="toolbar__button-set">
             <div className="tool-button">
               <i className="icon tool-button__icon icon-designer-zindex-arrow-up" />
@@ -200,7 +200,7 @@ function EditToobar() {
             <div className="tool-button">
               <i className="icon tool-button__icon icon-designer-zindex-bring-down" />
             </div>
-          </div>
+          </div> */}
           <div className="toolbar__divider" />
           <div className="toolbar__button-set">
             <div className="tool-button" data-test="toolbar-hyperlink">

@@ -7,13 +7,18 @@ import Support from './Support';
 import Profile from './Profile'
 import LanguageDropDown from './LanguageDropDown'
 import Request from './Request';
+import { useSelector } from 'react-redux';
+import { selectProfile } from '../../store/app/AccountInformation/profile';
 
 function Header(props) {
   // ** Stats
+  const userProfile = useSelector(selectProfile);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isFlag, setIsFlag] = useState('url("https://tcgimarketing.com/images/flags/en.svg")');
   const [languageButtonPosition, setlanguageButtonPosition] = useState(null)
 
+
+  // console.log("userProfile -> ", userProfile)
 
   const handleFlag = (backgroundImage) => {
     setIsFlag(backgroundImage);
@@ -42,7 +47,7 @@ function Header(props) {
         <img className="header__logo" alt="Claircius Group International" src="https://dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/account/platform_logo/original/platform_logo_login_1-1-1.png?1661778656" />
       </Link>
       <div className="header__divider"></div>
-      <Request />
+      {userProfile.isAdmin && <Request />}
       <Support />
       <Profile />
       {/* Language Section */}
