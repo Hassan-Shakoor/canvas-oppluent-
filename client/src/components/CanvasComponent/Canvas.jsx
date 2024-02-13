@@ -13,9 +13,11 @@ import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
 import { updateOpenDrawer } from "../../store/app/Edit/EditDrawer";
+import SpinnerOverlay from "../Loader/SpinnerOverlay";
 
 function Canvas(props) {
 
+  const [loading, setLoading] = useState(true);
   // ** Hooks
   const dispatch = useDispatch()
   const fabricData = useSelector(selectFabricData)
@@ -70,6 +72,10 @@ function Canvas(props) {
       }
       setCanvasRef([...newCanvases])
       dispatch(updateCanvasContainer([...newCanvases]))
+      
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
 
       return () => {
         const canvases = getCanvasRef()
@@ -80,6 +86,7 @@ function Canvas(props) {
       }
     }
 
+
   }, [dispatch, fabricData, resolution]);
 
   console.log(canvasContainer)
@@ -88,6 +95,7 @@ function Canvas(props) {
       id="canvases"
       aria-label="backgroundWorkArea"
       className={displayDirection === DISPLAY_DIRECTION.HORIZONTAL ? "canvases canvases_horizontal canvases_bottom-panel-open fpd-container" : "canvases canvases_bottom-panel-open fpd-container"}>
+      <SpinnerOverlay loading={loading} />
       <div id="fpd-main-wrapper" className="fpd-main-wrapper">
         <div
           id="fpd-product-stage"

@@ -17,7 +17,7 @@ import { selectMlsPropertyInfo, selectUseMlsInfo } from "../../../../store/app/P
 
 // ** Vars
 const Modes = {
-  Pixabay:'pixabay',
+  Pixabay: 'pixabay',
   Main: 'default',
   MyUploads: 'My Uploads',
   Shapes: 'Shapes',
@@ -89,7 +89,7 @@ function EditUploadTab() {
     const fetchData = async () => {
       if (showPanel === Modes.MyUploads) {
         try {
-          const urls = await getUploadImage(); 
+          const urls = await getUploadImage();
           setImgContainer(urls);
           setLoading(false)
         } catch (error) {
@@ -109,22 +109,23 @@ function EditUploadTab() {
     // Checking if mls button for property is not already created
     const mlsBtnExists = multiMediaBtn?.some((item) => item.title === mlsPropertyInfo.street)
     if (mlsBtnExists) return
-    if (useMlsInfo){
+    if (useMlsInfo) {
       setMultiMediaBtn(multiMediaBtn.push({
-        title:mlsPropertyInfo.street,
-        icon:"ph:house"}))
+        title: mlsPropertyInfo.street,
+        icon: "ph:house"
+      }))
 
-      const updatedSearchMap = {...searchMap}
-    
+      const updatedSearchMap = { ...searchMap }
+
       updatedSearchMap[mlsPropertyInfo.street] = {
         placeholder: `Search in ${mlsPropertyInfo.street}`,
         data: mlsPropertyInfo.selectedImages,
       };
 
-    setSearchMap(updatedSearchMap)
+      setSearchMap(updatedSearchMap)
     }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useMlsInfo, openDrawer])
 
   //  Update Search Map with new imgContainer
@@ -134,96 +135,97 @@ function EditUploadTab() {
       [Modes.Pixabay]: {
         ...prevSearchMap[Modes.Pixabay],
         data: imgContainer,
-      },[Modes.MyUploads]: {
+      }, [Modes.MyUploads]: {
         placeholder: "Search in My Uploads",
         data: imgContainer,
       },
     }))
-  },[imgContainer])
+  }, [imgContainer])
 
   return (
     <>
-    {loading ? <SpinnerContainer loading={loading}/> :
-    <div
-      className={
-        openDrawer === "Uploads"
-          ? "sidebar-module vertical-switch-content-enter-done"
-          : "sidebar-module vertical-switch-content-exit-done"
-      }
-    >
-      <div className="media-library">
-        {showPanel !== Modes.Main && showPanel !== Modes.Pixabay ? (
-          <button
-            type="button"
-            className="btn btn_gray btn_back-button mb-2"
-            onClick={handleBack}
-          >
-            <svg className="icon v1-icon v1-icon-chevron-left-light">
-              <use
-                href="#v1-icon-chevron-left-light"
-                xlinkHref="#v1-icon-chevron-left-light"
-              />
-            </svg>
-            <span className="btn__text">Back</span>
-          </button>
-        ) : (
-          <UploadImageBox />
-        )}
-        <EditUploadSearch
-          showPanel={showPanel}
-          searchMap={searchMap}
-          setLoading = {setLoading}
-          setShowPanel={setShowPanel}
-          setImgContainer={setImgContainer}
-        />
-        {showPanel === Modes.Main && (
-          <div className="sidebar-module__title">Multimedia</div>
-        )}
-        {showPanel !== Modes.Main && showPanel !== Modes.Pixabay && (
-          <UploadImageLinear />
-        )}
-        <div className="sidebar-module__divider" />
-        <div className="media-library__container-wrapper">
-          <div
-            className="media-library__container"
-            id="library-scroll-target-c8fc07b7-7e3d-4249-afe9-681c698f89e7"
-          >
-            <span>
-              <div className="m-auto mb-3 upload-multimedia-container">
-                {/* {showPanel == "My Uploads" && imageUrls.length > 0 ? (
+      <div
+        className={
+          openDrawer === "Uploads" || openDrawer === "UploadBG"
+            ? "sidebar-module vertical-switch-content-enter-done"
+            : "sidebar-module vertical-switch-content-exit-done"
+        }
+      >
+        <div className="media-library">
+          {showPanel !== Modes.Main && showPanel !== Modes.Pixabay ? (
+            <button
+              type="button"
+              className="btn btn_gray btn_back-button mb-2"
+              onClick={handleBack}
+            >
+              <svg className="icon v1-icon v1-icon-chevron-left-light">
+                <use
+                  href="#v1-icon-chevron-left-light"
+                  xlinkHref="#v1-icon-chevron-left-light"
+                />
+              </svg>
+              <span className="btn__text">Back</span>
+            </button>
+          ) : (
+            <UploadImageBox />
+          )}
+          <EditUploadSearch
+            showPanel={showPanel}
+            searchMap={searchMap}
+            setLoading={setLoading}
+            setShowPanel={setShowPanel}
+            setImgContainer={setImgContainer}
+          />
+          {showPanel === Modes.Main && (
+            <div className="sidebar-module__title">Multimedia</div>
+          )}
+          {showPanel !== Modes.Main && showPanel !== Modes.Pixabay && (
+            <UploadImageLinear />
+          )}
+          <div className="sidebar-module__divider" />
+          <div className="media-library__container-wrapper">
+            <div
+              className="media-library__container"
+              id="library-scroll-target-c8fc07b7-7e3d-4249-afe9-681c698f89e7"
+            >
+              <span>
+                <div className="m-auto mb-3 upload-multimedia-container">
+                  {/* {showPanel == "My Uploads" && imageUrls.length > 0 ? (
                   <ImageGrid imageUrls={imageUrls} />
                 ) : ( */}
-                <EditGrid
-                  searchMap={searchMap}
-                  showPanel={showPanel}
-                  setShowPanel={setShowPanel}
-                />
-                {/* )} */}
-              </div>
-            </span>
+                  {loading ? <SpinnerContainer loading={loading} /> :
+
+                    <EditGrid
+                      searchMap={searchMap}
+                      showPanel={showPanel}
+                      setShowPanel={setShowPanel}
+                    />}
+                  {/* )} */}
+                </div>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="media-library-terms">
+          <div>
+            Maxa Designs, Inc. does not claim any ownership rights to your
+            content.
+          </div>
+          <div>
+            By uploading, you hereby expressly acknowledge and agree that your
+            content complies with our{" "}
+            <a
+              className="text-info text-no-decoration fw-bolder"
+              href="/terms_of_use"
+              target="_blank"
+              data-reactroot=""
+            >
+              Terms of Use
+            </a>{" "}
+            and does not infringe any third party rights.
           </div>
         </div>
       </div>
-      <div className="media-library-terms">
-        <div>
-          Maxa Designs, Inc. does not claim any ownership rights to your
-          content.
-        </div>
-        <div>
-          By uploading, you hereby expressly acknowledge and agree that your
-          content complies with our{" "}
-          <a
-            className="text-info text-no-decoration fw-bolder"
-            href="/terms_of_use"
-            target="_blank"
-            data-reactroot=""
-          >
-            Terms of Use
-          </a>{" "}
-          and does not infringe any third party rights.
-        </div>
-      </div>
-    </div>}
     </>
   );
 }

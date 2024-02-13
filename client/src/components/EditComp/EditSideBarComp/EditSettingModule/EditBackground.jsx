@@ -22,7 +22,7 @@ function EditBackground({setShowPanel}){
             </svg>
             <span className="btn__text">Back</span>
         </button>
-        <div className="background-module__image" onClick={() => dispatch(updateOpenDrawer('Uploads'))}>
+        <div className="background-module__image" onClick={() => dispatch(updateOpenDrawer('UploadBG'))}>
             <div className="background-module__image-overlay background-module__image-overlay_without-image">
                 <svg className="icon v2-icon v2-icon-plus-within-circle background-module__plus-circle">
                 <use

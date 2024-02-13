@@ -14,20 +14,25 @@ import { getLocalStorage } from "../../../services/localStorage";
 
 // ** Constant
 import { LOCAL_STORAGE } from "../../../shared/constant";
+import { useNavigate } from "react-router-dom";
 
 function NavSaveCloseButtonSet() {
+  const navigate = useNavigate();
   // vars 
   const dispatch = useDispatch()
   const templateData = useSelector(selectTemplateData);
   const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
-  
+
   const handleSave = async () => {
     const canvasContainer = getCanvasRef()
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
-    const updatedData = {...templateData, fabricData: serializedData}
+    const updatedData = { ...templateData, fabricData: serializedData }
     await updateTemplateJsonData(userData?.uid, updatedData)
     toast.success("Changes successfully saved")
+  }
+  const handleClose = async () => {
+    navigate('/')
   }
 
   return (
@@ -35,7 +40,7 @@ function NavSaveCloseButtonSet() {
       <li className="header__text-button header__save-button" data-test="save-button" onClick={handleSave}>
         Save
       </li>
-      <li className="header__text-button" data-test="close-button">
+      <li className="header__text-button" data-test="close-button" onClick={handleClose}>
         Close
       </li>
     </ul>

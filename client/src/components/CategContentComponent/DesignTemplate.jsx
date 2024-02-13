@@ -8,9 +8,11 @@ import { BASE_URL, LOCAL_STORAGE } from "../../shared/constant";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../../services/localStorage";
 import { updateIsMyDesign } from "../../services/firebase/updateIsMyDesign";
+import SpinnerContainer from "../Loader/SpinnerContainer";
 
 function DesignTemplate(props) {
     const [isCreateDesignOpen, setCreateDesginOpen] = useState(null);
+    const [loading, setLoading] = useState(true)
 
     const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
@@ -83,7 +85,7 @@ function DesignTemplate(props) {
         // Change the size of templete depending upon grid column state
         <div
             className="template"
-            // style={{ width: props.gridColumn === 3 ? "380px" : "280px" }}
+            style={{ width: props.gridColumn === 2 ? "360px" : "240px" }}
         >
             <div className="template__preview-wrapper">
                 <div className="template__preview">
@@ -91,7 +93,14 @@ function DesignTemplate(props) {
                         alt="Email Signature"
                         className="template__preview-image"
                         src={props.item.storage_url[0]}
-                    />
+                        style={
+                            {
+                                display: loading ? "none" : "block",
+                                width: "100%",
+                                animation: "fadeIn 1s",
+                            }
+                        } onLoad={(e) => { setLoading(false) }} />
+                    <SpinnerContainer loading={loading} height={'auto'}/>
                     <button
                         type="button"
                         className="btn btn_no-min-width template__edit-btn"
