@@ -55,7 +55,7 @@ function SlickSlider({ images }) {
                   animation: "fadeIn 1s",
                 }
               } onLoad={(e) => { setLoading(false) }} />
-            <SpinnerContainer loading={loading} />
+            <SpinnerContainer loading={loading} height={'280px'} />
           </div>)}
       </Slider>
       {images.length > 1 && <><div className="react-slider__btn react-slider__btn_next" onClick={slideNext}>

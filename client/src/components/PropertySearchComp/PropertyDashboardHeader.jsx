@@ -6,7 +6,7 @@ function PropertyDashboardHeader(){
     return(
         <div className="dashboard-header dashboard-header_margin-bottom">
             <div className="dashboard-header__top-panel">
-                <div className="dashboard-header__left-panel">
+                <div className="dashboard-header__left-panel justify-content-start">
                 <Link className="back-button" to="/categories">
                     <svg className="icon v2-icon v2-icon-chevron-left back-button__icon">
                     <use href="#v2-icon-chevron-left" xlinkHref="#v2-icon-chevron-left" />
