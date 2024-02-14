@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import Header from '../components/NavBarComp/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectDarkMode } from '../store/app/User/userPreference'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import SelectOptions from '../components/TemplateRequestComp/SelectOptions'
 import Select from 'react-select'
 import { get, getDatabase, onValue, push, ref, set, update } from 'firebase/database'
@@ -32,6 +32,8 @@ const TemplateRequest = () => {
     const [loading, setLoading] = useState(false);
     const darkMode = useSelector(selectDarkMode)
 
+    const navigate = useNavigate();
+
     const [templateType, setTemplateType] = useState("");
     const [dimensions, setDimensions] = useState("");
     const [category, setCategory] = useState("");
@@ -41,6 +43,8 @@ const TemplateRequest = () => {
     const [designCategories, setDesignCategories] = useState(['Business Category', 'Instagram Stories', 'Facebook Banner']);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [openCategoryOption, setOpenCategoryOptions] = useState(false);
+
+
 
     const [selectedUser, setSelectedUser] = useState(null);
     const [users, setUsers] = useState(false);
@@ -189,7 +193,7 @@ const TemplateRequest = () => {
         try {
             console.log('submit');
             const database = getDatabase();
-            const databaseRef = ref(database);
+            const databaseRef = ref(database, `${currentUserId}/templateData`);
 
             const imageUrl = await Promise.all(files.map(async (file) => uploadFileAndGetURL(file)));
 
@@ -202,65 +206,81 @@ const TemplateRequest = () => {
             });
 
             const snapshot = await get(databaseRef);
-            const dbJson = snapshot.val();
+            const templateData = snapshot.val();
 
-            for (const [userId, { templateData }] of Object.entries(dbJson)) {
-                for (const [index, data] of templateData?.entries()) {
-                    if (data?.id === selectedCategory.value) {
-                        console.log(dbJson);
-                        console.log(selectedCategory);
-                        console.log(selectedUser);
+            console.log(templateData)
+            // console.log(dbJson.currentUserId.templateData)
+            // console.log(currentUserId)
 
-                        const templateObject = {
-                            cardTitle: `${templateType}`,
-                            created: formatDate(Date.now()),
-                            docSpecs: {
-                                designType: `${selectedCategory.label}`,
-                                maxPages: "unlimited",
-                                minPages: 1,
-                                pageCountDivisible: 1,
-                                resolution: {
-                                    width: imageDimensions[0].width,
-                                    height: imageDimensions[0].height,
-                                },
+            let templateId = uuidv4();
+            // for (const [userId, { templateData }] of Object.entries(dbJson)) {
+            for (const [index, data] of templateData?.entries()) {
+                if (data?.id === selectedCategory.value) {
+                    // console.log(dbJson);
+                    console.log(selectedCategory);
+                    console.log(selectedUser);
+
+
+                    const templateObject = {
+                        cardTitle: `${templateType}`,
+                        created: formatDate(Date.now()),
+                        docSpecs: {
+                            designType: selectedCategory.label,
+                            designID: selectedCategory.value,
+                            maxPages: "unlimited",
+                            minPages: 1,
+                            pageCountDivisible: 1,
+                            resolution: {
+                                width: imageDimensions[0].width,
+                                height: imageDimensions[0].height,
                             },
-                            fabricData,
-                            isMyDesign: false,
-                            favorite: false,
-                            id: uuidv4(),
-                            imageUrl: `${files[0].name}`,
-                            designedBy: currentUserId,
-                            modified: formatDate(Date.now()),
-                            storage_url: storageUrl,
-                        };
+                        },
+                        fabricData,
+                        isMyDesign: false,
+                        favorite: false,
+                        id: templateId,
+                        published: false,
+                        visible: true,
+                        imageUrl: `${files[0].name}`,
+                        designedBy: currentUserId,
+                        modified: formatDate(Date.now()),
+                        storage_url: storageUrl,
+                    };
 
-                        // Push the templateObject to the data.template array
-                        const templateDataRef = ref(database, `${userId}/templateData/${index}/template`);
-                        console.log(Object.keys(data.template).length);
+                    // Push the templateObject to the data.template array
+                    const templateDataRef = ref(database, `${currentUserId}/templateData/${index}/template`);
+                    console.log(Object.keys(data.template).length);
 
-                        // // Set the templateObject to the templateData node
-                        // update(templateDataRef, {
-                        //     [Object.keys(data.template).length]: templateObject,
-                        // });
+                    // // Set the templateObject to the templateData node
+                    // update(templateDataRef, {
+                    //     [Object.keys(data.template).length]: templateObject,
+                    // });
 
-                        // console.log(templateDataRef);
-                        const nextKey = Object.keys(data.template).length;
 
-                        // Use set to append the new object with the calculated key
-                        set(templateDataRef, {
-                            ...data.template,
-                            [nextKey]: templateObject,
-                        });
+                    // console.log(templateDataRef);
+                    const nextKey = Object.keys(data.template).length;
 
-                        // Use break to exit the loop after the first iteration
-                        break;
-                    }
+                    // Use set to append the new object with the calculated key
+                    set(templateDataRef, {
+                        ...data.template,
+                        [nextKey]: templateObject,
+                    });
+
+                    // Use break to exit the loop after the first iteration
+                    break;
                 }
             }
-            toast.success('Template added successfully!', {
+            // }
+            toast.success('Template added successfully!\n Navigating to Edit Template...', {
                 position: toast.POSITION.TOP_RIGHT,
             });
-            setLoading(false)
+
+            setLoading(false);
+
+            setTimeout(() => {
+                navigate(`/edit/${templateId}`)
+            }, 3000);
+
 
         } catch (error) {
             console.error('Error handling template upload:', error);
@@ -270,6 +290,7 @@ const TemplateRequest = () => {
             });
             setLoading(false)
         }
+
     }
 
 
@@ -542,7 +563,7 @@ const TemplateRequest = () => {
                                 <span className="btn__text">Cancel</span>
                             </Link>
                             <button type="submit" className="btn" onClick={handleUploadTemplate}>
-                               <span className="btn__text">Submit </span> 
+                                <span className="btn__text">Submit </span>
                             </button>
                         </div>
                     </div>

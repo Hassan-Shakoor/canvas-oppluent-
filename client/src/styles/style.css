@@ -20830,6 +20830,7 @@ input[type="submit"] {
 .header__text-button:hover {
   opacity: 1;
   -webkit-text-stroke-width: 0.5px;
+  cursor: pointer;
 }
 
 .header__text-button:active,
@@ -20843,6 +20844,7 @@ input[type="submit"] {
 
 .header__text-button_disabled {
   opacity: 0.5;
+  cursor: default;
 }
 
 .header__text-button_icon-chevron {
@@ -20858,6 +20860,7 @@ input[type="submit"] {
 
 .header__save-button {
   position: relative !important;
+  cursor: pointer;
 }
 
 .header__title-input {

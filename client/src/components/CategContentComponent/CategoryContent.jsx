@@ -11,6 +11,7 @@ import TemplateSort from './TemplateSort';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../configs/firebase';
 import { getDatabase, ref, set, onValue } from "firebase/database";
+import SpinnerContainer from '../Loader/SpinnerContainer';
 
 let userId = null;
 onAuthStateChanged(auth, (user) => {
@@ -25,6 +26,7 @@ onAuthStateChanged(auth, (user) => {
 
 function CategoryContent() {
   // ** States
+  const [loading, setLoading] = useState(true);
   const [gridColumn, setGridColumn] = useState(3)
   const [sortTemplate, setSortTemplate] = useState('Default')
   const { id } = useParams();
@@ -60,8 +62,10 @@ function CategoryContent() {
     });
   };
   useEffect(() => {
+    setLoading(true);
     fetchDataFromDatabase();
     fetchUserJsonDataFromDatabase();
+    setLoading(false);
   }, [userId]);
 
   function updateFavorite(id) {
@@ -139,6 +143,7 @@ function CategoryContent() {
 
   // Fetch the template data based on the id parameter
   useEffect(() => {
+    setLoading(true);
     setCategory({
       id: 0,
       subHeading: '',
@@ -164,10 +169,15 @@ function CategoryContent() {
         console.log(fetchedCategory)
       }
     }
+    setTimeout(() => {
+      
+      setLoading(false);
+    }, 1000);
   }, [id, categoriesData]);
 
   // Sorting Effect
   useEffect(() => {
+    setLoading(true)
     if (sortTemplate === 'Modified') {
       let tempHold = [...category.template].sort((a, b) => new Date(b.modified) - new Date(a.modified));
       setCategory(prevCategory => ({
@@ -205,10 +215,11 @@ function CategoryContent() {
         template: tempHold
       }))
     }
+    setLoading(false)
   }, [sortTemplate])
   return (
     <div className="page__content">
-      {id &&
+      {id && (!loading ?
         <div className="container">
           {/* Top Header */}
           <div className="dashboard-header">
@@ -243,8 +254,8 @@ function CategoryContent() {
               </div>
             </div>
           </div>
-        </div>}
-      {!id && <DashboardHeader category={category} gridColumn={gridColumn} userId={userId} handleSortTemplate={handleSortTemplate} handleColumn={handleColumn} />}
+        </div> : <SpinnerContainer loading={loading} />)}
+      {!id && (loading ? <SpinnerContainer loading={loading} /> : <DashboardHeader category={category} gridColumn={gridColumn} userId={userId} handleSortTemplate={handleSortTemplate} handleColumn={handleColumn} />)}
     </div>
   );
 }

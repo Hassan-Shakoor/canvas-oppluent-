@@ -8,10 +8,14 @@ import { BASE_URL, LOCAL_STORAGE } from "../../shared/constant";
 import { updateIsMyDesign } from "../../services/firebase/updateIsMyDesign";
 import { getLocalStorage } from "../../services/localStorage";
 import { toast } from "react-toastify";
+import SpinnerOverlay from "../Loader/SpinnerOverlay";
+import SpinnerContainer from "../Loader/SpinnerContainer";
 
 function Template(props) {
   const [isCreateDesignOpen, setCreateDesginOpen] = useState(null);
   const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
+
+  const [loading, setLoading] = useState(true);
 
   const handleAddMyDesign = async () => {
     try {
@@ -58,15 +62,24 @@ function Template(props) {
     // Change the size of templete depending upon grid column state
     <div
       className="template"
-      // style={{ width: props.gridColumn === 3 ? "380px" : "280px" }}
+      style={{ width: props.gridColumn === 2 ? "360px" : "250px" }}
     >
       <div className="template__preview-wrapper">
         <div className="template__preview">
+          {/* {!loading ? */}
           <img
             alt="Email Signature"
             className="template__preview-image"
             src={props.item.storage_url[0]}
-          />
+            style={
+              {
+                display: loading ? "none" : "block",
+                width: "100%",
+                animation: "fadeIn 1s",
+              }
+            } onLoad={(e) => { setLoading(false) }}></img>
+          <SpinnerContainer loading={loading} height={'auto'} />
+          {/* } */}
           <button
             type="button"
             className="btn btn_no-min-width template__edit-btn"
