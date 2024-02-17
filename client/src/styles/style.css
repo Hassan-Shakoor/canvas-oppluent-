@@ -445,11 +445,18 @@
   right: 15%;
 }
 
+.slider-box__slider {
+  width: calc(100% - 14px - 40px);
+  padding: 7px 0;
+  margin: 3px 0;
+  height: 14px;
+}
+
 .rc-slider {
   position: relative;
   height: 14px;
   padding: 5px 0;
-  width: 100%;
+  width: calc(100% - 14px - 40px);
   border-radius: 6px;
   touch-action: none;
   box-sizing: border-box;
@@ -474,21 +481,22 @@
   left: 0;
   height: 4px;
   border-radius: 6px;
-  background-color: #abe2fb;
+  background-color: #2898fb;
 }
 
 .rc-slider-handle {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
   cursor: pointer;
   cursor: -webkit-grab;
-  margin-top: -5px;
+  margin-top: -3px;
   cursor: grab;
   border-radius: 50%;
-  border: solid 2px #96dbfa;
-  background-color: #fff;
+  border: solid 2px #2898fb;
+  background-color: #2898fb;
   touch-action: pan-x;
+  opacity: 1;
 }
 
 .rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
@@ -10538,6 +10546,30 @@ btn.folder__menu-dropdown,
   background-color: var(--secondary-color);
 }
 
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:after {
+  content: attr(data-tooltip);
+  position: absolute;
+  color: white;
+  font-size: 10px;
+  padding: 0px 8px;
+  border-radius: 4px;
+  border: 0.5px solid gray;
+  background-color: rgb(32, 32, 32);
+  width: max-content;
+  opacity: 0;
+  top: 100%;
+  z-index: 1000;
+  -webkit-transition: opacity 0.3s ease-in-out;
+}
+
+[data-tooltip]:hover:after {
+  opacity: 1;
+}
+
 .users-import__select,
 .mailing-list__select {
   min-width: 125px;
@@ -13116,6 +13148,7 @@ input[type="submit"] {
   margin-bottom: 5px;
   flex-wrap: wrap;
   display: flex;
+  align-items: center;
 }
 
 .slider-box__title {
@@ -13247,10 +13280,10 @@ input[type="submit"] {
 }
 
 .slider-box__input {
-  text-align: right;
-  font-size: 12px;
+  text-align: center;
+  font-size: 10px;
   height: 21px;
-  border: none;
+  border: 1px solid #e3e3e3;
   padding: 4px;
   width: 45px;
 }
@@ -37969,7 +38002,7 @@ svg.icon.v2-icon.v2-icon-chevron-down {
 }
 
 .rc-slider-handle {
-  margin-top: -1px !important;
+  /* margin-top: -1px !important; */
 }
 
 .react-colorful {

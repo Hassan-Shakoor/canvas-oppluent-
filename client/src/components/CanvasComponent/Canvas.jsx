@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
 import { updateOpenDrawer } from "../../store/app/Edit/EditDrawer";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
+import { selectMlsPropertyInfo } from "../../store/app/PropertySearch/property";
 
 function Canvas(props) {
 
@@ -23,6 +24,7 @@ function Canvas(props) {
   const fabricData = useSelector(selectFabricData)
   const canvasContainer = useSelector(selectCanvasContainer)
   const resolution = useSelector(selectResolution)
+  const propertyInfo = useSelector(selectMlsPropertyInfo)
 
 
   // ** Vars
@@ -35,6 +37,32 @@ function Canvas(props) {
       const newCanvases = [];
       for (let i = 0; i < fabricData.length; i++) {
         const canvasData = JSON.parse(fabricData[i])
+        const canvasObjects = canvasData.objects;
+        const objectsWithoutShape = canvasObjects.filter(object => object.type !== 'Shape')
+
+        let imageIndex = 0;
+        const canvasObjectsWithPropertySearch = canvasObjects.map((object, index) => {
+          if (object.type === 'Image') {
+            if (imageIndex < propertyInfo?.selectedImages?.length) {
+              // Return the updated object
+              // return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
+              return { ...object, src:'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
+            }
+          } else {
+            console.error("Unsupported object type:", object.type);
+          }
+
+          // Return the original object if no update is needed
+          return object;
+        });
+
+        const canvasDataWithoutObjects = {
+          ...canvasData,
+          // objects: canvasObjectsWithPropertySearch.filter((object) => object.type !== "Shape")
+          objects: []
+        }
+        console.log(canvasObjectsWithPropertySearch)
+
         const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
           width: props.width,
           height: props.height,
@@ -45,7 +73,7 @@ function Canvas(props) {
         }, { crossOrigin: 'Anonymous' });
 
         // console.log("canvas.getZoom(): ", canvas.getZoom())
-        canvas?.loadFromJSON(canvasData, function () {
+        canvas?.loadFromJSON(canvasDataWithoutObjects, function () {
           // if (canvas.backgroundImage) {
           //   canvas.backgroundImage.set({ crossOrigin: 'Anonymous' });
           //   canvas.requestRenderAll();
@@ -54,6 +82,57 @@ function Canvas(props) {
           // canvas.requestRenderAll();
 
         })
+
+        // Objects Addition to Canvas
+        // setTimeout(() => {
+
+        let fabricObjects = [];
+
+        canvasObjectsWithPropertySearch.map((object, index) => {
+          if (object.type === 'Text') {
+            fabricObjects.push(new fabric.Textbox(object.text, object));
+          } else if (object.type === 'Shape') {
+            fabricObjects.push(new fabric.Path(object.path, object));
+          } else if (object.type === 'Image') {
+            fabric.Image.fromURL(object.src, function (img) {
+              // img is an instance of fabric.Image
+              // You can add it to the canvas or perform other operations
+              img.set({
+                ...object
+              });
+
+              canvas.add(img); // Add the image to the canvas
+            }, { crossOrigin: 'anonymous' });
+          }
+          else {
+            console.error("Unsupported object type:", object.type);
+          }
+        })
+
+        // const images = canvas.getObjects().filter(obj => obj.type === 'Image'); // Select all image objects
+
+        // if (propertyInfo && propertyInfo.selectedImages) {
+        //   // Handle cases where the number of images and selected images match
+        //   if (images.length === propertyInfo.selectedImages.length) {
+        //     for (let i = 0; i < images.length; i++) {
+        //       images[i].setSrc('https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074', () => {
+        //         canvas.renderAll()
+        //       })
+        //     }
+        //   } else {
+        //     console.warn(`Number of images on canvas (${images.length}) does not match selected images length (${propertyInfo.selectedImages.length})`);
+        //   }
+        //   // Update the canvas
+        //   canvas.renderAll();
+        // } else {
+        //   console.warn("Missing propertyInfo or selectedImages data");
+        // }
+
+        // Add objects to canvas
+        canvas.add(...fabricObjects);
+        canvas.renderAll();
+        // }, 100);
+
         canvas?.on("mouse:down", (event) => {
           // Check if the clicked area have object and set it active
           const target = event.target
@@ -72,7 +151,7 @@ function Canvas(props) {
       }
       setCanvasRef([...newCanvases])
       dispatch(updateCanvasContainer([...newCanvases]))
-      
+
       setTimeout(() => {
         setLoading(false);
       }, 2000);

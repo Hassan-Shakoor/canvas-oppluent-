@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../Modal/ConfirmationModal";
 import { selectProfile } from "../../../store/app/AccountInformation/profile";
 import { publishTemplate } from "../../../services/firebase/publishTemplate";
+import SpinnerOverlay from "../../Loader/SpinnerOverlay";
 
 function NavSaveCloseButtonSet() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ function NavSaveCloseButtonSet() {
   const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSaveCheck = () => {
     if (userProfile.isAdmin) {
@@ -41,15 +43,18 @@ function NavSaveCloseButtonSet() {
   }
 
   const handleSave = async () => {
+    setLoading(true);
     const canvasContainer = getCanvasRef()
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
     await updateTemplateJsonData(userData?.uid, updatedData)
     toast.success("Changes Saved Successfully.")
+    setLoading(false);
   }
 
   const handlePublish = async () => {
+    setLoading(true);
     const canvasContainer = getCanvasRef()
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
@@ -57,6 +62,7 @@ function NavSaveCloseButtonSet() {
     await updateTemplateJsonData(userData?.uid, updatedData)
     await publishTemplate(userData?.uid, updatedData)
     toast.success("Template Published Successfully.")
+    setLoading(false);
   }
 
   const handleClose = async () => {
@@ -72,6 +78,7 @@ function NavSaveCloseButtonSet() {
         Close
       </li>
     </ul>
+    <SpinnerOverlay loading={loading} />
     {
       showConfirmationModal &&
       <ConfirmationModal
