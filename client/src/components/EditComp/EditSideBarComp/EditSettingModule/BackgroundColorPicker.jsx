@@ -97,22 +97,59 @@ function BackgroundColorPicker({ title }) {
       const canvas = canvasContainer[selectedCanvas];
       if (canvas?.getActiveObject()) {
         const textObject = canvas?.getActiveObject();
-        textObject.set({
-          fill: new fabric.Gradient({
-            type: 'linear',
-            gradientUnits: 'percentage',
-            coords: { x1: 0, y1: 0, x2: 0, y2: 100 },
-            colorStops: [
-              { offset: 0, color: 'red' },
-              { offset: 1, color: 'blue' },
-            ],
-          }),
-        });
-        canvas.requestRenderAll();
+
+        const existingFill = textObject.get('fill');
+
+        // Check if the fill is a gradient
+        if (existingFill && existingFill.type === 'linear') {
+          // Modify the color stops
+          existingFill.colorStops = [
+            { offset: 0, color: getRgbaCSS(color) },
+            // { offset: 0.5, color: 'red' },
+            { offset: 1, color: 'blue' },
+          ];
+
+
+          console.log(existingFill)
+
+          textObject.set({
+            fill: existingFill,
+          });
+          canvas.requestRenderAll();
+        }
       }
 
     } else if (title === 'DropShadow') {
 
+      const canvas = canvasContainer[selectedCanvas];
+      if (canvas?.getActiveObject()) {
+        const activeObject = canvas?.getActiveObject();
+
+        const existingShadow = activeObject?.get('shadow');
+
+        if (existingShadow) {
+          console.log('Shadow is applied to the text.');
+
+          const existingShadow = activeObject.get('shadow')
+
+          existingShadow.color = getRgbaCSS(color)
+
+          activeObject.set(existingShadow)
+
+          console.log(existingShadow)
+        }
+        else {
+          activeObject.set({
+            shadow: new fabric.Shadow({
+              color: getRgbaCSS(color),
+              blur: 10,
+              offsetX: 5,
+              offsetY: 5,
+            }),
+          });
+        }
+        canvas.requestRenderAll();
+      }
     } else {
       if (color.r === 51 && color.g === 51 && color.b === 51 && color.a === 1) {
         if (!selectedObject) {

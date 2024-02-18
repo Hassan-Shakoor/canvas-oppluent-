@@ -14,6 +14,7 @@ import GradientModule from "../../EditToolbarComp/TextModules/GradientModule";
 import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject } from "../../../../store/app/Edit/Canvas/canvas";
 import Slider from "rc-slider";
 import Select from "react-select";
+import DropShadowModule from "../../EditToolbarComp/TextModules/DropShadowModule";
 
 function EditTextTab() {
   // States
@@ -229,7 +230,7 @@ function EditTextTab() {
         className={openDrawer === 'TextDropShadow'
           ? "shadow-module colorize-module vertical-switch-content-enter-done"
           : "shadow-module colorize-module vertical-switch-content-exit-done"} >
-        <GradientModule />
+        <DropShadowModule />
       </div>
     </>
   )

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,67 +31,161 @@ const GradientModule = () => {
     const handleOpacityChange = (value) => {
         setOpacity(value);
     };
+
+
+
     const handleHorizontalOffsetChange = (value) => {
         setHorizontalOffset(value);
-    };
+    }
     const handleVerticalOffsetChange = (value) => {
         setVerticalOffset(value);
     };
     const handleFromXChange = (value) => {
         setFromX(value);
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+
+            const existingFill = activeObject.get('fill');
+
+            // Check if the fill is a gradient
+            console.log(value)
+            if (existingFill && existingFill.type === 'linear') {
+                // Modify the color stops
+                existingFill.coords = {
+                    ...existingFill.coords,
+                    x1: value,
+                }
+
+
+                activeObject.set({
+                    fill: existingFill,
+                });
+                canvas.requestRenderAll();
+            }
+        }
     };
     const handleFromYChange = (value) => {
         setFromY(value);
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+
+            const existingFill = activeObject.get('fill');
+
+            // Check if the fill is a gradient
+            if (existingFill && existingFill.type === 'linear') {
+                // Modify the color stops
+                existingFill.coords = {
+                    ...existingFill.coords,
+                    y1: value,
+                }
+
+                console.log(existingFill)
+
+                activeObject.set({
+                    fill: existingFill,
+                });
+                canvas.requestRenderAll();
+            }
+        }
     };
     const handleToXChange = (value) => {
         setToX(value);
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+
+            const existingFill = activeObject.get('fill');
+
+            // Check if the fill is a gradient
+            if (existingFill && existingFill.type === 'linear') {
+                // Modify the color stops
+                existingFill.coords = {
+                    ...existingFill.coords,
+                    x2: value * activeObject.width,
+                }
+
+                console.log(existingFill)
+
+                activeObject.set({
+                    fill: existingFill,
+                });
+                canvas.requestRenderAll();
+            }
+        }
     };
     const handleToYChange = (value) => {
         setToY(value);
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+
+            const existingFill = activeObject.get('fill');
+
+            // Check if the fill is a gradient
+            if (existingFill && existingFill.type === 'linear') {
+                // Modify the color stops
+                existingFill.coords = {
+                    ...existingFill.coords,
+                    y2: value * activeObject.height,
+                }
+
+                console.log(value * activeObject.height)
+
+                activeObject.set({
+                    fill: existingFill,
+                });
+                canvas.requestRenderAll();
+            }
+        }
     };
 
-
-
-    // const handleLineSpacing = (spacing) => {
-    //     setLineSpacing(spacing);
-    //     const canvas = canvasContainer[selectedCanvas];
-    //     if (canvas?.getActiveObject()) {
-    //         console.log(spacing)
-    //         const textObject = canvas?.getActiveObject();
-    //         textObject.set({ lineHeight: spacing });
-    //         canvas.requestRenderAll();
-    //     }
-    // }
-
-    // const handleLetterSpacing = (spacing) => {
-    //     setLetterSpacing(spacing);
-    //     const canvas = canvasContainer[selectedCanvas];
-    //     if (canvas?.getActiveObject()) {
-    //         console.log(spacing)
-    //         const textObject = canvas?.getActiveObject();
-    //         textObject.set({ charSpacing: spacing });
-    //         canvas.requestRenderAll();
-    //     }
-    // }
-
-    // const handleRotate = (rotate) => {
-    //     setRotate(rotate);
-    //     const canvas = canvasContainer[selectedCanvas];
-    //     if (canvas?.getActiveObject()) {
-    //         console.log(rotate)
-    //         const textObject = canvas?.getActiveObject();
-    //         textObject.set({ angle: rotate });
-    //         canvas.requestRenderAll();
-    //     }
-    // }
-
     const handleLinearGradient = () => {
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+            console.log('linear')
+            // Create a linear gradient
+            const linearGradient = new fabric.Gradient({
+                type: 'linear',
+                // gradientUnits: 'percentage',
+                coords: { x1: 0, y1: 0, x2: 0, y2: activeObject.height },
+                colorStops: [
+                    { offset: 0, color: 'red' },
+                    { offset: 1, color: 'blue' },
+                ],
+            });
 
+            // Set the linear gradient as the fill
+            activeObject.set({ fill: linearGradient });
+
+            canvas.requestRenderAll();
+        }
     }
 
     const handleRadialGradient = () => {
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+            console.log('radial');
 
-    }
+            // Create a radial gradient
+            const radialGradient = new fabric.Gradient({
+                type: 'radial',
+                coords: { r1: 0, r2: activeObject.width / 2, x1: activeObject.width / 2, y1: activeObject.height / 2, x2: activeObject.width / 2, y2: activeObject.height / 2 },
+                colorStops: [
+                    { offset: 0, color: 'red' },
+                    { offset: 1, color: 'blue' },
+                ],
+            });
+
+            // Set the radial gradient as the fill
+            activeObject.set({ fill: radialGradient });
+
+            canvas.requestRenderAll();
+        }
+    };
 
     const handleSaveGradient = () => {
 
@@ -101,13 +195,40 @@ const GradientModule = () => {
 
     }
 
+    useEffect(() => {
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+            const existingFill = activeObject.get('fill');
+
+            // Check if the fill is a gradient
+            if (existingFill && existingFill.type === 'linear') {
+                // It's a linear gradient
+                console.log('Fill is a linear gradient');
+                setChecked(true);
+                // Modify the gradient or perform other actions
+            } else if (existingFill && existingFill.type === 'radial') {
+                // It's a radial gradient
+                console.log('Fill is a radial gradient');
+                setChecked(true);
+                // Modify the gradient or perform other actions
+            } else {
+                // It's not a gradient
+                setChecked(false);
+                console.log('Fill is not a gradient');
+                // Handle non-gradient fill or perform other actions
+            }
+
+        }
+    }, [])
+
 
     return (
 
 
         <>
             <div class="sidebar-module__divider"></div>
-            <label className={`toggle ${isChecked ? 'toggle-gradient' : ''}`}>
+            <label className={`toggle toggle-gradient`}>
                 <input type="checkbox" className="toggle__input" checked={isChecked} onChange={handleToggle} />
                 <span className="toggle__background">
                     <span className="toggle__dot"></span>
