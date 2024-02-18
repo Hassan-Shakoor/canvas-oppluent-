@@ -38,8 +38,8 @@ function Edit() {
     const { id } = useParams();
     const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
-    const [width, setWidth] = useState(1020)
-    const [height, setHeight] = useState(793)
+    const [width, setWidth] = useState(null)
+    const [height, setHeight] = useState(null)
     const [zoom, setZoom] = useState(1)
 
     // TODO: Remove hardcoded else condition in fetch tempate data
@@ -82,14 +82,14 @@ function Edit() {
             <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme={darkMode ? 'dark' : 'light'} />
             <EditHeader />
             {/* <button onClick={() => console.log("Edit --- selectedObject --->> ", selectedObject)} style={{ zIndex: 2000, position: 'fixed' }}>Selected Object</button> */}
-            <EditToobar />
+            {selectedObject && (<EditToobar />)}
             <EditSidebar />
             <EditZoom width={width} height={height} zoom={zoom} updateZoomResolution={updateZoomResolution} />
             <div className="page-manager">
                 <PageManagerStage />
                 <PageManagerButtonSet />
             </div>
-            <Canvas width={width} height={height} />
+            {width && height && (< Canvas width={width} height={height} />)}
         </div>
     )
 }

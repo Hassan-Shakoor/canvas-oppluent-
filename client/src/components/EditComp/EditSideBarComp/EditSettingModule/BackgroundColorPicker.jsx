@@ -16,7 +16,9 @@ import { useDispatch } from "react-redux/es/hooks/useDispatch";
 import { updateUserColor } from "../../../../store/app/Edit/EditSidebar/EditSetting/background"
 import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject } from "../../../../store/app/Edit/Canvas/canvas";
 
-function BackgroundColorPicker() {
+import { fabric } from 'fabric'
+
+function BackgroundColorPicker({ title }) {
   // ** State
   const [selectedColor, setSelectedColor] = useState(undefined)
   const [color, setColor] = useState({ r: 51, g: 51, b: 51, a: 1 })
@@ -91,66 +93,89 @@ function BackgroundColorPicker() {
   }
 
   useEffect(() => {
-    if (color.r === 51 && color.g === 51 && color.b === 51 && color.a === 1) {
-      if (!selectedObject) {
-        setColor({ r: 51, g: 51, b: 51, a: 1 })
-        console.log('asansjx', canvasContainer[selectedCanvas].getBackgroundColor, "<-->")
+    if (title === 'Gradient') {
+      const canvas = canvasContainer[selectedCanvas];
+      if (canvas?.getActiveObject()) {
+        const textObject = canvas?.getActiveObject();
+        textObject.set({
+          fill: new fabric.Gradient({
+            type: 'linear',
+            gradientUnits: 'percentage',
+            coords: { x1: 0, y1: 0, x2: 0, y2: 100 },
+            colorStops: [
+              { offset: 0, color: 'red' },
+              { offset: 1, color: 'blue' },
+            ],
+          }),
+        });
+        canvas.requestRenderAll();
       }
-      else {
-        if (selectedObject.type === 'Text') {
-          // setColor({ r: 51, g: 51, b: 51, a: 1 })
-        }
-        else if (selectedObject.type === 'Shape') {
-          // setColor({ r: 51, g: 51, b: 51, a: 1 })
-        }
-      }
-      return;
-    }
 
-    if (color && !selectedObject) {
-      console.log("color: ", color)
+    } else if (title === 'DropShadow') {
 
-      canvasContainer[selectedCanvas].setBackgroundColor(getRgbaCSS(color), render(selectedCanvas, canvasContainer))
-    }
-    else if (color && selectedObject) {
-      if (selectedObject.type === 'Text') {
-        // selectedObject.fill = getRgbaCSS(color);
-        if (selectedObject.selectionStart !== selectedObject.selectionEnd) {
-          for (let i = selectedObject.selectionStart; i < selectedObject.selectionEnd; i++) {
-            selectedObject.styles[0][i] = {
-              fill: getRgbaCSS(color),
-            };
-          }
+    } else {
+      if (color.r === 51 && color.g === 51 && color.b === 51 && color.a === 1) {
+        if (!selectedObject) {
+          setColor({ r: 51, g: 51, b: 51, a: 1 })
+          console.log('asansjx', canvasContainer[selectedCanvas].getBackgroundColor, "<-->")
         }
         else {
-          for (let i = 0; i < selectedObject.text?.length; i++) {
-            selectedObject.styles[0][i] = {
-              fill: getRgbaCSS(color),
-            };
+          if (selectedObject.type === 'Text') {
+            // setColor({ r: 51, g: 51, b: 51, a: 1 })
+          }
+          else if (selectedObject.type === 'Shape') {
+            // setColor({ r: 51, g: 51, b: 51, a: 1 })
           }
         }
+        return;
+      }
 
+      if (color && !selectedObject) {
+        console.log("color: ", color)
+
+        canvasContainer[selectedCanvas].setBackgroundColor(getRgbaCSS(color), render(selectedCanvas, canvasContainer))
+      }
+      else if (color && selectedObject) {
+        if (selectedObject.type === 'Text') {
+          // selectedObject.fill = getRgbaCSS(color);
+          if (selectedObject.selectionStart !== selectedObject.selectionEnd) {
+            for (let i = selectedObject.selectionStart; i < selectedObject.selectionEnd; i++) {
+              selectedObject.styles[0][i] = {
+                fill: getRgbaCSS(color),
+              };
+            }
+          }
+          else {
+            for (let i = 0; i < selectedObject.text?.length; i++) {
+              selectedObject.styles[0][i] = {
+                fill: getRgbaCSS(color),
+              };
+            }
+          }
+
+          render(selectedCanvas, canvasContainer)
+        }
+        if (selectedObject.type === 'Shape') {
+          // selectedObject.fill = getHexColor((color));;
+          selectedObject.set({ fill: getHexColor(color) });
+          // if (selectedObject.selectionStart !== selectedObject.selectionEnd) {
+          // for (let i = selectedObject.selectionStart; i < selectedObject.selectionEnd; i++) {
+          //   selectedObject.styles[0][i] = {
+          //     fill: getRGBAtoSet(color),
+          //   };
+          //   }
+          // }
+          // selectedObject.styles = {
+          //   0: {
+          //     fill: getRgbaCSS(color),
+          //   }
+        };
+        canvasContainer[selectedCanvas].renderAll()
+        // selectedObject.renderAll();
         render(selectedCanvas, canvasContainer)
       }
-      if (selectedObject.type === 'Shape') {
-        // selectedObject.fill = getHexColor((color));;
-        selectedObject.set({ fill: getHexColor(color) });
-        // if (selectedObject.selectionStart !== selectedObject.selectionEnd) {
-        // for (let i = selectedObject.selectionStart; i < selectedObject.selectionEnd; i++) {
-        //   selectedObject.styles[0][i] = {
-        //     fill: getRGBAtoSet(color),
-        //   };
-        //   }
-        // }
-        // selectedObject.styles = {
-        //   0: {
-        //     fill: getRgbaCSS(color),
-        //   }
-      };
-      canvasContainer[selectedCanvas].renderAll()
-      // selectedObject.renderAll();
-      render(selectedCanvas, canvasContainer)
     }
+
   }, [canvasContainer, color, selectedCanvas])
 
   return (

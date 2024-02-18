@@ -28,12 +28,14 @@ function TextInput() {
   const handleAddBtn = () => {
     const canvasArr = getCanvasRef();
     const canvas = canvasArr[selectedCanvas];
-    const fabricText = new fabric.IText(text.trim(), {
+    const fabricText = new fabric.Textbox(text.trim(), {
       selectable: true,
       hasControls: true,
       id: generateRandomId(),
       type: 'Text',
       cursorColor: '#000',
+      textWrapping: true,
+      textAlign: 'left',
       styles: {
         0: {
           0: {

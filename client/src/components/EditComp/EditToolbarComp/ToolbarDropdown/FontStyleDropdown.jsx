@@ -11,22 +11,29 @@ import { getCanvasRef } from "../../../../shared/utils/fabric";
 import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
 
 const FontStyleDropdown = () => {
-    // ** State
-    const [font, setFont] = useState(null)
+  // ** State
+  const [font, setFont] = useState(null)
 
-    // ** Vars
-    const canvasContainer = getCanvasRef() || []
-    const selectedCanvas = useSelector(selectSelectedCanvas)
+  // ** Vars
+  const canvasContainer = getCanvasRef() || []
+  const selectedCanvas = useSelector(selectSelectedCanvas)
 
-    useEffect(() => {
-        const canvas = canvasContainer[selectedCanvas] 
-        if(canvas?.getActiveObject()){
-            const textObject = canvas?.getActiveObject()
-            textObject.set({fontFamily: font})
-            canvas.requestRenderAll();
-        }
+
+  useEffect(() => {
+    console.log('fontstyle')
+    const canvas = canvasContainer[selectedCanvas]
+    if (canvas?.getActiveObject()) {
+      const textObject = canvas?.getActiveObject()
+      if (font) {
+        textObject?.set({ fontFamily: font })
+        canvas.requestRenderAll();
+      }
+      if (!font) {
+        setFont(textObject.fontFamily)
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[font])
+  }, [font])
 
   const options = [
     {
@@ -45,46 +52,62 @@ const FontStyleDropdown = () => {
         </p>
       ),
     },
-    { value: "EB Garamond Medium", label:(
+    {
+      value: "EB Garamond Medium", label: (
         <p className="dropdown-select__option-label" style={{ fontFamily: 'EB Garamond Medium' }}>
-            EB Garamond Medium
+          EB Garamond Medium
         </p>
-    ) },
-    { value: "EB Garamond SemiBold", label:(
+      )
+    },
+    {
+      value: "EB Garamond SemiBold", label: (
         <p className="dropdown-select__option-label" style={{ fontFamily: 'EB Garamond SemiBold' }}>
-            EB Garamond SemiBold
+          EB Garamond SemiBold
         </p>
-    ) },
-    { value: "Poppins", label:(
+      )
+    },
+    {
+      value: "Poppins", label: (
         <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins' }}>
-            Poppins
+          Poppins
         </p>
-    ) },
-    { value: "Poppins Black", label:(
+      )
+    },
+    {
+      value: "Poppins Black", label: (
         <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Black' }}>
-            Poppins Black
+          Poppins Black
         </p>
-    ) },
-    { value: "Poppins Light", label:(
+      )
+    },
+    {
+      value: "Poppins Light", label: (
         <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Light' }}>
-            Poppins Light
+          Poppins Light
         </p>
-    ) },
-    { value: "Poppins Medium", label:(
+      )
+    },
+    {
+      value: "Poppins Medium", label: (
         <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Medium' }}>
-            Poppins Medium
+          Poppins Medium
         </p>
-    ) },
-    { value: "Poppins Semibold", label:(
+      )
+    },
+    {
+      value: "Poppins Semibold", label: (
         <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Semibold' }}>
-            Poppins Semibold
+          Poppins Semibold
         </p>
-    ) },
-    { value: "Poppins Thin", label:(
+      )
+    },
+    {
+      value: "Poppins Thin", label: (
         <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Thin' }}>
-            Poppins Thin
+          Poppins Thin
         </p>
-    ) },
+      )
+    },
 
   ];
 
@@ -153,6 +176,14 @@ const FontStyleDropdown = () => {
       <Select
         options={options}
         defaultValue={options[0]}
+        value={{
+          value: font,
+          label: (
+            <p className="dropdown-select__option-label" style={{ fontFamily: font }}>
+              {font}
+            </p>
+          )
+        }}
         styles={customStyles}
         onChange={(option) => setFont(option.value)}
       />

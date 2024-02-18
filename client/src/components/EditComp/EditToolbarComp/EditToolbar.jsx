@@ -11,23 +11,30 @@ import FontSizeDropdown from "./ToolbarDropdown/FontSizeDropdown";
 
 // ** Shared
 import { getCanvasRef } from "../../../shared/utils/fabric";
+import TextAlignDropdown from "./ToolbarDropdown/TextAlignDropdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SendBackFrontObject from "./TextModules/SendBackFrontObject";
+
 
 function EditToobar() {
   // ** State
 
   const dispatch = useDispatch()
 
-  const selectedObject = useSelector(selectSelectedObject);
   const [activeBold, setActiveBold] = useState(false);
   const [activeItalic, setActiveItalic] = useState(false);
   const [activeUnderline, setActiveUnderline] = useState(false)
   const [activeStrikethrought, setActiveStikethrought] = useState(false)
   const [activeUpperCase, setActiveUpperCase] = useState(false)
+  const [openTextAlignDropdown, setOpenTextAlignDropdown] = useState(false)
 
   // ** Vars
   const canvasContainer = getCanvasRef() || [];
   const selectedCanvas = useSelector(selectSelectedCanvas);
+  const selectedObject = useSelector(selectSelectedObject);
   const openDrawer = useSelector(selectOpenDrawer);
+
+  console.log('Rindhdb')
 
   const handleBoldText = () => {
     const canvas = canvasContainer[selectedCanvas];
@@ -72,146 +79,148 @@ function EditToobar() {
     }
   };
 
+
   return (
     // selectedObject && Object.keys(selectedObject).length > 0 && (
-      <div
-        className={
-          openDrawer !== null ? "toolbar toolbar_type-animate-general" : "toolbar"
-        }
-        aria-label="clickOutsideIgnore"
-      >
-        <div className="toolbar__container-tools">
-          <div className="toolbar__color-picker__button" onClick={() => {
-            dispatch(updateOpenDrawer('TextEdit'));
-            console.log("TextEdit")
-            console.log(openDrawer);
-          }}>
-            <div className="toolbar__color-picker__flare" />
-            <div className="toolbar__color-picker" />
-          </div>
-          <div className="toolbar__divider" />
-          <FontStyleDropdown />
-          <FontSizeDropdown />
-          <div className="toolbar__divider" />
-          <div className="toolbar__text-button">Format</div>
-          <div className="toolbar__text-button">Gradient</div>
-          <div className="toolbar__text-button">Drop Shadow</div>
+    <div
+      className={
+        openDrawer !== null ? "toolbar toolbar_type-animate-general" : "toolbar"
+      }
+      aria-label="clickOutsideIgnore"
+    >
+      <div className="toolbar__container-tools">
+        <div className="toolbar__color-picker__button" onClick={() => {
+          dispatch(updateOpenDrawer('TextEdit'));
+          console.log("TextEdit")
+          console.log(openDrawer);
+        }}>
+          <div className="toolbar__color-picker__flare" />
+          <div className="toolbar__color-picker" />
         </div>
-        <div className="toolbar__container-tools">
-          <div className="toolbar__divider" />
-          <div className="toolbar__button-set">
-            <div className="">
-              <div
-                className={
-                  activeBold ? "tool-button tool-button_active" : "tool-button"
-                }
-                onClick={() => {
-                  setActiveBold(!activeBold);
-                  handleBoldText();
-                }}
-              >
-                <svg className="icon v2-icon v2-icon-text-bold tool-button__icon">
-                  <use href="#v2-icon-text-bold" xlinkHref="#v2-icon-text-bold" />
-                </svg>
-              </div>
-              <div className={activeItalic ? "tool-button tool-button_active" : "tool-button"}
-                onClick={() => {
-                  setActiveItalic(!activeItalic);
-                  handleItalicText();
-                }}>
-                <svg className="icon v2-icon v2-icon-text-italic tool-button__icon">
-                  <use
-                    href="#v2-icon-text-italic"
-                    xlinkHref="#v2-icon-text-italic"
-                  />
-                </svg>
-              </div>
-              <div className={activeUnderline ? "tool-button tool-button_active" : "tool-button"}
-                onClick={() => {
-                  setActiveUnderline(!activeUnderline);
-                  handleUnderlineText();
-                }}>
-                <svg className="icon v2-icon v2-icon-text-underline tool-button__icon">
-                  <use
-                    href="#v2-icon-text-underline"
-                    xlinkHref="#v2-icon-text-underline"
-                  />
-                </svg>
-              </div>
-              <div className={activeStrikethrought ? "tool-button tool-button_active" : "tool-button"} onClick={() => {
-                setActiveStikethrought(!activeStrikethrought)
-                handleStrikethrought()
-              }}>
-                <svg className="icon v2-icon v2-icon-text-linethrough tool-button__icon">
-                  <use
-                    href="#v2-icon-text-linethrough"
-                    xlinkHref="#v2-icon-text-linethrough"
-                  />
-                </svg>
-              </div>
-              <div className={activeUpperCase ? "tool-button tool-button_active" : "tool-button"} onClick={() => {
-                setActiveUpperCase(!activeUpperCase)
-                handleUpperCase()
-              }}>
-                <svg className="icon v2-icon v2-icon-text-upcase tool-button__icon">
-                  <use
-                    href="#v2-icon-text-upcase"
-                    xlinkHref="#v2-icon-text-upcase"
-                  />
-                </svg>
-              </div>
-            </div>
-            {/* <div className="tool-button">
-              <svg className="icon v2-icon v2-icon-text-align-left tool-button__icon">
-                <use
-                  href="#v2-icon-text-align-left"
-                  xlinkHref="#v2-icon-text-align-left"
-                />
-              </svg>
-              <i className="icon icon-chevron-up toolbar__icon-chevron" />
-            </div>
-            <div className="tool-button">
-              <i className="icon tool-button__icon icon-designer-bulleted-lists" />
-              <i className="icon icon-chevron-up toolbar__icon-chevron" />
-            </div>
-            <div className="tool-button">
-              <i className="icon tool-button__icon icon-designer-numbered-lists" />
-              <i className="icon icon-chevron-up toolbar__icon-chevron" />
-            </div>
-            <div className="tool-button">
-              <i className="icon tool-button__icon icon-designer-bulleted-lists" />
-              <i className="icon icon-chevron-up toolbar__icon-chevron" />
-            </div>
-            <div className="tool-button">
-              <i className="icon tool-button__icon icon-designer-wrap-text" />
-            </div> */}
-          </div>
-          {/* <div className="toolbar__divider" />
-          <div className="toolbar__button-set">
-            <div className="tool-button">
-              <i className="icon tool-button__icon icon-designer-zindex-arrow-up" />
-            </div>
-            <div className="tool-button">
-              <i className="icon tool-button__icon icon-designer-zindex-arrow-down" />
-            </div>
-            <div className="tool-button">
-              <i className="icon tool-button__icon icon-designer-zindex-bring-up" />
-            </div>
-            <div className="tool-button">
-              <i className="icon tool-button__icon icon-designer-zindex-bring-down" />
-            </div>
-          </div> */}
-          <div className="toolbar__divider" />
-          <div className="toolbar__button-set">
-            <div className="tool-button" data-test="toolbar-hyperlink">
-              <svg className="icon v2-icon v2-icon-chain tool-button__icon">
-                <use href="#v2-icon-chain" xlinkHref="#v2-icon-chain" />
-              </svg>
-            </div>
-          </div>
-        </div>
+        {selectedObject.type === 'Text' && (
+          <>
+            <div className="toolbar__divider" />
+            <FontStyleDropdown />
+            <FontSizeDropdown />
+          </>
+        )}
+
+        <div className="toolbar__divider" />
+        <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextTransform'))}>Format</div>
+        <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div>
+        <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextDropShadow'))}>Drop Shadow</div>
       </div>
-      // )
+
+      <div className="toolbar__container-tools">
+        {selectedObject.type === 'Text' && (
+          <>
+            <div className="toolbar__divider" />
+            <div className="toolbar__button-set">
+              <div className="">
+                <div
+                  className={
+                    activeBold ? "tool-button tool-button_active" : "tool-button"
+                  }
+                  onClick={() => {
+                    setActiveBold(!activeBold);
+                    handleBoldText();
+                  }}
+                  data-tooltip='Bold'
+                >
+                  <svg className="icon v2-icon v2-icon-text-bold tool-button__icon">
+                    <use href="#v2-icon-text-bold" xlinkHref="#v2-icon-text-bold" />
+                  </svg>
+                </div>
+                <div className={activeItalic ? "tool-button tool-button_active" : "tool-button"}
+                  onClick={() => {
+                    setActiveItalic(!activeItalic);
+                    handleItalicText();
+                  }}
+                  data-tooltip='Italic'>
+                  <svg className="icon v2-icon v2-icon-text-italic tool-button__icon">
+                    <use
+                      href="#v2-icon-text-italic"
+                      xlinkHref="#v2-icon-text-italic"
+                    />
+                  </svg>
+                </div>
+                <div className={activeUnderline ? "tool-button tool-button_active" : "tool-button"}
+                  data-tooltip='Underline'
+                  onClick={() => {
+                    setActiveUnderline(!activeUnderline);
+                    handleUnderlineText();
+                  }}>
+                  <svg className="icon v2-icon v2-icon-text-underline tool-button__icon">
+                    <use
+                      href="#v2-icon-text-underline"
+                      xlinkHref="#v2-icon-text-underline"
+                    />
+                  </svg>
+                </div>
+                <div className={activeStrikethrought ? "tool-button tool-button_active" : "tool-button"}
+                  data-tooltip='Strikethrough'
+                  onClick={() => {
+                    setActiveStikethrought(!activeStrikethrought)
+                    handleStrikethrought()
+                  }}>
+                  <svg className="icon v2-icon v2-icon-text-linethrough tool-button__icon">
+                    <use
+                      href="#v2-icon-text-linethrough"
+                      xlinkHref="#v2-icon-text-linethrough"
+                    />
+                  </svg>
+                </div>
+                <div className={activeUpperCase ? "tool-button tool-button_active" : "tool-button"}
+                  data-tooltip='Uppercase'
+                  onClick={() => {
+                    setActiveUpperCase(!activeUpperCase)
+                    handleUpperCase()
+                  }}>
+                  <svg className="icon v2-icon v2-icon-text-upcase tool-button__icon">
+                    <use
+                      href="#v2-icon-text-upcase"
+                      xlinkHref="#v2-icon-text-upcase"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="tool-button" onClick={() => setOpenTextAlignDropdown(!openTextAlignDropdown)}>
+                <svg className="icon v2-icon v2-icon-text-align-justify tool-button__icon">
+                  <use
+                    href="#v2-icon-text-align-justify"
+                    xlinkHref="#v2-icon-text-align-justify"
+                  />
+                </svg>
+                <i className="icon icon-chevron-up toolbar__icon-chevron" />
+              </div>
+              {openTextAlignDropdown && <TextAlignDropdown />}
+              <div className="tool-button">
+                <FontAwesomeIcon icon="fa-solid fa-list-ul" />
+                <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
+              </div>
+              <div className="tool-button">
+                <FontAwesomeIcon icon="fa-solid fa-list-ol" />
+                <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
+              </div>
+              <div className="tool-button">
+                <i className="icon tool-button__icon icon-designer-bulleted-lists"></i>
+                <i className="icon icon-chevron-up toolbar__icon-chevron"></i>
+              </div>
+              <div className="tool-button">
+                <i className="icon tool-button__icon icon-designer-wrap-text"></i>
+              </div>
+            </div>
+          </>
+        )}
+
+        <div className="toolbar__divider" />
+
+        <SendBackFrontObject />
+
+        
+      </div>
+    </div>
+    // )
   );
 }
 
