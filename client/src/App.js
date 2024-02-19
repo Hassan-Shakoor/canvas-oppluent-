@@ -40,11 +40,15 @@ function App() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const userProfile = await getUserInformation()
-      setIsAdmin(userProfile.isAdmin);
+  const getUserInfo = async () => {
+    const userProfile = await getUserInformation()
+    if (userProfile) {
+      setIsAdmin(userProfile?.isAdmin);
+      console.log(userProfile)
     }
+  }
+
+  useEffect(() => {
     getUserInfo();
 
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -54,7 +58,7 @@ function App() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [isAuthenticated]);
   if (!isAuthChecked) {
     return <div>Loading...</div>;
   }
@@ -77,6 +81,7 @@ function App() {
           <Route path='/partners/:id/edit' element={isAuthenticated ? <PartnerEdit /> : <Navigate to='/' replace />} />
           <Route path='/share/:userId/:categoryId/:templateId' element={isAuthenticated ? <Share /> : <Navigate to='/' replace />} />
           <Route path='/template-request' element={isAdmin ? <TemplateRequest /> : <Navigate to='/' replace />} />
+          {/* <Route path='/template-request' element={<TemplateRequest />} /> */}
         </Routes>
       </Router>
     </Provider>

@@ -97,25 +97,42 @@ const TransformModule = () => {
   const handleDuplicate = () => {
     const canvas = canvasContainer[selectedCanvas];
 
-    if (canvas?.getActiveObject() instanceof fabric.Textbox) {
-      const textObject = canvas?.getActiveObject();
+    if (canvas?.getActiveObject()) {
+      const activeObject = canvas?.getActiveObject();
 
-      // Clone the textObject
-      const clonedTextObject = new fabric.Textbox(textObject.text, {
-        ...textObject,
-        left: textObject.left + 10, // Example: Add an offset to avoid overlap
-        top: textObject.top + 10, // Example: Add an offset to avoid overlap
-      });
-      canvas.add(clonedTextObject);
-      canvas.setActiveObject(clonedTextObject);
-      canvas.requestRenderAll();
+      if (activeObject?.type === 'Text') {
+        // Clone Textbox
+        const clonedObject = new fabric.Textbox(activeObject.text, {
+          ...activeObject.toObject(),
+          left: activeObject.left + 10,
+          top: activeObject.top + 10,
+        });
+
+        canvas?.add(clonedObject);
+      }
+
+      if (activeObject?.type === 'Shape' || activeObject?.type === 'Image') {
+        // Duplicate Shape (SVG)
+        const activeObject = canvas?.getActiveObject();
+
+        if (activeObject) {
+          activeObject.clone(function (clone) {
+            canvas.add(clone.set({
+              left: activeObject.left + 10,
+              top: activeObject.top + 10
+            }));
+          });
+          canvas?.renderAll();
+        }
+      }
+      canvas?.requestRenderAll();
     }
   };
 
   const handleFlip = (value) => {
     const canvas = canvasContainer[selectedCanvas];
 
-    if (canvas?.getActiveObject() instanceof fabric.Textbox) {
+    if (canvas?.getActiveObject()) {
       const textObject = canvas?.getActiveObject();
 
       if (value === 'X') {

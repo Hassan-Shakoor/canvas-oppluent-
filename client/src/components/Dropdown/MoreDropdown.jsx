@@ -29,16 +29,11 @@ function MoreDropDown({ dropdown }) {
               key={index}
             >
               {item.key === "download" ? (
-                <a
-                  href={`${item.link}`}
-                  download
-                  target="_blank"
-                  className="text-no-decoration"
-                >
-                  <button type="button" className="btn btn_menu-item">
-                    <FontAwesomeIcon icon={item.iconClass} /> {item.title}
-                  </button>
-                </a>
+
+                <button type="button" className="btn btn_menu-item" onClick={item.function}>
+                  <FontAwesomeIcon icon={item.iconClass} /> {item.title}
+                </button>
+
               ) : item.key === "copy" ? (
                 <button type="button" className="btn btn_menu-item"
                   onClick={() => {

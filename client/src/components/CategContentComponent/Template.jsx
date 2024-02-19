@@ -28,23 +28,23 @@ function Template(props) {
   }
 
   const dropdownMenu = [
-    {
-      key: "download",
-      iconClass: "fa-solid fa-download",
-      title: "Download",
-      link: `${props.item.storage_url[0]}`
-    },
+    // {
+    //   key: "download",
+    //   iconClass: "fa-solid fa-download",
+    //   title: "Download",
+    //   link: `${props.item.storage_url[0]}`
+    // },
     {
       key: "copy",
       iconClass: "fa-solid fa-link",
       title: "Copy Website Link",
-      link: `/share/${props.userId}/${props.categoryId}/${props.item.id}`,
+      link: `share/${props.userId}/${props.categoryId}/${props.item.id}`,
     },
     {
       key: "open",
       iconClass: "fa-solid fa-copy",
       title: "Open in new Tab",
-      link: `/share/${props.userId}/${props.categoryId}/${props.item.id}`
+      link: `share/${props.userId}/${props.categoryId}/${props.item.id}`
     },
     {
       key: "add-to-my-design",

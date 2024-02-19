@@ -8,8 +8,6 @@ const DashboardHeaderButtons = (props) => {
 
   const [sortGrid, setSortGrid] = useState(3)
 
-
-
   const sortDropdownOptions = [
     {
       key: "default",
