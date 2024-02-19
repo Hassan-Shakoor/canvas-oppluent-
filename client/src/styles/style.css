@@ -9586,7 +9586,7 @@ table {
   --card-gutter: 10%;
   animation: 0.3s ease-in-out fade-in;
   border-radius: 7px;
-  box-shadow: 0 0 18px 0 rgba(26, 24, 24, 0.0980392157);
+  /* box-shadow: 0 0 18px 0 rgba(26, 24, 24, 0.0980392157); */
   color: var(--font-color);
   display: flex;
   flex-direction: column;
@@ -9715,7 +9715,7 @@ table {
 .folder__panel,
 .design__panel,
 .design-card__panel {
-  background-color: var(--secondary-bg-color);
+  /* background-color: var(--secondary-bg-color); */
   border-bottom-left-radius: 7px;
   border-bottom-right-radius: 7px;
   font-size: 11px;
@@ -9832,7 +9832,7 @@ table {
   flex-direction: column;
 }
 
-.template:hover .folder__menu_top-left,
+.folder:hover .folder__menu_top-left,
 .template:hover .design__menu_top-left {
   display: block;
 }
@@ -9846,7 +9846,7 @@ table {
   top: 12px;
 }
 
-btn.folder__menu-dropdown,
+.btn.folder__menu-dropdown,
 .btn.design__menu-dropdown,
 .btn.template__menu-dropdown {
   --btn-text-color: #dfdfdf;
@@ -20206,6 +20206,11 @@ input[type="submit"] {
 .move-to-folder-modal__tree {
   overflow: auto;
   height: 300px;
+}
+
+.move-to-folder-modal__tree .selected-folder {
+  background: #efefef;
+  border-radius: 6px;
 }
 
 .move-to-folder-modal__tree::-webkit-scrollbar {
@@ -33407,7 +33412,7 @@ span.CodeMirror-selectedtext {
 }
 
 .folder__preview-container {
-  padding-top: 100%;
+  /* padding-top: 100%; */
   position: relative;
 }
 
@@ -34035,6 +34040,7 @@ span.CodeMirror-selectedtext {
 }
 
 .template_menu-opened .template__menu,
+.folder:hover .template__menu,
 .template:hover .template__menu {
   opacity: 1;
 }

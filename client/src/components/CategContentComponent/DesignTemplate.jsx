@@ -17,6 +17,8 @@ import { duplicateTemplate } from "../../services/firebase/duplicateTemplate";
 import { useNavigate } from "react-router-dom";
 import { fabric } from 'fabric';
 import { deleteTemplate } from "../../services/firebase/deleteTemplate";
+import { moveToFolder } from "../../services/firebase/moveToFolder";
+import FoldersModal from "../Modal/FoldersModal";
 
 function DesignTemplate(props) {
 
@@ -30,6 +32,12 @@ function DesignTemplate(props) {
     const uid = useSelector(selectUID)
 
     const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
+
+    const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false)
+
+    const closeMoveFolderModal = () => {
+        setOpenMoveFolderModal(false);
+    }
 
     const handleAddMyDesign = async () => {
         try {
@@ -110,12 +118,12 @@ function DesignTemplate(props) {
             title: "Edit",
             function: () => { navigate(`/edit/${props.item.id}`) }
         },
-        {
-            key: "share",
-            iconClass: "fa-solid fa-share-nodes",
-            title: "Share",
-            function: `/share/${props.userId}/${props.categoryId}/${props.item.id}`
-        },
+        // {
+        //     key: "share",
+        //     iconClass: "fa-solid fa-share-nodes",
+        //     title: "Share",
+        //     function: `/share/${props.userId}/${props.categoryId}/${props.item.id}`
+        // },
         {
             key: "download",
             iconClass: "fa-solid fa-download",
@@ -135,12 +143,20 @@ function DesignTemplate(props) {
             function: handleAddMyDesign
         },
         {
+            key: "move-to-folder",
+            iconClass: "fa-solid fa-star",
+            title: "Move to Folder",
+            function: () => {
+                setOpenMoveFolderModal(true);
+            }
+        },
+        {
             key: "delete",
             iconClass: "fa-regular fa-trash-can",
             title: "Delete",
             function: async () => {
                 try {
-                    await duplicateTemplate(uid, props.item.id)
+                    await deleteTemplate(uid, props.item.id)
                     toast.success("File Deleted Successfully.")
                 } catch (error) {
                     console.error("Error: ", error)
@@ -190,6 +206,13 @@ function DesignTemplate(props) {
                         }
                     }}
                 />)}
+
+            {openMoveFolderModal &&
+                <FoldersModal
+                    closeMoveFolderModal={closeMoveFolderModal}
+                    templateId={props.item.id}
+                    />}
+
 
             <div
                 className="template"

@@ -70,6 +70,9 @@ function App() {
           <Route path="/categories" element={isAuthenticated ? <Category /> : <Navigate to="/" replace />}>
             <Route path=':id' element={<CategoryContent />} />
           </Route>
+          <Route path="/folders" element={isAuthenticated ? <Category /> : <Navigate to="/" replace />}>
+            <Route path=':id' element={<CategoryContent />} />
+          </Route>
           <Route path="/edit/:id" element={<Edit />} />
           <Route path='/property-search' element={<PropertySearch />}>
             <Route path=':id' element={<ColumnMLS />} />

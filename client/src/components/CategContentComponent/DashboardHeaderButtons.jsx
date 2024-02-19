@@ -1,10 +1,26 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import SortDropDown from '../Dropdown/SortDropdown';
+import InputModal from '../Modal/InputModal';
+import { selectUID } from '../../store/app/User/userPreference';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { createFolder } from '../../services/firebase/createFolder';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardHeaderButtons = (props) => {
+
+  const navigate = useNavigate();
+
+  const uid = useSelector(selectUID)
+
   const [openSortDropDown, setOpenSortDropDown] = useState(false);
   const [openGridDropDown, setOpenGridDropDown] = useState(false);
+
+  const isFoldersKeywordPresent = window.location.href.includes('folders');
+
+  const [showInputFolderModal, setShowInputFolderModal] = useState(false);
+  const [folderName, setFolderName] = useState('');
 
   const [sortGrid, setSortGrid] = useState(3)
 
@@ -33,8 +49,45 @@ const DashboardHeaderButtons = (props) => {
 
   return (
     <div className="dashboard-header">
+      {showInputFolderModal && (
+        <InputModal
+          title="Rename"
+          body={
+            <div className="password-input">
+              <label className="input">
+                <span className="input__label">Folder Name</span>
+                <input
+                  placeholder="Enter Folder Name"
+                  type="text"
+                  className="simple-input"
+                  value={folderName}
+                  onChange={(e) => setFolderName(e.target.value)}
+                />
+              </label>
+            </div>
+          }
+          secondayBtnTxt={"Cancel"}
+          primaryBtnTxt={"Submit"}
+          onClose={() => setShowInputFolderModal(false)}
+          handleSecodnaryBtn={() => setShowInputFolderModal(false)}
+          handlePrimaryBtn={async (e) => {
+            e.preventDefault();
+            const response = await createFolder(uid, folderName);
+            if (response) {
+              setShowInputFolderModal(false);
+              toast.success("Folder Created Successfully.")
+            }
+          }}
+        />)}
+
       <div className="dashboard-header__top-panel">
         <div className="dashboard-header__left-panel">
+          {isFoldersKeywordPresent &&
+            <button type="button" className="btn_secondary dashboard-header__buttons-back dashboard-header__buttons" onClick={()=> navigate('/categories')}>
+              <span className="btn__text">
+                <FontAwesomeIcon icon="fa-solid fa-chevron-left" /> Back
+              </span>
+            </button>}
           <div className="dashboard-header__search search-input">
             <label htmlFor="search">
               <svg className="icon v2-icon v2-icon-loupe search-input__icon">
@@ -55,7 +108,7 @@ const DashboardHeaderButtons = (props) => {
           </div>
         </div>
         <div className="dashboard-header__right-panel">
-          <button type="button" className="btn_secondary btn_secondary dashboard-header__buttons">
+          <button type="button" className="btn_secondary btn_secondary dashboard-header__buttons" onClick={() => setShowInputFolderModal(true)}>
             <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-circle-plus" size='lg' /> Create Folder</span>
           </button>
           <button className="btn_secondary btn_disabled btn_dropdown dashboard-header__buttons-dropdown-batch dashboard-header__buttons">

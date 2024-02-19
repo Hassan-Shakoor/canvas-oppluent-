@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 
@@ -19,21 +19,32 @@ import ConfirmationModal from "../../Modal/ConfirmationModal";
 import { selectProfile } from "../../../store/app/AccountInformation/profile";
 import { publishTemplate } from "../../../services/firebase/publishTemplate";
 import SpinnerOverlay from "../../Loader/SpinnerOverlay";
+import { getUserInformation } from "../../../services/firebase/getUserInformation";
 
 function NavSaveCloseButtonSet() {
   const navigate = useNavigate();
   // vars 
   const dispatch = useDispatch()
   const templateData = useSelector(selectTemplateData);
-  const userProfile = useSelector(selectProfile);
+
 
   const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const getUserInfo = async () => {
+    const userProfile = await getUserInformation()
+    if (userProfile) {
+      setIsAdmin(userProfile?.isAdmin);
+      console.log(userProfile)
+    }
+  }
 
   const handleSaveCheck = () => {
-    if (userProfile.isAdmin) {
+    console.log('first')
+    if (isAdmin) {
       if (!templateData.published) {
         setShowConfirmationModal(true);
         return;
@@ -57,17 +68,21 @@ function NavSaveCloseButtonSet() {
     setLoading(true);
     const canvasContainer = getCanvasRef()
     const serializedData = serializeCanvasContainer(canvasContainer)
-    dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
     await updateTemplateJsonData(userData?.uid, updatedData)
     await publishTemplate(userData?.uid, updatedData)
     toast.success("Template Published Successfully.")
+    dispatch(updateFabricData(serializedData))
     setLoading(false);
   }
 
   const handleClose = async () => {
     navigate('/')
   }
+
+  useEffect(() => {
+    getUserInfo()
+  }, [])
 
   return (<>
     <ul className="header__button-set">
@@ -83,7 +98,7 @@ function NavSaveCloseButtonSet() {
       showConfirmationModal &&
       <ConfirmationModal
         title={"Publish Template Confirmation"}
-        body={"Do you want to publish this template?"}
+        body={<p style={{ color: '#000', margin: 0}}>Do you want to publish this template?</p>}
         secondaryBtnTxt={"Cancel"}
         primaryBtnTxt={"Publish"}
         close={() => { setShowConfirmationModal(false) }}

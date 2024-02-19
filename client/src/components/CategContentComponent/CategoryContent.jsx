@@ -30,6 +30,7 @@ function CategoryContent() {
   const [gridColumn, setGridColumn] = useState(3)
   const [sortTemplate, setSortTemplate] = useState('Default')
   const { id } = useParams();
+  const isFoldersKeywordPresent = window.location.href.includes('folders');
   const [userJson, setUserJson] = useState([]);
   const [categoriesData, setCategoriesData] = useState([]);
   const [category, setCategory] = useState({
@@ -170,7 +171,7 @@ function CategoryContent() {
       }
     }
     setTimeout(() => {
-      
+
       setLoading(false);
     }, 1000);
   }, [id, categoriesData]);
@@ -219,7 +220,7 @@ function CategoryContent() {
   }, [sortTemplate])
   return (
     <div className="page__content">
-      {id && (!loading ?
+      {id && !isFoldersKeywordPresent && (!loading ?
         <div className="container">
           {/* Top Header */}
           <div className="dashboard-header">
@@ -255,7 +256,7 @@ function CategoryContent() {
             </div>
           </div>
         </div> : <SpinnerContainer loading={loading} />)}
-      {!id && (loading ? <SpinnerContainer loading={loading} /> : <DashboardHeader category={category} gridColumn={gridColumn} userId={userId} handleSortTemplate={handleSortTemplate} handleColumn={handleColumn} />)}
+      {(!id || isFoldersKeywordPresent) && (loading ? <SpinnerContainer loading={loading} /> : <DashboardHeader category={category} gridColumn={gridColumn} userId={userId} handleSortTemplate={handleSortTemplate} handleColumn={handleColumn} />)}
     </div>
   );
 }
