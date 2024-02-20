@@ -50,7 +50,9 @@ function NavSaveCloseButtonSet() {
         return;
       }
     }
-    handleSave();
+    else {
+      handleSave();
+    }
   }
 
   const handleSave = async () => {
@@ -68,11 +70,11 @@ function NavSaveCloseButtonSet() {
     setLoading(true);
     const canvasContainer = getCanvasRef()
     const serializedData = serializeCanvasContainer(canvasContainer)
-    const updatedData = { ...templateData, fabricData: serializedData }
-    await updateTemplateJsonData(userData?.uid, updatedData)
-    await publishTemplate(userData?.uid, updatedData)
-    toast.success("Template Published Successfully.")
     dispatch(updateFabricData(serializedData))
+    const updatedData = { ...templateData, fabricData: serializedData }
+    await publishTemplate(userData?.uid, updatedData)
+    await updateTemplateJsonData(userData?.uid, updatedData)
+    toast.success("Template Published Successfully.")
     setLoading(false);
   }
 
@@ -98,11 +100,11 @@ function NavSaveCloseButtonSet() {
       showConfirmationModal &&
       <ConfirmationModal
         title={"Publish Template Confirmation"}
-        body={<p style={{ color: '#000', margin: 0}}>Do you want to publish this template?</p>}
+        body={<p style={{ color: '#000', margin: 0 }}>Do you want to publish this template?</p>}
         secondaryBtnTxt={"Cancel"}
         primaryBtnTxt={"Publish"}
         close={() => { setShowConfirmationModal(false) }}
-        submit={(event) => handlePublish(event)}
+        submit={() => handlePublish()}
       />
     }
   </>

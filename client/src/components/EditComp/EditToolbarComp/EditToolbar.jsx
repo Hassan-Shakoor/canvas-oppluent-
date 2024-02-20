@@ -202,13 +202,13 @@ function EditToobar() {
                 <FontAwesomeIcon icon="fa-solid fa-list-ol" />
                 <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
               </div>
-              <div className="tool-button">
+              {/* <div className="tool-button">
                 <i className="icon tool-button__icon icon-designer-bulleted-lists"></i>
                 <i className="icon icon-chevron-up toolbar__icon-chevron"></i>
               </div>
               <div className="tool-button">
                 <i className="icon tool-button__icon icon-designer-wrap-text"></i>
-              </div>
+              </div> */}
             </div>
           </>
         )}
