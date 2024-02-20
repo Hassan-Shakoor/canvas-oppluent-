@@ -51,8 +51,8 @@ function NavSaveCloseButtonSet() {
       }
     }
     else {
-      handleSave();
     }
+    handleSave();
   }
 
   const handleSave = async () => {
@@ -66,16 +66,18 @@ function NavSaveCloseButtonSet() {
     setLoading(false);
   }
 
-  const handlePublish = async () => {
+  const handlePublish = async (event) => {
     setLoading(true);
+    event.preventDefault()
     const canvasContainer = getCanvasRef()
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
-    await publishTemplate(userData?.uid, updatedData)
+    // await publishTemplate(userData?.uid, updatedData)
     await updateTemplateJsonData(userData?.uid, updatedData)
     toast.success("Template Published Successfully.")
     setLoading(false);
+    setShowConfirmationModal(false)
   }
 
   const handleClose = async () => {
@@ -88,10 +90,10 @@ function NavSaveCloseButtonSet() {
 
   return (<>
     <ul className="header__button-set">
-      <li className="header__text-button header__save-button" data-test="save-button" onClick={handleSaveCheck}>
+      <li className="header__text-button header__save-button" data-test="save-button" onClick={() => handleSaveCheck()}>
         Save
       </li>
-      <li className="header__text-button" data-test="close-button" onClick={handleClose}>
+      <li className="header__text-button" data-test="close-button" onClick={() => handleClose()}>
         Close
       </li>
     </ul>
@@ -104,7 +106,7 @@ function NavSaveCloseButtonSet() {
         secondaryBtnTxt={"Cancel"}
         primaryBtnTxt={"Publish"}
         close={() => { setShowConfirmationModal(false) }}
-        submit={() => handlePublish()}
+        submit={(event) => handlePublish(event)}
       />
     }
   </>
