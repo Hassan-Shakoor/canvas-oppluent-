@@ -4,21 +4,30 @@ import { useSelector } from 'react-redux';
 import { selectUID } from '../../store/app/User/userPreference';
 import { moveToFolder } from '../../services/firebase/moveToFolder';
 import { toast } from 'react-toastify';
+import { moveToDashboard } from '../../services/firebase/moveToDashboard';
 
 const FoldersModal = ({ closeMoveFolderModal, templateId }) => {
 
     const uid = useSelector(selectUID);
+    const isFoldersKeywordPresent = window.location.href.includes('folders');
 
     const [folders, setFolders] = useState([]);
     const [selectedFolderId, setSelectedFolderId] = useState('');
 
     const moveTemplateToFolder = async () => {
-        await moveToFolder(uid, templateId, selectedFolderId)
+        if (!selectedFolderId) {
+            alert('Please Select a Folder to Move.')
+            return;
+        }
+        if (selectedFolderId === 'Dashboard') {
+            await moveToDashboard(uid, templateId)
+        } else {
+            await moveToFolder(uid, templateId, selectedFolderId)
+        }
         toast.success("Template Moved Successfully")
     }
 
     const handleFolderClick = (folderId) => {
-        console.log('first')
         if (selectedFolderId === folderId) {
             // If the clicked folder is already selected, unselect it
             setSelectedFolderId('');
@@ -63,9 +72,26 @@ const FoldersModal = ({ closeMoveFolderModal, templateId }) => {
                             <div className="modal__body">
                                 <div className="mb-3">
                                     <ul role="tree" aria-multiselectable="false" className="MuiTreeView-root move-to-folder-modal__tree css-12mehxg" tabIndex="0" id="mui-2">
+                                        {isFoldersKeywordPresent && (
+                                            <li className={`MuiTreeItem-root css-105mfs8 ${selectedFolderId === 'Dashboard' ? 'selected-folder' : ''}`} role="treeitem" tabIndex="-1" id={`mui-2-0`} onClick={() => handleFolderClick('Dashboard')}>
+                                                <ul className="move-to-folder-modal__item-list">
+                                                    <li className="move-to-folder-modal__tree-item">
+                                                        <div className="move-to-folder-modal__tree-item-icons">
+                                                            <svg className="icon v2-icon v2-icon-folder move-to-folder-modal__folder-icon">
+                                                                <use href="#v2-icon-folder" xlinkHref="#v2-icon-folder"></use>
+                                                            </svg>
+                                                        </div>
+                                                        <div className="move-to-folder-modal__tree-item-label"> Dashboard</div>
+                                                        <div className="move-to-folder-modal__tree-item-icons">
+                                                            <div className="move-to-folder-modal__expansion-icon"></div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        )}
                                         {folders && folders?.length ?
                                             folders.map((folder, index) => (
-                                                <li className={`MuiTreeItem-root css-105mfs8 ${selectedFolderId === folder.id ? 'selected-folder' : ''}`} role="treeitem" tabIndex="-1" id={`mui-2-${index}`} onClick={() => handleFolderClick(folder.id)}>
+                                                <li className={`MuiTreeItem-root css-105mfs8 ${selectedFolderId === folder.id ? 'selected-folder' : ''}`} role="treeitem" tabIndex="-1" id={`mui-2-${index + 1}`} onClick={() => handleFolderClick(folder.id)}>
                                                     <ul className="move-to-folder-modal__item-list">
                                                         <li className="move-to-folder-modal__tree-item">
                                                             <div className="move-to-folder-modal__tree-item-icons">

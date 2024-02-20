@@ -6,7 +6,6 @@ import { getFolders } from '../../services/firebase/getFolders';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUID } from '../../store/app/User/userPreference';
-import FoldersModal from '../Modal/FoldersModal';
 
 
 const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
@@ -73,7 +72,8 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                                                         <FolderComponent folderTitle={folder.name}
                                                             folderId={folder.id}
                                                             templates={folder?.template}
-                                                            itemCount={folder?.template ? folder?.template?.length : 0} />
+                                                            itemCount={folder?.template ? folder?.template?.length : 0}
+                                                            gridColumn={gridColumn} />
                                                     </div>
                                                 </div>
                                             </div>

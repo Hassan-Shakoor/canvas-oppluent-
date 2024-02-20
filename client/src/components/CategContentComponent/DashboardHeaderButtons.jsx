@@ -83,7 +83,7 @@ const DashboardHeaderButtons = (props) => {
       <div className="dashboard-header__top-panel">
         <div className="dashboard-header__left-panel">
           {isFoldersKeywordPresent &&
-            <button type="button" className="btn_secondary dashboard-header__buttons-back dashboard-header__buttons" onClick={()=> navigate('/categories')}>
+            <button type="button" className="btn_secondary dashboard-header__buttons-back dashboard-header__buttons" onClick={() => navigate('/categories')}>
               <span className="btn__text">
                 <FontAwesomeIcon icon="fa-solid fa-chevron-left" /> Back
               </span>
@@ -108,7 +108,8 @@ const DashboardHeaderButtons = (props) => {
           </div>
         </div>
         <div className="dashboard-header__right-panel">
-          <button type="button" className="btn_secondary btn_secondary dashboard-header__buttons" onClick={() => setShowInputFolderModal(true)}>
+          <button type="button" className={`btn_secondary dashboard-header__buttons ${isFoldersKeywordPresent ? 'btn_disabled' : ''}`}
+            onClick={() => setShowInputFolderModal(true)} disabled={isFoldersKeywordPresent}>
             <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-circle-plus" size='lg' /> Create Folder</span>
           </button>
           <button className="btn_secondary btn_disabled btn_dropdown dashboard-header__buttons-dropdown-batch dashboard-header__buttons">
