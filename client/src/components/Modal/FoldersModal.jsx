@@ -62,7 +62,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId }) => {
                         <div className="modal__content">
                             <div className="modal__header">
                                 <div className="modal__title">Move to Folder</div>
-                                <button type="button" className="btn btn_icon modal__close btn_close-modal-icon" onClick={() => closeMoveFolderModal} data-test="close-button">
+                                <button type="button" className="btn btn_icon modal__close btn_close-modal-icon" onClick={() => closeMoveFolderModal()} data-test="close-button">
                                     <svg className="icon v1-icon v1-icon-cross-light">
                                         <use href="#v1-icon-cross-light" xlinkHref="#v1-icon-cross-light"></use>
                                     </svg>
@@ -114,7 +114,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId }) => {
                                     </ul>
                                 </div>
                                 <div className="button-set button-set_right">
-                                    <button type="button" className="btn btn_gray me-2" onClick={() => closeMoveFolderModal}>
+                                    <button type="button" className="btn btn_gray me-2" onClick={() => closeMoveFolderModal()}>
                                         <span className="btn__text">Cancel</span>
                                     </button>
                                     <button className={`btn ${selectedFolderId ? '' : 'btn_disabled'}`}

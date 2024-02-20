@@ -183,16 +183,21 @@ function BackgroundColorPicker({ title }) {
             }
           }
           else {
-            for (let i = 0; i < selectedObject.text?.length; i++) {
-              if (selectedObject?.styles?.length > 0) {
-                return;
-              }
-              selectedObject.styles[0][i] = {
-                fill: getRgbaCSS(color),
-              };
-            }
-          }
+            if (selectedObject?.textLines?.length > 0) {
+              for (let i = 0; i < selectedObject.textLines?.length; i++) {
+                for (let j = 0; j < selectedObject?.textLines[i].length; j++) {
 
+                  if (selectedObject?.styles?.length > 0) {
+                    selectedObject.styles[i][j] = {
+                      fill: getRgbaCSS(color),
+                    };
+                  }
+                }
+              }
+            }
+            selectedObject.set({ fill: getRgbaCSS(color) })
+          }
+          canvasContainer[selectedCanvas].requestRenderAll()
           render(selectedCanvas, canvasContainer)
         }
         if (selectedObject.type === 'Shape') {

@@ -17,7 +17,7 @@ import SendBackFrontObject from "./TextModules/SendBackFrontObject";
 import { fabric } from 'fabric'
 
 
-function EditToobar() {
+function EditToolbar() {
   // ** State
 
   const dispatch = useDispatch()
@@ -228,7 +228,7 @@ function EditToobar() {
       </div>
 
       <div className="toolbar__container-tools">
-        {selectedObject.type === 'Text' && (
+        {selectedObject?.type === 'Text' && (
           <>
             <div className="toolbar__divider" />
             <div className="toolbar__button-set">
@@ -342,4 +342,4 @@ function EditToobar() {
   );
 }
 
-export default EditToobar;
+export default EditToolbar;

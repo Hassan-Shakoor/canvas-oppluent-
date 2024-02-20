@@ -21,7 +21,7 @@ import EditZoom from "../components/EditComp/EditZoom";
 import PageManagerStage from "../components/EditComp/EdirPageManager.jsx/PageManagerStage";
 import PageManagerButtonSet from "../components/EditComp/EdirPageManager.jsx/PageManagerButtonSet";
 import Canvas from "../components/CanvasComponent/Canvas";
-import EditToobar from "../components/EditComp/EditToolbarComp/EditToolbar";
+import EditToolbar from "../components/EditComp/EditToolbarComp/EditToolbar";
 import SpinnerOverlay from "../components/Loader/SpinnerOverlay";
 
 // ** Service
@@ -82,14 +82,14 @@ function Edit() {
             <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme={darkMode ? 'dark' : 'light'} />
             <EditHeader />
             {/* <button onClick={() => console.log("Edit --- selectedObject --->> ", selectedObject)} style={{ zIndex: 2000, position: 'fixed' }}>Selected Object</button> */}
-            {selectedObject && (<EditToobar />)}
+            {selectedObject && (<EditToolbar />)}
             <EditSidebar />
             <EditZoom width={width} height={height} zoom={zoom} updateZoomResolution={updateZoomResolution} />
             <div className="page-manager">
                 <PageManagerStage />
                 <PageManagerButtonSet />
             </div>
-            {width && height && (< Canvas width={width} height={height} />)}
+            {width && height && (<Canvas width={width} height={height} />)}
         </div>
     )
 }
