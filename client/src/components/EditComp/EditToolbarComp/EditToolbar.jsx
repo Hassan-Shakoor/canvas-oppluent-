@@ -14,6 +14,7 @@ import { getCanvasRef } from "../../../shared/utils/fabric";
 import TextAlignDropdown from "./ToolbarDropdown/TextAlignDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SendBackFrontObject from "./TextModules/SendBackFrontObject";
+import { fabric } from 'fabric'
 
 
 function EditToobar() {
@@ -34,7 +35,6 @@ function EditToobar() {
   const selectedObject = useSelector(selectSelectedObject);
   const openDrawer = useSelector(selectOpenDrawer);
 
-  console.log('Rindhdb')
 
   const handleBoldText = () => {
     const canvas = canvasContainer[selectedCanvas];
@@ -78,6 +78,114 @@ function EditToobar() {
       canvas.requestRenderAll();
     }
   };
+
+  const convertToBulletPoint = () => {
+    const canvas = canvasContainer[selectedCanvas];
+    const activeObject = canvas?.getActiveObject();
+
+    if (activeObject?.isBulletsEnabled) {
+      removeBullets();
+      return;
+    }
+    if (activeObject?.isNumbersEnabled) {
+      removeNumbers();
+    }
+
+    if (activeObject && activeObject.type === 'Text') {
+      // Get the current text content
+      const textContent = activeObject?.text;
+
+      // Convert the text to bullet points
+      const textWithBullets = textContent
+        .split('\n')
+        .map(line => (line.includes('\u2022') ? line : `\u2022 ${line}`))
+        .join('\n');
+
+      // Update the textbox with the new text
+      activeObject.set({ text: textWithBullets, isBulletsEnabled: true });
+      canvas.renderAll();
+      // Render the canvas
+      canvas.requestRenderAll();
+    }
+  };
+
+  const removeBullets = () => {
+    const canvas = canvasContainer[selectedCanvas];
+    const activeObject = canvas?.getActiveObject();
+
+    if (activeObject?.type === 'Text') {
+      // Get the current text content
+      const textContent = activeObject?.text;
+
+      // Remove existing bullet points
+      const textWithoutBullets = textContent.replace(/\u2022 /g, '');
+
+      // Update the textbox with the new text
+      activeObject.set({ text: textWithoutBullets, isBulletsEnabled: false });
+
+      // Render the canvas
+      canvas.renderAll();
+    }
+  };
+
+  const convertToNumberPoint = () => {
+    const canvas = canvasContainer[selectedCanvas];
+    const activeObject = canvas?.getActiveObject();
+
+    if (activeObject?.isNumbersEnabled) {
+      removeNumbers();
+      return;
+    }
+    if (activeObject?.isBulletsEnabled) {
+      removeBullets();
+    }
+
+    if (activeObject && activeObject.type === 'Text') {
+      // Get the current text content
+      const textContent = activeObject?.text;
+
+      // Convert the text to bullet points
+      const textWithBullets = textContent
+        .split('\n')
+        .map((line, index) => (line.includes(`${index + 1}. `) ? line : `${index + 1}. ${line}`))
+        .join('\n');
+
+      // Update the textbox with the new text
+      activeObject.set({ text: textWithBullets, isNumbersEnabled: true });
+
+      // Render the canvas
+      canvas.renderAll();
+    }
+  };
+
+  const removeNumbers = () => {
+    const canvas = canvasContainer[selectedCanvas];
+    const activeObject = canvas?.getActiveObject();
+
+    if (activeObject?.type === 'Text') {
+      // Get the current text content
+      const textContent = activeObject?.text;
+
+      // Remove existing bullet points
+      const textWithoutNumbers = textContent.replace(/^\d+\.\s/gm, '');
+
+      // Update the textbox with the new text
+      activeObject.set({ text: textWithoutNumbers, isNumbersEnabled: false });
+
+      // Render the canvas
+      canvas.renderAll();
+    }
+  };
+
+  // const bulletText = createBulletText();
+  // canvas.add(bulletText);
+  // canvas.renderAll();
+
+  // // Example: Toggle bullet points
+  // document.getElementById('toggleBullets').addEventListener('click', function () {
+  //   bulletText.bulletsEnabled = !bulletText.bulletsEnabled;
+  // });
+
 
 
   return (
@@ -185,22 +293,24 @@ function EditToobar() {
                 </div>
               </div>
               <div className="tool-button" onClick={() => setOpenTextAlignDropdown(!openTextAlignDropdown)}>
-                <svg className="icon v2-icon v2-icon-text-align-justify tool-button__icon">
+
+
+                <svg className={`icon v2-icon v2-icon-text-align-${selectedObject.textAlign} tool-button__icon`}>
                   <use
-                    href="#v2-icon-text-align-justify"
-                    xlinkHref="#v2-icon-text-align-justify"
+                    href={`#v2-icon-text-align-${selectedObject.textAlign}`}
+                    xlinkHref={`#v2-icon-text-align-${selectedObject.textAlign}`}
                   />
                 </svg>
-                <i className="icon icon-chevron-up toolbar__icon-chevron" />
+                <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
               </div>
               {openTextAlignDropdown && <TextAlignDropdown />}
-              <div className="tool-button">
+              <div className="tool-button" onClick={convertToBulletPoint}>
                 <FontAwesomeIcon icon="fa-solid fa-list-ul" />
-                <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
+                {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
               </div>
-              <div className="tool-button">
+              <div className="tool-button" onClick={convertToNumberPoint}>
                 <FontAwesomeIcon icon="fa-solid fa-list-ol" />
-                <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
+                {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
               </div>
               {/* <div className="tool-button">
                 <i className="icon tool-button__icon icon-designer-bulleted-lists"></i>
@@ -217,7 +327,7 @@ function EditToobar() {
 
         <SendBackFrontObject />
 
-        
+
       </div>
     </div>
     // )

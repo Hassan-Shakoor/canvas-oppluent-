@@ -184,6 +184,9 @@ function BackgroundColorPicker({ title }) {
           }
           else {
             for (let i = 0; i < selectedObject.text?.length; i++) {
+              if (selectedObject?.styles?.length > 0) {
+                return;
+              }
               selectedObject.styles[0][i] = {
                 fill: getRgbaCSS(color),
               };

@@ -22,7 +22,7 @@ const TextAlignDropdown = () => {
     }, [textAlign])
 
     return (
-        <div className="rc-dropdown rc-dropdown-placement-bottomLeft" style={{ '--arrow-x': '15px', '--arrow-y': '-2px', inset: '40px auto auto 1016.633px', boxSizing: 'border-box', zIndex: 200, position: 'absolute', minWidth: '30px' }}>
+        <div className="rc-dropdown rc-dropdown-placement-bottomLeft" style={{ '--arrow-x': '15px', '--arrow-y': '-2px', inset: '40px auto auto 881.63px', boxSizing: 'border-box', zIndex: 200, position: 'absolute', minWidth: '30px' }}>
             <div className="toolbar__tool-dropdown">
                 <div className={`tool-button ${textAlign === 'left' ? 'tool-button_active' : ''}`} onClick={() => setTextAlign('left')}>
                     <svg className="icon v2-icon v2-icon-text-align-left tool-button__icon">

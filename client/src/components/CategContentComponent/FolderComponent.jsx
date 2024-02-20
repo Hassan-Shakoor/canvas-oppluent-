@@ -158,15 +158,16 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             <div className="folder" style={{ width: gridColumn === 2 ? "360px" : "240px" }}>
                 <div className="folder__preview-container">
                     <div className="folder__preview" style={{ height: gridColumn === 2 ? "360px" : "240px" }}>
-                        {templates.slice(0, 4).map((template, index) => (
-                            <div className="folder__preview-box">
-                                <img src={template?.storage_url[0]} alt="" style={{
-                                    objectFit: 'contain',
-                                    width: '100%',
-                                    height: '100%'
-                                }} />
-                            </div>
-                        ))}
+                        {templates && templates?.length > 0 ?
+                            templates?.slice(0, 4).map((template, index) => (
+                                <div className="folder__preview-box">
+                                    <img src={template?.storage_url?.length ? template?.storage_url[0] : ""} alt="" style={{
+                                        objectFit: 'contain',
+                                        width: '100%',
+                                        height: '100%'
+                                    }} />
+                                </div>
+                            )) : <></>}
                         <button
                             type="button"
                             className="btn btn_no-min-width template__edit-btn"

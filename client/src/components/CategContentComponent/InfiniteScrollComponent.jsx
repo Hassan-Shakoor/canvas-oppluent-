@@ -109,27 +109,30 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                 (<>
                     <div className="dashboard-header__folder-title" style={{ marginBottom: '20px' }}>
                         <FontAwesomeIcon icon="fa-regular fa-folder" /> <span style={{ fontWeight: 900, marginLeft: '4px' }}> {folder?.name}</span></div >
-                    {
-                        folder?.template?.length > 0 ?
-                            folder?.template?.map((item, index) => (
-                                <div style={{ order: index % 3 + 1 }} key={index}>
-                                    <div className="">
-                                        <div className="" draggable="true">
-                                            <DesignTemplate key={index} item={item} gridColumn={gridColumn} userId={userId} categoryId={category.id} />
+                    <div className="template-grid-container" style={{ gridTemplateColumns: `repeat(${gridColumn}, auto)` }}>
+
+                        {
+                            folder?.template?.length > 0 ?
+                                folder?.template?.map((item, index) => (
+                                    <div style={{ order: index % 3 + 1 }} key={index}>
+                                        <div className="">
+                                            <div className="" draggable="true">
+                                                <DesignTemplate key={index} item={item} gridColumn={gridColumn} userId={userId} categoryId={category.id} />
+                                            </div>
                                         </div>
                                     </div>
+                                )) : <div className="empty-data-set" data-test="empty-data-set" style={{ paddingTop: '20%' }}>
+                                    <div className="empty-data-set__icon-wrapper">
+                                        <img
+                                            src="https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/512dae34bbe771ada018.svg"
+                                            alt="designs"
+                                            className="empty-data-set__icon"
+                                        />
+                                    </div>
+                                    <div className="empty-data-set__label">No Templates</div>
                                 </div>
-                            )) : <div className="empty-data-set" data-test="empty-data-set" style={{ paddingTop: '20%' }}>
-                                <div className="empty-data-set__icon-wrapper">
-                                    <img
-                                        src="https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/512dae34bbe771ada018.svg"
-                                        alt="designs"
-                                        className="empty-data-set__icon"
-                                    />
-                                </div>
-                                <div className="empty-data-set__label">No Templates</div>
-                            </div>
-                    }
+                        }
+                    </div>
                 </>)
 
             }
