@@ -10,6 +10,7 @@ import RenameEditBar from "./RenameEditBar";
 import NavShareDownloadButtonSet from "./NavShareDownloadButtonSet";
 import NavUndoRedoButtonSet from "./NavUndoRedoButtonSet";
 import EditAnnouncement from "./EditAnnouncement";
+import Profile from "../../NavBarComp/Profile";
 
 function EditHeader(){
   const [isDropdownOpen,setIsDropdownOpen] = useState(false);
@@ -47,7 +48,8 @@ function EditHeader(){
       <div className="header__divider"></div>
       <NavShareDownloadButtonSet/>
       <EditAnnouncement/>
-      <ProfileEdit name="Faizan"/>
+      {/* <ProfileEdit name="Faizan"/> */}
+      <Profile />
       {/* Language Section */}
       <i className={`${isDropdownOpen ? "language-switcher language-switcher__flag ms-2 rc-dropdown-open" : "language-switcher language-switcher__flag ms-2"}`} style={{backgroundImage:isFlag}} onClick={handleLanguageButtonClick}/>
       {isDropdownOpen && (<EditLanguageDropDown flag={handleFlag} position={languageButtonPosition} />)}

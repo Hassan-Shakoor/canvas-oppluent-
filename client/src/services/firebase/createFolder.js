@@ -50,6 +50,8 @@ export async function createFolder(authId, folderName) {
             }
         };
 
+        return true;
+
     } catch (error) {
         console.error('Error updating data in Firebase:', error);
         throw error;

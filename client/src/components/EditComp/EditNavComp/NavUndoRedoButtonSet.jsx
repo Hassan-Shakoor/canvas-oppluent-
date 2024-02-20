@@ -1,7 +1,7 @@
 import React from "react";
 
-function NavUndoRedoButtonSet(){
-    return(
+function NavUndoRedoButtonSet() {
+    return (
         <ul className="header__button-set">
             <li className="header__text-button" data-test="undo-button">
                 Undo
@@ -10,8 +10,7 @@ function NavUndoRedoButtonSet(){
                 Redo
             </li>
         </ul>
-
-    )
+    );
 }
 
 export default NavUndoRedoButtonSet;

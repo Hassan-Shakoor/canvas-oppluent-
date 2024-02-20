@@ -15,7 +15,8 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
     const { id } = useParams();
     const [folder, setFolder] = useState(null)
     const [folders, setFolders] = useState([])
-    const [folderId, setFolderId] = useState('')
+
+    const [triggerRender, setTriggerRender] = useState(false);
 
 
     // const category = {
@@ -54,7 +55,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
 
         console.log(category)
 
-    }, [])
+    }, [triggerRender])
 
     return (
         <>
@@ -73,7 +74,9 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                                                             folderId={folder.id}
                                                             templates={folder?.template}
                                                             itemCount={folder?.template ? folder?.template?.length : 0}
-                                                            gridColumn={gridColumn} />
+                                                            gridColumn={gridColumn} 
+                                                            triggerRender={triggerRender}
+                                                            setTriggerRender={setTriggerRender} />
                                                     </div>
                                                 </div>
                                             </div>

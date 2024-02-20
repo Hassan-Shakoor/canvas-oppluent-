@@ -43,6 +43,8 @@ function TextInput() {
           },
         },
       },
+      isBulletsEnabled: false,
+      isNumbersEnabled: false
     });
     for (let i = 0; i < fabricText.text.length; i++) {
       // Set color based on the index (even or odd)

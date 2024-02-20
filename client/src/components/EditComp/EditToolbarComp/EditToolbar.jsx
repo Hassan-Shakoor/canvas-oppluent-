@@ -103,9 +103,11 @@ function EditToobar() {
 
       // Update the textbox with the new text
       activeObject.set({ text: textWithBullets, isBulletsEnabled: true });
+
+      canvas.discardActiveObject(activeObject);
+      canvas.setActiveObject(activeObject);
       canvas.renderAll();
       // Render the canvas
-      canvas.requestRenderAll();
     }
   };
 
@@ -123,6 +125,8 @@ function EditToobar() {
       // Update the textbox with the new text
       activeObject.set({ text: textWithoutBullets, isBulletsEnabled: false });
 
+      canvas.discardActiveObject(activeObject);
+      canvas.setActiveObject(activeObject);
       // Render the canvas
       canvas.renderAll();
     }
@@ -153,6 +157,8 @@ function EditToobar() {
       // Update the textbox with the new text
       activeObject.set({ text: textWithBullets, isNumbersEnabled: true });
 
+      canvas.discardActiveObject(activeObject);
+      canvas.setActiveObject(activeObject);
       // Render the canvas
       canvas.renderAll();
     }
@@ -172,6 +178,8 @@ function EditToobar() {
       // Update the textbox with the new text
       activeObject.set({ text: textWithoutNumbers, isNumbersEnabled: false });
 
+      canvas.discardActiveObject(activeObject);
+      canvas.setActiveObject(activeObject);
       // Render the canvas
       canvas.renderAll();
     }

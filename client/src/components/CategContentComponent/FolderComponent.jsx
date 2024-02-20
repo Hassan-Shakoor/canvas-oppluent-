@@ -10,8 +10,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import InputModal from '../Modal/InputModal';
 import { renameFolder } from '../../services/firebase/renameFolder';
+import { deleteFolder } from '../../services/firebase/deleteFolder';
 
-const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColumn }) => {
+const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColumn, triggerRender, setTriggerRender }) => {
 
     const uid = useSelector(selectUID)
 
@@ -87,7 +88,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             title: "Duplicate",
             function: async () => {
                 try {
-                    // await duplicateTemplate(uid, props.item.id)
+                    setTriggerRender(!triggerRender);
                     toast.success("File Duplicated Successfully.")
                 } catch (error) {
                     console.error("Error: ", error)
@@ -106,8 +107,12 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             title: "Delete",
             function: async () => {
                 try {
-                    // await deleteTemplate(uid, props.item.id)
-                    toast.success("File Deleted Successfully.")
+                    console.log('dsd')
+                    const response = await deleteFolder(uid, folderId);
+                    if (response) {
+                        setTriggerRender(!triggerRender);
+                        toast.success("Folder Deleted Successfully.")
+                    }
                 } catch (error) {
                     console.error("Error: ", error)
                 }
@@ -151,6 +156,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                         if (response) {
                             setShowInputModal(false);
                             toast.success("Folder Name Updated Successfully.")
+                            setTriggerRender(!triggerRender)
                         }
                     }}
                 />)}

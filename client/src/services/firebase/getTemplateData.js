@@ -13,7 +13,7 @@ export async function getTemplateJsonData(authId, id) {
 
       for (const item of data) {
         if (item.template) {
-          const matchingTemplate = item.template.find((templateItem) => templateItem.id == id);
+          const matchingTemplate = item.template.find((templateItem) => templateItem.id === id);
           if (matchingTemplate) {
             return matchingTemplate;
           }
