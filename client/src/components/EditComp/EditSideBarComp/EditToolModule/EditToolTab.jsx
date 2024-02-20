@@ -17,7 +17,7 @@ import { selectOpenDrawer } from "../../../../store/app/Edit/EditDrawer"
 const toolsBtn = [
   {title: 'QR Code', icon:'fa-solid fa-qrcode'},
   {title: 'AI Writer', icon:'fa-solid fa-file-lines'},
-  {title: 'Chart', icon:'fa-solid fa-chart-area'}
+  // {title: 'Chart', icon:'fa-solid fa-chart-area'}
 ]
 
 function EditToolTab() {
