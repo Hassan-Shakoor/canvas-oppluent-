@@ -18,7 +18,7 @@ import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject } fro
 
 import { fabric } from 'fabric'
 
-function BackgroundColorPicker({ title }) {
+function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
   // ** State
   const [selectedColor, setSelectedColor] = useState(undefined)
   const [color, setColor] = useState({ r: 51, g: 51, b: 51, a: 1 })
@@ -101,22 +101,38 @@ function BackgroundColorPicker({ title }) {
         const existingFill = textObject.get('fill');
 
         // Check if the fill is a gradient
-        if (existingFill && existingFill.type === 'linear') {
+        if (existingFill && (existingFill.type === 'linear' || existingFill.type === 'radial' )) {
           // Modify the color stops
-          existingFill.colorStops = [
-            { offset: 0, color: getRgbaCSS(color) },
-            // { offset: 0.5, color: 'red' },
-            { offset: 1, color: 'blue' },
-          ];
-
+          // existingFill.colorStops = [
+          //   { offset: 0, color: getRgbaCSS(color) },
+          //   // { offset: 0.5, color: 'red' },
+          //   { offset: 1, color: getRgbaCSS(color) },
+          // ];
+          let colorChangeFill = existingFill;
+          existingFill.colorStops[activeColorIndex] = { offset: existingFill?.colorStops[activeColorIndex]?.offset, color: getRgbaCSS(color) }
+          colorChangeFill.colorStops[activeColorIndex] = { offset: existingFill?.colorStops[activeColorIndex]?.offset, color: getRgbaCSS(color) }
+          textObject.set({
+            styles: {
+              0: {
+                0: {
+                  fill: existingFill,
+                },
+              },
+            },
+          })
 
           console.log(existingFill)
 
           textObject.set({
             fill: existingFill,
           });
-          canvas.requestRenderAll();
+          // canvas.requestRenderAll();
+          onColorChange(colorChangeFill.colorStops)
         }
+
+
+        canvas.requestRenderAll()
+        render(selectedCanvas, canvasContainer)
       }
 
     } else if (title === 'DropShadow') {
