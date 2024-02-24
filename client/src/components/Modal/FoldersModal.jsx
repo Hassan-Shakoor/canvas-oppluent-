@@ -5,6 +5,7 @@ import { selectUID } from '../../store/app/User/userPreference';
 import { moveToFolder } from '../../services/firebase/moveToFolder';
 import { toast } from 'react-toastify';
 import { moveToDashboard } from '../../services/firebase/moveToDashboard';
+import { moveFromFolderToFolder } from '../../services/firebase/moveFromFolderToFolder';
 
 const FoldersModal = ({ closeMoveFolderModal, templateId }) => {
 
@@ -22,9 +23,15 @@ const FoldersModal = ({ closeMoveFolderModal, templateId }) => {
         if (selectedFolderId === 'Dashboard') {
             await moveToDashboard(uid, templateId)
         } else {
-            await moveToFolder(uid, templateId, selectedFolderId)
+            if(isFoldersKeywordPresent) {
+                await moveFromFolderToFolder(uid, templateId, selectedFolderId)
+            }
+            else {
+                await moveToFolder(uid, templateId, selectedFolderId)
+            }
         }
         toast.success("Template Moved Successfully")
+        closeMoveFolderModal();
     }
 
     const handleFolderClick = (folderId) => {

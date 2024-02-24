@@ -44,7 +44,7 @@ function App() {
     const userProfile = await getUserInformation()
     if (userProfile) {
       setIsAdmin(userProfile?.isAdmin);
-      console.log(userProfile)
+      // console.log(userProfile)
     }
   }
 
@@ -53,7 +53,7 @@ function App() {
 
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setIsAuthenticated(!!user);
-      console.log(user)
+      // console.log(user)
       setIsAuthChecked(true);
     });
 

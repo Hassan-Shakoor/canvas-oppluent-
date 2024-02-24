@@ -7,12 +7,15 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createFolder } from '../../services/firebase/createFolder';
 import { useNavigate } from 'react-router-dom';
+import SpinnerOverlay from '../Loader/SpinnerOverlay';
 
 const DashboardHeaderButtons = (props) => {
 
   const navigate = useNavigate();
 
   const uid = useSelector(selectUID)
+  
+  const [overlayLoading, setOverlayLoading] = useState(false);
 
   const [openSortDropDown, setOpenSortDropDown] = useState(false);
   const [openGridDropDown, setOpenGridDropDown] = useState(false);
@@ -49,6 +52,7 @@ const DashboardHeaderButtons = (props) => {
 
   return (
     <div className="dashboard-header">
+      <SpinnerOverlay loading={overlayLoading}/>
       {showInputFolderModal && (
         <InputModal
           title="Rename"
@@ -72,11 +76,13 @@ const DashboardHeaderButtons = (props) => {
           handleSecodnaryBtn={() => setShowInputFolderModal(false)}
           handlePrimaryBtn={async (e) => {
             e.preventDefault();
+            setOverlayLoading(true);
             const response = await createFolder(uid, folderName);
             if (response) {
               setShowInputFolderModal(false);
               toast.success("Folder Created Successfully.")
             }
+            setOverlayLoading(false)
           }}
         />)}
 

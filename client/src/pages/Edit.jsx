@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 // ** Store
 import { useDispatch, useSelector } from "react-redux";
 import { selectDarkMode } from "../store/app/User/userPreference";
-import { selectSelectedObject, selectZoomResolution, updateFabricData, updateResolution, updateTemplateData, updateZoom } from "../store/app/Edit/Canvas/canvas"
+import { selectCanvasContainer, selectSelectedObject, selectZoomResolution, updateFabricData, updateResolution, updateTemplateData, updateZoom } from "../store/app/Edit/Canvas/canvas"
 
 // ** Utils
 import { getLocalStorage } from "../services/localStorage";
@@ -32,6 +32,7 @@ function Edit() {
     const [loading, setLoading] = useState(false)
 
     const selectedObject = useSelector(selectSelectedObject)
+    const canvasContainer = useSelector(selectCanvasContainer)
     // ** Vars
     const dispatch = useDispatch();
     const darkMode = useSelector(selectDarkMode);
@@ -76,11 +77,13 @@ function Edit() {
         setHeight(newHeight);
     }
 
+    console.log(canvasContainer)
+
     return (
         <div>
             <SpinnerOverlay loading={loading} />
             <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme={darkMode ? 'dark' : 'light'} />
-            <EditHeader />
+            {canvasContainer && canvasContainer?.length > 0 && (<EditHeader />)}
             {/* <button onClick={() => console.log("Edit --- selectedObject --->> ", selectedObject)} style={{ zIndex: 2000, position: 'fixed' }}>Selected Object</button> */}
             {selectedObject && (<EditToolbar />)}
             <EditSidebar />

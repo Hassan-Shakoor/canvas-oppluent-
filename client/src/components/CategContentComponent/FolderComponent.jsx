@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import InputModal from '../Modal/InputModal';
 import { renameFolder } from '../../services/firebase/renameFolder';
 import { deleteFolder } from '../../services/firebase/deleteFolder';
+import { duplicateFolder } from '../../services/firebase/duplicateFolder';
 
 const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColumn, triggerRender, setTriggerRender }) => {
 
@@ -33,8 +34,6 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             toast.error('Error updating design', { position: toast.POSITION.TOP_RIGHT });
         }
     }
-
-    // const downloadCanvasAsImage = () => {
     //     const jsonData = JSON.parse(props.item.fabricData[0]);
     //     const canvas = new fabric.Canvas('canvas');
 
@@ -88,9 +87,15 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             title: "Duplicate",
             function: async () => {
                 try {
-                    setTriggerRender(!triggerRender);
-                    toast.success("File Duplicated Successfully.")
+                    const response = await duplicateFolder(uid, folderId)
+                    if (response) {
+                        setTriggerRender(!triggerRender);
+                        toast.success("File Duplicated Successfully.")
+                    } else {
+                        toast.error("Error Duplicating Folder.")
+                    }
                 } catch (error) {
+                    toast.error("Error Duplicating Folder.")
                     console.error("Error: ", error)
                 }
             }
@@ -107,14 +112,16 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             title: "Delete",
             function: async () => {
                 try {
-                    console.log('dsd')
                     const response = await deleteFolder(uid, folderId);
                     if (response) {
                         setTriggerRender(!triggerRender);
                         toast.success("Folder Deleted Successfully.")
+                    } else {
+                        toast.error("Error Deleting Folder.")
                     }
                 } catch (error) {
                     console.error("Error: ", error)
+                    toast.error("Error Deleting Folder.")
                 }
             }
         },
@@ -196,25 +203,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                         </div>
                         <div className="template__menu">
                             <div className="template__menu-btn-set">
-                                {/* <button
-              type="button"
-              className="btn btn_black btn_no-text template__menu-btn"
-              onClick={() => props.updateFavorite(props.item.id)}
-            >
-              <span className="btn__text">
-                {props.item.favorite ? (
-                  <FontAwesomeIcon
-                    icon="fa-solid fa-heart"
-                    style={{ color: "#FF6661" }}
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    icon="fa-regular fa-heart"
-                    style={{ color: "#7a7a7a" }}
-                  />
-                )}
-              </span>
-            </button> */}
+
                             </div>
                             <Dropdown
                                 trigger={["click"]}

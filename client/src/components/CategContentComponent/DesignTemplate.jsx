@@ -136,12 +136,12 @@ function DesignTemplate(props) {
             title: "Copy Link",
             link: `share/${uid}/0/${props.item.id}`,
         },
-        {
-            key: "add-to-my-design",
-            iconClass: "fa-solid fa-star",
-            title: props.item.isMyDesign ? "Remove from My Designs" : "Add to My Designs",
-            function: handleAddMyDesign
-        },
+        // {
+        //     key: "add-to-my-design",
+        //     iconClass: "fa-solid fa-star",
+        //     title: props.item.isMyDesign ? "Remove from My Designs" : "Add to My Designs",
+        //     function: handleAddMyDesign
+        // },
         {
             key: "move-to-folder",
             iconClass: "fa-solid fa-star",
