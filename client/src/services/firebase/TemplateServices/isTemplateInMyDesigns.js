@@ -1,4 +1,5 @@
 import { get, set, ref, getDatabase } from "firebase/database";
+import { getTemplateFromFoldersRecursive } from "./getTemplateFromFolders";
 
 export async function isTemplateInMyDesigns(authId, templateId) {
     const database = getDatabase();
@@ -43,6 +44,14 @@ export async function isTemplateInMyDesigns(authId, templateId) {
                         console.log("Template Not Available in My Designs.")
                         return { templateObject: folder.template[matchingTemplateIndex], isTemplateInMyDesigns: true };
                         // break;
+                    }
+                }
+
+                if (folder.folders) {
+                    const matchingTemplate = getTemplateFromFoldersRecursive(folder.folders, templateId);
+                    if (matchingTemplate) {
+                        return { templateObject: matchingTemplate, isTemplateInMyDesigns: true };
+
                     }
                 }
             }

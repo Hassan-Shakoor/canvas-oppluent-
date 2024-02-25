@@ -1,4 +1,6 @@
 import { get, ref, getDatabase } from "firebase/database";
+import { getTemplateFromFoldersRecursive } from "./getTemplateFromFolders";
+
 
 export async function getTemplateJsonData(authId, id) {
   // id = parseInt(id, 10);
@@ -22,10 +24,17 @@ export async function getTemplateJsonData(authId, id) {
           }
         }
       }
-      
+
       for (const folder of folders) {
         if (folder?.template) {
           const matchingTemplate = folder.template.find((template) => template.id === id);
+          if (matchingTemplate) {
+            return matchingTemplate;
+          }
+        }
+        if (folder.folders) {
+          const matchingTemplate = await getTemplateFromFoldersRecursive(folder.folders, id);
+
           if (matchingTemplate) {
             return matchingTemplate;
           }

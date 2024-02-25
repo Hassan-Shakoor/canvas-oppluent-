@@ -5,15 +5,18 @@ import InputModal from '../Modal/InputModal';
 import { selectUID } from '../../store/app/User/userPreference';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createFolder } from '../../services/firebase/createFolder';
-import { useNavigate } from 'react-router-dom';
+import { createFolder } from '../../services/firebase/FolderServices/createFolder';
+import { useNavigate, useParams } from 'react-router-dom';
 import SpinnerOverlay from '../Loader/SpinnerOverlay';
+import { createFolderinFolder } from '../../services/firebase/FolderServices/createFolderinFolder';
 
 const DashboardHeaderButtons = (props) => {
 
   const navigate = useNavigate();
 
   const uid = useSelector(selectUID)
+
+  const { id } = useParams();
   
   const [overlayLoading, setOverlayLoading] = useState(false);
 
@@ -77,11 +80,20 @@ const DashboardHeaderButtons = (props) => {
           handlePrimaryBtn={async (e) => {
             e.preventDefault();
             setOverlayLoading(true);
-            const response = await createFolder(uid, folderName);
-            if (response) {
-              setShowInputFolderModal(false);
-              toast.success("Folder Created Successfully.")
+            if(isFoldersKeywordPresent) {
+              const response = await createFolderinFolder(uid, id, folderName);
+              if (response) {
+                setShowInputFolderModal(false);
+                toast.success("Folder Created Successfully.")
+              }
+            } else {
+              const response = await createFolder(uid, folderName);
+              if(response) {
+                setShowInputFolderModal(false);
+                toast.success("Folder Created Successfully.")
+              }
             }
+            toast.error("Error Creating Folder  .")
             setOverlayLoading(false)
           }}
         />)}
@@ -114,8 +126,8 @@ const DashboardHeaderButtons = (props) => {
           </div>
         </div>
         <div className="dashboard-header__right-panel">
-          <button type="button" className={`btn_secondary dashboard-header__buttons ${isFoldersKeywordPresent ? 'btn_disabled' : ''}`}
-            onClick={() => setShowInputFolderModal(true)} disabled={isFoldersKeywordPresent}>
+          <button type="button" className={`btn_secondary dashboard-header__buttons`}
+            onClick={() => setShowInputFolderModal(true)}>
             <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-circle-plus" size='lg' /> Create Folder</span>
           </button>
           <button className="btn_secondary btn_disabled btn_dropdown dashboard-header__buttons-dropdown-batch dashboard-header__buttons">

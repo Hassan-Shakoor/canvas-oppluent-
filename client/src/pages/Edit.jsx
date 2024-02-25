@@ -25,7 +25,7 @@ import EditToolbar from "../components/EditComp/EditToolbarComp/EditToolbar";
 import SpinnerOverlay from "../components/Loader/SpinnerOverlay";
 
 // ** Service
-import { getTemplateJsonData } from "../services/firebase/getTemplateData";
+import { getTemplateJsonData } from "../services/firebase/TemplateServices/getTemplateData";
 
 function Edit() {
     // ** State

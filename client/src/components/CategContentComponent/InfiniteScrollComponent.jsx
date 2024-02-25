@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import DesignTemplate from './DesignTemplate';
 import FolderComponent from './FolderComponent';
-import { getFolders } from '../../services/firebase/getFolders';
+import { getFolders } from '../../services/firebase/FolderServices/getFolders';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUID } from '../../store/app/User/userPreference';
@@ -18,6 +18,23 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
 
     const [triggerRender, setTriggerRender] = useState(false);
 
+
+    const findFolderByIdRecursive = (folders, id) => {
+        for (const folder of folders) {
+            if (folder.id === id) {
+                return folder; // Found the folder with the matching id
+            }
+
+            if (folder.folders) {
+                const recursiveResult = findFolderByIdRecursive(folder.folders, id);
+                if (recursiveResult) {
+                    return recursiveResult; // Return the result from the recursive call
+                }
+            }
+        }
+
+        return null; // If the id is not found in the current folders or its descendants
+    };
 
     // const category = {
     //     id: 32,
@@ -40,7 +57,8 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                     console.log('Fetching folders...');
                     const fetchedFolders = await getFolders(uid);
                     if (isFoldersKeywordPresent) {
-                        const folder = fetchedFolders.find(folder => folder.id === id)
+                        // const folder = fetchedFolders.find(folder => folder.id === id)
+                        const folder = await findFolderByIdRecursive(fetchedFolders, id)
                         setFolder(folder)
                     }
                     setFolders(fetchedFolders);
@@ -73,8 +91,8 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                                                         <FolderComponent folderTitle={folder.name}
                                                             folderId={folder.id}
                                                             templates={folder?.template}
-                                                            itemCount={folder?.template ? folder?.template?.length : 0}
-                                                            gridColumn={gridColumn} 
+                                                            itemCount={(folder?.template ? folder?.template?.length : 0) + (folder?.folders ? folder?.folders?.length : 0)}
+                                                            gridColumn={gridColumn}
                                                             triggerRender={triggerRender}
                                                             setTriggerRender={setTriggerRender} />
                                                     </div>
@@ -114,6 +132,24 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                         <FontAwesomeIcon icon="fa-regular fa-folder" /> <span style={{ fontWeight: 900, marginLeft: '4px' }}> {folder?.name}</span></div >
                     <div className="template-grid-container" style={{ gridTemplateColumns: `repeat(${gridColumn}, auto)` }}>
 
+                        {folder?.folders?.length > 0 ?
+                            folder?.folders?.map((folder, index) => (
+                                <div style={{ order: 1 }} key={index}>
+                                    <div className="">
+                                        <div className="" draggable={true}>
+                                            <FolderComponent folderTitle={folder.name}
+                                                folderId={folder.id}
+                                                templates={folder?.template}
+                                                itemCount={(folder?.template ? folder?.template?.length : 0) + (folder?.folders ? folder?.folders?.length : 0)}
+                                                gridColumn={gridColumn}
+                                                triggerRender={triggerRender}
+                                                setTriggerRender={setTriggerRender} />
+                                        </div>
+                                    </div>
+                                </div>
+                            )) : <></>
+                        }
+
                         {
                             folder?.template?.length > 0 ?
                                 folder?.template?.map((item, index) => (
@@ -124,16 +160,20 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                                             </div>
                                         </div>
                                     </div>
-                                )) : <div className="empty-data-set" data-test="empty-data-set" style={{ paddingTop: '20%' }}>
-                                    <div className="empty-data-set__icon-wrapper">
-                                        <img
-                                            src="https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/512dae34bbe771ada018.svg"
-                                            alt="designs"
-                                            className="empty-data-set__icon"
-                                        />
-                                    </div>
-                                    <div className="empty-data-set__label">No Templates</div>
+                                )) : <></>
+                        }
+
+                        {folder?.template?.length <= 0 && folder.folders.length <= 0 && (
+                            <div className="empty-data-set" data-test="empty-data-set" style={{ paddingTop: '20%' }}>
+                                <div className="empty-data-set__icon-wrapper">
+                                    <img
+                                        src="https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/512dae34bbe771ada018.svg"
+                                        alt="designs"
+                                        className="empty-data-set__icon"
+                                    />
                                 </div>
+                                <div className="empty-data-set__label">No Templates</div>
+                            </div>)
                         }
                     </div>
                 </>)

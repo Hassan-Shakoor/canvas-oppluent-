@@ -7,23 +7,23 @@ import MoreDropDown from "../Dropdown/MoreDropdown";
 import { BASE_URL, LOCAL_STORAGE } from "../../shared/constant";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../../services/localStorage";
-import { updateIsMyDesign } from "../../services/firebase/updateIsMyDesign";
+import { updateIsMyDesign } from "../../services/firebase/TemplateServices/updateIsMyDesign";
 import SpinnerContainer from "../Loader/SpinnerContainer";
 import InputModal from "../Modal/InputModal";
 import { selectUID } from "../../store/app/User/userPreference";
 import { useSelector } from "react-redux";
-import { renameTemplate } from "../../services/firebase/renameTemplate";
-import { duplicateTemplate } from "../../services/firebase/duplicateTemplate";
+import { renameTemplate } from "../../services/firebase/TemplateServices/renameTemplate";
+import { duplicateTemplate } from "../../services/firebase/TemplateServices/duplicateTemplate";
 import { useNavigate } from "react-router-dom";
 import { fabric } from 'fabric';
-import { deleteTemplate } from "../../services/firebase/deleteTemplate";
-import { moveToFolder } from "../../services/firebase/moveToFolder";
+import { deleteTemplate } from "../../services/firebase/TemplateServices/deleteTemplate";
+import { moveToFolder } from "../../services/firebase/TemplateServices/moveToFolder";
 import FoldersModal from "../Modal/FoldersModal";
 
 function DesignTemplate(props) {
 
     const navigate = useNavigate();
-    const [isCreateDesignOpen, setCreateDesginOpen] = useState(null);
+    const [isCreateDesignOpen, setCreateDesignOpen] = useState(null);
     const [loading, setLoading] = useState(true)
     const [showInputModal, setShowInputModal] = useState(false)
 
@@ -166,7 +166,7 @@ function DesignTemplate(props) {
     ];
 
     function handleCreateDesign(id) {
-        setCreateDesginOpen(id);
+        setCreateDesignOpen(id);
     }
 
     useEffect(() => {

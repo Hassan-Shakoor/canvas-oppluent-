@@ -19,7 +19,7 @@ import { LOCAL_STORAGE } from "../../shared/constant";
 import { getLocalStorage } from "../../services/localStorage";
 
 import { v4 as uuidv4 } from 'uuid';
-import { isTemplateInMyDesigns } from "../../services/firebase/isTemplateInMyDesigns";
+import { isTemplateInMyDesigns } from "../../services/firebase/TemplateServices/isTemplateInMyDesigns";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
 
 // ** Vars

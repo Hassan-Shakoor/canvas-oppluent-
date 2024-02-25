@@ -9,9 +9,11 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import InputModal from '../Modal/InputModal';
-import { renameFolder } from '../../services/firebase/renameFolder';
-import { deleteFolder } from '../../services/firebase/deleteFolder';
-import { duplicateFolder } from '../../services/firebase/duplicateFolder';
+import { renameFolder } from '../../services/firebase/FolderServices/renameFolder';
+import { deleteFolder } from '../../services/firebase/FolderServices/deleteFolder';
+import { duplicateFolder } from '../../services/firebase/FolderServices/duplicateFolder';
+import SpinnerOverlay from '../Loader/SpinnerOverlay';
+import FoldersModal from '../Modal/FoldersModal';
 
 const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColumn, triggerRender, setTriggerRender }) => {
 
@@ -23,6 +25,8 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
 
     const [folderName, setFolderName] = useState('')
     const [showInputModal, setShowInputModal] = useState(false)
+    const [overlayLoading, setOverlayLoading] = useState(false);
+    const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
 
     const handleOpenFolder = async () => {
         try {
@@ -33,6 +37,11 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             console.error('Error updating design:', error);
             toast.error('Error updating design', { position: toast.POSITION.TOP_RIGHT });
         }
+    }
+
+    const closeMoveFolderModal = () => {
+        setOpenMoveFolderModal(false);
+        setTriggerRender(!triggerRender);
     }
     //     const jsonData = JSON.parse(props.item.fabricData[0]);
     //     const canvas = new fabric.Canvas('canvas');
@@ -87,6 +96,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             title: "Duplicate",
             function: async () => {
                 try {
+                    setOverlayLoading(true);
                     const response = await duplicateFolder(uid, folderId)
                     if (response) {
                         setTriggerRender(!triggerRender);
@@ -94,8 +104,10 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                     } else {
                         toast.error("Error Duplicating Folder.")
                     }
+                    setOverlayLoading(false);
                 } catch (error) {
                     toast.error("Error Duplicating Folder.")
+                    setOverlayLoading(false)
                     console.error("Error: ", error)
                 }
             }
@@ -104,7 +116,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             key: "move-to-folder",
             iconClass: "fa-solid fa-star",
             title: "Move to Folder",
-            function: () => handleOpenFolder
+            function: () => setOpenMoveFolderModal(true)
         },
         {
             key: "delete",
@@ -112,6 +124,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
             title: "Delete",
             function: async () => {
                 try {
+                    setOverlayLoading(true);
                     const response = await deleteFolder(uid, folderId);
                     if (response) {
                         setTriggerRender(!triggerRender);
@@ -119,8 +132,10 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                     } else {
                         toast.error("Error Deleting Folder.")
                     }
+                    setOverlayLoading(false);
                 } catch (error) {
                     console.error("Error: ", error)
+                    setOverlayLoading(false);
                     toast.error("Error Deleting Folder.")
                 }
             }
@@ -159,27 +174,53 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                     handleSecodnaryBtn={() => setShowInputModal(false)}
                     handlePrimaryBtn={async (e) => {
                         e.preventDefault();
+                        setOverlayLoading(true);
                         const response = await renameFolder(uid, folderId, folderName);
                         if (response) {
                             setShowInputModal(false);
                             toast.success("Folder Name Updated Successfully.")
                             setTriggerRender(!triggerRender)
                         }
+                        setOverlayLoading(false);
                     }}
                 />)}
 
+            {openMoveFolderModal &&
+                <FoldersModal
+                    closeMoveFolderModal={closeMoveFolderModal}
+                    templateId={folderId}
+                    thingToMove={'Folder'}
+                />}
+
+            <SpinnerOverlay loading={overlayLoading} />
             <div className="folder" style={{ width: gridColumn === 2 ? "360px" : "240px" }}>
                 <div className="folder__preview-container">
                     <div className="folder__preview" style={{ height: gridColumn === 2 ? "360px" : "240px" }}>
+                        <div className='folder-icon' style={{
+                            background: 'black',
+                            width: '20%',
+                            height: '20%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            borderRadius: '0 24px 0 0px'
+                        }}>
+                            <FontAwesomeIcon icon="fa-regular fa-folder-open" size="lg" style={{ color: "#ffffff", }} />
+                        </div>
                         {templates && templates?.length > 0 ?
                             templates?.slice(0, 4).map((template, index) => (
-                                <div className="folder__preview-box">
-                                    <img src={template?.storage_url?.length ? template?.storage_url[0] : ""} alt="" style={{
-                                        objectFit: 'contain',
-                                        width: '100%',
-                                        height: '100%'
-                                    }} />
-                                </div>
+                                <>
+                                    <div className="folder__preview-box">
+                                        <img src={template?.storage_url?.length ? template?.storage_url[0] : ""} alt="" style={{
+                                            objectFit: 'contain',
+                                            width: '100%',
+                                            height: '100%'
+                                        }} />
+                                    </div>
+                                </>
                             )) : <></>}
                         <button
                             type="button"

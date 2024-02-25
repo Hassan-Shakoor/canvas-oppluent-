@@ -9,7 +9,7 @@ import { getCanvasRef, serializeCanvasContainer } from "../../../shared/utils/fa
 import { selectTemplateData, updateFabricData } from "../../../store/app/Edit/Canvas/canvas";
 
 // ** Services
-import { updateTemplateJsonData } from "../../../services/firebase/updateTemplateJsonData";
+import { updateTemplateJsonData } from "../../../services/firebase/TemplateServices/updateTemplateJsonData";
 import { getLocalStorage } from "../../../services/localStorage";
 
 // ** Constant
@@ -17,7 +17,7 @@ import { LOCAL_STORAGE } from "../../../shared/constant";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../Modal/ConfirmationModal";
 import { selectProfile } from "../../../store/app/AccountInformation/profile";
-import { publishTemplate } from "../../../services/firebase/publishTemplate";
+import { publishTemplate } from "../../../services/firebase/TemplateServices/publishTemplate";
 import SpinnerOverlay from "../../Loader/SpinnerOverlay";
 import { getUserInformation } from "../../../services/firebase/getUserInformation";
 

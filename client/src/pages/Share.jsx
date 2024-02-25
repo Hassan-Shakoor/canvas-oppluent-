@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import SpinnerOverlay from "../components/Loader/SpinnerOverlay"
 
 // ** Services
-import getShareTemplateData from "../services/firebase/getShareTemplateData";
+import getShareTemplateData from "../services/firebase/TemplateServices/getShareTemplateData";
 
 
 const Share = () => {

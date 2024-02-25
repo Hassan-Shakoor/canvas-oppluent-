@@ -7,7 +7,7 @@ import SlickSlider from "../Sliders/SlickSlider";
 import PropertySearchPreview from "./PropertySearchPreview";
 
 // ** Services
-import { getTemplateJsonData } from "../../services/firebase/getTemplateData";
+import { getTemplateJsonData } from "../../services/firebase/TemplateServices/getTemplateData";
 import { getLocalStorage } from "../../services/localStorage";
 import { LOCAL_STORAGE } from "../../shared/constant";
 

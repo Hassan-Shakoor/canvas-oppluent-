@@ -5,7 +5,7 @@ import Dropdown from "rc-dropdown";
 import EditPopUp from "./EditPopUp";
 import MoreDropDown from "../Dropdown/MoreDropdown";
 import { BASE_URL, LOCAL_STORAGE } from "../../shared/constant";
-import { updateIsMyDesign } from "../../services/firebase/updateIsMyDesign";
+import { updateIsMyDesign } from "../../services/firebase/TemplateServices/updateIsMyDesign";
 import { getLocalStorage } from "../../services/localStorage";
 import { toast } from "react-toastify";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
