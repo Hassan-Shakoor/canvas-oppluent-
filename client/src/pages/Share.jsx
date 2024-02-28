@@ -4,9 +4,10 @@ import { useParams } from "react-router-dom";
 
 // ** Custom Component
 import SpinnerOverlay from "../components/Loader/SpinnerOverlay"
+import getShareTemplateData from "../services/firebase/TemplateServices/getShareTemplateData";
 
 // ** Services
-import getShareTemplateData from "../services/firebase/TemplateServices/getShareTemplateData";
+
 
 
 const Share = () => {

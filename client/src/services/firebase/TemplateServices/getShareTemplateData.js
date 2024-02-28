@@ -9,7 +9,7 @@ const getShareTemplateData = async (userId, categoryId, templateId) => {
         const category = updatedCategories.find(category => category.id === parseInt(categoryId));
         if(category){
             const templates = category?.template
-            const template = templates.find(template => template.id === parseInt(templateId));
+            const template = templates.find(template => template.id === templateId);
             return template
         }
         return null
