@@ -17,16 +17,18 @@ const DashboardHeaderButtons = (props) => {
   const uid = useSelector(selectUID)
 
   const { id } = useParams();
-  
+
   const [overlayLoading, setOverlayLoading] = useState(false);
 
   const [openSortDropDown, setOpenSortDropDown] = useState(false);
   const [openGridDropDown, setOpenGridDropDown] = useState(false);
+  const [openBatchDropdown, setOpenBatchDropdown] = useState(false);
 
   const isFoldersKeywordPresent = window.location.href.includes('folders');
 
   const [showInputFolderModal, setShowInputFolderModal] = useState(false);
   const [folderName, setFolderName] = useState('');
+  const [searchInput, setSearchInput] = useState('');
 
   const [sortGrid, setSortGrid] = useState(3)
 
@@ -55,7 +57,7 @@ const DashboardHeaderButtons = (props) => {
 
   return (
     <div className="dashboard-header">
-      <SpinnerOverlay loading={overlayLoading}/>
+      <SpinnerOverlay loading={overlayLoading} />
       {showInputFolderModal && (
         <InputModal
           title="Rename"
@@ -80,21 +82,26 @@ const DashboardHeaderButtons = (props) => {
           handlePrimaryBtn={async (e) => {
             e.preventDefault();
             setOverlayLoading(true);
-            if(isFoldersKeywordPresent) {
+            if (isFoldersKeywordPresent) {
               const response = await createFolderinFolder(uid, id, folderName);
               if (response) {
                 setShowInputFolderModal(false);
                 toast.success("Folder Created Successfully.")
+              } else {
+                setShowInputFolderModal(false);
+                toast.error("Error Creating Folder.")
               }
             } else {
               const response = await createFolder(uid, folderName);
-              if(response) {
+              if (response) {
                 setShowInputFolderModal(false);
                 toast.success("Folder Created Successfully.")
+              } else {
+                setShowInputFolderModal(false);
+                toast.error("Error Creating Folder.")
               }
             }
-            toast.error("Error Creating Folder  .")
-            setOverlayLoading(false)
+            setOverlayLoading(false);
           }}
         />)}
 
@@ -120,7 +127,11 @@ const DashboardHeaderButtons = (props) => {
                 placeholder="Search My Dashboard"
                 type="search"
                 className="dashboard-header__search-input search-input__input"
-                value=""
+                value={searchInput}
+                onChange={(e) => {
+                  setSearchInput(e.target.value);
+                  props.getSearchInput(e.target.value)
+                }}
               />
             </div>
           </div>
@@ -130,7 +141,8 @@ const DashboardHeaderButtons = (props) => {
             onClick={() => setShowInputFolderModal(true)}>
             <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-circle-plus" size='lg' /> Create Folder</span>
           </button>
-          <button className="btn_secondary btn_disabled btn_dropdown dashboard-header__buttons-dropdown-batch dashboard-header__buttons">
+          <button className={`btn_secondary btn_dropdown dashboard-header__buttons-dropdown-batch dashboard-header__buttons ${props.selectedItems.length === 0 ? 'btn_disabled' : ''}`}
+            disabled={props.selectedItems.length === 0} onClick={() => setOpenBatchDropdown(!openBatchDropdown)}>
             <span className="btn__text"> <FontAwesomeIcon icon="fa-regular fa-copy" flip="horizontal" /> Batch Actions</span>
             <svg className="icon v2-icon v2-icon-chevron-down">
               <use href="#v2-icon-chevron-down" xlinkHref="#v2-icon-chevron-down"></use>
@@ -187,7 +199,7 @@ const DashboardHeaderButtons = (props) => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

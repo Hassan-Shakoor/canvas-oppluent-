@@ -14,6 +14,7 @@ import SpinnerContainer from "../../../Loader/SpinnerContainer";
 import { useSelector } from "react-redux";
 import { selectOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 import { selectMlsPropertyInfo, selectUseMlsInfo } from "../../../../store/app/PropertySearch/property";
+import { CLAIRCIUS_LOGO, SHAPES, SOCIAL_MEDIA_ICONS } from "../../../../shared/constant";
 
 // ** Vars
 const Modes = {
@@ -29,6 +30,7 @@ function EditUploadTab() {
   // ** States
   const [showPanel, setShowPanel] = useState(Modes.Main);
   const [imgContainer, setImgContainer] = useState([]);
+  const [shapesContainer, setShapesContainer] = useState([]);
   const [loading, setLoading] = useState(false)
   const [multiMediaBtn, setMultiMediaBtn] = useState([
     {
@@ -61,14 +63,17 @@ function EditUploadTab() {
       placeholder: "Search in My Uploads",
       data: imgContainer,
     },
-    [Modes.Shapes]: { placeholder: "Search in Shapes", data: multiMediaBtn },
+    [Modes.Shapes]: {
+      placeholder: "Search in Shapes",
+      data: SHAPES
+    },
     [Modes.Logo]: {
       placeholder: "Search in Claircius Logo",
-      data: multiMediaBtn,
+      data: CLAIRCIUS_LOGO,
     },
     [Modes.Icons]: {
       placeholder: "Search in Social Media Icons",
-      data: multiMediaBtn,
+      data: SOCIAL_MEDIA_ICONS,
     },
   })
 

@@ -15,7 +15,8 @@ import { duplicateFolder } from '../../services/firebase/FolderServices/duplicat
 import SpinnerOverlay from '../Loader/SpinnerOverlay';
 import FoldersModal from '../Modal/FoldersModal';
 
-const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColumn, triggerRender, setTriggerRender }) => {
+const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColumn, triggerRender, setTriggerRender,
+    selectedItems, setSelectedItems }) => {
 
     const uid = useSelector(selectUID)
 
@@ -43,6 +44,16 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
         setOpenMoveFolderModal(false);
         setTriggerRender(!triggerRender);
     }
+
+    const handleCheckboxChange = () => {
+        if (selectedItems.includes(folderId)) {
+            // If the item ID is already in the array, remove it
+            setSelectedItems(selectedItems.filter(id => id !== folderId));
+        } else {
+            // If the item ID is not in the array, add it
+            setSelectedItems([...selectedItems, folderId]);
+        }
+    };
     //     const jsonData = JSON.parse(props.item.fabricData[0]);
     //     const canvas = new fabric.Canvas('canvas');
 
@@ -193,7 +204,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                 />}
 
             <SpinnerOverlay loading={overlayLoading} />
-            <div className="folder" style={{ width: gridColumn === 2 ? "360px" : "240px" }}>
+            <div className={`folder ${selectedItems.includes(folderId) ? 'folder_selected' : ''}`} style={{ width: gridColumn === 2 ? "360px" : "240px" }}>
                 <div className="folder__preview-container">
                     <div className="folder__preview" style={{ height: gridColumn === 2 ? "360px" : "240px" }}>
                         <div className='folder-icon' style={{
@@ -234,7 +245,9 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                         </div>
                         <div className="design__menu folder__menu_top-left">
                             <label className="checkbox folder__menu-checkbox" data-test="select-for-batch-action">
-                                <input className="checkbox__input" type="checkbox" />
+                                <input className="checkbox__input" type="checkbox"
+                                    checked={selectedItems.includes(folderId)}
+                                    onChange={() => handleCheckboxChange(folderId)} />
                                 <div className="checkbox__box">
                                     <div className="checkbox__tick">
                                         <FontAwesomeIcon icon="fa-solid fa-check" color="#fff" />

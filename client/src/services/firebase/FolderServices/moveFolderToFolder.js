@@ -56,7 +56,6 @@ export async function moveFolderToFolder(authId, folderId, folderDestinationId) 
                     }
                 }
 
-
                 // Remove the original folder from the data array
                 const newData = data.filter(folder => folder.id !== folderId);
 
@@ -77,10 +76,10 @@ export async function moveFolderToFolder(authId, folderId, folderDestinationId) 
     return false;
 }
 
-export const deleteFolderFromFoldersRecursive = (folders, folderId) => {
+export const deleteFolderFromFoldersRecursive = async (folders, folderId) => {
     if (folders && folders.length > 0) {
         for (const folder of folders) {
-            const folderIndex = folder.folders.findIndex(folder => folder.id === folderId);
+            const folderIndex = folder?.folders?.findIndex(folder => folder.id === folderId);
             if (folderIndex !== -1) {
                 // Remove the template at the found index
                 folder.folders.splice(folderIndex, 1);
@@ -88,7 +87,7 @@ export const deleteFolderFromFoldersRecursive = (folders, folderId) => {
             }
 
             if (folder.folders) {
-                const recursiveMatch = deleteTemplateFromFoldersRecursive(folder.folders, folderId);
+                const recursiveMatch = await deleteTemplateFromFoldersRecursive(folder.folders, folderId);
                 if (recursiveMatch) {
                     return recursiveMatch;
                 }

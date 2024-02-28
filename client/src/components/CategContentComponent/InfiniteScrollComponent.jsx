@@ -8,13 +8,15 @@ import { useSelector } from 'react-redux';
 import { selectUID } from '../../store/app/User/userPreference';
 
 
-const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
+const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, selectedItems, setSelectedItems }) => {
 
     const uid = useSelector(selectUID)
     const isFoldersKeywordPresent = window.location.href.includes('folders');
     const { id } = useParams();
     const [folder, setFolder] = useState(null)
     const [folders, setFolders] = useState([])
+    const [fetchedFolders, setFetchedFolders] = useState([])
+    const [searchedTemplates, setSearchedTemplates] = useState([])
 
     const [triggerRender, setTriggerRender] = useState(false);
 
@@ -62,6 +64,8 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                         setFolder(folder)
                     }
                     setFolders(fetchedFolders);
+                    setFetchedFolders(fetchedFolders);
+                    setSearchedTemplates(category);
 
                     console.log('Folders fetched successfully:', fetchedFolders);
                 } catch (error) {
@@ -70,10 +74,36 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
             }
         };
         fetchData();
-
         console.log(category)
 
     }, [triggerRender])
+
+    useEffect(() => {
+        const findItemsByName = () => {
+            const lowercaseItemName = searchInput?.toLowerCase();
+
+            if (!isFoldersKeywordPresent) {
+                const searchedFolder = fetchedFolders?.filter(item => {
+                    const lowercaseItem = item?.name?.toLowerCase();
+                    return lowercaseItem?.includes(lowercaseItemName);
+                });
+                setFolders(searchedFolder);
+
+                const searchedCategory = category?.filter(item => {
+                    const lowercaseItem = item?.cardTitle?.toLowerCase();
+                    return lowercaseItem?.includes(lowercaseItemName);
+                });
+
+                setSearchedTemplates(searchedCategory)
+                // Do something with 'searchedCategory' if needed
+            }
+        };
+
+        findItemsByName();
+
+        console.log(searchInput);
+
+    }, [searchInput])
 
     return (
         <>
@@ -94,18 +124,26 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                                                             itemCount={(folder?.template ? folder?.template?.length : 0) + (folder?.folders ? folder?.folders?.length : 0)}
                                                             gridColumn={gridColumn}
                                                             triggerRender={triggerRender}
-                                                            setTriggerRender={setTriggerRender} />
+                                                            setTriggerRender={setTriggerRender}
+                                                            selectedItems={selectedItems}
+                                                            setSelectedItems={setSelectedItems} />
                                                     </div>
                                                 </div>
                                             </div>
                                         )) : <></>
                                     }
 
-                                    {category?.map((item, index) => (
+                                    {searchedTemplates?.map((item, index) => (
                                         <div style={{ order: index % 3 + 1 }} key={index}>
                                             <div className="">
                                                 <div className="" draggable="true">
-                                                    <DesignTemplate key={index} item={item} gridColumn={gridColumn} userId={userId} categoryId={category.id} />
+                                                    <DesignTemplate key={index}
+                                                        item={item}
+                                                        gridColumn={gridColumn}
+                                                        userId={userId}
+                                                        categoryId={category.id}
+                                                        selectedItems={selectedItems}
+                                                        setSelectedItems={setSelectedItems} />
                                                 </div>
                                             </div>
                                         </div>
@@ -143,7 +181,9 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId }) => {
                                                 itemCount={(folder?.template ? folder?.template?.length : 0) + (folder?.folders ? folder?.folders?.length : 0)}
                                                 gridColumn={gridColumn}
                                                 triggerRender={triggerRender}
-                                                setTriggerRender={setTriggerRender} />
+                                                setTriggerRender={setTriggerRender}
+                                                selectedItems={selectedItems}
+                                                setSelectedItems={setSelectedItems} />
                                         </div>
                                     </div>
                                 </div>

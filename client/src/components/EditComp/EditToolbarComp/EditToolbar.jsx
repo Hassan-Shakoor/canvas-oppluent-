@@ -185,6 +185,15 @@ function EditToolbar() {
     }
   };
 
+  const handleCropImage = () => {
+    const canvas = canvasContainer[selectedCanvas];
+    if (selectedObject && selectedObject.type === 'Image') {
+      selectedObject.set({ selectable: true });
+      canvas?.setActiveObject(selectedObject);
+      selectedObject.crop();
+      canvas?.renderAll();
+    }
+  }
   // const bulletText = createBulletText();
   // canvas.add(bulletText);
   // canvas.renderAll();
@@ -222,9 +231,21 @@ function EditToolbar() {
         )}
 
         <div className="toolbar__divider" />
-        <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextTransform'))}>Format</div>
-        <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div>
-        <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextDropShadow'))}>Drop Shadow</div>
+        <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextTransform'))}>
+          {selectedObject.type === 'Text' ? 'Format' : 'Transform'}
+        </div>
+        {selectedObject.type === 'Text' || selectedObject.type === 'Shape' && (
+          <>
+            <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div>
+            <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextDropShadow'))}>Drop Shadow</div>
+          </>
+        )}
+        {selectedObject.type === 'Image' && (
+          <>
+            {/* <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div> */}
+            <div className="toolbar__text-button" onClick={handleCropImage}>Crop Image</div>
+          </>
+        )}
       </div>
 
       <div className="toolbar__container-tools">

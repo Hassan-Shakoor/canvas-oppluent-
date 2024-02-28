@@ -1,5 +1,5 @@
 // ** React Import
-import React from "react";
+import React, { useState } from "react";
 
 // ** Icon Import
 import { Icon } from "@iconify/react";
@@ -13,12 +13,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
 import { selectOpenDrawer, updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SpinnerContainer from "../../../Loader/SpinnerContainer";
 
 function EditGrid({ searchMap, showPanel, setShowPanel }) {
 
   const dispatch = useDispatch();
   const selectedCanvas = useSelector(selectSelectedCanvas);
   const openDrawer = useSelector(selectOpenDrawer);
+
+  const [loading, setLoading] = useState(false);
 
   const handleUploadImage = (image) => {
     // const canvasArr = getCanvasRef();
@@ -61,8 +64,17 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
           top: canvasCenter.top,
           selectable: true,
           hasControls: true,
+          name: 'image_' + new Date().getTime(),
           id: generateRandomId(),
           type: 'Image'
+        });
+
+        img.on('dblclick', () => {
+          // selectedImage = img;
+          img.set({ selectable: false });
+          canvas.setActiveObject(img);
+          img.crop();
+          canvas.renderAll();
         });
 
         img.scale(scale);
@@ -125,6 +137,50 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
     }
   }
 
+  const handleAddShape = (shape) => {
+
+    const canvasArr = getCanvasRef();
+    const canvas = canvasArr[selectedCanvas];
+
+    fabric.loadSVGFromURL(shape.url, function (objects, options) {
+      const svg = fabric.util.groupSVGElements(objects, options);
+      const canvasCenter = canvas.getCenter();
+      // const svgCenter = svg.getCoords();
+
+      // // Calculate the offset to center the scaled SVG
+      // const offsetX = canvasCenter.left - (svgCenter.left + (svgCenter.width * svg.scaleX) / 2);
+      // const offsetY = canvasCenter.top - (svgCenter.top + (svgCenter.height * svg.scaleY) / 2);
+
+      svg.set({
+        left: canvasCenter.left,
+        top: canvasCenter.top,
+        selectable: true,
+        hasControls: true,
+        id: generateRandomId(),
+        name: shape.title,
+        type: 'Shape',
+        originX: 'left',
+        originY: 'top',
+      });
+
+      // Adjust the dimensions if needed
+
+
+      // Adjust the dimensions if needed
+      svg.scaleToWidth(200)
+      // svg.setCoords();
+
+
+      canvas.add(svg);
+      canvas.setActiveObject(svg);
+      // dispatch(updateSelectedObject(svg));
+      canvas.renderAll();
+      updateCanvasRef(canvasArr, selectedCanvas, canvas);
+      dispatch(updateOpenDrawer(null));
+    });
+  }
+
+
   return searchMap[showPanel]?.data?.map((item, index) => {
     return showPanel === "default" ? (
       <div
@@ -155,10 +211,37 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
           </label>}
           <img
             className="media-library__image-thumbnail"
-            src={item.webformatURL || item}
+            src={item.webformatURL || item.url || item}
             alt="spring bird, bird, tit"
-            onClick={() => handleUploadImage(item)}
+            style={
+              {
+                display: loading ? "none" : "block",
+                width: "100%",
+                animation: "fadeIn 1s",
+              }
+            }
+            onLoad={(e) => { setLoading(false) }}
+            onClick={() => {
+              if (showPanel === 'Shapes') {
+                handleAddShape(item);
+              }
+              else if (showPanel === 'My Uploads') {
+                handleUploadImage(item);
+              }
+              else if (showPanel === 'Social Media Icons') {
+                handleUploadImage(item.url);
+              }
+              else if (showPanel === 'Claircius Logo') {
+                handleUploadImage(item.url);
+              }
+              else if (showPanel === 'pixabay') {
+                handleUploadImage(item.webformatURL);
+              }
+            }
+            }
           />
+          <SpinnerContainer loading={loading} height={'auto'} />
+
         </div>
       </div>
     );

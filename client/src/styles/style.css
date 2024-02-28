@@ -33428,6 +33428,24 @@ span.CodeMirror-selectedtext {
   cursor: text;
 }
 
+.folder_selected .folder__preview,
+.design_selected .folder__preview,
+.folder_selected .design__preview,
+.design_selected .design__preview,
+.folder_selected .template__preview,
+.design_selected .template__preview,
+.folder_selected .listing__preview,
+.design_selected .listing__preview {
+  outline: 2px solid var(--primary-color);
+}
+
+.folder_selected .folder__menu_top-left,
+.design_selected .folder__menu_top-left,
+.folder_selected .design__menu_top-left,
+.design_selected .design__menu_top-left {
+  display: block;
+}
+
 @media (min-width: 768px) {
   .folder__preview {
     height: 150px;

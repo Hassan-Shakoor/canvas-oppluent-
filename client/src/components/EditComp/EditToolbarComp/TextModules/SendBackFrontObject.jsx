@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector } from 'react-redux';
 import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject } from '../../../../store/app/Edit/Canvas/canvas';
 import arrowDownToLine from '../../../../assets/icons/arrow-down-to-line.png';
+import { toast } from 'react-toastify';
 
 
 
@@ -13,6 +14,8 @@ const SendBackFrontObject = () => {
     const canvasContainer = useSelector(selectCanvasContainer);
     const selectedCanvas = useSelector(selectSelectedCanvas)
     const [isLocked, setIsLocked] = useState(false)
+    const [openHyperlinkDropdown, setOpenHyperlinkDropdown] = useState(false)
+    const [hyperlinkText, setHyperlinkText] = useState('')
 
     const selectedObject = useSelector(selectSelectedObject)
 
@@ -76,7 +79,19 @@ const SendBackFrontObject = () => {
         }
     };
 
-    useEffect(()=> {
+    const handleSaveHyperlink = () => {
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+            activeObject.set({
+                hyperlink: hyperlinkText
+            });
+            canvas.requestRenderAll();
+            toast.success("Hyperlink Saved")
+        }
+    }
+
+    useEffect(() => {
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
             const activeObject = canvas?.getActiveObject();
@@ -85,6 +100,9 @@ const SendBackFrontObject = () => {
             }
             else {
                 setIsLocked(false)
+            }
+            if (activeObject?.hyperlink) {
+                setHyperlinkText(activeObject?.hyperlink)
             }
         }
     }, [selectedObject])
@@ -108,7 +126,9 @@ const SendBackFrontObject = () => {
             <div className="toolbar__divider" />
 
             {isLocked ?
-                <div data-tooltip='Lock' className="tool-button" onClick={handleLockObject}>
+                <div data-tooltip='Lock'
+                    className={`tool-button ${(selectedObject?.lockMovementX && selectedObject?.lockMovementY) ? 'tool-button_active' : ''}`}
+                    onClick={handleLockObject}>
                     <FontAwesomeIcon icon="fa-solid fa-lock" />
                 </div>
                 :
@@ -117,12 +137,25 @@ const SendBackFrontObject = () => {
                 </div>
             }
 
-            <div className="tool-button" data-test="toolbar-hyperlink" data-tooltip='Hyperlink'>
+            <div className={`tool-button ${selectedObject.hyperlink ? 'tool-button_active' : ''}`} data-test="toolbar-hyperlink" data-tooltip='Hyperlink' onClick={() => setOpenHyperlinkDropdown(!openHyperlinkDropdown)}>
                 <svg className="icon v2-icon v2-icon-chain tool-button__icon">
                     <use href="#v2-icon-chain" xlinkHref="#v2-icon-chain" />
                 </svg>
             </div>
-
+            {openHyperlinkDropdown &&
+                <div>
+                    <div className="rc-dropdown rc-dropdown-placement-bottom" style={{ '--arrow-x': '129.75px', '--arrow-y': '-2px', 'inset': '45px auto auto 940px', 'boxSizing': 'border-box', 'zIndex': '100', 'position': 'absolute', 'minWidth': '30px' }}>
+                        <div className="toolbar__tool-dropdown toolbar__tool-dropdown_hyperlink">
+                            <label className="input">
+                                <input placeholder="http://example.com" autoComplete="off" type="text" className="simple-input" value={hyperlinkText} onChange={(e) => setHyperlinkText(e.target.value)} />
+                            </label>
+                            <button type="button" className="btn" onClick={() => handleSaveHyperlink()}>
+                                <span className="btn__text">Save</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
             <div data-tooltip='Remove' className="tool-button" onClick={handleRemoveObject}>
                 <svg className="icon v2-icon v2-icon-trash tool-button__icon">
                     <use href="#v2-icon-trash" xlinkHref="#v2-icon-trash"></use>

@@ -1,5 +1,5 @@
 // ** Import React and Dependency
-import React from "react";
+import React, { useState } from "react";
 
 // ** Store
 import { useSelector } from 'react-redux';
@@ -12,6 +12,14 @@ function DashboardHeader(props) {
     const uid = useSelector(selectUID)
     const userData = useSelector(selectUserData)
     const userName = userData[uid]
+    const [searchInput, setSearchInput] = useState('');
+    const [selectedItems, setSelectedItems] = useState([]);
+
+    const getSearchInput = (value) => {
+        setSearchInput(value)
+    }
+
+    console.log(selectedItems)
 
     return (
         <div className="container">
@@ -77,9 +85,14 @@ function DashboardHeader(props) {
                 </div>
             </div> */}
 
-            <DashboardHeaderButtons gridColumn={props.gridColumn} handleSortTemplate={props.handleSortTemplate} handleColumn={props.handleColumn} />
+            <DashboardHeaderButtons
+                gridColumn={props.gridColumn}
+                handleSortTemplate={props.handleSortTemplate}
+                handleColumn={props.handleColumn}
+                getSearchInput={getSearchInput}
+                selectedItems={selectedItems} />
 
-            {/* <div className="dashboard-header mt-2">
+                {/* <div className="dashboard-header mt-2">
                     <div className="dashboard-header__top-panel">
                         <div className="dashboard-header__left-panel">
                             <button type="button" className="btn create-button btn_gray btn_big me-2">
@@ -457,7 +470,12 @@ function DashboardHeader(props) {
                 </div>
             </div> */}
 
-            <InfiniteScrollComponent category={props.category} gridColumn={props.gridColumn} />
+            <InfiniteScrollComponent
+                category={props.category}
+                gridColumn={props.gridColumn}
+                searchInput={searchInput}
+                selectedItems={selectedItems}
+                setSelectedItems={setSelectedItems} />
 
 
         </div>

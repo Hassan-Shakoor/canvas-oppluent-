@@ -169,6 +169,16 @@ function DesignTemplate(props) {
         setCreateDesignOpen(id);
     }
 
+    const handleCheckboxChange = () => {
+        if (props.selectedItems.includes(props.item.id)) {
+            // If the item ID is already in the array, remove it
+            props.setSelectedItems(props.selectedItems.filter(id => id !== props.item.id));
+        } else {
+            // If the item ID is not in the array, add it
+            props.setSelectedItems([...props.selectedItems, props.item.id]);
+        }
+    };
+
     useEffect(() => {
         setFileName(props.item.cardTitle);
     }, [])
@@ -211,11 +221,11 @@ function DesignTemplate(props) {
                 <FoldersModal
                     closeMoveFolderModal={closeMoveFolderModal}
                     templateId={props.item.id}
-                    />}
+                />}
 
 
             <div
-                className="template"
+                className={`template ${props.selectedItems.includes(props.item.id) ? 'design_selected' : ''}`}
                 style={{ width: props.gridColumn === 2 ? "360px" : "240px" }}
             >
                 <div className="template__preview-wrapper">
@@ -249,7 +259,10 @@ function DesignTemplate(props) {
 
                     <div className="design__menu design__menu_top-left">
                         <label className="checkbox folder__menu-checkbox" data-test="select-for-batch-action">
-                            <input className="checkbox__input" type="checkbox" />
+                            <input className="checkbox__input" type="checkbox"
+                                checked={props.selectedItems.includes(props.item.id)}
+                                onChange={() => handleCheckboxChange(props.item.id)} />
+
                             <div className="checkbox__box">
                                 <div className="checkbox__tick">
                                     <FontAwesomeIcon icon="fa-solid fa-check" color="#fff" />

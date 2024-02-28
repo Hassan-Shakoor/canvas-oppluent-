@@ -46,7 +46,7 @@ function Canvas(props) {
             if (imageIndex < propertyInfo?.selectedImages?.length) {
               // Return the updated object
               // return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
-              return { ...object, src:'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
+              return { ...object, src: 'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
             }
           } else {
             console.error("Unsupported object type:", object.type);
@@ -147,6 +147,17 @@ function Canvas(props) {
           // Update the selected canvas
           dispatch(updateSelectedCanvas(Number(i)))
         })
+
+        document.addEventListener('keydown', (event) => {
+          const selectedObject = canvas.getActiveObject();
+          if (event.key === 'Delete' && selectedObject) {
+            if (selectedObject) {
+              canvas?.remove(selectedObject);
+              canvas?.setActiveObject(null);
+            }
+          }
+        });
+
         newCanvases.push(canvas);
       }
       setCanvasRef([...newCanvases])
@@ -161,6 +172,7 @@ function Canvas(props) {
         canvases?.forEach(canvas => {
           canvas.dispose()
         });
+        // document.removeEventListener('keydown');
         console.log('Canvas Disposed');
       }
     }
