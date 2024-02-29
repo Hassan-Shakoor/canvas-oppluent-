@@ -3,7 +3,7 @@ import React, { useState } from "react";
 // ** Store
 import { useDispatch, useSelector } from "react-redux";
 import { selectOpenDrawer, updateOpenDrawer } from "../../../store/app/Edit/EditDrawer";
-import { selectSelectedCanvas, selectSelectedObject } from "../../../store/app/Edit/Canvas/canvas";
+import { selectSelectedCanvas, selectSelectedObject, updateSelectedObject } from "../../../store/app/Edit/Canvas/canvas";
 
 // ** Custom Component
 import FontStyleDropdown from "./ToolbarDropdown/FontStyleDropdown";
@@ -28,12 +28,15 @@ function EditToolbar() {
   const [activeStrikethrought, setActiveStikethrought] = useState(false)
   const [activeUpperCase, setActiveUpperCase] = useState(false)
   const [openTextAlignDropdown, setOpenTextAlignDropdown] = useState(false)
+  const [cropRect, setCropRect] = useState(null);
 
+  const [imageObjectForCrop, setImageObjectForCrop] = useState(null);
   // ** Vars
   const canvasContainer = getCanvasRef() || [];
   const selectedCanvas = useSelector(selectSelectedCanvas);
   const selectedObject = useSelector(selectSelectedObject);
   const openDrawer = useSelector(selectOpenDrawer);
+
 
 
   const handleBoldText = () => {
@@ -185,15 +188,162 @@ function EditToolbar() {
     }
   };
 
+  // const handleCropImage = () => {
+  //   const canvas = canvasContainer[selectedCanvas];
+  //   if (selectedObject && selectedObject.type === 'Image') {
+  //     selectedObject.set({ selectable: true });
+  //     canvas?.setActiveObject(selectedObject);
+  //     selectedObject.crop();
+  //     canvas?.renderAll();
+  //   }
+  // }
+
+  // const handleCropImage = () => {
+  //   const canvas = canvasContainer[selectedCanvas];
+  //   const activeObject = canvas?.getActiveObject();
+
+  //   if (activeObject && activeObject.type === 'Image') {
+  //     const { left, top, width, height } = activeObject;
+
+  //     // Create a clipping rectangle to simulate cropping
+  //     const clipRect = new fabric.Rect({
+  //       left,
+  //       top,
+  //       width,
+  //       height,
+  //       fill: 'white', // You can set the color to match your canvas background
+  //     });
+
+  //     // Apply the clipPath to the image
+  //     activeObject.set({
+  //       clipPath: clipRect,
+  //       scaleX: 1,
+  //       scaleY: 1,
+  //       width,
+  //       height,
+  //     });
+
+  //     canvas.renderAll();
+  //   }
+  // };
+
   const handleCropImage = () => {
+
+    // Create a rectangle for cropping
     const canvas = canvasContainer[selectedCanvas];
+
     if (selectedObject && selectedObject.type === 'Image') {
-      selectedObject.set({ selectable: true });
-      canvas?.setActiveObject(selectedObject);
-      selectedObject.crop();
-      canvas?.renderAll();
+      setImageObjectForCrop(selectedObject);
     }
-  }
+
+    const rect = new fabric.Rect({
+      left: selectedObject?.left ? selectedObject.left : 50,
+      top: selectedObject?.top ? selectedObject.top : 50,
+      width: selectedObject?.width ? selectedObject.width : 200,
+      height: selectedObject?.height ? selectedObject.height : 150,
+      scaleX: selectedObject?.scaleX ? selectedObject.scaleX : 1,
+      scaleY: selectedObject?.scaleY ? selectedObject.scaleY : 1,
+      fill: 'transparent',
+      stroke: 'red',
+      strokeWidth: 2 / selectedObject?.scaleX,
+      resizable: true,
+      selectable: true,
+      type: 'crop'
+    });
+
+    rect.setControlsVisibility({
+      mt: true,
+      mb: true,
+      ml: true,
+      mr: true,
+      tl: true,
+      tr: true,
+      bl: true,
+      br: true,
+      mtr: false,
+    });
+
+    // rect.set({
+    //   lockScalingY: image.height / rect.height,
+    //   maxScaleLimit: image.height / rect.height,
+    // });
+
+    // Add the rectangle to the canvas
+    canvas.add(rect);
+    canvas.setActiveObject(rect);
+    setCropRect(rect);
+    canvas?.setActiveObject(rect);
+    dispatch(updateSelectedObject(rect))
+  };
+
+  const handleDoneCrop = () => {
+    const canvas = canvasContainer[selectedCanvas];
+
+    if (cropRect && imageObjectForCrop) {
+      // Convert cropRect coordinates to be relative to the image
+      const scaleX = imageObjectForCrop.scaleX;
+      const scaleY = imageObjectForCrop.scaleY;
+
+      const relativeLeft = (cropRect.left - imageObjectForCrop.left) / scaleX;
+      const relativeTop = (cropRect.top - imageObjectForCrop.top) / scaleY;
+      const relativeWidth = cropRect.width / scaleX;
+      const relativeHeight = cropRect.height / scaleY;
+
+      // Create a clipping rectangle
+      const clipRect = new fabric.Rect({
+        left: relativeLeft,
+        top: relativeTop,
+        width: relativeWidth,
+        height: relativeHeight,
+        fill: 'white',
+        type: 'crop', // Adjust the color to match your canvas background
+      });
+      // Apply the clipPath to the image
+      imageObjectForCrop.set({
+        clipPath: clipRect,
+      });
+
+      // Remove the crop rectangle from the canvas
+      canvas.remove(cropRect);
+
+      // Render the canvas
+      canvas.renderAll();
+
+      // Reset the cropRect state
+      setCropRect(null);
+
+      // Set the image as the active object
+      canvas.setActiveObject(imageObjectForCrop);
+      dispatch(updateSelectedObject(imageObjectForCrop));
+    }
+  };
+
+
+  const handleResetCrop = () => {
+    const canvas = canvasContainer[selectedCanvas];
+    if (cropRect) {
+      // Remove the crop rectangle from the canvas
+      imageObjectForCrop.set({ clipPath: null })
+      canvas?.remove(cropRect);
+      setCropRect(null);
+      canvas?.setActiveObject(imageObjectForCrop);
+      dispatch(updateSelectedObject(imageObjectForCrop))
+    }
+  };
+
+  const handleCancelCrop = () => {
+
+
+    const canvas = canvasContainer[selectedCanvas];
+
+    canvas.remove(selectedObject);
+    // Reset the cropRect state without applying changes
+    setCropRect(null);
+    canvas?.setActiveObject(imageObjectForCrop);
+    dispatch(updateSelectedObject(imageObjectForCrop))
+  };
+
+
   // const bulletText = createBulletText();
   // canvas.add(bulletText);
   // canvas.renderAll();
@@ -213,151 +363,171 @@ function EditToolbar() {
       }
       aria-label="clickOutsideIgnore"
     >
-      <div className="toolbar__container-tools">
-        <div className="toolbar__color-picker__button" onClick={() => {
-          dispatch(updateOpenDrawer('TextEdit'));
-          console.log("TextEdit")
-          console.log(openDrawer);
-        }}>
-          <div className="toolbar__color-picker__flare" />
-          <div className="toolbar__color-picker" />
-        </div>
-        {selectedObject.type === 'Text' && (
-          <>
+      {selectedObject.type !== 'crop' ? (
+        <>
+          <div className="toolbar__container-tools">
+            <div className="toolbar__color-picker__button" onClick={() => {
+              dispatch(updateOpenDrawer('TextEdit'));
+              console.log("TextEdit")
+              console.log(openDrawer);
+            }}>
+              <div className="toolbar__color-picker__flare" />
+              <div className="toolbar__color-picker" />
+            </div>
+            {selectedObject.type === 'Text' && (
+              <>
+                <div className="toolbar__divider" />
+                <FontStyleDropdown />
+                <FontSizeDropdown />
+              </>
+            )}
+
             <div className="toolbar__divider" />
-            <FontStyleDropdown />
-            <FontSizeDropdown />
-          </>
-        )}
 
-        <div className="toolbar__divider" />
-        <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextTransform'))}>
-          {selectedObject.type === 'Text' ? 'Format' : 'Transform'}
-        </div>
-        {selectedObject.type === 'Text' || selectedObject.type === 'Shape' && (
-          <>
-            <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div>
-            <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextDropShadow'))}>Drop Shadow</div>
-          </>
-        )}
-        {selectedObject.type === 'Image' && (
-          <>
-            {/* <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div> */}
-            <div className="toolbar__text-button" onClick={handleCropImage}>Crop Image</div>
-          </>
-        )}
-      </div>
+            <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextTransform'))}>
+              {selectedObject.type === 'Text' ? 'Format' : 'Transform'}
+            </div>
 
-      <div className="toolbar__container-tools">
-        {selectedObject?.type === 'Text' && (
-          <>
-            <div className="toolbar__divider" />
-            <div className="toolbar__button-set">
-              <div className="">
-                <div
-                  className={
-                    activeBold ? "tool-button tool-button_active" : "tool-button"
-                  }
-                  onClick={() => {
-                    setActiveBold(!activeBold);
-                    handleBoldText();
-                  }}
-                  data-tooltip='Bold'
-                >
-                  <svg className="icon v2-icon v2-icon-text-bold tool-button__icon">
-                    <use href="#v2-icon-text-bold" xlinkHref="#v2-icon-text-bold" />
-                  </svg>
-                </div>
-                <div className={activeItalic ? "tool-button tool-button_active" : "tool-button"}
-                  onClick={() => {
-                    setActiveItalic(!activeItalic);
-                    handleItalicText();
-                  }}
-                  data-tooltip='Italic'>
-                  <svg className="icon v2-icon v2-icon-text-italic tool-button__icon">
-                    <use
-                      href="#v2-icon-text-italic"
-                      xlinkHref="#v2-icon-text-italic"
-                    />
-                  </svg>
-                </div>
-                <div className={activeUnderline ? "tool-button tool-button_active" : "tool-button"}
-                  data-tooltip='Underline'
-                  onClick={() => {
-                    setActiveUnderline(!activeUnderline);
-                    handleUnderlineText();
-                  }}>
-                  <svg className="icon v2-icon v2-icon-text-underline tool-button__icon">
-                    <use
-                      href="#v2-icon-text-underline"
-                      xlinkHref="#v2-icon-text-underline"
-                    />
-                  </svg>
-                </div>
-                <div className={activeStrikethrought ? "tool-button tool-button_active" : "tool-button"}
-                  data-tooltip='Strikethrough'
-                  onClick={() => {
-                    setActiveStikethrought(!activeStrikethrought)
-                    handleStrikethrought()
-                  }}>
-                  <svg className="icon v2-icon v2-icon-text-linethrough tool-button__icon">
-                    <use
-                      href="#v2-icon-text-linethrough"
-                      xlinkHref="#v2-icon-text-linethrough"
-                    />
-                  </svg>
-                </div>
-                <div className={activeUpperCase ? "tool-button tool-button_active" : "tool-button"}
-                  data-tooltip='Uppercase'
-                  onClick={() => {
-                    setActiveUpperCase(!activeUpperCase)
-                    handleUpperCase()
-                  }}>
-                  <svg className="icon v2-icon v2-icon-text-upcase tool-button__icon">
-                    <use
-                      href="#v2-icon-text-upcase"
-                      xlinkHref="#v2-icon-text-upcase"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div className="tool-button" onClick={() => setOpenTextAlignDropdown(!openTextAlignDropdown)}>
+            {(selectedObject.type === 'Text' || selectedObject.type === 'Shape') && (
+              <>
+                <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div>
+                <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextDropShadow'))}>Drop Shadow</div>
+              </>
+            )}
+            {selectedObject.type === 'Image' && (
+              <>
+                {/* <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div> */}
+                <div className="toolbar__text-button" onClick={handleCropImage}>Crop Image</div>
+              </>
+            )}
+          </div>
+
+          <div className="toolbar__container-tools">
+            {selectedObject?.type === 'Text' && (
+              <>
+                <div className="toolbar__divider" />
+                <div className="toolbar__button-set">
+                  <div className="">
+                    <div
+                      className={
+                        activeBold ? "tool-button tool-button_active" : "tool-button"
+                      }
+                      onClick={() => {
+                        setActiveBold(!activeBold);
+                        handleBoldText();
+                      }}
+                      data-tooltip='Bold'
+                    >
+                      <svg className="icon v2-icon v2-icon-text-bold tool-button__icon">
+                        <use href="#v2-icon-text-bold" xlinkHref="#v2-icon-text-bold" />
+                      </svg>
+                    </div>
+                    <div className={activeItalic ? "tool-button tool-button_active" : "tool-button"}
+                      onClick={() => {
+                        setActiveItalic(!activeItalic);
+                        handleItalicText();
+                      }}
+                      data-tooltip='Italic'>
+                      <svg className="icon v2-icon v2-icon-text-italic tool-button__icon">
+                        <use
+                          href="#v2-icon-text-italic"
+                          xlinkHref="#v2-icon-text-italic"
+                        />
+                      </svg>
+                    </div>
+                    <div className={activeUnderline ? "tool-button tool-button_active" : "tool-button"}
+                      data-tooltip='Underline'
+                      onClick={() => {
+                        setActiveUnderline(!activeUnderline);
+                        handleUnderlineText();
+                      }}>
+                      <svg className="icon v2-icon v2-icon-text-underline tool-button__icon">
+                        <use
+                          href="#v2-icon-text-underline"
+                          xlinkHref="#v2-icon-text-underline"
+                        />
+                      </svg>
+                    </div>
+                    <div className={activeStrikethrought ? "tool-button tool-button_active" : "tool-button"}
+                      data-tooltip='Strikethrough'
+                      onClick={() => {
+                        setActiveStikethrought(!activeStrikethrought)
+                        handleStrikethrought()
+                      }}>
+                      <svg className="icon v2-icon v2-icon-text-linethrough tool-button__icon">
+                        <use
+                          href="#v2-icon-text-linethrough"
+                          xlinkHref="#v2-icon-text-linethrough"
+                        />
+                      </svg>
+                    </div>
+                    <div className={activeUpperCase ? "tool-button tool-button_active" : "tool-button"}
+                      data-tooltip='Uppercase'
+                      onClick={() => {
+                        setActiveUpperCase(!activeUpperCase)
+                        handleUpperCase()
+                      }}>
+                      <svg className="icon v2-icon v2-icon-text-upcase tool-button__icon">
+                        <use
+                          href="#v2-icon-text-upcase"
+                          xlinkHref="#v2-icon-text-upcase"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="tool-button" onClick={() => setOpenTextAlignDropdown(!openTextAlignDropdown)}>
 
 
-                <svg className={`icon v2-icon v2-icon-text-align-${selectedObject.textAlign} tool-button__icon`}>
-                  <use
-                    href={`#v2-icon-text-align-${selectedObject.textAlign}`}
-                    xlinkHref={`#v2-icon-text-align-${selectedObject.textAlign}`}
-                  />
-                </svg>
-                <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
-              </div>
-              {openTextAlignDropdown && <TextAlignDropdown />}
-              <div className="tool-button" onClick={convertToBulletPoint}>
-                <FontAwesomeIcon icon="fa-solid fa-list-ul" />
-                {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
-              </div>
-              <div className="tool-button" onClick={convertToNumberPoint}>
-                <FontAwesomeIcon icon="fa-solid fa-list-ol" />
-                {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
-              </div>
-              {/* <div className="tool-button">
+                    <svg className={`icon v2-icon v2-icon-text-align-${selectedObject.textAlign} tool-button__icon`}>
+                      <use
+                        href={`#v2-icon-text-align-${selectedObject.textAlign}`}
+                        xlinkHref={`#v2-icon-text-align-${selectedObject.textAlign}`}
+                      />
+                    </svg>
+                    <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
+                  </div>
+                  {openTextAlignDropdown && <TextAlignDropdown />}
+                  <div className="tool-button" onClick={convertToBulletPoint}>
+                    <FontAwesomeIcon icon="fa-solid fa-list-ul" />
+                    {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
+                  </div>
+                  <div className="tool-button" onClick={convertToNumberPoint}>
+                    <FontAwesomeIcon icon="fa-solid fa-list-ol" />
+                    {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
+                  </div>
+                  {/* <div className="tool-button">
                 <i className="icon tool-button__icon icon-designer-bulleted-lists"></i>
                 <i className="icon icon-chevron-up toolbar__icon-chevron"></i>
               </div>
               <div className="tool-button">
                 <i className="icon tool-button__icon icon-designer-wrap-text"></i>
               </div> */}
+                </div>
+              </>
+            )}
+
+            <div className="toolbar__divider" />
+
+            <SendBackFrontObject />
+
+
+          </div>
+        </>) :
+        <>
+
+          <>
+            <div className="toolbar__text-button" onClick={handleDoneCrop}>
+              <FontAwesomeIcon icon="fa-solid fa-check" style={{ marginRight: 5 }} /> Done
+            </div>
+            <div className="toolbar__text-button" onClick={handleResetCrop}>
+              <FontAwesomeIcon icon="fa-solid fa-rotate-left" style={{ marginRight: 5 }} /> Reset
+            </div>
+            <div className="toolbar__text-button" onClick={handleCancelCrop}>
+              <FontAwesomeIcon icon="fa-solid fa-xmark" style={{ marginRight: 5 }} /> Cancel
             </div>
           </>
-        )}
+        </>}
 
-        <div className="toolbar__divider" />
-
-        <SendBackFrontObject />
-
-
-      </div>
     </div>
     // )
   );

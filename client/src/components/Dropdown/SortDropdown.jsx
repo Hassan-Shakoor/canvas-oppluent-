@@ -2,8 +2,29 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../shared/constant";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useRef } from "react";
 
-function SortDropDown({ dropdown, handleSortTemplate }) {
+function SortDropDown({ dropdown, handleSortTemplate, setOpenSortDropDown }) {
+
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                // Clicked outside the dropdown, close it
+                setOpenSortDropDown(false);
+            }
+        };
+
+        // Attach the event listener
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <div
             className="rc-dropdown rc-dropdown-placement-bottomLeft"
@@ -12,6 +33,7 @@ function SortDropDown({ dropdown, handleSortTemplate }) {
                 boxSizing: "border-box",
                 minWidth: "25.3335px",
             }}
+            ref={dropdownRef}
         >
             <ul
                 className="rc-menu rc-menu-root rc-menu-vertical"

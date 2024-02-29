@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 // ** import React and Dependencies
 import ReactDOM from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { selectDarkMode, updateDarkMode } from '../../store/app/User/userPrefere
 // ** Firebase
 import { auth } from '../../configs/firebase';
 
-function ProfileDropDown({ position }) {
+function ProfileDropDown({ position, setIsSecondDropdownOpen }) {
 
     const isEditKeywordPresent = window.location.href.includes('/edit/');
 
@@ -24,6 +24,8 @@ function ProfileDropDown({ position }) {
     };
 
     const navigate = useNavigate();
+
+    const dropdownRef = useRef();
 
     const handleLogout = () => {
         auth.signOut()
@@ -40,8 +42,26 @@ function ProfileDropDown({ position }) {
         document.body.className = darkMode ? "theme_dark" : "";
     }, [darkMode]);
 
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                // Clicked outside the dropdown, close it
+                setIsSecondDropdownOpen(false);
+            }
+        };
+
+        // Attach the event listener
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return ReactDOM.createPortal(
-        <div className="profile-drop-down">
+        <div className="profile-drop-down" ref={dropdownRef}>
             <div style={{ position: 'absolute', top: '0px', left: '0px', width: '100%' }}>
                 <div>
                     <div className="rc-dropdown rc-dropdown-placement-bottomRight" style={dropdownStyle}>

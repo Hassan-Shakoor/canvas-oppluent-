@@ -16605,6 +16605,23 @@ input[type="submit"] {
   width: 15px;
 }
 
+.export-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.export-sidebar__title {
+  font-family: "Montserrat New",sans-serif;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.export-sidebar_mt {
+  margin-top: 15px;
+}
+.download-dropdown__checkbox {
+  margin-bottom: 8px;
+}
+
 .validation-box_padding {
   padding: 20px;
 }

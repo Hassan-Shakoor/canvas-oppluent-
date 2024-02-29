@@ -14,6 +14,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
     const isFoldersKeywordPresent = window.location.href.includes('folders');
     const { id } = useParams();
     const [folder, setFolder] = useState(null)
+    const [folderData, setFolderData] = useState(null)
     const [folders, setFolders] = useState([])
     const [fetchedFolders, setFetchedFolders] = useState([])
     const [searchedTemplates, setSearchedTemplates] = useState([])
@@ -61,7 +62,8 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                     if (isFoldersKeywordPresent) {
                         // const folder = fetchedFolders.find(folder => folder.id === id)
                         const folder = await findFolderByIdRecursive(fetchedFolders, id)
-                        setFolder(folder)
+                        setFolderData(folder);
+                        setFolder(folder);
                     }
                     setFolders(fetchedFolders);
                     setFetchedFolders(fetchedFolders);
@@ -75,6 +77,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
         };
         fetchData();
         console.log(category)
+        setSelectedItems([]);
 
     }, [triggerRender])
 
@@ -96,11 +99,29 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
 
                 setSearchedTemplates(searchedCategory)
                 // Do something with 'searchedCategory' if needed
+            } else {
+                const searchedFolder = folderData?.folders?.filter(item => {
+                    const lowercaseItem = item?.name?.toLowerCase();
+                    return lowercaseItem?.includes(lowercaseItemName);
+                });
+
+                const searchedCategory = folderData?.template?.filter(item => {
+                    const lowercaseItem = item?.cardTitle?.toLowerCase();
+                    return lowercaseItem?.includes(lowercaseItemName);
+                });
+
+                setFolder({
+                    ...folderData,
+                    folders: searchedFolder,
+                    template: searchedCategory
+                });
+
             }
         };
 
         findItemsByName();
 
+        setSelectedItems([]);
         console.log(searchInput);
 
     }, [searchInput])
@@ -196,7 +217,13 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                                     <div style={{ order: index % 3 + 1 }} key={index}>
                                         <div className="">
                                             <div className="" draggable="true">
-                                                <DesignTemplate key={index} item={item} gridColumn={gridColumn} userId={userId} categoryId={category.id} />
+                                                <DesignTemplate key={index}
+                                                    item={item}
+                                                    gridColumn={gridColumn}
+                                                    userId={userId}
+                                                    categoryId={category.id}
+                                                    selectedItems={selectedItems}
+                                                    setSelectedItems={setSelectedItems} />
                                             </div>
                                         </div>
                                     </div>

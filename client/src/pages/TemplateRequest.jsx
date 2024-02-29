@@ -244,6 +244,7 @@ const TemplateRequest = () => {
                         imageUrl: `${files[0].name}`,
                         designedBy: currentUserId,
                         modified: formatDate(Date.now()),
+                        description: description,
                         storage_url: storageUrl,
                     };
 

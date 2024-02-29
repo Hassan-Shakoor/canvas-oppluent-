@@ -11,7 +11,7 @@ import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
 
 // ** Store
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, updateCanvasContainer, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
+import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, selectTemplateData, updateCanvasContainer, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
 import { updateOpenDrawer } from "../../store/app/Edit/EditDrawer";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
 import { selectMlsPropertyInfo } from "../../store/app/PropertySearch/property";
@@ -25,6 +25,7 @@ function Canvas(props) {
   const canvasContainer = useSelector(selectCanvasContainer)
   const resolution = useSelector(selectResolution)
   const propertyInfo = useSelector(selectMlsPropertyInfo)
+  const templateData = useSelector(selectTemplateData);
 
 
   // ** Vars
@@ -33,7 +34,7 @@ function Canvas(props) {
 
   useEffect(() => {
 
-    if (document.getElementById('canvas-1')) {
+    // if (document.getElementById('canvas-1')) {
       const newCanvases = [];
       for (let i = 0; i < fabricData.length; i++) {
         const canvasData = JSON.parse(fabricData[i])
@@ -42,15 +43,15 @@ function Canvas(props) {
 
         let imageIndex = 0;
         const canvasObjectsWithPropertySearch = canvasObjects.map((object, index) => {
-          if (object.type === 'Image') {
-            if (imageIndex < propertyInfo?.selectedImages?.length) {
-              // Return the updated object
-              // return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
-              return { ...object, src: 'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
-            }
-          } else {
-            console.error("Unsupported object type:", object.type);
-          }
+          // if (object.type === 'Image') {
+          //   if (imageIndex < propertyInfo?.selectedImages?.length) {
+          //     // Return the updated object
+          //     // return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
+          //     return { ...object, src: 'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
+          //   }
+          // } else {
+          //   console.error("Unsupported object type:", object.type);
+          // }
 
           // Return the original object if no update is needed
           return object;
@@ -108,6 +109,12 @@ function Canvas(props) {
             console.error("Unsupported object type:", object.type);
           }
         })
+
+        if (templateData.description && !templateData.published) {
+          if (templateData.description.length > 0) {
+            fabricObjects.push(new fabric.Textbox(templateData.description));
+          } 
+        }
 
         // const images = canvas.getObjects().filter(obj => obj.type === 'Image'); // Select all image objects
 
@@ -175,7 +182,7 @@ function Canvas(props) {
         // document.removeEventListener('keydown');
         console.log('Canvas Disposed');
       }
-    }
+    // }
 
 
   }, [dispatch, fabricData, resolution]);

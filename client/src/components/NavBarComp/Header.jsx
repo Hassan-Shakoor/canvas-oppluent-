@@ -35,8 +35,8 @@ function Header(props) {
       const buttonRect = buttonElement.getBoundingClientRect();
       console.log(buttonRect);
       setlanguageButtonPosition({
-        top: buttonRect.bottom + window.scrollY,
-        left: buttonRect.left - ((buttonRect.right - buttonRect.left) * 3) + window.screenY,
+        top: buttonRect.bottom + window.scrollY + 15,
+        left: buttonRect.left - ((buttonRect.right - buttonRect.left) * 3) + window.screenY - 20,
       });
     }
   };
@@ -52,7 +52,11 @@ function Header(props) {
       <Profile />
       {/* Language Section */}
       <i className={`${isDropdownOpen ? "language-switcher language-switcher__flag ms-2 rc-dropdown-open" : "language-switcher language-switcher__flag ms-2"}`} style={{ backgroundImage: isFlag }} onClick={handleLanguageButtonClick} />
-      {isDropdownOpen && (<LanguageDropDown flag={handleFlag} position={languageButtonPosition} />)}
+      {isDropdownOpen && (
+        <LanguageDropDown
+          flag={handleFlag}
+          position={languageButtonPosition}
+          setIsDropdownOpen={setIsDropdownOpen} />)}
     </div>
   );
 }

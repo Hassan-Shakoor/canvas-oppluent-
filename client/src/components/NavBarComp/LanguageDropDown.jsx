@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 function LanguageDropDown(props) {
@@ -13,8 +13,28 @@ function LanguageDropDown(props) {
     props.flag(backgroundImage);
   };
 
+  const dropdownRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        // Clicked outside the dropdown, close it
+        props.setIsDropdownOpen(false);
+      }
+    };
+
+    // Attach the event listener
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
+
   return ReactDOM.createPortal(
-    <div className="support-drop-down">
+    <div className="support-drop-down" ref={dropdownRef}>
       <div style={{ position: 'absolute', top: '0px', left: '0px', width: '100%' }}>
         <div>
             <div className="rc-dropdown rc-dropdown-placement-bottomRight" style={dropdownStyle}>

@@ -8,17 +8,24 @@ import uploadFileAndGetURL from "../../../../services/uploadFileAndGetURL";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Icon } from "@iconify/react";
 
-function UploadImageBox() {
+function UploadImageBox({ triggerRender, setTriggerRender }) {
   // ** States
   const [selectedUploadFile, setSelectedUploadFile] = useState(null);
 
   useEffect(() => {
-    if (selectedUploadFile) {
-      console.log("File Chosen");
-      uploadFileAndGetURL(selectedUploadFile);
-    } else {
-      console.log("No File Chosen");
+
+    const uploadImage = async () => {
+      if (selectedUploadFile) {
+        console.log("File Chosen");
+        await uploadFileAndGetURL(selectedUploadFile);
+        setTriggerRender(!triggerRender);
+      } else {
+        console.log("No File Chosen");
+      }
     }
+
+    uploadImage();
+
   }, [selectedUploadFile]);
 
   return (
@@ -52,18 +59,23 @@ function UploadImageBox() {
   );
 }
 
-function UploadImageLinear() {
+function UploadImageLinear({triggerRender, setTriggerRender}) {
   // ** States
   const [selectedUploadFile, setSelectedUploadFile] = useState(null); // Initialize with null
 
   // ** useEffect to handle file upload
   useEffect(() => {
-    if (selectedUploadFile) {
-      console.log("File Chosen");
-      uploadFileAndGetURL(selectedUploadFile);
-    } else {
-      console.log("No File Chosen");
+    const uploadImage = async () => {
+      if (selectedUploadFile) {
+        console.log("File Chosen");
+        await uploadFileAndGetURL(selectedUploadFile);
+        setTriggerRender(!triggerRender);
+      } else {
+        console.log("No File Chosen");
+      }
     }
+
+    uploadImage();
   }, [selectedUploadFile]);
 
   return (

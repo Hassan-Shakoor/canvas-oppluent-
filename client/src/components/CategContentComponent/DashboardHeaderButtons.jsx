@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SortDropDown from '../Dropdown/SortDropdown';
 import InputModal from '../Modal/InputModal';
 import { selectUID } from '../../store/app/User/userPreference';
@@ -25,7 +25,8 @@ const DashboardHeaderButtons = (props) => {
   const [openBatchDropdown, setOpenBatchDropdown] = useState(false);
 
   const isFoldersKeywordPresent = window.location.href.includes('folders');
-
+  const dropdownRef = useRef();
+  
   const [showInputFolderModal, setShowInputFolderModal] = useState(false);
   const [folderName, setFolderName] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -54,6 +55,24 @@ const DashboardHeaderButtons = (props) => {
       title: "Name Z - A",
     },
   ]
+
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        // Clicked outside the dropdown, close it
+        setOpenGridDropDown(false);
+      }
+    };
+
+    // Attach the event listener
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="dashboard-header">
@@ -156,7 +175,10 @@ const DashboardHeaderButtons = (props) => {
                 <use href="#v2-icon-chevron-down" xlinkHref="#v2-icon-chevron-down"></use>
               </svg>
             </button>
-            {openSortDropDown && (<SortDropDown dropdown={sortDropdownOptions} handleSortTemplate={props.handleSortTemplate} />)}
+            {openSortDropDown && (<SortDropDown
+              dropdown={sortDropdownOptions}
+              handleSortTemplate={props.handleSortTemplate}
+              setOpenSortDropDown={setOpenSortDropDown} />)}
           </div>
           <div className="select-container select-container_with-icons select-container_has-value">
             <div className="select-container css-2b097c-container">
@@ -175,7 +197,7 @@ const DashboardHeaderButtons = (props) => {
                 </div>
 
                 {openGridDropDown ?
-                  <div className="select__menu css-26l3qy-menu">
+                  <div className="select__menu css-26l3qy-menu" ref={dropdownRef}>
                     <div className="select__menu-list css-a8xhzo">
                       <div className="select__option css-1dkp1dt-option" id="react-select-2-option-0" tabIndex="-1" onClick={() => props.handleColumn(2)}>
                         <div className='rect-block'></div>

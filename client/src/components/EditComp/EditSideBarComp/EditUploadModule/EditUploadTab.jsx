@@ -31,7 +31,8 @@ function EditUploadTab() {
   const [showPanel, setShowPanel] = useState(Modes.Main);
   const [imgContainer, setImgContainer] = useState([]);
   const [shapesContainer, setShapesContainer] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [triggerRender, setTriggerRender] = useState(false);
   const [multiMediaBtn, setMultiMediaBtn] = useState([
     {
       title: "My Uploads",
@@ -106,7 +107,7 @@ function EditUploadTab() {
 
     setLoading(true)
     fetchData();
-  }, [showPanel]);
+  }, [showPanel, triggerRender]);
 
   useEffect(() => {
     // Fix for multiMediaBtn not array error
@@ -172,7 +173,7 @@ function EditUploadTab() {
               <span className="btn__text">Back</span>
             </button>
           ) : (
-            <UploadImageBox />
+            <UploadImageBox triggerRender={triggerRender} setTriggerRender={setTriggerRender} />
           )}
           <EditUploadSearch
             showPanel={showPanel}
@@ -185,7 +186,7 @@ function EditUploadTab() {
             <div className="sidebar-module__title">Multimedia</div>
           )}
           {showPanel !== Modes.Main && showPanel !== Modes.Pixabay && (
-            <UploadImageLinear />
+            <UploadImageLinear triggerRender={triggerRender} setTriggerRender={setTriggerRender}/>
           )}
           <div className="sidebar-module__divider" />
           <div className="media-library__container-wrapper">
