@@ -4,8 +4,11 @@ import ReactDOM from 'react-dom';
 function SupportDropDown(props) {
   
   const dropdownStyle = {
-    top: props.position.top + 'px',
-    left: props.position.left + 'px',
+    position: 'fixed',
+    // top: props.position.top + 'px',
+    // left: props.position.left + 'px',
+    top: '66px',
+    left: '1100px',
     "min-width": props.width,
   };
 

@@ -9,6 +9,11 @@ import { createFolder } from '../../services/firebase/FolderServices/createFolde
 import { useNavigate, useParams } from 'react-router-dom';
 import SpinnerOverlay from '../Loader/SpinnerOverlay';
 import { createFolderinFolder } from '../../services/firebase/FolderServices/createFolderinFolder';
+import MoreDropDown from '../Dropdown/MoreDropdown';
+import Dropdown from 'rc-dropdown';
+import { deleteFolder } from '../../services/firebase/FolderServices/deleteFolder';
+import { deleteTemplate } from '../../services/firebase/TemplateServices/deleteTemplate';
+import FoldersModal from '../Modal/FoldersModal';
 
 const DashboardHeaderButtons = (props) => {
 
@@ -26,12 +31,18 @@ const DashboardHeaderButtons = (props) => {
 
   const isFoldersKeywordPresent = window.location.href.includes('folders');
   const dropdownRef = useRef();
-  
+
   const [showInputFolderModal, setShowInputFolderModal] = useState(false);
   const [folderName, setFolderName] = useState('');
   const [searchInput, setSearchInput] = useState('');
 
   const [sortGrid, setSortGrid] = useState(3)
+
+  const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false)
+
+  const closeMoveFolderModal = () => {
+    setOpenMoveFolderModal(false);
+  }
 
   const sortDropdownOptions = [
     {
@@ -53,6 +64,54 @@ const DashboardHeaderButtons = (props) => {
     {
       key: "z-a",
       title: "Name Z - A",
+    },
+  ]
+
+  const batchDropdownMenu = [
+    {
+      key: "move-to-folder",
+      iconClass: "fa-solid fa-arrow-right-arrow-left",
+      title: "Move to Folder",
+      function: async () => {
+        try {
+          // props.selectedItems?.map((item, index) => {
+          //   if (item.type === 'folder') {
+
+          //   } else if (item.type === 'template') {
+
+          //     // await deleteTemplate(uid, props.item.id)
+          //   }
+          // })
+          // toast.success("Files Moved Successfully.")
+          setOpenMoveFolderModal(true);
+        } catch (error) {
+          console.error("Error: ", error)
+          toast.error("Error Moving Files.")
+        }
+      }
+    },
+    {
+      key: "delete",
+      iconClass: "fa-regular fa-trash-can",
+      title: "Delete",
+      function: async () => {
+        try {
+          await Promise.all(
+            props.selectedItems?.map(async (item) => {
+              if (item.type === 'folder') {
+                return deleteFolder(uid, item.id);
+              } else if (item.type === 'template') {
+                return deleteTemplate(uid, item.id);
+              }
+            })
+          );
+          // await deleteTemplate(uid, props.item.id)
+          toast.success("Files Deleted Successfully.")
+        } catch (error) {
+          console.error("Error: ", error)
+          toast.error("Error Deleting Files.")
+        }
+      }
     },
   ]
 
@@ -124,6 +183,13 @@ const DashboardHeaderButtons = (props) => {
           }}
         />)}
 
+      {openMoveFolderModal &&
+        <FoldersModal
+          closeMoveFolderModal={closeMoveFolderModal}
+          items={props.selectedItems}
+        />}
+
+
       <div className="dashboard-header__top-panel">
         <div className="dashboard-header__left-panel">
           {isFoldersKeywordPresent &&
@@ -160,13 +226,28 @@ const DashboardHeaderButtons = (props) => {
             onClick={() => setShowInputFolderModal(true)}>
             <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-circle-plus" size='lg' /> Create Folder</span>
           </button>
-          <button className={`btn_secondary btn_dropdown dashboard-header__buttons-dropdown-batch dashboard-header__buttons ${props.selectedItems.length === 0 ? 'btn_disabled' : ''}`}
-            disabled={props.selectedItems.length === 0} onClick={() => setOpenBatchDropdown(!openBatchDropdown)}>
-            <span className="btn__text"> <FontAwesomeIcon icon="fa-regular fa-copy" flip="horizontal" /> Batch Actions</span>
-            <svg className="icon v2-icon v2-icon-chevron-down">
-              <use href="#v2-icon-chevron-down" xlinkHref="#v2-icon-chevron-down"></use>
-            </svg>
-          </button>
+          <Dropdown
+            trigger={["click"]}
+            overlay={
+              <MoreDropDown
+                dropdown={batchDropdownMenu}
+              />
+            }
+          >
+            <button className={`btn_secondary btn_dropdown dashboard-header__buttons-dropdown-batch dashboard-header__buttons ${props.selectedItems.length === 0 ? 'btn_disabled' : ''}`}
+              disabled={props.selectedItems.length === 0} onClick={() => setOpenBatchDropdown(!openBatchDropdown)}>
+              <span className="btn__text"> <FontAwesomeIcon icon="fa-regular fa-copy" flip="horizontal" /> Batch Actions</span>
+              <svg className="icon v2-icon v2-icon-chevron-down">
+                <use href="#v2-icon-chevron-down" xlinkHref="#v2-icon-chevron-down"></use>
+              </svg>
+            </button>
+          </Dropdown>
+
+          {/* {openBatchDropdown && (
+            <MoreDropDown
+              dropdown={batchDropdownMenu}
+            />
+          )} */}
           <div style={{ position: 'relative' }}>
 
             <button type="button" onClick={() => setOpenSortDropDown(!openSortDropDown)} className="btn_secondary btn_dropdown btn_secondary dashboard-header__buttons-dropdown dashboard-header__buttons">

@@ -1,48 +1,58 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 import { v4 as uuidv4 } from 'uuid';
 
-export async function addDesignToCategory(authId, templateId, categoryId) {
+export async function addDesignToCategory(authId, templateObject, categoryId) {
     const database = getDatabase();
-    const databaseRef = ref(database, `${authId}/templateData`);
+    const databaseRef = ref(database);
 
     try {
         const snapshot = await get(databaseRef);
-
         if (snapshot.exists()) {
-            const data = snapshot.val();
-            const matchingCategory = data.find(category => category?.id === categoryId);
+            const dataJson = snapshot.val();
 
-            for (const item of data) {
-                if (item.template) {
-                    const templateIndex = item.template.findIndex(template => template.id === templateId);
+            // const selectedCategory = templateObject.docSpecs.designID;
+            const allowedUsers = templateObject.allowedUsers;
 
-                    if (templateIndex !== -1) {
-                        const matchingTemplate = item.template[templateIndex];
+            for (const [userId, { templateData }] of Object.entries(dataJson)) {
+                if (userId === authId || (allowedUsers?.length > 0 && !allowedUsers?.includes(userId))) {
+                    continue;
+                }
 
-                        if (!matchingCategory.template) {
-                            matchingCategory.template = [];
-                        }
+                for (const [index, data] of templateData?.entries()) {
+                    if (data?.id === categoryId) {
+                        // console.log(dbJson);
+                        console.log(categoryId);
 
-                        // Create a duplicate of the matching template with a new UUID
-                        const duplicatedTemplate = { ...matchingTemplate, id: uuidv4() };
+                        const publishTemplate = {
+                            ...templateObject,
+                            published: true,
+                            visible: true,
+                            id: uuidv4()
+                        };
 
-                        matchingCategory.template.push(duplicatedTemplate);
+                        // Push the templateObject to the data.template array
+                        const templateDataRef = ref(database, `${userId}/templateData/${index}/template`);
+                        console.log(Object.keys(data.template).length);
 
-                        // Update the database with the modified data
-                        await set(databaseRef, data);
-                        console.log("Data updated successfully");
-                        return true;
+                        const nextKey = Object.keys(data.template).length;
+
+                        set(templateDataRef, {
+                            ...data.template,
+                            [nextKey]: publishTemplate,
+                        });
+
+                        break;
                     }
                 }
             }
-            console.log("Template not found in any category.");
+            console.log("Template Moved to Category Successfully.");
+            return true;
         } else {
-            console.log("Data does not exist.");
+            console.log("Data does not exist");
         }
     } catch (error) {
         console.error('Error updating data in Firebase:', error);
         throw error;
     }
-
     return false;
 }

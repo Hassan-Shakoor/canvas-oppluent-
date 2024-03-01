@@ -19,8 +19,11 @@ function ProfileDropDown({ position, setIsSecondDropdownOpen }) {
     const dispatch = useDispatch()
 
     const dropdownStyle = {
-        top: position.top + 'px',
-        left: position.left + 'px'
+        position: 'fixed',
+        // top: position.top + 'px',
+        // left: position.left + 'px'
+        top: '66px',
+        left: '1196px'
     };
 
     const navigate = useNavigate();

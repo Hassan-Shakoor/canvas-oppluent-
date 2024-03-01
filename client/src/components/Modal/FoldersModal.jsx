@@ -7,8 +7,9 @@ import { toast } from 'react-toastify';
 import { moveToDashboard } from '../../services/firebase/TemplateServices/moveToDashboard';
 import { moveFromFolderToFolder } from '../../services/firebase/TemplateServices/moveFromFolderToFolder';
 import { moveFolderToFolder } from '../../services/firebase/FolderServices/moveFolderToFolder';
+import { moveFoldertoDashboard } from '../../services/firebase/FolderServices/moveFoldertoDashboard';
 
-const FoldersModal = ({ closeMoveFolderModal, templateId, thingToMove }) => {
+const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) => {
 
     const uid = useSelector(selectUID);
     const isFoldersKeywordPresent = window.location.href.includes('folders');
@@ -21,6 +22,12 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, thingToMove }) => {
             alert('Please Select a Folder to Move.')
             return;
         }
+
+        if (items && items.length > 0) {
+            await handleMoveItems();
+            return;
+        }
+
         if (thingToMove === 'Folder') {
             await moveFolderToFolder(uid, templateId, selectedFolderId)
         }
@@ -36,6 +43,39 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, thingToMove }) => {
                 }
             }
             toast.success("Template Moved Successfully")
+        }
+        closeMoveFolderModal();
+    }
+
+    const handleMoveItems = async () => {
+        if (items?.length > 0) {
+            items.map(async (item, index) => {
+
+                if (item.type === 'Folder') {
+                    if (selectedFolderId === 'Dashboard') {
+                        await moveFoldertoDashboard(uid, item.id)
+                    } else {
+                        // if (isFoldersKeywordPresent) {
+
+                        // } else {
+                        await moveFolderToFolder(uid, item.id, selectedFolderId)
+                        // }
+                    }
+                }
+                else {
+                    if (selectedFolderId === 'Dashboard') {
+                        await moveToDashboard(uid, item.id)
+                    } else {
+                        if (isFoldersKeywordPresent) {
+                            await moveFromFolderToFolder(uid, item.id, selectedFolderId)
+                        }
+                        else {
+                            await moveToFolder(uid, item.id, selectedFolderId)
+                        }
+                    }
+                }
+            })
+            toast.success("Items Moved Successfully")
         }
         closeMoveFolderModal();
     }

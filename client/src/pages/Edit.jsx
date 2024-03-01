@@ -88,7 +88,7 @@ function Edit() {
             {/* <button onClick={() => console.log("Edit --- selectedObject --->> ", selectedObject)} style={{ zIndex: 2000, position: 'fixed' }}>Selected Object</button> */}
             {selectedObject && (<EditToolbar />)}
             <EditSidebar />
-            {/* <EditExportSidebar /> */}
+            <EditExportSidebar />
             <EditZoom width={width} height={height} zoom={zoom} updateZoomResolution={updateZoomResolution} />
             <div className="page-manager">
                 <PageManagerStage />

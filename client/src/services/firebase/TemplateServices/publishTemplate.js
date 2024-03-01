@@ -10,11 +10,13 @@ export async function publishTemplate(authId, templateObject) {
             const dataJson = snapshot.val();
 
             const selectedCategory = templateObject.docSpecs.designID;
+            const allowedUsers = templateObject.allowedUsers;
 
             for (const [userId, { templateData }] of Object.entries(dataJson)) {
-                if (userId === authId) {
+                if (userId === authId || (allowedUsers?.length > 0 && !allowedUsers?.includes(userId))) {
                     continue;
                 }
+
                 for (const [index, data] of templateData?.entries()) {
                     if (data?.id === selectedCategory) {
                         // console.log(dbJson);

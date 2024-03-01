@@ -1,7 +1,8 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 import { v4 as uuidv4 } from 'uuid';
-import { getFolderinFoldersRecursive } from "./createFolderinFolder";
+
 import { deleteTemplateFromFoldersRecursive } from "../TemplateServices/deleteTemplate";
+import { getFolderinFoldersRecursive } from "./createFolderinFolder";
 
 export async function moveFolderToFolder(authId, folderId, folderDestinationId) {
     const database = getDatabase();

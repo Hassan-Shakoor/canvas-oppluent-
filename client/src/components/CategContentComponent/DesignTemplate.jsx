@@ -19,13 +19,24 @@ import { fabric } from 'fabric';
 import { deleteTemplate } from "../../services/firebase/TemplateServices/deleteTemplate";
 import { moveToFolder } from "../../services/firebase/TemplateServices/moveToFolder";
 import FoldersModal from "../Modal/FoldersModal";
+import { addDesignToCategory } from "../../services/firebase/TemplateServices/addDesignToCategory";
+import Select from "react-select";
+import { getDatabase, onValue, ref } from 'firebase/database'
+
+import { selectProfile } from "../../store/app/AccountInformation/profile";
 
 function DesignTemplate(props) {
+
+    const userProfile = useSelector(selectProfile);
 
     const navigate = useNavigate();
     const [isCreateDesignOpen, setCreateDesignOpen] = useState(null);
     const [loading, setLoading] = useState(true)
     const [showInputModal, setShowInputModal] = useState(false)
+    const [showSelectModal, setShowSelectModal] = useState(false)
+    const [designCategories, setDesignCategories] = useState(['Business Category', 'Instagram Stories', 'Facebook Banner']);
+
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     const [fileName, setFileName] = useState('')
 
@@ -39,15 +50,15 @@ function DesignTemplate(props) {
         setOpenMoveFolderModal(false);
     }
 
-    const handleAddMyDesign = async () => {
-        try {
-            await updateIsMyDesign(userData?.uid, props.item.id, !props.item.isMyDesign);
-            toast.success('Successfully Removed From My Design.', { position: toast.POSITION.TOP_RIGHT });
-        } catch (error) {
-            console.error('Error updating design:', error);
-            toast.error('Error updating design', { position: toast.POSITION.TOP_RIGHT });
-        }
-    }
+    // const handleAddDesignToCategory = async () => {
+    //     try {
+    //         await addDesignToCategory(userData?.uid, props.item, !props.item.isMyDesign);
+    //         toast.success('Successfully Removed From My Design.', { position: toast.POSITION.TOP_RIGHT });
+    //     } catch (error) {
+    //         console.error('Error updating design:', error);
+    //         toast.error('Error updating design', { position: toast.POSITION.TOP_RIGHT });
+    //     }
+    // }
 
     const downloadCanvasAsImage = () => {
         const jsonData = JSON.parse(props.item.fabricData[0]);
@@ -118,12 +129,6 @@ function DesignTemplate(props) {
             title: "Edit",
             function: () => { navigate(`/edit/${props.item.id}`) }
         },
-        // {
-        //     key: "share",
-        //     iconClass: "fa-solid fa-share-nodes",
-        //     title: "Share",
-        //     function: `/share/${props.userId}/${props.categoryId}/${props.item.id}`
-        // },
         {
             key: "download",
             iconClass: "fa-solid fa-download",
@@ -136,15 +141,15 @@ function DesignTemplate(props) {
             title: "Copy Link",
             link: `share/${uid}/0/${props.item.id}`,
         },
-        // {
-        //     key: "add-to-my-design",
-        //     iconClass: "fa-solid fa-star",
-        //     title: props.item.isMyDesign ? "Remove from My Designs" : "Add to My Designs",
-        //     function: handleAddMyDesign
-        // },
+        userProfile.isAdmin && {
+            key: "add-to-category",
+            iconClass: "fa-solid fa-star",
+            title: "Add Design to Category",
+            function: () => setShowSelectModal(true)
+        },
         {
             key: "move-to-folder",
-            iconClass: "fa-solid fa-star",
+            iconClass: "fa-solid fa-arrow-right-arrow-left",
             title: "Move to Folder",
             function: () => {
                 setOpenMoveFolderModal(true);
@@ -163,23 +168,63 @@ function DesignTemplate(props) {
                 }
             }
         },
-    ];
+    ].filter(Boolean); ;
 
     function handleCreateDesign(id) {
         setCreateDesignOpen(id);
     }
 
     const handleCheckboxChange = () => {
-        if (props.selectedItems.includes(props.item.id)) {
+        const templateIndex = props.selectedItems.findIndex(template => template.id === props.item.id);
+
+        if (templateIndex !== -1) {
             // If the item ID is already in the array, remove it
-            props.setSelectedItems(props.selectedItems.filter(id => id !== props.item.id));
+            props.setSelectedItems(props.selectedItems.filter(template => template.id !== props.item.id));
         } else {
             // If the item ID is not in the array, add it
-            props.setSelectedItems([...props.selectedItems, props.item.id]);
+            props.setSelectedItems([
+                ...props.selectedItems,
+                {
+                    id: props.item.id,
+                    type: 'template'
+                }]);
         }
     };
 
+    const fetchDataFromDatabase = () => {
+        const database = getDatabase();
+        const userJsonRef = ref(database, `${uid}/userJson`);
+
+        onValue(userJsonRef, (snapshot) => {
+            try {
+                const updatedCategories = snapshot.val();
+
+                if (updatedCategories) {
+                    console.log(updatedCategories);
+
+                    // Assuming subTitle is an array of objects with 'name' and 'id' properties
+                    const transformedArray = updatedCategories
+                        .filter(category => category.title !== 'Favorites')
+                        .reduce((accumulator, category) => {
+                            const categoryItems = category.subTitle.map(item => ({ label: item.name, value: item.id }));
+                            return accumulator.concat(categoryItems);
+                        }, []);
+
+                    console.log(transformedArray);
+                    setDesignCategories(transformedArray);
+                }
+            } catch (error) {
+                console.error('Error fetching data from the database:', error);
+                // Handle the error as needed
+            }
+        });
+    };
+
     useEffect(() => {
+        fetchDataFromDatabase()
+
+        console.log(dropdownMenu)
+
         setFileName(props.item.cardTitle);
     }, [])
 
@@ -216,6 +261,36 @@ function DesignTemplate(props) {
                         }
                     }}
                 />)}
+            {showSelectModal && (
+                <InputModal
+                    title="Add to Category"
+                    body={
+                        <div className="password-input">
+                            <label className="input">
+                                <span className="input__label">Select Category</span>
+                                <Select
+                                    options={designCategories}
+                                    styles={customStyles}
+                                    placeholder='Select category'
+                                    onChange={(option) => setSelectedCategory(option)} />
+                            </label>
+                        </div>
+                    }
+                    secondayBtnTxt={"Cancel"}
+                    primaryBtnTxt={"Submit"}
+                    onClose={() => setShowSelectModal(false)}
+                    handleSecodnaryBtn={() => setShowSelectModal(false)}
+                    handlePrimaryBtn={async (e) => {
+                        e.preventDefault();
+                        const response = await addDesignToCategory(uid, props.item, selectedCategory);
+                        if (response) {
+                            setShowSelectModal(false);
+                            toast.success("File Name Updated Successfully.")
+                        } else {
+                            toast.error('Error Moving to Category..')
+                        }
+                    }}
+                />)}
 
             {openMoveFolderModal &&
                 <FoldersModal
@@ -225,7 +300,7 @@ function DesignTemplate(props) {
 
 
             <div
-                className={`template ${props.selectedItems.includes(props.item.id) ? 'design_selected' : ''}`}
+                className={`template ${props.selectedItems?.findIndex(template => template.id === props.item.id) !== -1 ? 'design_selected' : ''}`}
                 style={{ width: props.gridColumn === 2 ? "360px" : "240px" }}
             >
                 <div className="template__preview-wrapper">
@@ -260,7 +335,7 @@ function DesignTemplate(props) {
                     <div className="design__menu design__menu_top-left">
                         <label className="checkbox folder__menu-checkbox" data-test="select-for-batch-action">
                             <input className="checkbox__input" type="checkbox"
-                                checked={props.selectedItems.includes(props.item.id)}
+                                checked={(props.selectedItems.findIndex(template => template.id === props.item.id) !== -1)}
                                 onChange={() => handleCheckboxChange(props.item.id)} />
 
                             <div className="checkbox__box">
@@ -328,5 +403,64 @@ function DesignTemplate(props) {
         </>
     );
 }
+
+const customStyles = {
+    container: (provided) => ({
+        ...provided,
+        minWidth: "50px",
+        position: "relative",
+    }),
+    control: (provided) => ({
+        ...provided,
+        backgroundColor: "var(--secondary-bg-color)",
+        border: "1px solid var(--input-border-color)",
+        borderRadius: "4px",
+        padding: "0px 0px",
+        cursor: "pointer",
+        minHeight: "26px",
+    }),
+    valueContainer: (provided) => ({
+        ...provided,
+        fontSize: "14px",
+        fontWeight: "bold",
+        minHeight: "20px",
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        color: "var(--font-color)",
+    }),
+    input: (provided) => ({
+        ...provided,
+        color: "var(--dark-color)",
+        width: '75px',
+        height: '26px'
+    }),
+    indicatorSeparator: (provided) => ({
+        ...provided,
+        display: "none",
+    }),
+    menu: (provided) => ({
+        ...provided,
+        minWidth: "220px",
+        backgroundColor: "var(--secondary-bg-color)",
+        zIndex: "11",
+    }),
+    menuList: (provided) => ({
+        ...provided,
+        paddingBottom: "4px",
+        paddingTop: "4px",
+        maxHeight: "60vh",
+        overflowX: "hidden",
+        overflowY: "auto",
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        backgroundColor: (state.isFocused || state.isSelected) ? 'var(--primary-color-light)' : "var(--secondary-bg-color)",
+        letterSpacing: "1px",
+        cursor: "pointer",
+        padding: "13px",
+    }),
+};
+
 
 export default DesignTemplate;

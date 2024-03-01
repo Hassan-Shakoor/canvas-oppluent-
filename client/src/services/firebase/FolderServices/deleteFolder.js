@@ -1,4 +1,5 @@
 import { get, set, ref, getDatabase } from "firebase/database";
+import { deleteFolderFromFoldersRecursive } from "./moveFolderToFolder";
 
 export async function deleteFolder(authId, folderId) {
     const database = getDatabase();
@@ -16,14 +17,21 @@ export async function deleteFolder(authId, folderId) {
                 await set(databaseRef, data);
                 console.log("Template deleted successfully");
                 return true;
+            } else if (!folderIndex || folderIndex === -1) {
+                const response = await deleteFolderFromFoldersRecursive(data, folderId)
+                if (response) {
+                    await set(databaseRef, data);
+                    console.log("Template deleted successfully");
+                    return true;
+                }
             }
 
         }
         console.log("Matching template not found");
-        return false;
 
     } catch (error) {
         console.error('Error deleting template in Firebase:', error);
         throw error;
     }
+    return false;
 }

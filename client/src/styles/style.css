@@ -13433,12 +13433,16 @@ input[type="submit"] {
 .checkbox__label {
   color: var(--font-color);
   display: flex;
-  font-size: 14px;
+  font-size: 13px;
   margin-left: 10px;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
   cursor: pointer;
+}
+
+.css-1nmdiq5-menu {
+  z-index: 10;
 }
 
 .checkbox__label_d-block {
@@ -16611,15 +16615,23 @@ input[type="submit"] {
 }
 
 .export-sidebar__title {
-  font-family: "Montserrat New",sans-serif;
+  font-family: "Montserrat New", sans-serif;
   font-weight: 700;
   margin-bottom: 20px;
 }
+
 .export-sidebar_mt {
   margin-top: 15px;
 }
+
 .download-dropdown__checkbox {
   margin-bottom: 8px;
+}
+
+.download-dropdown__checkbox-subtitle {
+  font-size: 10px;
+  color: #8b8b8d;
+  margin-left: 5px;
 }
 
 .validation-box_padding {
@@ -24082,6 +24094,15 @@ input[type="submit"] {
 
 .animate-mounting__sidebar-enter-done {
   left: 90px;
+}
+
+.animate-mounting__sidebar-enter-right {
+  right: 0;
+  transition: right 0.2s ease-in-out;
+}
+
+.sidebar_right {
+  right: -390px
 }
 
 .animate-mounting__sidebar-exit {

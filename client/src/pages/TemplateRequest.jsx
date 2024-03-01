@@ -241,10 +241,12 @@ const TemplateRequest = () => {
                         id: templateId,
                         published: false,
                         visible: true,
+                        allowedUsers: selectedUser,
                         imageUrl: `${files[0].name}`,
                         designedBy: currentUserId,
                         modified: formatDate(Date.now()),
                         description: description,
+                        disclaimer: disclaimer,
                         storage_url: storageUrl,
                     };
 
@@ -454,7 +456,7 @@ const TemplateRequest = () => {
                                                     isMulti
                                                     placeholder='Select users'
                                                     styles={customStyles}
-                                                    onChange={(option) => { setSelectedUser(option); console.log(option) }} />
+                                                    onChange={(option) => { setSelectedUser(option); console.log(selectedUser) }} />
                                             </div>
                                         </div>
                                     )}

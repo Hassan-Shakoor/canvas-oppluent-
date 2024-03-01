@@ -90,7 +90,8 @@ function DashboardHeader(props) {
                 handleSortTemplate={props.handleSortTemplate}
                 handleColumn={props.handleColumn}
                 getSearchInput={getSearchInput}
-                selectedItems={selectedItems} />
+                selectedItems={selectedItems} 
+                setSelectedItems={setSelectedItems} />
 
                 {/* <div className="dashboard-header mt-2">
                     <div className="dashboard-header__top-panel">

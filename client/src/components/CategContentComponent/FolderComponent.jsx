@@ -46,12 +46,20 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
     }
 
     const handleCheckboxChange = () => {
-        if (selectedItems.includes(folderId)) {
+        const folderIndex = selectedItems.findIndex(folder => folder.id === folderId);
+
+        if (folderIndex !== -1) {
             // If the item ID is already in the array, remove it
-            setSelectedItems(selectedItems.filter(id => id !== folderId));
+            setSelectedItems(selectedItems.filter(folder => folder.id !== folderId));
         } else {
             // If the item ID is not in the array, add it
-            setSelectedItems([...selectedItems, folderId]);
+            setSelectedItems([
+                ...selectedItems,
+                {
+                    id: folderId,
+                    type: 'folder'
+                }
+            ]);
         }
     };
     //     const jsonData = JSON.parse(props.item.fabricData[0]);
@@ -125,7 +133,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
         },
         {
             key: "move-to-folder",
-            iconClass: "fa-solid fa-star",
+            iconClass: "fa-solid fa-arrow-right-arrow-left",
             title: "Move to Folder",
             function: () => setOpenMoveFolderModal(true)
         },
@@ -204,7 +212,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                 />}
 
             <SpinnerOverlay loading={overlayLoading} />
-            <div className={`folder ${selectedItems.includes(folderId) ? 'folder_selected' : ''}`} style={{ width: gridColumn === 2 ? "360px" : "240px" }}>
+            <div className={`folder ${selectedItems.findIndex(folder => folder.id === folderId) !== -1 ? 'folder_selected' : ''}`} style={{ width: gridColumn === 2 ? "360px" : "240px" }}>
                 <div className="folder__preview-container">
                     <div className="folder__preview" style={{ height: gridColumn === 2 ? "360px" : "240px" }}>
                         <div className='folder-icon' style={{
@@ -246,7 +254,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                         <div className="design__menu folder__menu_top-left">
                             <label className="checkbox folder__menu-checkbox" data-test="select-for-batch-action">
                                 <input className="checkbox__input" type="checkbox"
-                                    checked={selectedItems.includes(folderId)}
+                                    checked={selectedItems.findIndex(folder => folder.id === folderId) !== -1}
                                     onChange={() => handleCheckboxChange(folderId)} />
                                 <div className="checkbox__box">
                                     <div className="checkbox__tick">

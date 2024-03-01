@@ -6,8 +6,11 @@ import { Link } from 'react-router-dom';
 function RequestDropDown(props) {
 
   const dropdownStyle = {
-    top: `${props.position.top}px`,
-    left: `${props.position.left}px`,
+    position: 'fixed',
+    // top: `${props.position.top}px`,
+    // left: `${props.position.left}px`,
+    top: '66px',
+    left: '1050px',
     minWidth: props.width,
   };
 
