@@ -23,6 +23,7 @@ function ProfileBody({ profile }) {
   const [lastName, setLastName] = useState(profile.lastName);
   const [email, setEmail] = useState(profile.email);
   const [contactNo, setContactNo] = useState(profile.contactNo);
+  const [base64Image, setBase64Image] = useState(null)
   const [selectedUploadProfile, setSelectedUploadFile] = useState(
     profile.profileImage
   );
@@ -151,12 +152,20 @@ function ProfileBody({ profile }) {
               <div className="image-upload__header">
                 <span className="input__label my-2">Profile Photo</span>
               </div>
-              <label className="image-upload__profile-photo">
-                <img
-                  className="image-upload__logo-image"
-                  src="https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/5bfd0c77f2db530b34c9.svg"
-                  alt="partners"
-                />
+              <div className="image-upload__profile-photo">
+
+                {base64Image ?
+                  <img
+                    className="image-upload__logo-image"
+                    src={base64Image}
+                    alt="partners"
+                  /> :
+                  <img
+                    className="image-upload__logo-image"
+                    src={'https://dnhf8bus4lv8r.cloudfront.net/new-packs/assets/5bfd0c77f2db530b34c9.svg'}
+                    style={{ width: '50px', height: '50px' }}
+                    alt="partners"
+                  />}
                 <input
                   type="file"
                   multiple={false}
@@ -164,11 +173,25 @@ function ProfileBody({ profile }) {
                   accept=".png, .jpg, .jpeg"
                   autoComplete="off"
                   onChange={(event) => {
-                    setSelectedUploadFile(event.target.files[0]);
+                    console.log('Profile Image: ', event.target.files[0])
+                    if (event.target.files[0]) {
+                      const reader = new FileReader();
+
+                      reader.onloadend = () => {
+                        // The result contains the base64 image data
+                        const base64ImageData = reader.result;
+                        setBase64Image(base64ImageData);
+                        console.log(base64ImageData)
+                      };
+
+                      // Read the file as a data URL (base64)
+                      reader.readAsDataURL(event.target.files[0]);
+                    }
+                    setSelectedUploadFile(event.target.files[0])
                     setIsChanged(true);
                   }}
                 />
-              </label>
+              </div>
               <div className="image-upload__button-set">
                 <label type="file" className="btn btn_secondary me-2">
                   <input
@@ -178,13 +201,27 @@ function ProfileBody({ profile }) {
                     accept=".png, .jpg, .jpeg"
                     autoComplete="off"
                     onChange={(event) => {
-                      setSelectedUploadFile(event.target.files[0]);
+                      console.log('Profile Image: ', event.target.files[0])
+                      if (event.target.files[0]) {
+                        const reader = new FileReader();
+
+                        reader.onloadend = () => {
+                          // The result contains the base64 image data
+                          const base64ImageData = reader.result;
+                          setBase64Image(base64ImageData);
+                          console.log(base64ImageData)
+                        };
+
+                        // Read the file as a data URL (base64)
+                        reader.readAsDataURL(event.target.files[0]);
+                      }
+                      setSelectedUploadFile(event.target.files[0])
                       setIsChanged(true);
                     }}
                   />
                   <span className="btn__text">Upload</span>
                 </label>
-                <span className="btn btn_disabled btn_red me-2">
+                <span className={`btn btn_red me-2 ${base64Image ? '' : 'btn_disabled'}`} onClick={() => { setSelectedUploadFile(null); setBase64Image(null) }}>
                   <span className="btn__text">Delete</span>
                 </span>
               </div>
@@ -244,7 +281,7 @@ function ProfileBody({ profile }) {
           handlePrimaryBtn={async (e) => {
             e.preventDefault();
             const response = await updateUserEmail(email, currentPassword);
-            if(response){
+            if (response) {
               const data = {
                 firstName,
                 lastName,

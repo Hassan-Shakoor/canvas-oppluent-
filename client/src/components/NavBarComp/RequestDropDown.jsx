@@ -10,7 +10,7 @@ function RequestDropDown(props) {
     // top: `${props.position.top}px`,
     // left: `${props.position.left}px`,
     top: '66px',
-    left: '1050px',
+    left: '980px',
     minWidth: props.width,
   };
 

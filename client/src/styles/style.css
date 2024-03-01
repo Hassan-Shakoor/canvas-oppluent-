@@ -32528,8 +32528,9 @@ span.CodeMirror-selectedtext {
 }
 
 .image-upload__logo-image {
-  height: 50px;
-  width: 50px;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .image-upload__title {
@@ -32551,6 +32552,7 @@ span.CodeMirror-selectedtext {
   justify-content: center;
   margin: 14px 0;
   width: 120px;
+  overflow: hidden;
 }
 
 .image-upload__profile-image {

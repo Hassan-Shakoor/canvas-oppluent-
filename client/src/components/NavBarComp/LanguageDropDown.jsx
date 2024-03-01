@@ -5,8 +5,10 @@ function LanguageDropDown(props) {
   console.log(props.position);
   const dropdownStyle = {
     position: 'fixed',
-    top: props.position.top + 'px',
-    left: props.position.left + 'px',
+    // top: props.position.top + 'px',
+    // left: props.position.left + 'px',
+    top: '66px',
+    left: '1310px',
     "min-width": props.width,
   };
 
