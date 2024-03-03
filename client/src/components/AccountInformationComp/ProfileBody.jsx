@@ -33,7 +33,7 @@ function ProfileBody({ profile }) {
   const [showInputModal, setShowInputModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
 
-  const disptach = useDispatch();
+  const dispatch = useDispatch();
 
   // ** Vars
   const navigate = useNavigate();
@@ -52,13 +52,14 @@ function ProfileBody({ profile }) {
     if (email && email !== profile.email && isEmailValid.test(email)) {
       setShowInputModal(true);
     } else {
-      disptach(saveProfile(data));
+      dispatch(saveProfile(data));
       toast.success("Profile updated successfully")
     }
   };
+  
   useEffect(() => {
-    disptach(fetchProfile());
-  }, [disptach, loading]);
+    dispatch(fetchProfile());
+  }, [dispatch, loading]);
   return (
     <>
       <div className="pt-4">
@@ -291,7 +292,7 @@ function ProfileBody({ profile }) {
                   ? URL.createObjectURL(selectedUploadProfile)
                   : "",
               };
-              disptach(saveProfile(data));
+              dispatch(saveProfile(data));
               setShowInputModal(false);
               toast.success("Profile and email updated successfully")
             }

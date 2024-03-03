@@ -225,7 +225,8 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                             position: 'absolute',
                             bottom: 0,
                             left: 0,
-                            borderRadius: '0 24px 0 0px'
+                            borderRadius: '0 24px 0 0px',
+                            zIndex: 10
                         }}>
                             <FontAwesomeIcon icon="fa-regular fa-folder-open" size="lg" style={{ color: "#ffffff", }} />
                         </div>

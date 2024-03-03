@@ -35,35 +35,37 @@ function Canvas(props) {
   useEffect(() => {
 
     // if (document.getElementById('canvas-1')) {
-      const newCanvases = [];
-      for (let i = 0; i < fabricData.length; i++) {
-        const canvasData = JSON.parse(fabricData[i])
-        const canvasObjects = canvasData.objects;
-        const objectsWithoutShape = canvasObjects.filter(object => object.type !== 'Shape')
+    const newCanvases = [];
+    for (let i = 0; i < fabricData.length; i++) {
+      const canvasData = JSON.parse(fabricData[i])
+      const canvasObjects = canvasData.objects;
+      const objectsWithoutShape = canvasObjects.filter(object => object.type !== 'Shape')
 
-        let imageIndex = 0;
-        const canvasObjectsWithPropertySearch = canvasObjects.map((object, index) => {
-          // if (object.type === 'Image') {
-          //   if (imageIndex < propertyInfo?.selectedImages?.length) {
-          //     // Return the updated object
-          //     // return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
-          //     return { ...object, src: 'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
-          //   }
-          // } else {
-          //   console.error("Unsupported object type:", object.type);
-          // }
+      let imageIndex = 0;
+      const canvasObjectsWithPropertySearch = canvasObjects.map((object, index) => {
+        // if (object.type === 'Image') {
+        //   if (imageIndex < propertyInfo?.selectedImages?.length) {
+        //     // Return the updated object
+        //     // return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
+        //     return { ...object, src: 'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
+        //   }
+        // } else {
+        //   console.error("Unsupported object type:", object.type);
+        // }
 
-          // Return the original object if no update is needed
-          return object;
-        });
+        // Return the original object if no update is needed
+        return object;
+      });
 
-        const canvasDataWithoutObjects = {
-          ...canvasData,
-          // objects: canvasObjectsWithPropertySearch.filter((object) => object.type !== "Shape")
-          objects: []
-        }
-        console.log(canvasObjectsWithPropertySearch)
+      const canvasDataWithoutObjects = {
+        ...canvasData,
+        // objects: canvasObjectsWithPropertySearch.filter((object) => object.type !== "Shape")
+        objects: []
+      }
+      console.log(canvasObjectsWithPropertySearch)
 
+      try {
+        
         const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
           width: props.width,
           height: props.height,
@@ -72,6 +74,7 @@ function Canvas(props) {
           // width: 634,
           // height: 634
         }, { crossOrigin: 'Anonymous' });
+
 
         // console.log("canvas.getZoom(): ", canvas.getZoom())
         canvas?.loadFromJSON(canvasDataWithoutObjects, function () {
@@ -113,7 +116,7 @@ function Canvas(props) {
         if (templateData.description && !templateData.published) {
           if (templateData.description.length > 0) {
             fabricObjects.push(new fabric.Textbox(templateData.description));
-          } 
+          }
         }
 
         // const images = canvas.getObjects().filter(obj => obj.type === 'Image'); // Select all image objects
@@ -166,22 +169,25 @@ function Canvas(props) {
         });
 
         newCanvases.push(canvas);
+      } catch (error) {
+        console.error('Error Creating Canvas. ', error)
       }
-      setCanvasRef([...newCanvases])
-      dispatch(updateCanvasContainer([...newCanvases]))
+    }
+    setCanvasRef([...newCanvases])
+    dispatch(updateCanvasContainer([...newCanvases]))
 
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
 
-      return () => {
-        const canvases = getCanvasRef()
-        canvases?.forEach(canvas => {
-          canvas.dispose()
-        });
-        // document.removeEventListener('keydown');
-        console.log('Canvas Disposed');
-      }
+    return () => {
+      const canvases = getCanvasRef()
+      canvases?.forEach(canvas => {
+        canvas.dispose()
+      });
+      // document.removeEventListener('keydown');
+      console.log('Canvas Disposed');
+    }
     // }
 
 

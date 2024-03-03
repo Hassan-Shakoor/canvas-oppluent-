@@ -36,7 +36,7 @@ function EditBackground({setShowPanel}){
                 <p className="background-module__text">Click here to select</p>
             </div>
         </div>
-        {/* <BackgroundColorPicker/> */}
+        <BackgroundColorPicker/>
         </>
     )
 }

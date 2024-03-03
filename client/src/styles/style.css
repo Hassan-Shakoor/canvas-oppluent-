@@ -20792,6 +20792,7 @@ input[type="submit"] {
   z-index: 7;
   padding: 0 20px 0 15px;
   color: var(--header-font-color);
+  z-index: 100;
 }
 
 .header_mobile-app {
