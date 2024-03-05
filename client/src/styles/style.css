@@ -13222,7 +13222,7 @@ input[type="submit"] {
   width: 8px;
   height: 8px;
   border-color: var(--primary-color);
-  margin-top: -3px;
+  margin-top: -1px;
   border: solid 1.5px var(--primary-color);
   background-color: var(--primary-color);
 }

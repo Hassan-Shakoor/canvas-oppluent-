@@ -168,7 +168,7 @@ function DesignTemplate(props) {
                 }
             }
         },
-    ].filter(Boolean); ;
+    ].filter(Boolean);;
 
     function handleCreateDesign(id) {
         setCreateDesignOpen(id);
@@ -320,7 +320,8 @@ function DesignTemplate(props) {
                         <button
                             type="button"
                             className="btn btn_no-min-width template__edit-btn"
-                            onClick={() => handleCreateDesign(props.item.id)}
+                            onClick={() => navigate(`/edit/${props.item.id}`)}
+                        // handleCreateDesign(props.item.id)}
                         >
                             <span className="btn__text" style={{ fontFamily: 'Montserrat' }}>Edit</span>
                         </button>
@@ -399,7 +400,7 @@ function DesignTemplate(props) {
                         {props.item.cardTitle}
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 }
