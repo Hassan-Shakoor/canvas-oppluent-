@@ -1,15 +1,16 @@
 import React from "react"
+import ColumnMLS from "../../../PropertySearchComp/ColumnMLS"
 
-function EditPropertySearchModal({isModalOpen, toggleModal}) {
+function EditPropertySearchModal({ isModalOpen, toggleModal }) {
   return (
     <div className="ReactModalPortal modal">
       {isModalOpen && <div
         className="ReactModal__Overlay ReactModal__Overlay--after-open"
         style={{
-        position: "fixed",
-        inset: 0,
-        backgroundColor: "rgba(255, 255, 255, 0.75)"
-      }}>
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(255, 255, 255, 0.75)"
+        }}>
         <div
           className="ReactModal__Content ReactModal__Content--after-open ReactModal__Content_lg">
           <div className="property-search-modal modal-visible">
@@ -22,13 +23,14 @@ function EditPropertySearchModal({isModalOpen, toggleModal}) {
                   data-test="close-button"
                   onClick={toggleModal}>
                   <svg className="icon v1-icon v1-icon-cross-light">
-                    <use href="#v1-icon-cross-light" xlinkHref="#v1-icon-cross-light"/>
+                    <use href="#v1-icon-cross-light" xlinkHref="#v1-icon-cross-light" />
                   </svg>
-                  <span className="btn__text"/>
+                  <span className="btn__text" />
                 </button>
               </div>
               <div className="modal__body">
-                <div className="mb-3 search-input_full-width search-input">
+                <ColumnMLS isInModal={true} toggleModal={toggleModal} />
+                {/* <div className="mb-3 search-input_full-width search-input">
                   <div className="">
                     <input
                       autoComplete="off"
@@ -52,7 +54,7 @@ function EditPropertySearchModal({isModalOpen, toggleModal}) {
                       Your search results will be here
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

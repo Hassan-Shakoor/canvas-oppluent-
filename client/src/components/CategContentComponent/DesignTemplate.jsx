@@ -101,8 +101,6 @@ function DesignTemplate(props) {
 
     };
 
-
-
     const dropdownMenu = [
         {
             key: "rename",

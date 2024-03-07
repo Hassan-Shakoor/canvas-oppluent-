@@ -22,6 +22,7 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
   // ** State
   const [selectedColor, setSelectedColor] = useState(undefined)
   const [color, setColor] = useState({ r: 51, g: 51, b: 51, a: 1 })
+  const [prevColor, setPrevColor] = useState()
   const [colorInput, setColorInput] = useState(getHexColor(color))
 
   // ** Hooks
@@ -101,7 +102,7 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
         const existingFill = textObject.get('fill');
 
         // Check if the fill is a gradient
-        if (existingFill && (existingFill.type === 'linear' || existingFill.type === 'radial' )) {
+        if (existingFill && (existingFill.type === 'linear' || existingFill.type === 'radial')) {
           // Modify the color stops
           // existingFill.colorStops = [
           //   { offset: 0, color: getRgbaCSS(color) },
@@ -167,6 +168,15 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
         canvas.requestRenderAll();
       }
     } else {
+      if (color?.r === prevColor?.r && color?.g === prevColor?.g && color?.b === prevColor?.b && color?.a === prevColor?.a) {
+        // Update the previous color
+        // Perform other actions if needed
+        return;
+      } else {
+        console.log('Color changed:', color);
+        setPrevColor(color);
+      }
+
       if (color.r === 51 && color.g === 51 && color.b === 51 && color.a === 1) {
         if (!selectedObject) {
           setColor({ r: 51, g: 51, b: 51, a: 1 })

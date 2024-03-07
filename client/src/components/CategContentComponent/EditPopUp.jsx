@@ -29,8 +29,8 @@ function EditPopUp(props) {
                 }, 2000);
             }
             else {
-                await createMyDesign(userData?.uid, templateObject.templateObject, templateId)
                 const templateId = uuidv4();
+                await createMyDesign(userData?.uid, templateObject.templateObject, templateId)
                 setTimeout(() => {
                     setOverlayLoading(false);
                     navigate(`/edit/${templateId}`);

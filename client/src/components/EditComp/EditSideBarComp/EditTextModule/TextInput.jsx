@@ -32,6 +32,7 @@ function TextInput() {
       selectable: true,
       hasControls: true,
       id: generateRandomId(),
+      name: text,
       type: 'Text',
       cursorColor: '#000',
       textWrapping: true,

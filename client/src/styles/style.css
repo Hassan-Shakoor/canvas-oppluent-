@@ -11032,6 +11032,10 @@ table {
   width: 100%;
 }
 
+.overflow-fixed {
+  overflow-y: hidden !important;
+}
+
 .ReactModal__Content_sm {
   max-width: 380px;
   width: 380px;

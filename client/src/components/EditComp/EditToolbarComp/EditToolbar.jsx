@@ -15,6 +15,7 @@ import TextAlignDropdown from "./ToolbarDropdown/TextAlignDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SendBackFrontObject from "./TextModules/SendBackFrontObject";
 import { fabric } from 'fabric'
+import { generateRandomId } from "../../../shared/utils";
 
 
 function EditToolbar() {
@@ -237,6 +238,7 @@ function EditToolbar() {
     }
 
     const rect = new fabric.Rect({
+      id: generateRandomId(),
       left: selectedObject?.left ? selectedObject.left : 50,
       top: selectedObject?.top ? selectedObject.top : 50,
       width: selectedObject?.width ? selectedObject.width : 200,

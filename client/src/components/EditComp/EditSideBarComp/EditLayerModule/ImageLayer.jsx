@@ -15,10 +15,10 @@ import {
 // ** Icon
 import { Icon } from "@iconify/react";
 
-const ImageLayer = ({object, updateObjects}) => {
-    const [layer, setLayer] = useState({ title: "", isLocked: false });
+const ImageLayer = ({ object, updateObjects }) => {
+  const [layer, setLayer] = useState({ title: "", isLocked: false });
 
-    // ** Var
+  // ** Var
   const dispatch = useDispatch()
   const canvasContainer = getCanvasRef();
   const selectedCanvas = useSelector(selectSelectedCanvas);
@@ -49,14 +49,14 @@ const ImageLayer = ({object, updateObjects}) => {
   const activateObject = (event) => {
     // We check if 'icon' isn't in the class name to prevent this function from triggering and causing an error when deleting the object.
     console.log(event.target.classList)
-    if(event.target.classList.contains('icon') || event.target.classList.length === 0) return;
+    if (event.target.classList.contains('icon') || event.target.classList.length === 0) return;
     dispatch(updateSelectedObject(object))
     canvas.setActiveObject(object)
     canvas.renderAll()
   }
 
   const handleNameChange = (text) => {
-    object.set({name: text})
+    object.set({ name: text })
     setLayer(prevState => ({
       ...prevState,
       title: text
@@ -75,9 +75,8 @@ const ImageLayer = ({object, updateObjects}) => {
 
   return (
     <div
-      className={`tree__item ${
-        object?.id === selectedObject?.id && "tree__item_selected"
-      } ${layer.isLocked && "layers__item_user-lock"}`}
+      className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''}
+       ${layer.isLocked && "layers__item_user-lock"}`}
       onClick={event => activateObject(event)}
     >
       <div className="tree__root-box" draggable="true">

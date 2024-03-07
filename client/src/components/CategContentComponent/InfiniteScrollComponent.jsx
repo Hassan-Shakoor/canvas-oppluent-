@@ -91,13 +91,14 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                     return lowercaseItem?.includes(lowercaseItemName);
                 });
                 setFolders(searchedFolder);
+                if (category.length > 0) {
+                    const searchedCategory = category?.filter(item => {
+                        const lowercaseItem = item?.cardTitle?.toLowerCase();
+                        return lowercaseItem?.includes(lowercaseItemName);
+                    });
+                    setSearchedTemplates(searchedCategory)
+                }
 
-                const searchedCategory = category?.filter(item => {
-                    const lowercaseItem = item?.cardTitle?.toLowerCase();
-                    return lowercaseItem?.includes(lowercaseItemName);
-                });
-
-                setSearchedTemplates(searchedCategory)
                 // Do something with 'searchedCategory' if needed
             } else {
                 const searchedFolder = folderData?.folders?.filter(item => {
@@ -139,7 +140,8 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                                             <div style={{ order: 1 }} key={index}>
                                                 <div className="">
                                                     <div className="" draggable={true}>
-                                                        <FolderComponent folderTitle={folder.name}
+                                                        <FolderComponent key={index}
+                                                            folderTitle={folder.name}
                                                             folderId={folder.id}
                                                             templates={folder?.template}
                                                             itemCount={(folder?.template ? folder?.template?.length : 0) + (folder?.folders ? folder?.folders?.length : 0)}
@@ -196,7 +198,8 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                                 <div style={{ order: 1 }} key={index}>
                                     <div className="">
                                         <div className="" draggable={true}>
-                                            <FolderComponent folderTitle={folder.name}
+                                            <FolderComponent key={index}
+                                                folderTitle={folder.name}
                                                 folderId={folder.id}
                                                 templates={folder?.template}
                                                 itemCount={(folder?.template ? folder?.template?.length : 0) + (folder?.folders ? folder?.folders?.length : 0)}

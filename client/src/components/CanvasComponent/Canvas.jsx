@@ -43,15 +43,21 @@ function Canvas(props) {
 
       let imageIndex = 0;
       const canvasObjectsWithPropertySearch = canvasObjects.map((object, index) => {
-        // if (object.type === 'Image') {
-        //   if (imageIndex < propertyInfo?.selectedImages?.length) {
-        //     // Return the updated object
-        //     // return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
-        //     return { ...object, src: 'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
-        //   }
-        // } else {
-        //   console.error("Unsupported object type:", object.type);
-        // }
+        if (object.type === 'Image') {
+          if (imageIndex < propertyInfo?.selectedImages?.length) {
+            // Return the updated object
+            return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
+            // return { ...object, src: 'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
+          }
+        } else if (object.type === 'Text') {
+          if (Object.keys(propertyInfo).includes(object.name)) {
+            const newTextValue = propertyInfo[object.name];
+            return { ...object, text: newTextValue }
+          }
+        }
+        else {
+          console.error("Unsupported object type:", object.type);
+        }
 
         // Return the original object if no update is needed
         return object;
@@ -65,7 +71,7 @@ function Canvas(props) {
       console.log(canvasObjectsWithPropertySearch)
 
       try {
-        
+
         const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
           width: props.width,
           height: props.height,
@@ -102,7 +108,8 @@ function Canvas(props) {
               // img is an instance of fabric.Image
               // You can add it to the canvas or perform other operations
               img.set({
-                ...object
+                ...object,
+                crossOrigin: 'anonymous'
               });
 
               canvas.add(img); // Add the image to the canvas
@@ -191,7 +198,7 @@ function Canvas(props) {
     // }
 
 
-  }, [dispatch, fabricData, resolution]);
+  }, [dispatch, fabricData, resolution, propertyInfo]);
 
   console.log(canvasContainer)
   return (

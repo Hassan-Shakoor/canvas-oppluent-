@@ -28,7 +28,7 @@ const messageMap = {
   notFound: "Properties Not Found"
 }
 
-function ColumnMLS() {
+function ColumnMLS({ isInModal, toggleModal }) {
   // ** State
   const [searchFeedback, setSearchFeedback] = useState(messageMap.default)
   const [searchedProperty, setSearchedProperty] = useState("")
@@ -101,11 +101,13 @@ function ColumnMLS() {
   }, [debouncesPropertySearch, searchedProperty])
 
   return (
-    <div className="col-md-8 page__column">
-      <ul className="tabs">
-        <li className="tabs__item tabs__item_active">Property Search</li>
-      </ul>
-      <SpinnerOverlay loading={overlayLoading}/>
+    <div className={`${isInModal ? 'col-md-12' : 'col-md-8'} page__column`}>
+      {!isInModal &&
+        <ul className="tabs">
+          <li className="tabs__item tabs__item_active">Property Search</li>
+        </ul>
+      }
+      <SpinnerOverlay loading={overlayLoading} />
       {selectedProperty === null ? <div className="pt-4">
         <h4 className="mb-3 text-info">
           Search and populate a property's information into your design here.
@@ -149,18 +151,20 @@ function ColumnMLS() {
           }
           <SpinnerContainer loading={loading} />
         </div>
-        <div className="button-set">
-          <div className="button-set button-set_flex-end">
-            <button type="button" className="btn btn_border">
-              <span className="btn__text">Back</span>
-            </button>
-            <button type="submit" className="btn" onClick={() => setShowWarnModal(true)}>
-              <span className="btn__text">Create</span>
-            </button>
+        {!isInModal &&
+          <div className="button-set">
+            <div className="button-set button-set_flex-end">
+              <button type="button" className="btn btn_border">
+                <span className="btn__text">Back</span>
+              </button>
+              <button type="submit" className="btn" onClick={() => setShowWarnModal(true)}>
+                <span className="btn__text">Create</span>
+              </button>
+            </div>
           </div>
-        </div>
+        }
       </div> :
-        <PropertyResult templateId={id} />}
+        <PropertyResult templateId={id} isInModal={isInModal} toggleModal={toggleModal} />}
     </div>
 
   )
