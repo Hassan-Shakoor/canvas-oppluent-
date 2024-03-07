@@ -36,9 +36,11 @@ function EditPopUp(props) {
                     navigate(`/edit/${templateId}`);
                 }, 2000);
             }
-            navigate(`/edit/${id}`)
+            // navigate(`/edit/${id}`)
         } else {
-            navigate(url)
+            setTimeout(() => {
+                navigate(url)
+            }, 40);
         }
 
     }
