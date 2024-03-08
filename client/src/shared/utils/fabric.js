@@ -14,7 +14,6 @@ export const render = (selectedCanvas, canvasContainer) => {
 
 export const serializeCanvasContainer = (canvasContainer) => {
     const serializedCont = [];
-    const serializedObjects = [];
     canvasContainer?.map(canvas => {
 
         const canvasAttributes = {

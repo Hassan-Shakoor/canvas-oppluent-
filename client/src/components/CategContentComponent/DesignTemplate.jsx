@@ -65,7 +65,6 @@ function DesignTemplate(props) {
         const canvas = new fabric.Canvas('canvas');
 
         // Load the parsed data into the canvas
-        console.log('first')
         canvas.loadFromJSON(jsonData, () => {
             // Once the data is loaded, render the canvas
             canvas.renderAll();
@@ -79,10 +78,10 @@ function DesignTemplate(props) {
                     quality: 1.0,   // You can adjust the quality
                 });
                 // Cleanup: Remove all objects from the canvas
-                canvas.clear();
+                canvas?.clear();
 
                 // Dispose of the canvas
-                canvas.dispose();
+                canvas?.dispose();
 
                 // Generate the desired filename (you can customize this)
                 const fileName = `${props.item.cardTitle}.png`;

@@ -166,7 +166,7 @@ function Canvas(props) {
         })
 
         document.addEventListener('keydown', (event) => {
-          const selectedObject = canvas.getActiveObject();
+          const selectedObject = canvas?.getActiveObject();
           if (event.key === 'Delete' && selectedObject) {
             if (selectedObject) {
               canvas?.remove(selectedObject);
