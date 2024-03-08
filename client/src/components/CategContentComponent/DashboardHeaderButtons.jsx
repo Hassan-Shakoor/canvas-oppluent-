@@ -14,6 +14,7 @@ import Dropdown from 'rc-dropdown';
 import { deleteFolder } from '../../services/firebase/FolderServices/deleteFolder';
 import { deleteTemplate } from '../../services/firebase/TemplateServices/deleteTemplate';
 import FoldersModal from '../Modal/FoldersModal';
+import { getFolders } from '../../services/firebase/FolderServices/getFolders';
 
 const DashboardHeaderButtons = (props) => {
 
@@ -115,6 +116,35 @@ const DashboardHeaderButtons = (props) => {
     },
   ]
 
+  const findFolderByIdRecursive = (folders, id) => {
+    for (const folder of folders) {
+      if (folder.id === id) {
+        return folder; // Found the folder with the matching id
+      }
+      if (folder.folders) {
+        const recursiveResult = findFolderByIdRecursive(folder.folders, id);
+        if (recursiveResult) {
+          return recursiveResult; // Return the result from the recursive call
+        }
+      }
+    }
+
+    return null;
+  };
+
+  const handleBack = async () => {
+    const isFoldersKeywordPresent = window.location.href.includes('folders');
+    const fetchedFolders = await getFolders(uid);
+    if (isFoldersKeywordPresent) {
+      const folder = await findFolderByIdRecursive(fetchedFolders, id)
+      if (folder?.parentID) {
+        navigate(`/folders/${folder.parentID}`)
+      } else {
+        navigate('/categories')
+      }
+    }
+  }
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -193,7 +223,7 @@ const DashboardHeaderButtons = (props) => {
       <div className="dashboard-header__top-panel">
         <div className="dashboard-header__left-panel">
           {isFoldersKeywordPresent &&
-            <button type="button" className="btn_secondary dashboard-header__buttons-back dashboard-header__buttons" onClick={() => navigate('/categories')}>
+            <button type="button" className="btn_secondary dashboard-header__buttons-back dashboard-header__buttons" onClick={handleBack}>
               <span className="btn__text">
                 <FontAwesomeIcon icon="fa-solid fa-chevron-left" /> Back
               </span>
