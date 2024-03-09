@@ -38161,6 +38161,7 @@ svg.icon.v2-icon.v2-icon-chevron-down {
   -o-object-fit: contain;
   object-fit: contain;
   width: 100%;
+  max-height: 80vh;
 }
 
 .button-set_right {
