@@ -11,40 +11,39 @@ function NavUndoRedoButtonSet() {
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
 
-    // useEffect(() => {
-    //     const canvas = canvasContainer[selectedCanvas];
+    useEffect(() => {
+        const canvas = canvasContainer[selectedCanvas];
 
-    //     console.log("canvas: ", canvas)
+        console.log("canvas: ", canvas)
 
-    //     if (!canvas) {
-    //         console.error(`Canvas not found for selectedCanvas: ${selectedCanvas}`);
-    //         return;
-    //     }
+        if (!canvas) {
+            console.error(`Canvas not found for selectedCanvas: ${selectedCanvas}`);
+            return;
+        }
 
-    //     const handleObjectModified = () => {
-    //         console.log("Object modified");
-    //         // const currentState = JSON.parse(JSON.stringify(myCanvas.toJSON()));
-    //         // setUndoStack(prevStack => [...undoStack, currentState]);
-    //     };
+        const handleObjectModified = () => {
+            console.log("Object modified");
+            const currentState = JSON.parse(JSON.stringify(canvas.toJSON()));
+            setUndoStack((prevStack) => [...prevStack, currentState]);
+        };
 
+        // Handle object deletion and other custom events as needed
+        const handleObjectRemoved = handleObjectModified;
+        const handleObjectAdded = handleObjectModified;
 
-    //     // Handle object deletion and other custom events as needed
-    //     const handleObjectRemoved = handleObjectModified;
-    //     const handleObjectAdded = handleObjectModified;
+        canvas.on("object:modified", handleObjectModified);
+        canvas.on("object:removed", handleObjectRemoved);
+        canvas.on("object:added", handleObjectAdded);
 
-    //     canvas.on("object:modified", handleObjectModified);
-    //     canvas.on("object:removed", handleObjectRemoved);
-    //     canvas.on("object:added", handleObjectAdded);
+        setMyCanvas(canvas);
+        setUndoStack([canvas.toJSON()]); // Initialize with initial state
 
-    //     setMyCanvas(canvas);
-    //     setUndoStack([canvas.toJSON()]); // Initialize with initial state
-
-    //     return () => {
-    //         //   canvas.off("object:modified", handleObjectModified);
-    //         //   canvas.off("object:removed", handleObjectRemoved);
-    //         //   canvas.off("object:added", handleObjectAdded);
-    //     };
-    // }, [selectedCanvas]);
+        return () => {
+            //   canvas.off("object:modified", handleObjectModified);
+            //   canvas.off("object:removed", handleObjectRemoved);
+            //   canvas.off("object:added", handleObjectAdded);
+        };
+    }, [canvasContainer, selectedCanvas]);
 
     const handleUndo = () => {
         if (undoStack.length > 1) {
