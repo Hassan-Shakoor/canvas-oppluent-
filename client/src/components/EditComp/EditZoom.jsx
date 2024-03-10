@@ -51,7 +51,7 @@ function EditZoom(props) {
                         // props.updateZoomResolution(newWidth, newHeight);
 
 
-                        canvas.renderAll();
+                        canvas?.renderAll();
                     }
                 })
             }
@@ -91,7 +91,7 @@ function EditZoom(props) {
 
                     dispatch(updateZoom(newZoom))
 
-                    canvas.renderAll();
+                    canvas?.renderAll();
                 }
             })
         }

@@ -71,6 +71,20 @@ function Edit() {
         fetchTemplateData()
     }, [fetchTemplateData, id])
 
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+          const message = 'Are you sure you want to leave?';
+          event.returnValue = message;
+          return message;
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+          window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+      }, []);
+
     const updateZoomResolution = (newWidth, newHeight, newZoom) => {
         console.log("Zoom Resolution Updated...")
         setZoom(newZoom);
