@@ -97,7 +97,7 @@ function PageManagerList(props) {
           width: previewWidth,
           height: previewHeight,
         }}>
-          <img src={snapshotURI} style={{
+          <img crossorigin="anonymous" src={snapshotURI} style={{
             width: previewWidth,
             height: previewHeight,
           }} alt="Snapshot" />

@@ -35,7 +35,16 @@ export async function moveFoldertoDashboard(authId, folderId) {
                     folderData.push({ ...folderToMove });
 
                     // Update the folderData array
+                    if (folder.folders) {
+                        const folderIndex = folder.folders.findIndex(folder => folder.id === folderId);
+                        if (typeof folderIndex !== 'undefined' && (folderIndex !== -1 || folderIndex === 0)) {
+                            folder.folders?.splice(folderIndex, 1);
+                            await set(folderDataRef, folderData);
 
+                            console.log("Folder Moved to Dashboard Successfully.");
+                            return true;
+                        }
+                    }
                     // Delete the folder from the source folder and nested folders
                     const response = await deleteFolderFromFoldersRecursive(folder.folders, folderToMove.id);
 
@@ -46,10 +55,10 @@ export async function moveFoldertoDashboard(authId, folderId) {
                         console.log("Folder Moved to Dashboard Successfully.");
                         return true;
                     }
+                    break;
                 } else {
                     console.log("Source folder not found.");
                 }
-                break;
             }
         } else {
             console.log("Data does not exist.");

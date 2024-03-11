@@ -43,7 +43,7 @@ export async function getTemplateFromFolders(authId, templateId) {
 export const getTemplateFromFoldersRecursive = (folders, templateId) => {
     if (folders.length > 0) {
         for (const folder of folders) {
-            const matchingTemplate = folder.template.find(template => template.id === templateId);
+            const matchingTemplate = folder.template?.find(template => template.id === templateId);
             if (matchingTemplate) {
                 return { ...matchingTemplate };
             }

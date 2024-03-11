@@ -27,6 +27,7 @@ import SpinnerOverlay from "../components/Loader/SpinnerOverlay";
 // ** Service
 import { getTemplateJsonData } from "../services/firebase/TemplateServices/getTemplateData";
 import EditExportSidebar from "../components/EditComp/EditExportSidebar";
+import { updateMlsPropertyInfo } from "../store/app/PropertySearch/property";
 
 function Edit() {
     // ** State
@@ -82,6 +83,8 @@ function Edit() {
 
         return () => {
           window.removeEventListener('beforeunload', handleBeforeUnload);
+          dispatch(updateZoom(1));
+          dispatch(updateMlsPropertyInfo({}))
         };
       }, []);
 

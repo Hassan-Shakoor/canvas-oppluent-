@@ -1,5 +1,6 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 import { v4 as uuidv4 } from 'uuid';
+import { getFolderinFoldersRecursive } from "../FolderServices/createFolderinFolder";
 
 export async function moveFromFolderToFolder(authId, templateId, folderId) {
     const database = getDatabase();
@@ -18,7 +19,11 @@ export async function moveFromFolderToFolder(authId, templateId, folderId) {
                 const templateIndex = item.template.findIndex(template => template.id === templateId);
 
                 // Find the destination folder
-                const destinationFolder = folderData.find(folder => folder.id === folderId);
+                let destinationFolder = folderData.find(folder => folder.id === folderId);
+
+                if (!destinationFolder) {
+                    destinationFolder = await getFolderinFoldersRecursive(folderData, folderId)
+                }
 
                 if (destinationFolder) {
                     // Create a duplicate of the matching template

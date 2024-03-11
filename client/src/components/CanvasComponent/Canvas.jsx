@@ -11,7 +11,7 @@ import { getCanvasRef, setCanvasRef } from "../../shared/utils/fabric";
 
 // ** Store
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, selectTemplateData, updateCanvasContainer, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
+import { selectCanvasContainer, selectDisplayDirection, selectFabricData, selectResolution, selectSelectedCanvas, selectTemplateData, selectZoom, updateCanvasContainer, updateSelectedCanvas, updateSelectedObject } from "../../store/app/Edit/Canvas/canvas";
 import { updateOpenDrawer } from "../../store/app/Edit/EditDrawer";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
 import { selectMlsPropertyInfo } from "../../store/app/PropertySearch/property";
@@ -23,6 +23,7 @@ function Canvas(props) {
   const dispatch = useDispatch()
   const fabricData = useSelector(selectFabricData)
   const canvasContainer = useSelector(selectCanvasContainer)
+  const zoom = useSelector(selectZoom);
   const resolution = useSelector(selectResolution)
   const propertyInfo = useSelector(selectMlsPropertyInfo)
   const templateData = useSelector(selectTemplateData);
@@ -113,7 +114,7 @@ function Canvas(props) {
               });
 
               canvas.add(img); // Add the image to the canvas
-            }, { crossOrigin: 'anonymous' });
+            });
           }
           else {
             console.error("Unsupported object type:", object.type);
@@ -147,6 +148,7 @@ function Canvas(props) {
 
         // Add objects to canvas
         canvas.add(...fabricObjects);
+        canvas.setZoom(zoom);
         canvas.renderAll();
         // }, 100);
 

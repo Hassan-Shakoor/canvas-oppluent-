@@ -55,10 +55,14 @@ export async function moveFolderToFolder(authId, folderId, folderDestinationId) 
                             return true;
                         }
                     }
+                } else {
+                    const newData = data.filter(folder => folder.id !== folderId);
+                    await set(databaseRef, newData);
+                    console.log("Folder moved successfully");
+                    return true;
                 }
 
                 // Remove the original folder from the data array
-                const newData = data.filter(folder => folder.id !== folderId);
 
                 // Update the database with the modified data
 
@@ -81,9 +85,9 @@ export const deleteFolderFromFoldersRecursive = async (folders, folderId) => {
     if (folders && folders.length > 0) {
         for (const folder of folders) {
             const folderIndex = folder?.folders?.findIndex(folder => folder.id === folderId);
-            if (folderIndex !== -1) {
+            if (typeof folderIndex !== 'undefined' && (folderIndex !== -1 || folderIndex === 0)) {
                 // Remove the template at the found index
-                folder.folders.splice(folderIndex, 1);
+                folder.folders?.splice(folderIndex, 1);
                 return true;
             }
 

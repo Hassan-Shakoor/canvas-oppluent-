@@ -65,10 +65,10 @@ export async function deleteTemplate(authId, templateId) {
 export const deleteTemplateFromFoldersRecursive = (folders, templateId) => {
   if (folders && folders.length > 0) {
     for (const folder of folders) {
-      const templateIndex = folder.template.findIndex(template => template.id === templateId);
-      if (templateIndex !== -1) {
+      const templateIndex = folder.template?.findIndex(template => template.id === templateId);
+      if (typeof templateIndex !== 'undefined' && (templateIndex !== -1 || templateIndex === 0)) {
         // Remove the template at the found index
-        folder.template.splice(templateIndex, 1);
+        folder.template?.splice(templateIndex, 1);
         return true;
       }
 

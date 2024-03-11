@@ -15,7 +15,7 @@ export async function getFoldersinFolder(authId, folderId) {
             if (folder && folder.folders) {
                 // Create a duplicate of the folder to be moved with a new UUID
 
-                console.log("Folder moved successfully");
+                console.log("Folders in Folder Retrieved Successfully");
                 return folder.folders;
             } else {
                 console.log("Folder not found.");

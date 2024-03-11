@@ -131,7 +131,9 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
           onColorChange(colorChangeFill.colorStops)
         }
 
+        textObject.set('dirty', true);
 
+        // Render the canvas
         canvas.requestRenderAll()
         render(selectedCanvas, canvasContainer)
       }

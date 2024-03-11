@@ -78,6 +78,9 @@ export const getFolderinFoldersRecursive = (folders, folderLocationId) => {
     } else {
         if (folders && folders.length > 0) {
             for (const folder of folders) {
+                if(folder.id === folderLocationId) {
+                    return folder;
+                }
                 const matchingFolder = folder?.folders?.find(folder => folder.id === folderLocationId);
                 if (matchingFolder) {
                     // Remove the template at the found index

@@ -26,11 +26,11 @@ export async function moveToDashboard(authId, templateId) {
 
                 // Check if the template is not in the current folder, and search in nested folders
                 if ((!templateIndex || templateIndex === -1) && folder.folders) {
-                    matchingTemplate = await getTemplateFromFoldersRecursive(folder.folders, templateId);
+                    matchingTemplate = await getTemplateFromFoldersRecursive(folder?.folders, templateId);
                 }
 
                 // Check if template is found
-                if (templateIndex !== -1 || matchingTemplate) {
+                if (templateIndex && templateIndex !== -1 || matchingTemplate) {
                     const destination = templateData.find(category => category.id === 0);
 
                     // Check if destination folder exists

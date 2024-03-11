@@ -29,7 +29,11 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
         }
 
         if (thingToMove === 'Folder') {
-            await moveFolderToFolder(uid, templateId, selectedFolderId)
+            if (selectedFolderId === 'Dashboard') {
+                await moveFoldertoDashboard(uid, templateId)
+            } else {
+                await moveFolderToFolder(uid, templateId, selectedFolderId)
+            }
         }
         else {
             if (selectedFolderId === 'Dashboard') {
@@ -92,11 +96,23 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
 
     useEffect(() => {
         const fetchData = async () => {
-
             try {
                 console.log('Fetching folders...');
                 const fetchedFolders = await getFolders(uid);
                 setFolders(fetchedFolders);
+
+                const getFoldersinFolder = async (foldersArray) => {
+                    // Use Promise.all to wait for all asynchronous calls to complete
+                    await Promise.all(foldersArray.map(async (folder) => {
+                        if (folder.folders) {
+                            // Use setFolders function to update the state correctly
+                            setFolders((prevFolders) => [...prevFolders, ...folder.folders]);
+                            await getFoldersinFolder(folder.folders);
+                        }
+                    }));
+                }
+
+                await getFoldersinFolder(fetchedFolders);
 
                 console.log('Folders fetched successfully:', fetchedFolders);
             } catch (error) {
@@ -104,8 +120,8 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
             }
         };
         fetchData();
+    }, []);
 
-    }, [])
 
     return (
         <div className="ReactModalPortal modal">
