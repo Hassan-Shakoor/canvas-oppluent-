@@ -26,7 +26,7 @@ function EditPopUp(props) {
                 setTimeout(() => {
                     setOverlayLoading(false);
                     navigate(`/edit/${id}`);
-                }, 2000);
+                }, 40);
             }
             else {
                 const templateId = uuidv4();
@@ -34,7 +34,7 @@ function EditPopUp(props) {
                 setTimeout(() => {
                     setOverlayLoading(false);
                     navigate(`/edit/${templateId}`);
-                }, 2000);
+                }, 40);
             }
             // navigate(`/edit/${id}`)
         } else {
