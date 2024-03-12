@@ -14,6 +14,7 @@ import uploadFileAndGetURL from '../services/uploadFileAndGetURL'
 
 import { v4 as uuidv4 } from 'uuid';
 import SpinnerContainer from '../components/Loader/SpinnerContainer'
+import uploadTemplateImage from '../services/uploadTemplateImage'
 
 let currentUserId = null;
 onAuthStateChanged(auth, (user) => {
@@ -42,6 +43,7 @@ const TemplateRequest = () => {
     const [disclaimer, setDisclaimer] = useState("");
     const [designCategories, setDesignCategories] = useState(['Business Category', 'Instagram Stories', 'Facebook Banner']);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [isPropertySearch, setIsPropertySearch] = useState(false);
     const [openCategoryOption, setOpenCategoryOptions] = useState(false);
 
 
@@ -195,7 +197,8 @@ const TemplateRequest = () => {
             const database = getDatabase();
             const databaseRef = ref(database, `${currentUserId}/templateData`);
 
-            const imageUrl = await Promise.all(files.map(async (file) => uploadFileAndGetURL(file)));
+            let templateId = uuidv4();
+            const imageUrl = await Promise.all(files.map(async (file) => await uploadTemplateImage(file, templateId)));
 
             const fabricData = {};
             const storageUrl = {};
@@ -212,7 +215,6 @@ const TemplateRequest = () => {
             // console.log(dbJson.currentUserId.templateData)
             // console.log(currentUserId)
 
-            let templateId = uuidv4();
             // for (const [userId, { templateData }] of Object.entries(dbJson)) {
             for (const [index, data] of templateData?.entries()) {
                 if (data?.id === selectedCategory.value) {
@@ -245,6 +247,7 @@ const TemplateRequest = () => {
                         imageUrl: `${files[0].name}`,
                         designedBy: currentUserId,
                         modified: formatDate(Date.now()),
+                        isPropertySearchEnabled: isPropertySearch,
                         description: description,
                         disclaimer: disclaimer,
                         storage_url: storageUrl,
@@ -410,6 +413,46 @@ const TemplateRequest = () => {
                                     placeholder='Select category'
                                     onChange={(option) => setSelectedCategory(option)} />
                             </div>
+                            <div className="col-md-6 mb-3">
+                                <div className="input">
+                                    <div className="input__label mb-2">Property Search:</div>
+                                    <div className="row">
+                                        <div className="col-lg-3">
+                                            <div className="radiobutton">
+                                                <input
+                                                    type="radio"
+                                                    id="inputEnabled"
+                                                    name="inputStatus"
+                                                    className="radiobutton__input radiobutton__input_checked"
+                                                    value=""
+                                                    checked={isPropertySearch}
+                                                    onChange={() => setIsPropertySearch(true)}
+                                                />
+                                                <label htmlFor="inputEnabled" className="radiobutton__label">
+                                                    Enabled
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-lg-3">
+                                            <div className="radiobutton">
+                                                <input
+                                                    type="radio"
+                                                    id="inputDisabled"
+                                                    name="inputStatus"
+                                                    className="radiobutton__input"
+                                                    value=""
+                                                    checked={!isPropertySearch}
+                                                    onChange={() => setIsPropertySearch(false)}
+                                                />
+                                                <label htmlFor="inputDisabled" className="radiobutton__label">
+                                                    Disabled
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div className="row">
                             <div className="input">

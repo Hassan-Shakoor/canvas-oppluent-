@@ -60,45 +60,45 @@ function DesignTemplate(props) {
     //     }
     // }
 
+
     const downloadCanvasAsImage = () => {
-        const jsonData = JSON.parse(props.item.fabricData[0]);
-        const canvas = new fabric.Canvas('canvas');
+        // Create a new XMLHttpRequest
+        const xhr = new XMLHttpRequest();
 
-        // Load the parsed data into the canvas
-        canvas.loadFromJSON(jsonData, () => {
-            // Once the data is loaded, render the canvas
-            canvas.renderAll();
+        // Set the responseType to 'blob'
+        xhr.responseType = 'blob';
 
-            setTimeout(() => {
+        // Open the request with the provided URL
+        xhr.open('GET', props.item.storage_url[0]);
 
-                // Listen for the 'renderAll' event to ensure rendering is complete
-                // Download the canvas as an image
-                const dataURL = canvas.toDataURL({
-                    format: 'png', // You can change the format (png, jpeg, etc.)
-                    quality: 1.0,   // You can adjust the quality
-                });
-                // Cleanup: Remove all objects from the canvas
-                canvas?.clear();
+        // Set up the onload event to handle the downloaded image
+        xhr.onload = () => {
+            // Create a link element
+            const link = document.createElement('a');
 
-                // Dispose of the canvas
-                canvas?.dispose();
+            // Create a Blob from the response
+            const blob = new Blob([xhr.response], { type: 'image/png' });
 
-                // Generate the desired filename (you can customize this)
-                const fileName = `${props.item.cardTitle}.png`;
+            // Create a URL for the Blob and set it as the link's href
+            link.href = window.URL.createObjectURL(blob);
 
-                // Create a link and trigger the download
-                const link = document.createElement('a');
-                link.href = dataURL;
-                link.download = fileName;
+            // Set the download attribute and filename
+            link.download = props.item.cardTitle;
 
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }, 3000);
+            // Append the link to the document
+            document.body.appendChild(link);
 
-        });
+            // Trigger a click on the link to start the download
+            link.click();
 
+            // Remove the link from the document
+            document.body.removeChild(link);
+        };
+
+        // Send the request
+        xhr.send();
     };
+
 
     const dropdownMenu = [
         {

@@ -20,6 +20,7 @@ import { selectProfile } from "../../../store/app/AccountInformation/profile";
 import { publishTemplate } from "../../../services/firebase/TemplateServices/publishTemplate";
 import SpinnerOverlay from "../../Loader/SpinnerOverlay";
 import { getUserInformation } from "../../../services/firebase/getUserInformation";
+import uploadTemplateImage from "../../../services/uploadTemplateImage";
 
 function NavSaveCloseButtonSet() {
   const navigate = useNavigate();
@@ -58,10 +59,20 @@ function NavSaveCloseButtonSet() {
   const handleSave = async () => {
     setLoading(true);
     const canvasContainer = getCanvasRef()
+
+    const dataURL = canvasContainer[0]?.toDataURL({
+      format: "png",
+      quality: 1,
+    });
+
+    // Convert the data URL to a Blob
+    const blob = await fetch(dataURL).then((res) => res.blob());
+    const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
+
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
-    await updateTemplateJsonData(userData?.uid, updatedData)
+    await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrl)
     toast.success("Changes Saved Successfully.")
     setLoading(false);
   }
@@ -70,11 +81,21 @@ function NavSaveCloseButtonSet() {
     setLoading(true);
     event.preventDefault()
     const canvasContainer = getCanvasRef()
+
+    const dataURL = canvasContainer[0]?.toDataURL({
+      format: "png",
+      quality: 1,
+    });
+
+    // Convert the data URL to a Blob
+    const blob = await fetch(dataURL).then((res) => res.blob());
+    const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
+
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
     await publishTemplate(userData?.uid, updatedData)
-    await updateTemplateJsonData(userData?.uid, updatedData)
+    await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrl)
     toast.success("Template Published Successfully.")
     setLoading(false);
     setShowConfirmationModal(false)

@@ -114,7 +114,7 @@ function Canvas(props) {
               });
 
               canvas.add(img); // Add the image to the canvas
-            });
+            }, { crossOrigin: 'anonymous' });
           }
           else {
             console.error("Unsupported object type:", object.type);

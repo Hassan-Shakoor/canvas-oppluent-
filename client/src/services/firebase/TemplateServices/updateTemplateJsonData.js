@@ -1,7 +1,7 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 import { getTemplateFromFoldersRecursive } from "./getTemplateFromFolders";
 
-export async function updateTemplateJsonData(authId, updatedObject) {
+export async function updateTemplateJsonData(authId, updatedObject, templateURL) {
   const database = getDatabase();
   const databaseRef = ref(database, `${authId}/templateData`);
   const folderDataRef = ref(database, `${authId}/folderData`);
@@ -11,6 +11,10 @@ export async function updateTemplateJsonData(authId, updatedObject) {
     const snapshot = await get(databaseRef);
     const folderDataSnapshot = await get(folderDataRef);
 
+    const updatedStorageURLs = updatedObject.storage_url.map((url, index) =>
+      index === 0 ? templateURL : url
+    );
+    
     if (snapshot.exists()) {
       const data = snapshot.val();
       for (const item of data) {
@@ -22,6 +26,7 @@ export async function updateTemplateJsonData(authId, updatedObject) {
             published: true,
             visible: true,
             modified: formatDate(Date.now()),
+            storage_url: updatedStorageURLs
           }
 
           if (matchingTemplateIndex !== -1) {
@@ -41,12 +46,16 @@ export async function updateTemplateJsonData(authId, updatedObject) {
           const matchingTemplate = folder.template.find(template => template.id === updatedObject.id)
 
           if (matchingTemplate) {
+            // const updatedStorageURLs = updatedObject.storage_url.map((url, index) =>
+            //   index === 0 ? templateURL : url
+            // );
 
             const updatedTemplate = {
               ...updatedObject,
               published: true,
               visible: true,
               modified: formatDate(Date.now()),
+              storage_url: updatedStorageURLs
             }
             matchingTemplate = updatedTemplate;
             await set(folderDataRef, folderData);
@@ -59,12 +68,18 @@ export async function updateTemplateJsonData(authId, updatedObject) {
 
           if (matchingTemplate) {
 
+            // const updatedStorageURLs = updatedObject.storage_url.map((url, index) =>
+            //   index === 0 ? templateURL : url
+            // );
+
             const updatedTemplate = {
               ...updatedObject,
               published: true,
               visible: true,
               modified: formatDate(Date.now()),
+              storage_url: updatedStorageURLs
             }
+
             matchingTemplate = updatedTemplate;
             await set(folderDataRef, folderData);
             console.log("Data updated successfully");
