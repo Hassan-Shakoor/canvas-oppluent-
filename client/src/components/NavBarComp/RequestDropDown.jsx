@@ -55,6 +55,11 @@ function RequestDropDown(props) {
                   <span className="btn__text"><FontAwesomeIcon icon="fa-regular fa-image" /> Template Requests</span>
                 </Link>
               </li>
+              <li className="rc-menu-item" role="menuitem" tabIndex="-1" data-menu-id="rc-menu-uuid-85920-1-2">
+                <Link to={'/user-registration-email'} className="btn btn_menu-item">
+                  <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-user-plus" /> Add New User</span>
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

@@ -69,6 +69,12 @@ function NavSaveCloseButtonSet() {
     const blob = await fetch(dataURL).then((res) => res.blob());
     const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
 
+    if(!templateImageUrl) {
+      toast.error("Error Saving Template.")
+      setLoading(false);
+      setShowConfirmationModal(false)
+    }
+
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
@@ -90,6 +96,12 @@ function NavSaveCloseButtonSet() {
     // Convert the data URL to a Blob
     const blob = await fetch(dataURL).then((res) => res.blob());
     const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
+
+    if(!templateImageUrl) {
+      toast.error("Error Publishing Template.")
+      setLoading(false);
+      setShowConfirmationModal(false)
+    }
 
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))

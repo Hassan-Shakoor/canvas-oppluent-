@@ -30,6 +30,8 @@ import PartnerEdit from './pages/PartnerEdit';
 import Share from './pages/Share';
 import TemplateRequest from './pages/TemplateRequest';
 import { getUserInformation } from './services/firebase/getUserInformation';
+import RegistrationEmail from './pages/RegistrationEmail';
+import UserRegistration from './pages/UserRegistration';
 
 // Intialising FontAwesomeIcon
 library.add(far);
@@ -84,6 +86,9 @@ function App() {
           <Route path='/partners/:id/edit' element={isAuthenticated ? <PartnerEdit /> : <Navigate to='/' replace />} />
           <Route path='/share/:userId/:categoryId/:templateId' element={isAuthenticated ? <Share /> : <Navigate to='/' replace />} />
           <Route path='/template-request' element={isAdmin ? <TemplateRequest /> : <Navigate to='/' replace />} />
+          <Route path='/user-registration-email' element={isAdmin ? <RegistrationEmail /> : <Navigate to='/' replace />} />
+          <Route path='/register-by-email/:userEmail' element={<UserRegistration />} />
+
           {/* <Route path='/template-request' element={<TemplateRequest />} /> */}
         </Routes>
       </Router>

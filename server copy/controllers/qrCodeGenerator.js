@@ -1,0 +1,19 @@
+import QRCode from 'qrcode';
+
+export const getQRCode = async (req, res) => {
+  try {
+    const url = req.query.url;
+    const qrCodeDataURL = await QRCode.toDataURL(url); // Await the result
+    res.json({ qrCodeDataURL }); // Send it as JSON
+    // res.send(`
+    //   <html>
+    //     <body>
+    //       <img src="${qrCodeDataURL}" alt="QR Code">
+    //     </body>
+    //   </html>
+    // `);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error generating QR code' });
+  }
+};
