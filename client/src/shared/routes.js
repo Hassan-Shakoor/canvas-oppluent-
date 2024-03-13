@@ -1,5 +1,5 @@
-// const baseUrl = "https://claircius-backend.vercel.app"
-const baseUrl = "http://localhost:5000"
+const baseUrl = "https://claircius-backend.vercel.app"
+// const baseUrl = "http://localhost:5000"
 
 export const APIS = {
     searchPixabay: `${baseUrl}/searchPixabay`,
