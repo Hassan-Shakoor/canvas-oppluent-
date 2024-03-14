@@ -9,6 +9,13 @@ export async function createMyDesign(authId, templateObject, templateId) {
         if (snapshot.exists()) {
             const templateData = snapshot.val();
 
+            const hasIdZero = templateData.some(item => item.id === 0);
+
+            // If id 0 doesn't exist, push a new object into the array
+            if (!hasIdZero) {
+                templateData.push({ id: 0, subHeading: 'My Designs', template: [] });
+            }
+
             for (const [index, data] of templateData?.entries()) {
                 if (data?.id === 0) {
                     // console.log(dbJson);

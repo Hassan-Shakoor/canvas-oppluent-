@@ -36,7 +36,7 @@ export const fetchProfile = createAsyncThunk(
     return new Promise(async (resolve, reject) => {
       try {
         const response = await getUserInformation()
-        resolve({userData : response});
+        resolve({ userData: response });
       } catch (err) {
         reject(err.message);
       }

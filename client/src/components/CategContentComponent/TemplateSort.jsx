@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // ** Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,8 +8,27 @@ const SortJSON = [{ sort: 0, "title": "Default" }, { sort: 1, "title": "Created"
 
 // item-selected-dropdown
 function SortDropDown(props) {
+    const dropdownRef = useRef();
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                // Clicked outside the dropdown, close it
+                props.setSortDropDownOpen(false);
+            }
+        };
+
+        // Attach the event listener
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div className="sort-dropdown-container">
+        <div className="sort-dropdown-container" ref={dropdownRef}>
             {SortJSON.map((item, index) => (
                 <li key={index} className="sort-dropdown-list" role="menuitem" tabIndex="-1" data-menu-id={item.sort}>
                     <button type="button" className="sort-dropdown-button" onClick={() => props.handleSortTemplate(item.title)}>
@@ -76,7 +95,7 @@ function TemplateSort(props) {
                     </span>
                     <FontAwesomeIcon className="sort-template-icon" icon={isSortDropDownOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down"} />
                 </button>
-                {isSortDropDownOpen && <SortDropDown handleSortTemplate={props.handleSortTemplate} />}
+                {isSortDropDownOpen && <SortDropDown handleSortTemplate={props.handleSortTemplate} setSortDropDownOpen={setSortDropDownOpen} />}
 
                 <div className="select-container select-container_with-icons select-container_has-value">
                     <div className="select-container css-2b097c-container">

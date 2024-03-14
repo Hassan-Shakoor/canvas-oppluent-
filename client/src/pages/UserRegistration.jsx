@@ -11,8 +11,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ref } from 'firebase/storage';
 import { get } from 'lodash';
 import { createDataForNewUser } from '../services/firebase/UserServices/createDataForNewUser';
+import SpinnerOverlay from '../components/Loader/SpinnerOverlay';
 
 function UserRegistration() {
+
+    const [loading, setLoading] = useState(false);
+
     const { userEmail } = useParams();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -54,6 +58,7 @@ function UserRegistration() {
     const handleSendRegistrationEmail = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
         // Add validation logic here before sending the registration email
         if (firstName === '' || lastName === '' || email === '' || password === '' || confirmPassword === '') {
             toast.error('Please Enter all the Required Fields.')
@@ -89,14 +94,14 @@ function UserRegistration() {
                 toast.error("Error Creating User.");
             }
 
-            // User registration successful
+            setLoading(false)
             return { success: true, message: 'User registered successfully.' };
         } catch (error) {
             // Handle error
             console.error('Error registering user:', error);
             toast.error('An error occurred. Please try again.');
-            return { success: false, message: 'Error registering user. Please try again.' };
         }
+        setLoading(false)
     };
 
     useEffect(() => {
@@ -106,6 +111,7 @@ function UserRegistration() {
     return (
         <div id="LogIn">
             <ToastContainer position="top-right" autoClose={5000} closeOnClick theme="light" />
+            <SpinnerOverlay loading={loading} />
             <div className="login-page">
                 <div className="login-page__content" style={{ justifyContent: 'center' }}>
                     <div className="login-page__left-border" style={{ background: 'linear-gradient(rgb(202, 182, 125), rgb(31, 31, 31))' }}></div>

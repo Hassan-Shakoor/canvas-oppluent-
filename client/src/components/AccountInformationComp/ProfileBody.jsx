@@ -16,6 +16,7 @@ import { set } from "lodash";
 import InputModal from "../Modal/InputModal";
 import { auth } from "../../configs/firebase";
 import { updateUserEmail } from "../../services/firebase/updateUserInformation";
+import { getUserInformation } from "../../services/firebase/getUserInformation";
 
 function ProfileBody({ profile }) {
   // ** State
@@ -23,9 +24,9 @@ function ProfileBody({ profile }) {
   const [lastName, setLastName] = useState(profile.lastName);
   const [email, setEmail] = useState(profile.email);
   const [contactNo, setContactNo] = useState(profile.contactNo);
-  const [base64Image, setBase64Image] = useState(null)
+  const [base64Image, setBase64Image] = useState(profile.profileImage)
   const [selectedUploadProfile, setSelectedUploadFile] = useState(
-    profile.profileImage
+
   );
   const [isChanged, setIsChanged] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
@@ -56,9 +57,21 @@ function ProfileBody({ profile }) {
       toast.success("Profile updated successfully")
     }
   };
-  
+
   useEffect(() => {
     dispatch(fetchProfile());
+
+    const getAndSetUserData = async () => {
+      const userData = await getUserInformation();
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName)
+      setEmail(userData.email);
+      setContactNo(userData.contactNo);
+      setBase64Image(userData.profileImage)
+    }
+
+    getAndSetUserData()
+
   }, [dispatch, loading]);
   return (
     <>

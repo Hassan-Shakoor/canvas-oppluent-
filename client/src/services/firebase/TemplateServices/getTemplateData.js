@@ -14,7 +14,6 @@ export async function getTemplateJsonData(authId, id) {
     const folderData = await get(folderDataRef);
     if (snapshot.exists()) {
       const data = snapshot.val();
-      const folders = folderData.val()
 
       for (const item of data) {
         if (item?.template) {
@@ -25,18 +24,21 @@ export async function getTemplateJsonData(authId, id) {
         }
       }
 
-      for (const folder of folders) {
-        if (folder?.template) {
-          const matchingTemplate = folder.template.find((template) => template.id === id);
-          if (matchingTemplate) {
-            return matchingTemplate;
+      if (folderData.exists()) {
+        const folders = folderData.val()
+        for (const folder of folders) {
+          if (folder?.template) {
+            const matchingTemplate = folder.template.find((template) => template.id === id);
+            if (matchingTemplate) {
+              return matchingTemplate;
+            }
           }
-        }
-        if (folder.folders) {
-          const matchingTemplate = await getTemplateFromFoldersRecursive(folder.folders, id);
+          if (folder.folders) {
+            const matchingTemplate = await getTemplateFromFoldersRecursive(folder.folders, id);
 
-          if (matchingTemplate) {
-            return matchingTemplate;
+            if (matchingTemplate) {
+              return matchingTemplate;
+            }
           }
         }
       }
