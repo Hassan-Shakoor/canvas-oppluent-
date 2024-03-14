@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { selectUID } from '../../store/app/User/userPreference';
 
 
-const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, selectedItems, setSelectedItems }) => {
+const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, selectedItems, setSelectedItems, renderTriggerFromDashboard, setRenderTriggerFromDashboard }) => {
 
     const uid = useSelector(selectUID)
     const isFoldersKeywordPresent = window.location.href.includes('folders');
@@ -79,7 +79,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
         console.log(category)
         setSelectedItems([]);
 
-    }, [triggerRender])
+    }, [triggerRender, renderTriggerFromDashboard])
 
     useEffect(() => {
         const findItemsByName = () => {
@@ -133,7 +133,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                 <div className="infinite-scroll-component__outerdiv">
                     <div className="infinite-scroll-component" style={{ height: 'auto', overflow: 'auto' }}>
                         <div className="MuiMasonry-root css-by147d">
-                            {category?.length > 0 ? (
+                            {category?.length > 0 || folders?.length > 0 ? (
                                 <div className="template-grid-container" style={{ gridTemplateColumns: `repeat(${gridColumn}, auto)` }}>
                                     {folders?.length > 0 ?
                                         folders?.map((folder, index) => (
@@ -156,7 +156,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                                         )) : <></>
                                     }
 
-                                    {searchedTemplates?.map((item, index) => (
+                                    {searchedTemplates?.length > 0 && searchedTemplates?.map((item, index) => (
                                         <div style={{ order: index % 3 + 1 }} key={index}>
                                             <div className="">
                                                 <div className="" draggable="true">

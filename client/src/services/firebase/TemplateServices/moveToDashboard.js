@@ -1,6 +1,6 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 import { getTemplateFromFoldersRecursive } from "./getTemplateFromFolders";
-import { deleteTemplateFromFoldersRecursive } from "./deleteTemplate";
+import { deleteTemplate, deleteTemplateFromFoldersRecursive } from "./deleteTemplate";
 
 export async function moveToDashboard(authId, templateId) {
     const database = getDatabase();
@@ -30,8 +30,13 @@ export async function moveToDashboard(authId, templateId) {
                 }
 
                 // Check if template is found
-                if (templateIndex && templateIndex !== -1 || matchingTemplate) {
-                    const destination = templateData.find(category => category.id === 0);
+                if ((typeof templateIndex !== 'undefined' && (templateIndex !== -1 || templateIndex === 0)) || matchingTemplate) {
+                    let destination = templateData.find(category => category.id === 0);
+
+                    if (!destination) {
+                        templateData.push({ id: 0, subHeading: "My Designs", template: [] })
+                        destination = templateData.find(category => category.id === 0);
+                    }
 
                     // Check if destination folder exists
                     if (destination) {
@@ -40,14 +45,21 @@ export async function moveToDashboard(authId, templateId) {
                             destination.template = [];  // If the template array doesn't exist, create it
                         }
 
-                        const templateToMove = templateIndex && templateIndex !== -1
-                            ? folder.template[templateIndex]
-                            : matchingTemplate;
+                        const templateToMove = (typeof templateIndex !== 'undefined' && (templateIndex !== -1 || templateIndex === 0))
+                            ? folder.template[templateIndex] : matchingTemplate;
 
                         destination.template?.push({ ...templateToMove });
 
                         // Update the folderData array
                         await set(folderDataRef, folderData);
+
+                        if (folder?.template) {
+                            const response = await deleteTemplate(authId, templateId);
+                            if (response) {
+                                await set(templateDataRef, templateData);
+                                return true;
+                            }
+                        }
 
                         // Delete the template from the source folder and nested folders
                         const response = await deleteTemplateFromFoldersRecursive(folder.folders, templateId);

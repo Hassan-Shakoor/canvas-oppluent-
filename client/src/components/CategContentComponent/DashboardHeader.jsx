@@ -15,6 +15,8 @@ function DashboardHeader(props) {
     const [searchInput, setSearchInput] = useState('');
     const [selectedItems, setSelectedItems] = useState([]);
 
+    const [renderTriggerFromDashboard, setRenderTriggerFromDashboard] = useState(false);
+
     const getSearchInput = (value) => {
         setSearchInput(value)
     }
@@ -90,10 +92,13 @@ function DashboardHeader(props) {
                 handleSortTemplate={props.handleSortTemplate}
                 handleColumn={props.handleColumn}
                 getSearchInput={getSearchInput}
-                selectedItems={selectedItems} 
-                setSelectedItems={setSelectedItems} />
+                selectedItems={selectedItems}
+                setSelectedItems={setSelectedItems}
+                renderTriggerFromDashboard={renderTriggerFromDashboard}
+                setRenderTriggerFromDashboard={setRenderTriggerFromDashboard}
+            />
 
-                {/* <div className="dashboard-header mt-2">
+            {/* <div className="dashboard-header mt-2">
                     <div className="dashboard-header__top-panel">
                         <div className="dashboard-header__left-panel">
                             <button type="button" className="btn create-button btn_gray btn_big me-2">
@@ -476,7 +481,10 @@ function DashboardHeader(props) {
                 gridColumn={props.gridColumn}
                 searchInput={searchInput}
                 selectedItems={selectedItems}
-                setSelectedItems={setSelectedItems} />
+                setSelectedItems={setSelectedItems}
+                renderTriggerFromDashboard={renderTriggerFromDashboard}
+                setRenderTriggerFromDashboard={setRenderTriggerFromDashboard}
+            />
 
 
         </div>

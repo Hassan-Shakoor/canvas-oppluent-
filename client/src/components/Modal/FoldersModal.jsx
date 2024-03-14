@@ -37,16 +37,30 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
         }
         else {
             if (selectedFolderId === 'Dashboard') {
-                await moveToDashboard(uid, templateId)
+                const response = await moveToDashboard(uid, templateId);
+                if (response) {
+                    toast.success("Template Moved Successfully")
+                } else {
+                    toast.error("Error Moving Template.")
+                }
             } else {
                 if (isFoldersKeywordPresent) {
-                    await moveFromFolderToFolder(uid, templateId, selectedFolderId)
+                    const response = await moveFromFolderToFolder(uid, templateId, selectedFolderId);
+                    if (response) {
+                        toast.success("Template Moved Successfully")
+                    } else {
+                        toast.error("Error Moving Template.")
+                    }
                 }
                 else {
-                    await moveToFolder(uid, templateId, selectedFolderId)
+                    const response = await moveToFolder(uid, templateId, selectedFolderId);
+                    if (response) {
+                        toast.success("Template Moved Successfully")
+                    } else {
+                        toast.error("Error Moving Template.")
+                    }
                 }
             }
-            toast.success("Template Moved Successfully")
         }
         closeMoveFolderModal();
     }
@@ -57,29 +71,53 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
 
                 if (item.type === 'Folder') {
                     if (selectedFolderId === 'Dashboard') {
-                        await moveFoldertoDashboard(uid, item.id)
+                        const response = await moveFoldertoDashboard(uid, item.id);
+                        if (response) {
+                            toast.success("Folders Moved Successfully")
+                        } else {
+                            toast.error("Error Moving Folder.")
+                        }
                     } else {
                         // if (isFoldersKeywordPresent) {
 
                         // } else {
-                        await moveFolderToFolder(uid, item.id, selectedFolderId)
+                        const response = await moveFolderToFolder(uid, item.id, selectedFolderId);
+                        if (response) {
+                            toast.success("Folders Moved Successfully")
+                        } else {
+                            toast.error("Error Moving Folder.")
+                        }
                         // }
                     }
                 }
                 else {
                     if (selectedFolderId === 'Dashboard') {
-                        await moveToDashboard(uid, item.id)
+                        const response = await moveToDashboard(uid, item.id);
+                        if (response) {
+                            toast.success("Templates Moved Successfully")
+                        } else {
+                            toast.error("Error Moving Template.")
+                        }
                     } else {
                         if (isFoldersKeywordPresent) {
-                            await moveFromFolderToFolder(uid, item.id, selectedFolderId)
+                            const response = await moveFromFolderToFolder(uid, item.id, selectedFolderId)
+                            if (response) {
+                                toast.success("Folders Moved Successfully")
+                            } else {
+                                toast.error("Error Moving Folder.")
+                            }
                         }
                         else {
-                            await moveToFolder(uid, item.id, selectedFolderId)
+                            const response = await moveToFolder(uid, item.id, selectedFolderId)
+                            if (response) {
+                                toast.success("Folders Moved Successfully")
+                            } else {
+                                toast.error("Error Moving Folder.")
+                            }
                         }
                     }
                 }
             })
-            toast.success("Items Moved Successfully")
         }
         closeMoveFolderModal();
     }

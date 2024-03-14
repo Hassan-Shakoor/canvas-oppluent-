@@ -1,4 +1,5 @@
 import { get, set, ref, getDatabase } from "firebase/database";
+import { getFolderinFoldersRecursive } from "./createFolderinFolder";
 
 export async function renameFolder(authId, folderId, newName) {
     const database = getDatabase();
@@ -13,14 +14,22 @@ export async function renameFolder(authId, folderId, newName) {
                     const matchingFolder = item
                     if (matchingFolder) {
                         matchingFolder.name = newName;
-                        break;
+                        
+                        await set(databaseRef, data);
+                        console.log("Data updated successfully");
+                        return true;
+                    }
+                } else {
+                    const folder = await getFolderinFoldersRecursive(item.folders, folderId)
+                    if (folder) {
+                        folder.name = newName;
+
+                        await set(databaseRef, data);
+                        console.log("Data updated successfully");
+                        return true;
                     }
                 }
             }
-            await set(databaseRef, data);
-
-            console.log("Data updated successfully");
-            return true;
         } else {
             console.log("Data does not exist");
             return false;

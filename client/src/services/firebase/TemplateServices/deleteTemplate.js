@@ -14,7 +14,7 @@ export async function deleteTemplate(authId, templateId) {
       for (const item of data) {
         if (item.template) {
           const templateIndex = item.template.findIndex(template => template.id === templateId);
-          if (templateIndex !== -1) {
+          if (typeof templateIndex !== 'undefined' && (templateIndex !== -1 || templateIndex === 0)) {
             // Remove the template at the found index
             item.template.splice(templateIndex, 1);
 
@@ -32,7 +32,7 @@ export async function deleteTemplate(authId, templateId) {
 
         if (folder?.template) {
           const templateIndex = folder.template.findIndex(template => template.id === templateId);
-          if (templateIndex !== -1) {
+          if (typeof templateIndex !== 'undefined' && (templateIndex !== -1 || templateIndex === 0)) {
             // Remove the template at the found index
             folder.template.splice(templateIndex, 1);
             await set(folderDataRef, folderData);

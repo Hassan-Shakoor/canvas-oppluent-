@@ -18,7 +18,7 @@ export async function moveToFolder(authId, templateId, folderId) {
                 if (item.template) {
                     const templateIndex = item.template.findIndex(template => template.id === templateId);
                     console.log(templateIndex)
-                    if (templateIndex !== -1) {
+                    if (typeof templateIndex !== 'undefined' && (templateIndex !== -1 || templateIndex === 0)) {
                         const destinationFolder = folderData.find(folder => folder.id === folderId);
 
                         if (destinationFolder) {

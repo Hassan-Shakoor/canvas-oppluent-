@@ -174,7 +174,7 @@ function DesignTemplate(props) {
     const handleCheckboxChange = () => {
         const templateIndex = props.selectedItems.findIndex(template => template.id === props.item.id);
 
-        if (templateIndex !== -1) {
+        if (typeof templateIndex !== 'undefined' && (templateIndex !== -1 || templateIndex === 0)) {
             // If the item ID is already in the array, remove it
             props.setSelectedItems(props.selectedItems.filter(template => template.id !== props.item.id));
         } else {

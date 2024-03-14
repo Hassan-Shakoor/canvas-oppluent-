@@ -107,6 +107,7 @@ const DashboardHeaderButtons = (props) => {
             })
           );
           // await deleteTemplate(uid, props.item.id)
+          props.setRenderTriggerFromDashboard(!props.renderTriggerFromDashboard)
           toast.success("Files Deleted Successfully.")
         } catch (error) {
           console.error("Error: ", error)
@@ -133,13 +134,16 @@ const DashboardHeaderButtons = (props) => {
   };
 
   const handleBack = async () => {
+    setOverlayLoading(true);
     const isFoldersKeywordPresent = window.location.href.includes('folders');
     const fetchedFolders = await getFolders(uid);
     if (isFoldersKeywordPresent) {
       const folder = await findFolderByIdRecursive(fetchedFolders, id)
       if (folder?.parentID) {
+        setOverlayLoading(false);
         navigate(`/folders/${folder.parentID}`)
       } else {
+        setOverlayLoading(false);
         navigate('/categories')
       }
     }
@@ -195,6 +199,7 @@ const DashboardHeaderButtons = (props) => {
               if (response) {
                 setShowInputFolderModal(false);
                 toast.success("Folder Created Successfully.")
+                props.setRenderTriggerFromDashboard(!props.renderTriggerFromDashboard)
               } else {
                 setShowInputFolderModal(false);
                 toast.error("Error Creating Folder.")
@@ -204,6 +209,7 @@ const DashboardHeaderButtons = (props) => {
               if (response) {
                 setShowInputFolderModal(false);
                 toast.success("Folder Created Successfully.")
+                props.setRenderTriggerFromDashboard(!props.renderTriggerFromDashboard)
               } else {
                 setShowInputFolderModal(false);
                 toast.error("Error Creating Folder.")
