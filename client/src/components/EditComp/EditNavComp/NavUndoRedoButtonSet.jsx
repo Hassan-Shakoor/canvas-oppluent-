@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCanvasContainer, selectSelectedCanvas } from "../../../store/app/Edit/Canvas/canvas";
 import { fabric } from 'fabric';
+import { useTranslation } from 'react-i18next';
+
 
 function NavUndoRedoButtonSet() {
+
+    const { t } = useTranslation()
+
     const canvasContainer = useSelector(selectCanvasContainer);
     const selectedCanvas = useSelector(selectSelectedCanvas);
 
@@ -79,7 +84,7 @@ function NavUndoRedoButtonSet() {
                 onClick={handleUndo}
                 disabled={undoStack.length <= 1}
             >
-                Undo
+                {t("undo")}
             </li>
             <li
                 className="header__text-button"
@@ -87,7 +92,7 @@ function NavUndoRedoButtonSet() {
                 onClick={handleRedo}
                 disabled={redoStack.length === 0}
             >
-                Redo
+                {t("redo")}
             </li>
         </ul>
     );

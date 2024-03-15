@@ -6,8 +6,10 @@ import { getLocalStorage } from "../../services/localStorage";
 import { createMyDesign } from "../../services/firebase/createMyDesign";
 import { isTemplateInMyDesigns } from "../../services/firebase/TemplateServices/isTemplateInMyDesigns";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
+import { useTranslation } from 'react-i18next';
 
 function EditPopUp(props) {
+    const { t } = useTranslation()
 
     const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
@@ -151,7 +153,7 @@ function EditPopUp(props) {
                                 <div className="col-auto mb-2 button-set button-set_with-mr-2" />
                                 <div className="col-auto mb-2 d-flex">
                                     <Link className="btn" onClick={handleCreateDesign}>
-                                        <span className="btn__text">Create Design</span>
+                                        <span className="btn__text">{t('createDesign')}</span>
                                     </Link>
                                 </div>
                             </div>

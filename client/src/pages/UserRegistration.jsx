@@ -11,9 +11,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ref } from 'firebase/storage';
 import { get } from 'lodash';
 import { createDataForNewUser } from '../services/firebase/UserServices/createDataForNewUser';
+import { useTranslation } from 'react-i18next';
 import SpinnerOverlay from '../components/Loader/SpinnerOverlay';
 
 function UserRegistration() {
+
+    const { t } = useTranslation()
 
     const [loading, setLoading] = useState(false);
 
@@ -61,11 +64,11 @@ function UserRegistration() {
         setLoading(true);
         // Add validation logic here before sending the registration email
         if (firstName === '' || lastName === '' || email === '' || password === '' || confirmPassword === '') {
-            toast.error('Please Enter all the Required Fields.')
+            toast.error(t("UserRegistration.enterAllFields"))
             return;
         }
         if (password !== confirmPassword) {
-            toast.error('Passwords do not match');
+            toast.error(t("UserRegistration.passwordNotMatch"));
             return;
         }
         try {
@@ -86,12 +89,12 @@ function UserRegistration() {
             const response = await createDataForNewUser(user, userData);
 
             if (response) {
-                toast.success("User Created Succesfully. Navigating to Login..");
+                toast.success(t("UserRegistration.userCreationSuccess"));
                 setTimeout(() => {
                     navigate('/');
                 }, 2000);
             } else {
-                toast.error("Error Creating User.");
+                toast.error(t("UserRegistration.userCreationError"));
             }
 
             setLoading(false)
@@ -99,7 +102,7 @@ function UserRegistration() {
         } catch (error) {
             // Handle error
             console.error('Error registering user:', error);
-            toast.error('An error occurred. Please try again.');
+            toast.error(t("UserRegistration.errorOccurred"));
         }
         setLoading(false)
     };
@@ -119,18 +122,18 @@ function UserRegistration() {
                         {/* Your firm banner goes here */}
                         <form className="login-page__form" onSubmit={handleSendRegistrationEmail} data-custom-attribute="addUser" style={{ width: '520px' }}>
                             <div className="login-page__form-header" style={{ textAlign: 'center' }}>
-                                <p className="login-page__title">Register Yourself</p>
-                                <p className="login-page__description">Register Yourself as a Claircius User!</p>
+                                <p className="login-page__title">{t("UserRegistration.title")}</p>
+                                <p className="login-page__description">{t("UserRegistration.subTitle")}</p>
                             </div>
                             <div className='d-flex justify-content-between'>
                                 <div className="mb-3">
                                     <label className="input" style={styles.labelStyle}>
-                                        <span className="input__label">First Name<span style={{ color: 'red' }}>*</span></span>
+                                        <span className="input__label">{t("UserRegistration.firstNameLabel")}<span style={{ color: 'red' }}>*</span></span>
                                         <input
                                             required
                                             autoComplete="firstName"
                                             name="firstName"
-                                            placeholder="Enter First Name"
+                                            placeholder={t("UserRegistration.firstNamePlaceholder")}
                                             type="text"
                                             className="simple-input"
                                             value={firstName}
@@ -140,12 +143,12 @@ function UserRegistration() {
                                 </div>
                                 <div className="mb-3">
                                     <label className="input" style={styles.labelStyle}>
-                                        <span className="input__label">Last Name<span style={{ color: 'red' }}>*</span></span>
+                                        <span className="input__label">{t("UserRegistration.lastNameLabel")}<span style={{ color: 'red' }}>*</span></span>
                                         <input
                                             required
                                             autoComplete="lastName"
                                             name="lastName"
-                                            placeholder="Enter Last Name"
+                                            placeholder={t("UserRegistration.lastNamePlaceholder")}
                                             type="text"
                                             className="simple-input"
                                             value={lastName}
@@ -157,12 +160,12 @@ function UserRegistration() {
                             <div className='d-flex justify-content-between'>
                                 <div className="mb-3">
                                     <label className="input" style={styles.labelStyle}>
-                                        <span className="input__label">Email<span style={{ color: 'red' }}>*</span></span>
+                                        <span className="input__label">{t("email")}<span style={{ color: 'red' }}>*</span></span>
                                         <input
                                             required
                                             autoComplete="email"
                                             name="email"
-                                            placeholder="Enter Your Email"
+                                            placeholder={t("emailPlaceholder")}
                                             type="email"
                                             className="simple-input"
                                             value={email}
@@ -173,12 +176,12 @@ function UserRegistration() {
                                 </div>
                                 <div className="mb-3">
                                     <label className="input" style={styles.labelStyle}>
-                                        <span className="input__label">Contact</span>
+                                        <span className="input__label">{t("UserRegistration.contact")}</span>
                                         <input
                                             required
                                             autoComplete="contact"
                                             name="contact"
-                                            placeholder="Enter Your Contact No"
+                                            placeholder={t("UserRegistration.contactPlaceholder")}
                                             type="text"
                                             className="simple-input"
                                             value={contact}
@@ -190,12 +193,12 @@ function UserRegistration() {
                             <div className='d-flex justify-content-between'>
                                 <div className="mb-3">
                                     <label className="input" style={styles.labelStyle}>
-                                        <span className="input__label">Password<span style={{ color: 'red' }}>*</span></span>
+                                        <span className="input__label">{t("UserRegistration.passwordLabel")}<span style={{ color: 'red' }}>*</span></span>
                                         <input
                                             required
                                             autoComplete="new-password"
                                             name="password"
-                                            placeholder="Enter Your Password"
+                                            placeholder={t("UserRegistration.passwordPlaceholder")}
                                             type="password"
                                             className="simple-input"
                                             value={password}
@@ -205,12 +208,12 @@ function UserRegistration() {
                                 </div>
                                 <div className="mb-3">
                                     <label className="input" style={styles.labelStyle}>
-                                        <span className="input__label">Confirm Password<span style={{ color: 'red' }}>*</span></span>
+                                        <span className="input__label">{t("UserRegistration.passwordConfirmationLabel")}<span style={{ color: 'red' }}>*</span></span>
                                         <input
                                             required
                                             autoComplete="new-password"
                                             name="confirmPassword"
-                                            placeholder="Confirm Your Password"
+                                            placeholder={t("UserRegistration.passwordConfirmationPlaceholder")}
                                             type="password"
                                             className="simple-input"
                                             value={confirmPassword}
@@ -222,7 +225,7 @@ function UserRegistration() {
 
                             <div className="image-upload m-auto">
                                 <div className="image-upload__header">
-                                    <span className="input__label my-2 text-center">Profile Photo</span>
+                                    <span className="input__label my-2 text-center">{t("UserRegistration.profilePhoto")}</span>
                                 </div>
                                 <div className="image-upload__profile-photo">
 
@@ -287,17 +290,17 @@ function UserRegistration() {
                                                 }
                                             }}
                                         />
-                                        <span className="btn__text">Upload</span>
+                                        <span className="btn__text">{t("upload")}</span>
                                     </label>
                                     <span className={`btn btn_red me-2 ${base64Image ? '' : 'btn_disabled'}`} onClick={() => { setBase64Image(null) }}>
-                                        <span className="btn__text">Delete</span>
+                                        <span className="btn__text">{t("delete")}</span>
                                     </span>
                                 </div>
                             </div>
 
                             <div className="login-page__button-set d-flex justify-content-center align-items-center mb-3">
                                 <button type="submit" className="btn" style={{ width: '50%' }}>
-                                    <span className="btn__text">Register</span>
+                                    <span className="btn__text">{t("register")}</span>
                                 </button>
                             </div>
                         </form>
@@ -308,7 +311,7 @@ function UserRegistration() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <span className="btn__text">Privacy</span>
+                                <span className="btn__text">{t("Login.privacy")}</span>
                             </a>
                             &nbsp;&amp;&nbsp;
                             <a
@@ -317,7 +320,7 @@ function UserRegistration() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <span className="btn__text">Terms</span>
+                                <span className="btn__text">{t("Login.terms")}</span>
                             </a>
                         </div>
                     </div>) : (
@@ -330,7 +333,7 @@ function UserRegistration() {
                             height: '70vh'
                         }}>
                             <div>
-                                <h1 style={{ fontSize: '30px', fontWeight: 'bold' }}>You're already registered!</h1>
+                                <h1 style={{ fontSize: '30px', fontWeight: 'bold' }}>{t("UserRegistration.alreadyRegistered1")}</h1>
                             </div>
                             <div className='separator'>
                                 <hr />
@@ -343,11 +346,11 @@ function UserRegistration() {
                                 <FontAwesomeIcon icon="fa-solid fa-circle-check" size='2xl' style={{ color: "#63E6BE", fontSize: '140px' }} />
                             </div>
                             <div style={{ marginBottom: '24px' }}>
-                                <h3>The User has Already been Registered!</h3>
+                                <h3>{t("UserRegistration.alreadyRegistered2")}</h3>
                             </div>
                             <div>
                                 <Link to={'/'}>
-                                    <button>Back to Login</button>
+                                    <button>{t("UserRegistration.backToLogin")}</button>
                                 </Link>
                             </div>
                         </div>

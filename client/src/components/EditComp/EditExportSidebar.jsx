@@ -9,7 +9,13 @@ import jsPDF from 'jspdf';
 import JSZip from 'jszip';
 import { selectCanvasContainer, selectSelectedCanvas } from '../../store/app/Edit/Canvas/canvas';
 
+import { useTranslation } from 'react-i18next';
+
+
 const EditExportSidebar = () => {
+
+    const { t } = useTranslation()
+
 
     const canvasContainer = useSelector(selectCanvasContainer);
     const selectedCanvas = useSelector(selectSelectedCanvas);
@@ -175,7 +181,7 @@ const EditExportSidebar = () => {
                 }}>
                 {openDrawer === 'Download' && (
                     <div className="sidebar sidebar_show export-sidebar">
-                        <div className="export-sidebar__title">File Type</div>
+                        <div className="export-sidebar__title">{t("EditExportSidebar.fileType")}</div>
                         <Select
                             options={fileTypes}
                             value={fileType}
@@ -199,7 +205,7 @@ const EditExportSidebar = () => {
                                         </div>
                                     </div>
                                     <div className="checkbox__label">
-                                        Transparency <span className="download-dropdown__checkbox-subtitle">(applies if no background)</span>
+                                        {t("EditExportSidebar.transparency")} <span className="download-dropdown__checkbox-subtitle">({t("EditExportSidebar.appliesNoBg")})</span>
                                     </div>
                                 </label>
                                 <label className="checkbox download-dropdown__checkbox export-sidebar_mb">
@@ -215,7 +221,7 @@ const EditExportSidebar = () => {
                                         </div>
                                     </div>
                                     <div className="checkbox__label">
-                                        Compress file <span className="download-dropdown__checkbox-subtitle">(lower quality)</span>
+                                        {t("EditExportSidebar.compressFile")} <span className="download-dropdown__checkbox-subtitle">({t("EditExportSidebar.lowerQuality")})</span>
                                     </div>
                                 </label>
                             </>
@@ -225,7 +231,7 @@ const EditExportSidebar = () => {
                                 <div tabIndex="-1" className="slider-box__hokeys-wrapper">
                                     <div className="slider-box__hokeys-wrapper">
                                         <div tabIndex="0" className="slider-box export-sidebar__slider export-sidebar_mt">
-                                            <p className="slider-box__title">Quality</p>
+                                            <p className="slider-box__title">{t("EditExportSidebar.quality")}</p>
                                             <Slider min={0} max={1} step={0.1} value={jpgQuality} onChange={(value) => setJpgQuality(value)} />
                                             <p className="slider-box__value">{jpgQuality * 10}</p>
                                         </div>
@@ -251,7 +257,7 @@ const EditExportSidebar = () => {
                                                             borderRadius: '14px',
                                                             fontSize: '8px',
                                                             color: 'white'
-                                                        }}>Suggested</span>}</span>
+                                                        }}>{t("EditExportSidebar.suggested")}</span>}</span>
                                             </div>
                                         </div>
                                         <input readOnly tabIndex="0" aria-autocomplete="list" className="css-62g3xt-dummyInput" value="" />
@@ -278,7 +284,7 @@ const EditExportSidebar = () => {
                                                                 borderRadius: '14px',
                                                                 fontSize: '8px',
                                                                 color: 'white'
-                                                            }}>Suggested</span>}
+                                                            }}>{t("EditExportSidebar.suggested")}</span>}
                                                     </div>
                                                 </div>
                                             ))}
@@ -292,17 +298,17 @@ const EditExportSidebar = () => {
 
                                 <div className="radiobutton export-sidebar__radiobutton m-0">
                                     <input type="radio" id="all-all" name="all" className="radiobutton__input" value="all" checked={selectedPageOption === 'all'} onChange={() => setSelectedPageOption('all')} />
-                                    <label htmlFor="all-all" className="radiobutton__label">All pages</label>
+                                    <label htmlFor="all-all" className="radiobutton__label">{t("EditExportSidebar.allPages")}</label>
                                 </div>
 
                                 <div className="radiobutton export-sidebar__radiobutton m-0">
                                     <input type="radio" id="current-current" name="current" className="radiobutton__input" value="current" checked={selectedPageOption === 'current'} onChange={() => setSelectedPageOption('current')} />
-                                    <label htmlFor="current-current" className="radiobutton__label">Current page</label>
+                                    <label htmlFor="current-current" className="radiobutton__label">{t("EditExportSidebar.currentPage")}</label>
                                 </div>
 
                                 <div className="radiobutton m-0">
                                     <input type="radio" id="range-range" name="range" className="radiobutton__input radiobutton__input_checked" value="range" checked={selectedPageOption === 'range'} onChange={() => setSelectedPageOption('range')} />
-                                    <label htmlFor="range-range" className="radiobutton__label">Range from:</label>
+                                    <label htmlFor="range-range" className="radiobutton__label">{t("EditExportSidebar.rangeFrom")}:</label>
                                 </div>
 
                                 <div className='d-flex justify-content-evenly align-items-center'>
@@ -316,7 +322,7 @@ const EditExportSidebar = () => {
                                         />
                                     </div>
 
-                                    <span>to</span>
+                                    <span>{t("EditExportSidebar.to")}</span>
 
                                     <div className="select-container export-sidebar__select export-sidebar__select_small select-container_has-value">
                                         <Select
@@ -333,7 +339,7 @@ const EditExportSidebar = () => {
 
 
                         <button type="button" className="btn btn_wide" style={{ zIndex: 0 }} onClick={handleDownload}>
-                            <span className="btn__text">Download</span>
+                            <span className="btn__text">{t("download")}</span>
                         </button>
                     </div>
                 )}

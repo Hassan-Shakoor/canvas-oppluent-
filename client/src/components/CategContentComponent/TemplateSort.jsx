@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 // ** Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +9,7 @@ const SortJSON = [{ sort: 0, "title": "Default" }, { sort: 1, "title": "Created"
 
 // item-selected-dropdown
 function SortDropDown(props) {
+
     const dropdownRef = useRef();
 
     useEffect(() => {
@@ -54,6 +56,8 @@ function GridDropDown(props) {
 }
 
 function TemplateSort(props) {
+    const { t } = useTranslation()
+
     const [isSortDropDownOpen, setSortDropDownOpen] = useState(false)
     const [isGridDropDownOpen, setGridDropDownOpen] = useState(false)
 
@@ -91,7 +95,7 @@ function TemplateSort(props) {
                     className="sort-dropdown-btn background-template-sort">
                     <FontAwesomeIcon icon="fa-solid fa-filter" className="sort-template-icon" />
                     <span className="sort-button-txt">
-                        Sort by
+                        {t("Home.sortBy")}
                     </span>
                     <FontAwesomeIcon className="sort-template-icon" icon={isSortDropDownOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down"} />
                 </button>

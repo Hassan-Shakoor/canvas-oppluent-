@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 // ** import React and Dependencies
 import ReactDOM from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // ** Store
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,6 +14,8 @@ import { auth } from '../../configs/firebase';
 function ProfileDropDown({ position, setIsSecondDropdownOpen }) {
 
     const isEditKeywordPresent = window.location.href.includes('/edit/');
+
+    const { t } = useTranslation()
 
     // ** Vars
     const darkMode = useSelector(selectDarkMode)
@@ -73,33 +76,33 @@ function ProfileDropDown({ position, setIsSecondDropdownOpen }) {
                                 isEditKeywordPresent && (
                                     <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                                         <Link className="btn btn_menu-item text-uppercase" rel="" to="/">
-                                            <span className="btn__text">Dashboard</span>
+                                            <span className="btn__text">{t("dashboard")}</span>
                                         </Link>
                                     </li>)
                             }
                             <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                                 <Link className="btn btn_menu-item text-uppercase" rel="" to="/profile">
-                                    <span className="btn__text">Account Information</span>
+                                    <span className="btn__text">{t("Header.accountInfo")}</span>
                                 </Link>
                             </li>
                             <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                                 <a className="btn btn_menu-item text-uppercase" href="https://20923924.hs-sites.com/knowledge" target="_blank" rel="noopener noreferrer">
-                                    <span className="btn__text">Knowledge Center</span>
+                                    <span className="btn__text">{t("Header.knowledgeCenter")}</span>
                                 </a>
                             </li>
                             <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                                 <Link className="btn btn_menu-item text-uppercase" rel="" to="/partners">
-                                    <span className="btn__text">Partners</span>
+                                    <span className="btn__text">{t("Header.partners")}</span>
                                 </Link>
                             </li>
                             <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                                 <a className="btn btn_menu-item text-uppercase" href="/terms_of_use" target="_blank">
-                                    <span className="btn__text">Terms Of Use</span>
+                                    <span className="btn__text">{t("Header.termsOfUse")}</span>
                                 </a>
                             </li>
                             <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
                                 <button type="button" className="btn btn_menu-item text-uppercase" onClick={handleLogout}>
-                                    <span className="btn__text">Log Out</span>
+                                    <span className="btn__text">{t("Header.logOut")}</span>
                                 </button>
                             </li>
                             <li className="rc-menu-item rc-dropdown-menu-item__button" role="menuitem">
@@ -109,7 +112,7 @@ function ProfileDropDown({ position, setIsSecondDropdownOpen }) {
                                         <span className="toggle__dot"></span>
                                     </span>
                                     <span className="toggle__label">
-                                        <span>Dark Mode</span>
+                                        <span>{t("Header.darkMode")}</span>
                                     </span>
                                 </label>
                             </li>

@@ -7,9 +7,12 @@ import ResetPasswordInputs from '../components/LoginComponent/ResetPasswordInput
 import { auth } from '../configs/firebase';
 import { setLocalStorage } from '../services/localStorage';
 import { LOCAL_STORAGE } from '../shared/constant';
+import { useTranslation } from 'react-i18next';
 import { APIS } from '../shared/routes';
 
 function RegistrationEmail() {
+    const { t } = useTranslation()
+
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
 
@@ -49,17 +52,17 @@ function RegistrationEmail() {
                         <div className="login-page__firm-banner">{/* Your firm banner goes here */}</div>
                         <form className="login-page__form" onSubmit={handleSendRegistrationEmail} data-custom-attribute="addUser">
                             <div className="login-page__form-header" style={{ textAlign: 'center' }}>
-                                <p className="login-page__title">Add New User</p>
-                                <p className="login-page__description">Send Registration Link to User!</p>
+                                <p className="login-page__title">{t("RegistrationEmail.addNewUser")}</p>
+                                <p className="login-page__description">{t("RegistrationEmail.sendLink")}</p>
                             </div>
                             <div className="mb-3">
                                 <label className="input">
-                                    <span className="input__label">New User Email</span>
+                                    <span className="input__label">{t("RegistrationEmail.newEmail")}</span>
                                     <input
                                         required
                                         autoComplete="email"
                                         name="email"
-                                        placeholder="Enter New User Email"
+                                        placeholder={t("RegistrationEmail.newEmailPlaceholder")}
                                         type="text"
                                         className="simple-input"
                                         id="myInput"
@@ -70,7 +73,7 @@ function RegistrationEmail() {
                             </div>
                             <div className="login-page__button-set">
                                 <button type="submit" className="btn btn_wide">
-                                    <span className="btn__text">Send Registration Email</span>
+                                    <span className="btn__text">{t("RegistrationEmail.sendEmail")}</span>
                                 </button>
                             </div>
                         </form>
@@ -81,7 +84,7 @@ function RegistrationEmail() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <span className="btn__text">Privacy</span>
+                                <span className="btn__text">{t('Login.privacy')}</span>
                             </a>
                             &nbsp;&amp;&nbsp;
                             <a
@@ -90,7 +93,7 @@ function RegistrationEmail() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <span className="btn__text">Terms</span>
+                                <span className="btn__text">{t('Login.terms')}</span>
                             </a>
                         </div>
                     </div>

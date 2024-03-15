@@ -1,5 +1,6 @@
 // ** Import React and Dependency
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 // ** Store
 import { useSelector } from 'react-redux';
@@ -8,6 +9,8 @@ import DashboardHeaderButtons from "./DashboardHeaderButtons";
 import InfiniteScrollComponent from "./InfiniteScrollComponent";
 
 function DashboardHeader(props) {
+
+    const { t } = useTranslation();
     // ** Vars
     const uid = useSelector(selectUID)
     const userData = useSelector(selectUserData)
@@ -26,7 +29,7 @@ function DashboardHeader(props) {
     return (
         <div className="container">
             <div class="announcement mt-3">
-                <h1 class="announcement__welcome">Welcome to your Dashboard, {userName}.</h1>
+                <h1 class="announcement__welcome">{t("Home.welcome")} {userName}.</h1>
             </div>
             {/* <div className="announcement__slider">
                 <div className="react-slider">

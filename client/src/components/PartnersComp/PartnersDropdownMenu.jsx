@@ -4,10 +4,13 @@ import { Link } from 'react-router-dom'
 // ** Icons
 import { Icon } from "@iconify/react";
 
+import { useTranslation } from 'react-i18next';
 // ** RC Dropdown
-import Menu, {Item as MenuItem} from 'rc-menu'
+import Menu, { Item as MenuItem } from 'rc-menu'
 
-function PartnersDropdownMenu ({partnerId, setConfirmDelete}) {
+
+function PartnersDropdownMenu({ partnerId, setConfirmDelete }) {
+    const { t } = useTranslation()
 
     return (
         <Menu>
@@ -15,7 +18,7 @@ function PartnersDropdownMenu ({partnerId, setConfirmDelete}) {
                 <Link className="btn btn_menu-item" rel="" to={`/partners/${partnerId}/edit`}>
                     <span className="btn__text">
                         <Icon icon="la:pen" className="icon" />
-                        Edit
+                        {t("edit")}
                     </span>
                 </Link>
             </MenuItem>
@@ -23,7 +26,7 @@ function PartnersDropdownMenu ({partnerId, setConfirmDelete}) {
                 <button type="button" className="btn btn_menu-item" onClick={() => setConfirmDelete(true)}>
                     <span className="btn__text">
                         <Icon icon="material-symbols:delete-outline" className="icon text-danger" />
-                        Delete
+                        {t("delete")}
                     </span>
                 </button>
             </MenuItem>

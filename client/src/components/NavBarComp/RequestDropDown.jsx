@@ -2,8 +2,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function RequestDropDown(props) {
+
+  const { t } = useTranslation()
 
   const dropdownStyle = {
     position: 'fixed',
@@ -52,12 +55,12 @@ function RequestDropDown(props) {
         </li> */}
               <li className="rc-menu-item" role="menuitem" tabIndex="-1" data-menu-id="rc-menu-uuid-85920-1-2">
                 <Link to={'/template-request'} className="btn btn_menu-item">
-                  <span className="btn__text"><FontAwesomeIcon icon="fa-regular fa-image" /> Template Requests</span>
+                  <span className="btn__text"><FontAwesomeIcon icon="fa-regular fa-image" /> {t("Header.templateRequest")}</span>
                 </Link>
               </li>
               <li className="rc-menu-item" role="menuitem" tabIndex="-1" data-menu-id="rc-menu-uuid-85920-1-2">
                 <Link to={'/user-registration-email'} className="btn btn_menu-item">
-                  <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-user-plus" /> Add New User</span>
+                  <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-user-plus" /> {t("Header.addNewUser")}</span>
                 </Link>
               </li>
             </ul>

@@ -9,6 +9,7 @@ import SpinnerOverlay from "../Loader/SpinnerOverlay";
 // ** Firebase
 import { onAuthStateChanged  } from 'firebase/auth';
 import { auth } from '../../configs/firebase';
+import { useTranslation } from 'react-i18next';
 import { getDatabase, ref, set, onValue } from "firebase/database";
 
 
@@ -62,6 +63,9 @@ function removeObjectFromFavorites(categories, idToRemove) {
   return categories;
 }
   function CategorySideBar(){
+
+    const { t } = useTranslation()
+
     // ** States
     // Categories JSON State
     const [categories, setCategories] = useState(categoryJSON);
@@ -203,7 +207,7 @@ function removeObjectFromFavorites(categories, idToRemove) {
                   <div className="sidebar-dashboard__search">
                       <div className="row">
                       <div className="col">
-                          <div className="sidebar-dashboard__search-title">Templates</div>
+                          <div className="sidebar-dashboard__search-title">{t("templates")}</div>
                       </div>
                       <div className="col-auto" />
                       </div>

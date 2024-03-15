@@ -10,8 +10,12 @@ import { getLocalStorage } from "../../services/localStorage";
 import { toast } from "react-toastify";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
 import SpinnerContainer from "../Loader/SpinnerContainer";
+import { useTranslation } from 'react-i18next';
 
 function Template(props) {
+
+  const { t } = useTranslation()
+
   const [isCreateDesignOpen, setCreateDesginOpen] = useState(null);
   const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
@@ -85,7 +89,7 @@ function Template(props) {
             className="btn btn_no-min-width template__edit-btn"
             onClick={() => handleCreateDesign(props.item.id)}
           >
-            <span className="btn__text">Create Design</span>
+            <span className="btn__text">{t('createDesign')}</span>
           </button>
           {isCreateDesignOpen && (
             <EditPopUp

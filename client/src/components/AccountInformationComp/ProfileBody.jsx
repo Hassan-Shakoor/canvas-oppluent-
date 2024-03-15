@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
 
 // ** Custom Component
 import WarningModal from "../Modal/WarningModal";
@@ -36,6 +37,8 @@ function ProfileBody({ profile }) {
 
   const dispatch = useDispatch();
 
+  const { t } = useTranslation()
+
   // ** Vars
   const navigate = useNavigate();
 
@@ -54,7 +57,7 @@ function ProfileBody({ profile }) {
       setShowInputModal(true);
     } else {
       dispatch(saveProfile(data));
-      toast.success("Profile updated successfully")
+      toast.success(t("profileChangedSuccess"))
     }
   };
 
@@ -83,11 +86,11 @@ function ProfileBody({ profile }) {
                 <div className="mb-3">
                   <label className="input input_has-value">
                     <span className="input__label">
-                      First Name<span>*</span>
+                      {t("accountInfo.firstNameLabel")}<span>*</span>
                     </span>
                     <input
                       required
-                      placeholder="Enter your First Name"
+                      placeholder={t("accountInfo.firstNamePlaceholder")}
                       type="text"
                       className="simple-input"
                       value={firstName}
@@ -103,11 +106,11 @@ function ProfileBody({ profile }) {
                 <div className="mb-3">
                   <label className="input input_has-value">
                     <span className="input__label">
-                      Last Name<span>*</span>
+                      {t("accountInfo.lastNameLabel")}<span>*</span>
                     </span>
                     <input
                       required
-                      placeholder="Enter your Last Name"
+                      placeholder={t("accountInfo.lastNamePlaceholder")}
                       type="text"
                       className="simple-input"
                       value={lastName}
@@ -123,10 +126,10 @@ function ProfileBody({ profile }) {
             <div className="mb-3">
               <label className="input">
                 <span className="input__label">
-                  Profile Email (default: mfaizanrazaq@gmail.com)
+                  {t("accountInfo.profileEmailLabel")}
                 </span>
                 <input
-                  placeholder="Enter your profile email"
+                  placeholder={t("accountInfo.profileEmailPlaceholder")}
                   type="text"
                   className="simple-input"
                   value={email}
@@ -143,9 +146,9 @@ function ProfileBody({ profile }) {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label className="input">
-                    <span className="input__label">Mobile Phone</span>
+                    <span className="input__label">{t("accountInfo.mobilePhoneLabel")}</span>
                     <input
-                      placeholder="Enter your mobile phone number"
+                      placeholder={t("accountInfo.mobilePhonePlaceholder")}
                       type="text"
                       className="simple-input"
                       value={contactNo}
@@ -164,7 +167,7 @@ function ProfileBody({ profile }) {
           <div className="col-md-5 page__column">
             <div className="image-upload">
               <div className="image-upload__header">
-                <span className="input__label my-2">Profile Photo</span>
+                <span className="input__label my-2">{t("accountInfo.profilePhotoLabel")}</span>
               </div>
               <div className="image-upload__profile-photo">
 
@@ -233,10 +236,10 @@ function ProfileBody({ profile }) {
                       setIsChanged(true);
                     }}
                   />
-                  <span className="btn__text">Upload</span>
+                  <span className="btn__text">{t("upload")}</span>
                 </label>
                 <span className={`btn btn_red me-2 ${base64Image ? '' : 'btn_disabled'}`} onClick={() => { setSelectedUploadFile(null); setBase64Image(null) }}>
-                  <span className="btn__text">Delete</span>
+                  <span className="btn__text">{t("delete")}</span>
                 </span>
               </div>
             </div>
@@ -250,10 +253,10 @@ function ProfileBody({ profile }) {
               isChanged ? setShowWarning(true) : navigate("/categories");
             }}
           >
-            <span className="btn__text">Cancel</span>
+            <span className="btn__text">{t("cancel")}</span>
           </button>
           <button type="submit" className="btn" onClick={handleSave}>
-            <span className="btn__text">Save Account Information</span>
+            <span className="btn__text">{t("save")}</span>
           </button>
         </div>
       </div>
@@ -274,9 +277,9 @@ function ProfileBody({ profile }) {
           body={
             <div className="password-input">
               <label className="input">
-                <span className="input__label">Current Password</span>
+                <span className="input__label">{t("accountInfo.currentPasswordLabel")}</span>
                 <input
-                  placeholder="Enter your current password"
+                  placeholder={t("accountInfo.currentPasswordPlaceholder")}
                   type="password"
                   className="simple-input"
                   value={currentPassword}
@@ -288,8 +291,8 @@ function ProfileBody({ profile }) {
               </label>
             </div>
           }
-          secondayBtnTxt={"Cancel"}
-          primaryBtnTxt={"Submit"}
+          secondayBtnTxt={t("cancel")}
+          primaryBtnTxt={t("submit")}
           onClose={() => setShowInputModal(false)}
           handleSecodnaryBtn={() => setShowInputModal(false)}
           handlePrimaryBtn={async (e) => {
@@ -307,7 +310,7 @@ function ProfileBody({ profile }) {
               };
               dispatch(saveProfile(data));
               setShowInputModal(false);
-              toast.success("Profile and email updated successfully")
+              toast.success(t("accountInfo.profileChangedSuccess"))
             }
           }}
         />

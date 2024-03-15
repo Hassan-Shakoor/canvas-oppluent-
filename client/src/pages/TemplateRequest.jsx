@@ -15,6 +15,8 @@ import uploadFileAndGetURL from '../services/uploadFileAndGetURL'
 import { v4 as uuidv4 } from 'uuid';
 import SpinnerContainer from '../components/Loader/SpinnerContainer'
 import uploadTemplateImage from '../services/uploadTemplateImage'
+import { useTranslation } from 'react-i18next';
+
 
 let currentUserId = null;
 onAuthStateChanged(auth, (user) => {
@@ -28,6 +30,9 @@ onAuthStateChanged(auth, (user) => {
 
 
 const TemplateRequest = () => {
+
+    const { t } = useTranslation()
+
 
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -363,16 +368,15 @@ const TemplateRequest = () => {
                                 <svg className="icon v2-icon v2-icon-chevron-left back-button__icon">
                                     <use href="#v2-icon-chevron-left" xlinkHref="#v2-icon-chevron-left"></use>
                                 </svg>
-                                <span className="back-button__text">Dashboard</span>
+                                <span className="back-button__text">{t("dashboard")}</span>
                             </Link>
                         </div>
                         <div className="dashboard-header__right-panel justify-content-end flex-grow-1"></div>
                     </div>
                     <div className="mt-4">
-                        <h1 className="mb-2">Request a New Template</h1>
+                        <h1 className="mb-2">{t("TemplateRequest.requestTemplate")}</h1>
                         <h4 className="text-info">
-                            Ask MAXA to design a new template for your brand. Fill out the form below. We will get started and your brand
-                            director will contact you when your request is ready to be previewed.
+                            {t("TemplateRequest.description")}
                         </h4>
                     </div>
                 </div>
@@ -381,9 +385,9 @@ const TemplateRequest = () => {
                         <div className="row">
                             <div className="col-md-6 mb-3">
                                 <label className="input">
-                                    <span className="input__label">What type of template would you like?<span>*</span></span>
+                                    <span className="input__label">{t("TemplateRequest.whatYouLike")}<span>*</span></span>
                                     <input
-                                        placeholder="Enter type of template here"
+                                        placeholder={t("TemplateRequest.whatYouLikePlaceholder")}
                                         type="text"
                                         className="simple-input"
                                         value={templateType}
@@ -393,9 +397,9 @@ const TemplateRequest = () => {
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label className="input">
-                                    <span className="input__label">What are the dimensions?<span>*</span></span>
+                                    <span className="input__label">{t("TemplateRequest.whatDimensions")}<span>*</span></span>
                                     <input
-                                        placeholder="Enter dimensions here"
+                                        placeholder={t("TemplateRequest.whatDimensionsPlaceholder")}
                                         type="text"
                                         className="simple-input"
                                         value={dimensions}
@@ -406,16 +410,16 @@ const TemplateRequest = () => {
                         </div>
                         <div className="row">
                             <div className="col-md-6 mb-3">
-                                <span className="input__label input__label_white-space-normal">What category do you want to place this design in?<span>*</span></span>
+                                <span className="input__label input__label_white-space-normal">{t("TemplateRequest.whatCategory")}<span>*</span></span>
                                 <Select
                                     options={designCategories}
                                     styles={customStyles}
-                                    placeholder='Select category'
+                                    placeholder={t("TemplateRequest.selectCategory")}
                                     onChange={(option) => setSelectedCategory(option)} />
                             </div>
                             <div className="col-md-6 mb-3">
                                 <div className="input">
-                                    <div className="input__label mb-2">Property Search:</div>
+                                    <div className="input__label mb-2">{t("Property.propertySearch")}:</div>
                                     <div className="row">
                                         <div className="col-lg-3">
                                             <div className="radiobutton">
@@ -456,7 +460,7 @@ const TemplateRequest = () => {
                         </div>
                         <div className="row">
                             <div className="input">
-                                <div className="input__label mb-2">Please explain the level of access:</div>
+                                <div className="input__label mb-2">{t("TemplateRequest.explainAccessLevel")}</div>
                                 <div className="row">
                                     <div className="col-lg-3">
                                         <div className="radiobutton">
@@ -470,7 +474,7 @@ const TemplateRequest = () => {
                                                 onChange={() => setAccess("")}
                                             />
                                             <label htmlFor="whereAvailable-" className="radiobutton__label">
-                                                Available to all users
+                                                {t("TemplateRequest.availableToAll")}
                                             </label>
                                         </div>
                                     </div>
@@ -486,7 +490,7 @@ const TemplateRequest = () => {
                                                 onChange={() => setAccess("selected")}
                                             />
                                             <label htmlFor="whereAvailable-" className="radiobutton__label">
-                                                Limit to selected users
+                                                {t("TemplateRequest.avaiableToSelected")}
                                             </label>
                                         </div>
                                     </div>
@@ -509,7 +513,7 @@ const TemplateRequest = () => {
 
                         {/* Upload Image Files */}
                         <div className="mb-3">
-                            <span className="input__label input__label_white-space-normal">Please upload logos, images and example marketing here:</span>
+                            <span className="input__label input__label_white-space-normal">{t("TemplateRequest.uploadMessage")}</span>
                             <div tabIndex="0">
                                 <input
                                     accept=".png, .jpg, .jpeg, .pdf"
@@ -572,7 +576,7 @@ const TemplateRequest = () => {
                                         {files.length > 0 && (
                                             <div className="text-end file-input__delete-all mt-2">
                                                 <button type="button" className="btn btn_gray" onClick={handleDeleteAll}>
-                                                    <span className="btn__text">Delete All</span>
+                                                    <span className="btn__text">{t("delete")} All</span>
                                                 </button>
                                             </div>
                                         )}
@@ -583,7 +587,7 @@ const TemplateRequest = () => {
                         <div className="mb-3">
                             <label className="textarea item-has-value textarea_has-value">
                                 <span className="input__label textarea__label textarea__label_white-space-normal">
-                                    Please describe what content should be on this marketing template:<span>*</span>
+                                    {t("TemplateRequest.describeContent")}<span>*</span>
                                 </span>
                                 <textarea
                                     placeholder="Enter description here"
@@ -595,7 +599,7 @@ const TemplateRequest = () => {
                         </div>
                         <div className="mb-3">
                             <label className="textarea item-has-value textarea_has-value">
-                                <span className="input__label textarea__label">Add disclaimer</span>
+                                <span className="input__label textarea__label">{t("TemplateRequest.addDisclaimer")}</span>
                                 <textarea
                                     placeholder="Enter disclaimer here"
                                     className="textarea__field textarea"
@@ -606,19 +610,18 @@ const TemplateRequest = () => {
                         </div>
                         <div className="button-set button-set_space-between">
                             <Link className="btn btn_secondary" to={'/'}>
-                                <span className="btn__text">Cancel</span>
+                                <span className="btn__text">{t("cancel")}</span>
                             </Link>
                             <button type="submit" className="btn" onClick={handleUploadTemplate}>
-                                <span className="btn__text">Submit </span>
+                                <span className="btn__text">{t("submit")} </span>
                             </button>
                         </div>
                     </div>
                     <div className="col-md-4 page__column mt-3 mt-lg-0">
-                        <h4>Questions?</h4>
+                        <h4>{t("TemplateRequest.questions")}</h4>
                         <div className="mt-2 d-flex flex-wrap">
                             <div className="text-info text-break">
-                                This is an admin feature only. If you would like to connect with us directly for immediate help, please
-                                email{" "}
+                                {t("TemplateRequest.connectMessage")}{" "}
                                 <span className="text-info">
                                     <a href="mailto:artin@maxadesigns.com" target="_blank" className="text-primary text-no-decoration text-break-words">
                                         artin@maxadesigns.com

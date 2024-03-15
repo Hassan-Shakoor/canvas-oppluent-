@@ -10,6 +10,8 @@ import SpinnerContainer from "../Loader/SpinnerContainer";
 import PropertySearchList from "./PropertySearchList";
 import PropertyResult from "./PropertyResult";
 import WarningModal from "../Modal/WarningModal";
+import { useTranslation } from 'react-i18next';
+
 
 // ** Store
 import { useDispatch, useSelector } from "react-redux"
@@ -29,6 +31,7 @@ const messageMap = {
 }
 
 function ColumnMLS({ isInModal, toggleModal }) {
+  const { t } = useTranslation()
   // ** State
   const [searchFeedback, setSearchFeedback] = useState(messageMap.default)
   const [searchedProperty, setSearchedProperty] = useState("")
@@ -104,13 +107,13 @@ function ColumnMLS({ isInModal, toggleModal }) {
     <div className={`${isInModal ? 'col-md-12' : 'col-md-8'} page__column`}>
       {!isInModal &&
         <ul className="tabs">
-          <li className="tabs__item tabs__item_active">Property Search</li>
+          <li className="tabs__item tabs__item_active">{t("Property.propertySearch")}</li>
         </ul>
       }
       <SpinnerOverlay loading={overlayLoading} />
       {selectedProperty === null ? <div className="pt-4">
         <h4 className="mb-3 text-info">
-          Search and populate a property's information into your design here.
+        {t("Property.smallDesc")}
         </h4>
         <div className="mb-3 search-input_full-width search-input">
           <div className="">
@@ -118,7 +121,7 @@ function ColumnMLS({ isInModal, toggleModal }) {
               autoComplete="off"
               id="search"
               name="search"
-              placeholder="Enter Address or MLS # here"
+              placeholder={t("Property.enterAddressPlaceholder")}
               type="search"
               className="search-input__simple-input"
               value={searchedProperty}
@@ -127,10 +130,10 @@ function ColumnMLS({ isInModal, toggleModal }) {
         </div>
         {showWarnModal &&
           <WarningModal
-            title={"Add Properties"}
-            body={"This design hosts 1 property. Do you want to add property or continue as is?"}
-            secondayBtnTxt={"Add Property"}
-            primaryBtnTxt={"Create Design"}
+            title={t("Property.warningTitle")}
+            body={t("Property.warningBody")}
+            secondayBtnTxt={t("Property.addProperty")}
+            primaryBtnTxt={t('createDesign')}
             onClose={() => setShowWarnModal(false)}
             handleSecodnaryBtn={() => setShowWarnModal(false)}
             handlePrimaryBtn={(event) => nonMlsCreate(event)} />}
@@ -155,10 +158,10 @@ function ColumnMLS({ isInModal, toggleModal }) {
           <div className="button-set">
             <div className="button-set button-set_flex-end">
               <button type="button" className="btn btn_border">
-                <span className="btn__text">Back</span>
+                <span className="btn__text">{t("Home.back")}</span>
               </button>
               <button type="submit" className="btn" onClick={() => setShowWarnModal(true)}>
-                <span className="btn__text">Create</span>
+                <span className="btn__text">{t("create")}</span>
               </button>
             </div>
           </div>

@@ -6,12 +6,16 @@ import { useParams } from "react-router-dom";
 import SpinnerOverlay from "../components/Loader/SpinnerOverlay"
 import getShareTemplateData from "../services/firebase/TemplateServices/getShareTemplateData";
 import { toast } from "react-toastify";
+import { useTranslation } from 'react-i18next';
 
 // ** Services
 
 
 
 const Share = () => {
+
+  const { t } = useTranslation()
+
   const [templateData, setTemplateData] = useState(null);
   const [loading, setLoading] = useState(false)
   const { userId, categoryId, templateId } = useParams();
@@ -90,7 +94,7 @@ const Share = () => {
                   xlinkHref="#v2-icon-download"
                 ></use>
               </svg>
-              Download
+              {t('download')}
             </button>
             {/* </a> */}
           </div>

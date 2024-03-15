@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 function SupportDropDown(props) {
-  
+
+  const { t } = useTranslation()
+
   const dropdownStyle = {
     position: 'fixed',
     // top: props.position.top + 'px',
@@ -34,22 +37,22 @@ function SupportDropDown(props) {
   return ReactDOM.createPortal(
     <div className="support-drop-down" ref={dropdownRef}>
       <div className="styleSDD" style={{ position: 'absolute', top: '0px', left: '0px', width: '100%' }}>
-          <div>
-            <div className="rc-dropdown rc-dropdown-placement-bottomLeft" style={dropdownStyle}>
-              <div className="header__dropdown header__dropdown_support">
-                <header className="support-overlay__header">
-                  <div className="support-overlay__name text-uppercase">Support</div>
-                </header>
-                <div className="support-overlay__panel">
-                  <div className="support-overlay__description">Platform Customer Service:</div>
-                  <a className="btn support-overlay__email btn_link" href="mailto:support@maxadesigns.com" target="_blank" rel="noopener noreferrer">
-                    <span onClick={props.click} className="btn__text">support@maxadesigns.com</span>
-                  </a>
-                </div>
+        <div>
+          <div className="rc-dropdown rc-dropdown-placement-bottomLeft" style={dropdownStyle}>
+            <div className="header__dropdown header__dropdown_support">
+              <header className="support-overlay__header">
+                <div className="support-overlay__name text-uppercase">{t("Header.support")}</div>
+              </header>
+              <div className="support-overlay__panel">
+                <div className="support-overlay__description">Platform Customer Service:</div>
+                <a className="btn support-overlay__email btn_link" href="mailto:support@maxadesigns.com" target="_blank" rel="noopener noreferrer">
+                  <span onClick={props.click} className="btn__text">support@maxadesigns.com</span>
+                </a>
               </div>
             </div>
           </div>
         </div>
+      </div>
     </div>,
     document.body
   );

@@ -12,6 +12,8 @@ import Dropdown from "rc-dropdown";
 import PartnersDropdownMenu from "./PartnersDropdownMenu";
 import ConfirmationModal from "../Modal/ConfirmationModal";
 import { toast } from "react-toastify";
+import { useTranslation } from 'react-i18next';
+
 
 // ** Store
 import {
@@ -30,6 +32,9 @@ function PartnerRow({
   setConfirmDelete,
   isPrimary
 }) {
+
+  const { t } = useTranslation()
+
 
   return (
     <>
@@ -77,8 +82,8 @@ function PartnerRow({
                   <p className="ReactTable__avatar_initials">{`${(partner?.firstName)
                     .slice(0, 1)
                     .toUpperCase()} ${(partner?.lastName)
-                    .slice(0, 1)
-                    .toUpperCase()}`}</p>
+                      .slice(0, 1)
+                      .toUpperCase()}`}</p>
                 </div>
               ) : (
                 <img
@@ -108,7 +113,7 @@ function PartnerRow({
                 type="button"
                 className="btn btn_badge btn_no-text-transform me-2"
               >
-                <span className="btn__text">Primary</span>
+                <span className="btn__text">{t("Partners.primary")}</span>
               </button>
             ) : (
               <button
@@ -116,7 +121,7 @@ function PartnerRow({
                 type="button"
                 className="btn btn_gray btn_no-text-transform me-2"
               >
-                <span className="btn__text">Make Primary</span>
+                <span className="btn__text">{t("Partners.makePrimary")}</span>
               </button>
             )}
           </div>

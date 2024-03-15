@@ -5,10 +5,14 @@ import { fabric } from 'fabric'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCanvasContainer, selectResolution, selectSelectedCanvas, selectZoom, updateFabricData, updateResolution, updateZoom } from '../../store/app/Edit/Canvas/canvas'
 
+import { useTranslation } from 'react-i18next';
 // ** Shared
 import { getCanvasRef, serializeCanvasContainer } from "../../shared/utils/fabric";
 
 function EditZoom(props) {
+
+    const { t } = useTranslation()
+
     // ** State
     const [zoomPercentage, setZoomPercentage] = useState(100)
 
@@ -103,14 +107,14 @@ function EditZoom(props) {
                 <svg className="icon v2-icon v2-icon-lupe-in zoom__icon">
                     <use href="#v2-icon-lupe-in" xlinkHref="#v2-icon-lupe-in" />
                 </svg>
-                <p className="zoom__button-title">Zoom In</p>
+                <p className="zoom__button-title">{t("zoomIn")}</p>
             </div>
             <p className="zoom__value">{zoomPercentage}%</p>
             <div className="zoom__button" onClick={handleZoomOut}>
                 <svg className="icon v2-icon v2-icon-lupe-out zoom__icon">
                     <use href="#v2-icon-lupe-out" xlinkHref="#v2-icon-lupe-out" />
                 </svg>
-                <p className="zoom__button-title">Zoom Out</p>
+                <p className="zoom__button-title">{t("zoomOut")}</p>
             </div>
         </div>
     )

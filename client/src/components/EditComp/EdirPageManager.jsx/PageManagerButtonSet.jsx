@@ -1,6 +1,7 @@
 // ** Import Libraries
 import React from "react"
 import { useState } from "react"
+import { useTranslation } from 'react-i18next';
 
 // ** Custom Components
 import ConfirmationModal from '../../Modal/ConfirmationModal'
@@ -14,6 +15,8 @@ import { getCanvasRef, serializeCanvasContainer } from "../../../shared/utils/fa
 import { DISPLAY_DIRECTION } from "../../../shared/constant"
 
 function PageManagerButtonSet() {
+    const { t } = useTranslation()
+
     // ** State
     const [showConfirmDialog, setShowConfirmDialog] = useState(false)
 
@@ -107,7 +110,7 @@ function PageManagerButtonSet() {
                             <use href="#v2-icon-plus" xlinkHref="#v2-icon-plus" />
                         </svg>
                     </div>
-                    <p className="page-manager__button-title">Add page</p>
+                    <p className="page-manager__button-title">{t("addPage")}</p>
                 </div>
                 <div className="page-manager__button-triangle">
                     <div
@@ -120,7 +123,7 @@ function PageManagerButtonSet() {
                                 <use href="#v1-icon-repeat" xlinkHref="#v1-icon-repeat" />
                             </svg>
                         </div>
-                        <p className="page-manager__button-title">Rotate</p>
+                        <p className="page-manager__button-title">{t("rotate")}</p>
                     </div>
                 </div>
                 <div className={displayDirection === DISPLAY_DIRECTION.HORIZONTAL ? "page-manager__toggle page-manager__toggle_horizontal-view" : "page-manager__toggle"} onClick={handleDisplayDirectionClick}>
@@ -135,7 +138,7 @@ function PageManagerButtonSet() {
                             />
                         </svg>
                     </div>
-                    <p className="page-manager__button-title">Display</p>
+                    <p className="page-manager__button-title">{t("display")}</p>
                 </div>
             </div>
             {showConfirmDialog &&

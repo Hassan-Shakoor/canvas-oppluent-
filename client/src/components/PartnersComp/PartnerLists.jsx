@@ -18,9 +18,12 @@ import {
 import PartnerRow from "./PartnerRow";
 import { useEffect, useState } from "react";
 import ConfirmationModal from "../Modal/ConfirmationModal";
+import { useTranslation } from 'react-i18next';
 import { toast } from "react-toastify";
 
 function PartnerLists() {
+  const { t } = useTranslation()
+
   // ** State
   const [checked, setChecked] = useState([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
@@ -98,7 +101,7 @@ function PartnerLists() {
     <>
       <div className="controls-set controls-set_end">
         <Link className="btn btn_gray me-2" rel="" to="/partners/new">
-          <span className="btn__text">+ Add New Partner</span>
+          <span className="btn__text">+ {t("Partners.addNewPartner")}</span>
         </Link>
       </div>
       {checked.length === partnerList.length && (
@@ -108,7 +111,7 @@ function PartnerLists() {
         >
           <div className="controls-set__item">
             <button type="button" className="btn btn_secondary">
-              <span className="btn__text">Delete All</span>
+              <span className="btn__text">{t("delete")} All</span>
             </button>
           </div>
         </div>

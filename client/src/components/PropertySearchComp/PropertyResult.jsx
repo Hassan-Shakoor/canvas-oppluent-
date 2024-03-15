@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
+import { useTranslation } from 'react-i18next';
 // ** Store
 import { useDispatch, useSelector } from "react-redux"
 import { selectNumDescRequired, selectNumPhotoRequired, selectSelectedProperty, updateMlsPropertyInfo, updateSelectedProperty, updateUseMlsInfo } from "../../store/app/PropertySearch/property";
@@ -12,6 +13,8 @@ import WarningModal from "../Modal/WarningModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function PropertyResult({ templateId, isInModal, toggleModal }) {
+
+    const { t } = useTranslation()
     // ** Vars
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -102,13 +105,13 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
 
     const handleCreate = () => {
         if (!isConfirm) {
-            toast.error("Oops! Something went wrong in Property Search.")
+            toast.error(t("Property.toastError"))
             setIsWarn(true)
             return
         }
         if (handleValidation()) {
             if (!isInModal) {
-                toast.error("Oops! Something went wrong in Property Search.")
+                toast.error(t("Property.toastError"))
                 setIsWarn(true)
                 setShowWarnModal(true)
                 return
@@ -143,14 +146,13 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
     return (
         <div className="pt-4">
             <h4 className="mb-3 text-info">
-                Your MLS may have compressed your property images. It is recommended that
-                you upload photos from your computer provided by your media team.
+                {t("Property.resultDesc")}
             </h4>
             <div className="mb-3">
                 <label className="input">
-                    <span className="input__label">Headline</span>
+                    <span className="input__label">{t("Property.headlineLabel")}</span>
                     <input
-                        placeholder="Enter the headline"
+                        placeholder={t("Property.headlinePlaceholder")}
                         type="text"
                         className="simple-input"
                         value={headline}
@@ -161,9 +163,9 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
             <div className="row">
                 <div className="col-md-6 mb-3">
                     <label className="input input_has-value">
-                        <span className="input__label">Street</span>
+                        <span className="input__label">{t("Property.streetLabel")}</span>
                         <input
-                            placeholder="Enter the street"
+                            placeholder={t("Property.streetPlaceholder")}
                             type="text"
                             className="simple-input"
                             value={street}
@@ -173,9 +175,9 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
                 </div>
                 <div className="col-md-6 mb-3">
                     <label className="input input_has-value">
-                        <span className="input__label">City</span>
+                        <span className="input__label">{t("Property.cityLabel")}</span>
                         <input
-                            placeholder="Enter the city"
+                            placeholder={t("Property.cityPlaceholder")}
                             type="text"
                             className="simple-input"
                             value={city}
@@ -187,9 +189,9 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
             <div className="row">
                 <div className="col-md-6 mb-3">
                     <label className="input input_has-value">
-                        <span className="input__label">State</span>
+                        <span className="input__label">{t("Property.stateLabel")}</span>
                         <input
-                            placeholder="Enter the state"
+                            placeholder={t("Property.statePlaceholder")}
                             type="text"
                             className="simple-input"
                             value={state}
@@ -199,9 +201,9 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
                 </div>
                 <div className="col-md-6 mb-3">
                     <label className="input input_has-value">
-                        <span className="input__label">Zipcode</span>
+                        <span className="input__label">{t("Property.zipCodeLabel")}</span>
                         <input
-                            placeholder="Enter the zipcode"
+                            placeholder={t("Property.zipCodePlaceholder")}
                             type="text"
                             className="simple-input"
                             value={postalCode}
@@ -274,9 +276,9 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
             <div className="row">
                 <div className="col-md-6 mb-3">
                     <label className="input input_has-value">
-                        <span className="input__label">Price</span>
+                        <span className="input__label">{t("Property.priceLabel")}</span>
                         <input
-                            placeholder="Enter the price"
+                            placeholder={t("Property.pricePlaceholder")}
                             type="text"
                             className="simple-input"
                             value={price}
@@ -286,9 +288,9 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
                 </div>
                 <div className="col-md-6 mb-3">
                     <label className="input input_has-value">
-                        <span className="input__label">MLS#</span>
+                        <span className="input__label">{t("Property.mls")}</span>
                         <input
-                            placeholder="Enter the MLS#"
+                            placeholder={t("Property.mlsPlaceholder")}
                             type="text"
                             className="simple-input"
                             value={mlsNo}
@@ -401,22 +403,20 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
                         </div>
                     </div>
                     <div className="checkbox__label property-search__confirmation checkbox__label_no-space">
-                        Please confirm this is your listing or you have written permission to
-                        use this property and its content for marketing by checking the box on
-                        the left. *
+                        {t("Property.confirmDesc")}
                     </div>
                     {isWarn && !isConfirm && <div className="validation-errors validation-errors_checkbox">
-                        <li className="validation-errors__item">Accept to continue</li>
+                        <li className="validation-errors__item">{t("Property.acceptToContinue")}</li>
                     </div>}
                 </label>
             </div>
             <div className="button-set button-set_space-between">
                 <button type="button" className="btn btn_gray" onClick={() => dispatch(updateSelectedProperty(null))}>
-                    <span className="btn__text">Back</span>
+                    <span className="btn__text">{t("Home.back")}</span>
                 </button>
                 <div className="button-set__divider" />
                 <button type="submit" className="btn" onClick={() => handleCreate()}>
-                    <span className="btn__text">Create</span>
+                    <span className="btn__text">{t('create')}</span>
                 </button>
             </div>
             {showWarnModal &&
@@ -424,7 +424,7 @@ function PropertyResult({ templateId, isInModal, toggleModal }) {
                     title={"Warning!"}
                     body={"Your description character count surpassed the amount that will properly fit and will most likely bleed into your design. Please shorten your text or click CREATE DESIGN to continue customizing your text formatting in the designer."}
                     secondayBtnTxt={"Fix Warnings"}
-                    primaryBtnTxt={"Create Design"}
+                    primaryBtnTxt={t('createDesign')}
                     onClose={() => setShowWarnModal(false)}
                     handleSecodnaryBtn={() => setShowWarnModal(false)}
                     handlePrimaryBtn={(event) => handleModalCreate(event)}

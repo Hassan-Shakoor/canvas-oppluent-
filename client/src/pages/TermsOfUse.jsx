@@ -1,6 +1,10 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 
 function TermsOfUse() {
+
+  const { t } = useTranslation()
+
   return (
     <div className="container">
       <div className="terms-page">
@@ -15,10 +19,10 @@ function TermsOfUse() {
               className="terms-page__account-logo"
               src="https://dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/account/platform_logo/original/platform_logo_login_1-1-1.png?1661778656"
               alt="logo"/>
-            <h1 className="terms-page__page-title">Terms Of Use</h1>
+            <h1 className="terms-page__page-title">{t("TermsOfUse.title")}</h1>
           </div>
           <div className="terms-page__body">
-            <p className="terms-page__welcome">Welcome!</p>
+            <p className="terms-page__welcome">{t("TermsOfUse.welcome")}</p>
             <div className="terms-page__text">
               <p>
                 <br/>
@@ -28,7 +32,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  1) User’s Acceptance{" "}
+                  1) {t("TermsOfUse.userAcceptance")}{" "}
                 </strong>
               </p>
               <p>
@@ -36,15 +40,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  This digital marketing application is comprised of various web pages and
-                  Services offered on those web pages, sites, software and applications
-                  (collectively, “Platform”). “Services” in this agreement (“Agreement”) means
-                  access to and use of the Platform and its features. The Platform is owned and
-                  operated by Maxa Designs, Inc. (collectively, “Maxa”) and is offered to you
-                  (“User”) conditioned on User’s acceptance without modification of the terms,
-                  conditions, and notices contained herein (the “Terms”). Please read these Terms
-                  carefully before agreeing because they are a binding agreement between User and
-                  Maxa.
+                  {t("TermsOfUse.desc1")}
                 </span>
               </p>
               <p>
@@ -52,13 +48,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  These Terms govern User’s use of the Platform and User automatically agrees to
-                  these Terms and to Maxa’s Privacy Policy simply by using or logging into the
-                  Platform.&nbsp;Maxa may amend this Agreement or the Privacy Policy and may
-                  notify User when Maxa does so. PLEASE BE AWARE THAT THERE ARE ARBITRATION AND
-                  CLASS ACTION PROVISIONS THAT MAY AFFECT USER’S RIGHTS.&nbsp;If User does not
-                  agree to this Agreement or the Privacy Policy, then User must stop using the
-                  Services immediately and cease accessing or using the Platform.&nbsp;&nbsp;
+                  {t("TermsOfUse.desc2")}
                 </span>
               </p>
               <p>
@@ -66,9 +56,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  Maxa reserves the right to terminate User’s account, prohibit User from using
-                  the Platform, and take appropriate legal actions if Maxa determine, in their
-                  sole discretion, that User has violated these Terms.
+                  {t("TermsOfUse.desc3")}
                 </span>
               </p>
               <p>
@@ -79,7 +67,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  2) The Services
+                  2) {t("TermsOfUse.theServices")}
                 </strong>
               </p>
               <p>
@@ -87,14 +75,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  Please note that Maxa offers many services. In addition to these Terms in this
-                  Agreement User’s use of Maxa products or services or the Platform may be
-                  provided by Maxa pursuant to a separate mutually or digitally-executed
-                  agreement. Those additional terms become part of User’s Terms in this Agreement
-                  with Maxa, whether executed by User or User’s employer, employee, consultant,
-                  contractor, client, principal, or agent and whether User is an employee,
-                  employer, consultant, contractor, client, principal, or agent if User uses the
-                  Services or logs into the Platform.
+                  {t("TermsOfUse.service1")}
                 </span>
               </p>
               <p>
@@ -105,7 +86,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  3) Access and Ownership
+                  3) {t("TermsOfUse.accessAndOwnership")}
                 </strong>
               </p>
               <p>
@@ -113,19 +94,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  User is granted a limited, non-exclusive, non-transferable, revocable license to
-                  access and use the Platform strictly in accordance with these Terms. All rights
-                  not explicitly granted are reserved by Maxa.&nbsp;If User breaches this
-                  Agreement, User’s access or license to use the Platform may be terminated at
-                  Maxa’s sole and exclusive discretion.&nbsp;Additionally, Maxa may revoke User’s
-                  access or license to use the Platform if Maxa believes that User’s actions may
-                  harm Maxa, its business interests, or any third party rights.&nbsp;Failure by
-                  Maxa to revoke User’s access does not act as a waiver of User’s
-                  conduct.&nbsp;User agrees that the structure, organization, and code of the
-                  Services and Platform along with all software components and related services
-                  are proprietary to Maxa and/or Maxa’s licensors.&nbsp;Maxa and/or its licensors
-                  retain exclusive ownership of the Platform, any documentation, information and
-                  any and all other intellectual property rights relating to the Platform.
+                  {t("TermsOfUse.accessPoint1")}
                 </span>
               </p>
               <p>
@@ -133,9 +102,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  As a condition of User’s use of the Platform, User warrants to Maxa that User
-                  will not use the Platform for any purpose that is unlawful or prohibited by
-                  these Terms.
+                  {t("TermsOfUse.accessPoint2")}
                 </span>
               </p>
               <p>
@@ -146,7 +113,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  4) User Account and Credentials
+                  4) {t("TermsOfUse.userAccountAndCredentials")}
                 </strong>
               </p>
               <p>
@@ -154,13 +121,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  User is required to create an account and a password in order to use the
-                  Platform. User must be at least 18 years old and provide truthful and accurate
-                  information about User to create an account. Providing inaccurate information
-                  when creating an account may result in termination or suspension of the account
-                  and in User being prohibited from using the Platform in the future. If User’s
-                  information changes at any time, User must update their account to reflect those
-                  changes.
+                  {t("TermsOfUse.userAccountPoint1")}
                 </span>
               </p>
               <p>
@@ -168,16 +129,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  If User’s account is assigned to them by an administrator, such as an employer,
-                  employee, consultant, contractor, client, principal, or agent additional terms
-                  may apply to User’s use of the Platform. User represents that User has complied
-                  with all obligations under those additional terms before registering for an
-                  account or accessing or using the Platform or Services. In addition, User
-                  warrants that User will access and use the Platform and Services only as
-                  authorized by those additional terms, including without limitation taking all
-                  necessary and reasonable steps keep User’s Credentials confidential and prevent
-                  unauthorized access by other persons. Also, User’s administrator may be able to
-                  access or disable User’s account without Maxa’s involvement.
+                  {t("TermsOfUse.userAccountPoint2")}
                 </span>
               </p>
               <p>
@@ -185,24 +137,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  Use by anyone other than User of User’s account is strictly prohibited unless
-                  authorized, in writing, by Maxa. User is responsible for maintaining the
-                  confidentiality of User’s exclusive account and username/password
-                  (“Credentials”), and agrees to (i) take all necessary and reasonable steps to
-                  keep User’s Credentials confidential, and (ii) accepts responsibility for all
-                  activities that occur under User’s account. If User believes that User’s account
-                  has been compromised at any time, User will immediately notify User’s system
-                  administrator or Maxa. Maxa reserves the right to verify User’s credentials and
-                  to deny or revoke any User accounts or activities at Maxa’s sole and exclusive
-                  discretion. When User registers for a User account, User may be asked for
-                  financial information, or information Maxa may use to identify User, User’s
-                  representatives, principals, beneficial owners, and other individuals associated
-                  with User’s account.&nbsp;Users are solely responsible and liable for any
-                  activities or actions taken under their Credentials, password and account,
-                  whether or not User has authorized such activities or actions.&nbsp;Maxa is not
-                  liable for any loss incurred as a result of an unauthorized use of a
-                  username/password or account, including without limitation from theft or
-                  misappropriation of User’s account or Credentials.
+                  {t("TermsOfUse.userAccountPoint3")}
                 </span>
               </p>
               <p>
@@ -210,11 +145,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  Not all of the Platform and its accounts are available to Users unless User is a
-                  paying member and enters into a written Maxa “SaaS Agreement” as authorized,
-                  accepted and approved by Maxa. User may not assign or otherwise transfer User’s
-                  account to any other person or entity, except with the prior written
-                  authorization of Maxa.
+                  {t("TermsOfUse.userAccountPoint4")}
                 </span>
               </p>
               <p>
@@ -225,7 +156,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  5) User Privacy
+                  5) {t("TermsOfUse.userPrivacy")}
                 </strong>
               </p>
               <p>
@@ -233,13 +164,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  Maxa values User’s privacy and understands User’s privacy concerns.&nbsp;Maxa’s
-                  Privacy Policy is incorporated into this Agreement, and it governs User’s
-                  submission of information to the Platform.&nbsp;Please review Maxa’s Privacy
-                  Policy so that User may understand Maxa’s privacy practices.&nbsp;All
-                  information Maxa collects is subject to Maxa’s Privacy Policy, and by using the
-                  Platform User consents to all actions taken by Maxa with respect to User’s
-                  information in compliance with the Privacy Policy.&nbsp;
+                  {t("TermsOfUse.userPrivacyPoint1")}
                 </span>
               </p>
               <p>
@@ -250,7 +175,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  6) User Personal Information
+                  6) {t("TermsOfUse.userPersonalInfo")}
                 </strong>
               </p>
               <p>
@@ -258,14 +183,7 @@ function TermsOfUse() {
                   style={{
                   backgroundColor: "transparent"
                 }}>
-                  The personal information (such as User name, company information, photos etc.)
-                  that may be collected during the course of registering for the Platform may be
-                  used or shared with Maxa’s group companies or their agents for the purpose of
-                  improving the quality of services. If User requests information about or
-                  accesses third-party products or services through the Platform, User agrees to
-                  have User’s personal information shared with Maxa’s partners for marketing
-                  purposes. If User chooses to make User’s personal information available through
-                  a third-party site, User does so at their own risk.
+                  {t("TermsOfUse.userPersonalInfoPoint1")}
                 </span>
               </p>
               <p>

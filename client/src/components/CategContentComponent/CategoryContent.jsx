@@ -11,6 +11,7 @@ import TemplateSort from './TemplateSort';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../configs/firebase';
 import { getDatabase, ref, set, onValue } from "firebase/database";
+import { useTranslation } from 'react-i18next';
 import SpinnerContainer from '../Loader/SpinnerContainer';
 
 let userId = null;
@@ -25,6 +26,9 @@ onAuthStateChanged(auth, (user) => {
 
 
 function CategoryContent() {
+
+  const { t } = useTranslation()
+
   // ** States
   const [loading, setLoading] = useState(true);
   const [gridColumn, setGridColumn] = useState(3)
@@ -249,7 +253,7 @@ function CategoryContent() {
                         className="empty-data-set__icon"
                       />
                     </div>
-                    <div className="empty-data-set__label">No Templates</div>
+                    <div className="empty-data-set__label">{t("noTemplates")}</div>
                   </div>}
                 {/* </span> */}
               </div>

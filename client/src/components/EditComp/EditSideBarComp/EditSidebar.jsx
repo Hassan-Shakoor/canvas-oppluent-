@@ -4,6 +4,7 @@ import React from "react";
 // ** Icons
 import { Icon } from "@iconify/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslation } from 'react-i18next';
 
 // Import Custom Components
 import EditSideModuleBar from "./EditSideModuleBar";
@@ -24,15 +25,19 @@ let SidebarButtonData = [
 ];
 
 function EditSidebarButton(props) {
+  const { t } = useTranslation()
   return (
     <div className={props.openDrawer === props.title ? "sidebar__button sidebar__button_active" : "sidebar__button"} data-test="image-module-button" onClick={() => props.handleToggleDrawer(props.title)}>
       <i className="icon"><Icon icon={props.icon} width='1.5rem' height='1.5rem' /></i>
-      <div className="sidebar__button-text">{props.title}</div>
+      <div className="sidebar__button-text">{t(props.title)}</div>
     </div>
   )
 }
 
 function EditSidebar() {
+
+  const { t } = useTranslation()
+
   // ** Hooks
   const openDrawer = useSelector(selectOpenDrawer)
   const dispatch = useDispatch()
@@ -47,19 +52,18 @@ function EditSidebar() {
   }
 
 
-
   return (
     <div className="sidebar">
       <aside className="sidebar__button-bar">
         {SidebarButtonData.map(({ name, iconClass }) => (
-          <EditSidebarButton title={name} icon={iconClass} key={name} handleToggleDrawer={handleToggleDrawer} openDrawer={openDrawer} />
+          <EditSidebarButton title={t(name)} icon={iconClass} key={t(name)} handleToggleDrawer={handleToggleDrawer} openDrawer={openDrawer} />
         ))}
         <div className="sidebar__divider" />
         <div className="sidebar__button_rounded-icon sidebar__button" data-test="support-button">
           <i className="icon">
             <FontAwesomeIcon icon="fa-regular fa-envelope" style={{ color: "#ffffff" }} />
           </i>
-          <div className="sidebar__button-text">Support</div>
+          <div className="sidebar__button-text">{t("Header.support")}</div>
           <div className="support-overlay__tooltip-anchor" />
         </div>
       </aside>

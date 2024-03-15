@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Dropdown from "rc-dropdown";
+import { useTranslation } from 'react-i18next';
+
 // import components
 import EditPopUp from "./EditPopUp";
 import MoreDropDown from "../Dropdown/MoreDropdown";
@@ -26,6 +28,8 @@ import { getDatabase, onValue, ref } from 'firebase/database'
 import { selectProfile } from "../../store/app/AccountInformation/profile";
 
 function DesignTemplate(props) {
+
+    const { t } = useTranslation()
 
     const userProfile = useSelector(selectProfile);
 
@@ -322,7 +326,7 @@ function DesignTemplate(props) {
                             onClick={() => navigate(`/edit/${props.item.id}`)}
                         // handleCreateDesign(props.item.id)}
                         >
-                            <span className="btn__text" style={{ fontFamily: 'Montserrat' }}>Edit</span>
+                            <span className="btn__text" style={{ fontFamily: 'Montserrat' }}>{t('edit')}</span>
                         </button>
                         {isCreateDesignOpen && (
                             <EditPopUp

@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 
 // ** Custom Component
 import App from './App';
+import './i18n'
 
 // Style Sheet Import
 import './styles/font.css'

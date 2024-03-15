@@ -6,9 +6,12 @@ import { getFolders } from '../../services/firebase/FolderServices/getFolders';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUID } from '../../store/app/User/userPreference';
+import { useTranslation } from 'react-i18next';
 
 
 const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, selectedItems, setSelectedItems, renderTriggerFromDashboard, setRenderTriggerFromDashboard }) => {
+
+    const { t } = useTranslation()
 
     const uid = useSelector(selectUID)
     const isFoldersKeywordPresent = window.location.href.includes('folders');
@@ -181,7 +184,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                                             className="empty-data-set__icon"
                                         />
                                     </div>
-                                    <div className="empty-data-set__label">No Templates</div>
+                                    <div className="empty-data-set__label">{t("noTemplates")}</div>
                                 </div>
                             )}
                         </div>
@@ -242,7 +245,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                                         className="empty-data-set__icon"
                                     />
                                 </div>
-                                <div className="empty-data-set__label">No Templates</div>
+                                <div className="empty-data-set__label">{t("noTemplates")}</div>
                             </div>)
                         }
                     </div>

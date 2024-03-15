@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 // ** Firebase
-import { signInWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 
 // ** Custom Component
 import LoginInputs from '../components/LoginComponent/LoginInputs';
-import { ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import ResetPasswordInputs from '../components/LoginComponent/ResetPasswordInputs';
 
 // ** Configs
@@ -16,6 +16,7 @@ import { auth } from '../configs/firebase';
 
 // ** Services
 import { setLocalStorage } from '../services/localStorage';
+import { useTranslation } from 'react-i18next';
 
 // ** Constant
 import { LOCAL_STORAGE } from '../shared/constant';
@@ -26,6 +27,9 @@ const SCREEN_MODES = {
 }
 
 function Login() {
+
+  const { t } = useTranslation()
+
   const [mode, setMode] = useState(SCREEN_MODES.LOGIN)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,50 +38,50 @@ function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (mode === SCREEN_MODES.LOGIN){
+    if (mode === SCREEN_MODES.LOGIN) {
       if (!email || !password) {
-        toast.error("Email or password are required")
-      }else{
+        toast.error(t('Login.emailRequiredError'))
+      } else {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             const user = userCredential.user;
-            setLocalStorage(LOCAL_STORAGE.USER_DATA,{
-              uid:user.uid,
+            setLocalStorage(LOCAL_STORAGE.USER_DATA, {
+              uid: user.uid,
               email: user.email,
             })
             navigate('/categories');
           })
           .catch((error) => {
-            toast.error("Invalid email or password")
+            toast.error(t('Login.invalidEmailError'))
             console.log(error)
           })
       }
     } else {
-        if (!resetEmail.trim()) {
-          toast.error("Please enter a valid email address.");
-          return;
-        }
-      
-        sendPasswordResetEmail(auth, resetEmail)
-          .then(() => {
-            toast.success("Password reset email sent. Check your inbox.");
-          })
-          .catch((error) => {
-            toast.error("An error occurred. Please check the email address.");
-          });
-    } 
+      if (!resetEmail.trim()) {
+        toast.error(t('Login.enterValidEmail'));
+        return;
+      }
+
+      sendPasswordResetEmail(auth, resetEmail)
+        .then(() => {
+          toast.success(t('Login.passwordResetToast'));
+        })
+        .catch((error) => {
+          toast.error(t('Login.errorOccuredToast'));
+        });
+    }
   };
-  
+
   const handleModeSwitch = () => {
     setEmail("")
     setPassword("")
     setResetEmail("")
-    setMode(mode === SCREEN_MODES.LOGIN ? SCREEN_MODES.RESET_PASSWORD : SCREEN_MODES.LOGIN )
+    setMode(mode === SCREEN_MODES.LOGIN ? SCREEN_MODES.RESET_PASSWORD : SCREEN_MODES.LOGIN)
   }
 
   return (
     <div id="LogIn">
-    <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme='light'/>
+      <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme='light' />
       <div className="login-page">
         <div className="login-page__content">
           <div
@@ -90,28 +94,28 @@ function Login() {
             </div>
             <form className="login-page__form" onSubmit={handleLogin} data-custom-attribute={mode === SCREEN_MODES.LOGIN ? SCREEN_MODES.LOGIN : SCREEN_MODES.RESET_PASSWORD}>
               <div className="login-page__form-header">
-                <p className="login-page__title">{mode === SCREEN_MODES.LOGIN ? "Log In" : "Reset Password"}</p>
-                {mode === SCREEN_MODES.LOGIN && <p className="login-page__description">Let's start creating custom marketing!</p>}
+                <p className="login-page__title">{mode === SCREEN_MODES.LOGIN ? t('Login.login') : t('Login.resetPassword')}</p>
+                {mode === SCREEN_MODES.LOGIN && <p className="login-page__description">{t('Login.heading')}</p>}
               </div>
-              {mode === SCREEN_MODES.LOGIN && <LoginInputs email={email} setEmail={setEmail} password={password} setPassword={setPassword}/>}
-              {mode === SCREEN_MODES.RESET_PASSWORD && <ResetPasswordInputs resetEmail={resetEmail} setResetEmail={setResetEmail}/>}
+              {mode === SCREEN_MODES.LOGIN && <LoginInputs email={email} setEmail={setEmail} password={password} setPassword={setPassword} />}
+              {mode === SCREEN_MODES.RESET_PASSWORD && <ResetPasswordInputs resetEmail={resetEmail} setResetEmail={setResetEmail} />}
               <div className="login-page__button-set">
                 <button type="submit" className="btn btn_wide">
-                  <span className="btn__text">{mode === SCREEN_MODES.LOGIN ? "Log In" : "Reset Password"}</span>
+                  <span className="btn__text">{mode === SCREEN_MODES.LOGIN ? t('Login.login') : t('Login.resetPassword')}</span>
                 </button>
                 <button type="button" className="btn btn_transparent btn_wide" onClick={handleModeSwitch}>
-                {mode === SCREEN_MODES.RESET_PASSWORD && 
-                  <svg className="icon v1-icon v1-icon-chevron-left-light">
-                    <use
-                      href="#v1-icon-chevron-left-light"
-                      xlinkHref="#v1-icon-chevron-left-light"
-                    />
-                  </svg>}
+                  {mode === SCREEN_MODES.RESET_PASSWORD &&
+                    <svg className="icon v1-icon v1-icon-chevron-left-light">
+                      <use
+                        href="#v1-icon-chevron-left-light"
+                        xlinkHref="#v1-icon-chevron-left-light"
+                      />
+                    </svg>}
                   <span className="btn__text">{mode === SCREEN_MODES.LOGIN
-                   ? 
-                   "Forgot Password?"
-                   :
-                    "Back to Log In"}</span>
+                    ?
+                    t('Login.forgotPasswork')
+                    :
+                    t('Login.backToLogin')}</span>
                 </button>
               </div>
             </form>
@@ -122,7 +126,7 @@ function Login() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="btn__text">Privacy</span>
+                <span className="btn__text">{t('Login.privacy')}</span>
               </a>
               &nbsp;&amp;&nbsp;
               <a
@@ -131,7 +135,7 @@ function Login() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="btn__text">Terms</span>
+                <span className="btn__text">{t('Login.terms')}</span>
               </a>
             </div>
           </div>

@@ -16,9 +16,14 @@ import { deleteTemplate } from '../../services/firebase/TemplateServices/deleteT
 import FoldersModal from '../Modal/FoldersModal';
 import { getFolders } from '../../services/firebase/FolderServices/getFolders';
 
+import { useTranslation } from 'react-i18next';
+
+
 const DashboardHeaderButtons = (props) => {
 
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const uid = useSelector(selectUID)
 
@@ -72,7 +77,7 @@ const DashboardHeaderButtons = (props) => {
     {
       key: "move-to-folder",
       iconClass: "fa-solid fa-arrow-right-arrow-left",
-      title: "Move to Folder",
+      title: t("Home.moveToFolder"),
       function: async () => {
         try {
           // props.selectedItems?.map((item, index) => {
@@ -94,7 +99,7 @@ const DashboardHeaderButtons = (props) => {
     {
       key: "delete",
       iconClass: "fa-regular fa-trash-can",
-      title: "Delete",
+      title: t("delete"),
       function: async () => {
         try {
           await Promise.all(
@@ -176,9 +181,9 @@ const DashboardHeaderButtons = (props) => {
           body={
             <div className="password-input">
               <label className="input">
-                <span className="input__label">Folder Name</span>
+                <span className="input__label">{t("Home.folderNameLabel")}</span>
                 <input
-                  placeholder="Enter Folder Name"
+                  placeholder={t("Home.folderNamePlaceholder")}
                   type="text"
                   className="simple-input"
                   value={folderName}
@@ -187,8 +192,8 @@ const DashboardHeaderButtons = (props) => {
               </label>
             </div>
           }
-          secondayBtnTxt={"Cancel"}
-          primaryBtnTxt={"Submit"}
+          secondayBtnTxt={t("cancel")}
+          primaryBtnTxt={t("submit")}
           onClose={() => setShowInputFolderModal(false)}
           handleSecodnaryBtn={() => setShowInputFolderModal(false)}
           handlePrimaryBtn={async (e) => {
@@ -198,21 +203,21 @@ const DashboardHeaderButtons = (props) => {
               const response = await createFolderinFolder(uid, id, folderName);
               if (response) {
                 setShowInputFolderModal(false);
-                toast.success("Folder Created Successfully.")
+                toast.success(t("Folder.folderCreatedSuccess"))
                 props.setRenderTriggerFromDashboard(!props.renderTriggerFromDashboard)
               } else {
                 setShowInputFolderModal(false);
-                toast.error("Error Creating Folder.")
+                toast.error(t("Folder.folderCreatedError"))
               }
             } else {
               const response = await createFolder(uid, folderName);
               if (response) {
                 setShowInputFolderModal(false);
-                toast.success("Folder Created Successfully.")
+                toast.success(t("Folder.folderCreatedSuccess"))
                 props.setRenderTriggerFromDashboard(!props.renderTriggerFromDashboard)
               } else {
                 setShowInputFolderModal(false);
-                toast.error("Error Creating Folder.")
+                toast.error(t("Folder.folderCreatedError"))
               }
             }
             setOverlayLoading(false);
@@ -231,7 +236,7 @@ const DashboardHeaderButtons = (props) => {
           {isFoldersKeywordPresent &&
             <button type="button" className="btn_secondary dashboard-header__buttons-back dashboard-header__buttons" onClick={handleBack}>
               <span className="btn__text">
-                <FontAwesomeIcon icon="fa-solid fa-chevron-left" /> Back
+                <FontAwesomeIcon icon="fa-solid fa-chevron-left" /> {t("Home.back")}
               </span>
             </button>}
           <div className="dashboard-header__search search-input">
@@ -245,7 +250,7 @@ const DashboardHeaderButtons = (props) => {
                 autoComplete="off"
                 id="search"
                 name="search"
-                placeholder="Search My Dashboard"
+                placeholder={t("Home.searchDashboard")}
                 type="search"
                 className="dashboard-header__search-input search-input__input"
                 value={searchInput}
@@ -260,7 +265,7 @@ const DashboardHeaderButtons = (props) => {
         <div className="dashboard-header__right-panel">
           <button type="button" className={`btn_secondary dashboard-header__buttons`}
             onClick={() => setShowInputFolderModal(true)}>
-            <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-circle-plus" size='lg' /> Create Folder</span>
+            <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-circle-plus" size='lg' /> {t("Home.createFolder")}</span>
           </button>
           <Dropdown
             trigger={["click"]}
@@ -272,7 +277,7 @@ const DashboardHeaderButtons = (props) => {
           >
             <button className={`btn_secondary btn_dropdown dashboard-header__buttons-dropdown-batch dashboard-header__buttons ${props.selectedItems.length === 0 ? 'btn_disabled' : ''}`}
               disabled={props.selectedItems.length === 0} onClick={() => setOpenBatchDropdown(!openBatchDropdown)}>
-              <span className="btn__text"> <FontAwesomeIcon icon="fa-regular fa-copy" flip="horizontal" /> Batch Actions</span>
+              <span className="btn__text"> <FontAwesomeIcon icon="fa-regular fa-copy" flip="horizontal" /> {t("Home.batchActions")}</span>
               <svg className="icon v2-icon v2-icon-chevron-down">
                 <use href="#v2-icon-chevron-down" xlinkHref="#v2-icon-chevron-down"></use>
               </svg>
@@ -287,7 +292,7 @@ const DashboardHeaderButtons = (props) => {
           <div style={{ position: 'relative' }}>
 
             <button type="button" onClick={() => setOpenSortDropDown(!openSortDropDown)} className="btn_secondary btn_dropdown btn_secondary dashboard-header__buttons-dropdown dashboard-header__buttons">
-              <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-right-left" rotation={90} size='lg' /> Sort by</span>
+              <span className="btn__text"><FontAwesomeIcon icon="fa-solid fa-right-left" rotation={90} size='lg' /> {t("Home.sortBy")}</span>
               <svg className="icon v2-icon v2-icon-chevron-down">
                 <use href="#v2-icon-chevron-down" xlinkHref="#v2-icon-chevron-down"></use>
               </svg>

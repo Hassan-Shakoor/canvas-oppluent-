@@ -21,8 +21,11 @@ import { publishTemplate } from "../../../services/firebase/TemplateServices/pub
 import SpinnerOverlay from "../../Loader/SpinnerOverlay";
 import { getUserInformation } from "../../../services/firebase/getUserInformation";
 import uploadTemplateImage from "../../../services/uploadTemplateImage";
+import { useTranslation } from 'react-i18next';
 
 function NavSaveCloseButtonSet() {
+  const { t } = useTranslation()
+
   const navigate = useNavigate();
   // vars 
   const dispatch = useDispatch()
@@ -69,8 +72,8 @@ function NavSaveCloseButtonSet() {
     const blob = await fetch(dataURL).then((res) => res.blob());
     const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
 
-    if(!templateImageUrl) {
-      toast.error("Error Saving Template.")
+    if (!templateImageUrl) {
+      toast.error(t("EditHeader.savedError"))
       setLoading(false);
       setShowConfirmationModal(false)
     }
@@ -79,7 +82,7 @@ function NavSaveCloseButtonSet() {
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
     await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrl)
-    toast.success("Changes Saved Successfully.")
+    toast.success(t("EditHeader.savedSuccess"))
     setLoading(false);
   }
 
@@ -97,8 +100,8 @@ function NavSaveCloseButtonSet() {
     const blob = await fetch(dataURL).then((res) => res.blob());
     const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
 
-    if(!templateImageUrl) {
-      toast.error("Error Publishing Template.")
+    if (!templateImageUrl) {
+      toast.error(t("EditHeader.publishTemplateSuccess"))
       setLoading(false);
       setShowConfirmationModal(false)
     }
@@ -108,7 +111,7 @@ function NavSaveCloseButtonSet() {
     const updatedData = { ...templateData, fabricData: serializedData }
     await publishTemplate(userData?.uid, updatedData)
     await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrl)
-    toast.success("Template Published Successfully.")
+    toast.success(t("EditHeader.publishTemplateError"))
     setLoading(false);
     setShowConfirmationModal(false)
   }
@@ -124,20 +127,20 @@ function NavSaveCloseButtonSet() {
   return (<>
     <ul className="header__button-set">
       <li className="header__text-button header__save-button" data-test="save-button" onClick={() => handleSaveCheck()}>
-        Save
+        {t("save")}
       </li>
       <li className="header__text-button" data-test="close-button" onClick={() => handleClose()}>
-        Close
+        {t("close")}
       </li>
     </ul>
     <SpinnerOverlay loading={loading} />
     {
       showConfirmationModal &&
       <ConfirmationModal
-        title={<p style={{ color: '#000', margin: 0 }}>Publish Template Confirmation</p>}
-        body={<p style={{ color: '#000', margin: 0 }}>Do you want to publish this template?</p>}
-        secondaryBtnTxt={"Cancel"}
-        primaryBtnTxt={"Publish"}
+        title={<p style={{ color: '#000', margin: 0 }}>{t("EditHeader.publishTemplateConfirmation")}</p>}
+        body={<p style={{ color: '#000', margin: 0 }}>{t("EditHeader.wantToPublish")}</p>}
+        secondaryBtnTxt={t("cancel")}
+        primaryBtnTxt={t("publish")}
         close={() => { setShowConfirmationModal(false) }}
         submit={(event) => handlePublish(event)}
       />

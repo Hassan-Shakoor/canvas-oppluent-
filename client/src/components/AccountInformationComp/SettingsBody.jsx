@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import { useTranslation } from 'react-i18next';
 // ** Constant
 import { toast } from "react-toastify";
 import { LANGUAGE, isEmailValid } from "../../shared/constant";
@@ -21,6 +21,8 @@ import {
 } from "../../services/firebase/updateUserInformation";
 
 function SettingsBody({ setting }) {
+
+  const { t } = useTranslation();
   // ** State
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -49,9 +51,9 @@ function SettingsBody({ setting }) {
       if (response) {
         updatedObject.language = setting.language;
         dispatch(saveSetting(updatedObject));
-        toast.success("Your email has been changed");
+        toast.success(t("accountInfo.emailChangedSuccess"));
       } else {
-        toast.error("Something went Wrong");
+        toast.error(t("accountInfo.somethingWentWrong"));
       }
       setLoading(!loading);
     } else if (
@@ -61,7 +63,7 @@ function SettingsBody({ setting }) {
       newPassword !== currentPassword
     ) {
       updateUserPassword(currentPassword, newPassword);
-      toast.success("Your password has been changed");
+      toast.success(t("accountInfo.passwordChangedSuccess"));
       setLoading(!loading);
     } else if (
       language !== setting.language &&
@@ -72,15 +74,15 @@ function SettingsBody({ setting }) {
       const response = updateUserEmail(email, currentPassword);
       if (response) {
         dispatch(saveSetting(updatedObject));
-        toast.success("Your email and language has been changed");
+        toast.success(t("accountInfo.emailAndLanguageChangedSuccess"));
       } else {
-        toast.error("Something went Wrong");
+        toast.error(t("accountInfo.somethingWentWrong"));
       }
       setLoading(!loading);
     } else if (language !== setting.language) {
       updatedObject.email = setting.email;
       dispatch(saveSetting(updatedObject));
-      toast.success("Your language has been changed");
+      toast.success(t("accountInfo.languageChangedSuccess"));
       setLoading(!loading);
     }
   };
@@ -97,9 +99,9 @@ function SettingsBody({ setting }) {
         <div className="col-md-7 page__column">
           <div className="mb-3">
             <label className="input input_has-value">
-              <span className="input__label">Email</span>
+              <span className="input__label">{t("accountInfo.emailLabel")}</span>
               <input
-                placeholder="Please Enter Your Email"
+                placeholder={t("accountInfo.emailPlaceholder")}
                 type="text"
                 className="simple-input"
                 value={email}
@@ -110,9 +112,9 @@ function SettingsBody({ setting }) {
           <div className="mb-3">
             <div className="password-input">
               <label className="input">
-                <span className="input__label">New Password</span>
+                <span className="input__label">{t("accountInfo.newPasswordLabel")}</span>
                 <input
-                  placeholder="Leave blank if you dont want to change your password"
+                  placeholder={t("accountInfo.newPasswordPlaceholder")}
                   type="password"
                   className="simple-input"
                   value={newPassword}
@@ -127,9 +129,9 @@ function SettingsBody({ setting }) {
           <div className="mb-3">
             <div className="password-input">
               <label className="input">
-                <span className="input__label">Password Confirmation</span>
+                <span className="input__label">{t("accountInfo.passwordConfirmationLabel")}</span>
                 <input
-                  placeholder="Reenter your password"
+                  placeholder={t("accountInfo.passwordConfirmationPlaceholder")}
                   type="password"
                   className="simple-input"
                   value={passwordConfirmation}
@@ -144,9 +146,9 @@ function SettingsBody({ setting }) {
           <div className="mb-3">
             <div className="password-input">
               <label className="input">
-                <span className="input__label">Current Password</span>
+                <span className="input__label">{t("accountInfo.currentPasswordLabel")}</span>
                 <input
-                  placeholder="Enter your current password"
+                  placeholder={t("accountInfo.currentPasswordPlaceholder")}
                   type="password"
                   className="simple-input"
                   value={currentPassword}
@@ -160,7 +162,7 @@ function SettingsBody({ setting }) {
           </div>
           <div className="mb-3">
             <div className="select-container select-container_has-value">
-              <span className="input__label">Language</span>
+              <span className="input__label">{t("accountInfo.language")}</span>
               <div
                 className="select-container"
                 style={{ position: "relative", boxSizing: "border-box" }}
@@ -276,12 +278,12 @@ function SettingsBody({ setting }) {
         </div>
         <div className="col-md-5 page__column">
           <div className="mb-4">
-            <h4 className="mb-3">Pro Tips</h4>
+            <h4 className="mb-3">{t("accountInfo.proTips")}</h4>
             <button
               type="button"
               className="btn btn_gray btn_no-text-transform"
             >
-              <span className="btn__text">Reset Pro Tips</span>
+              <span className="btn__text">{t("accountInfo.resetProTips")}</span>
             </button>
           </div>
         </div>
@@ -291,10 +293,10 @@ function SettingsBody({ setting }) {
             className="btn btn_secondary"
             onClick={() => navigate("/categories")}
           >
-            <span className="btn__text">Cancel</span>
+            <span className="btn__text">{t("cancel")}</span>
           </button>
           <button type="submit" className="btn" onClick={handleSaveClick}>
-            <span className="btn__text">Save</span>
+            <span className="btn__text">{t("save")}</span>
           </button>
         </div>
       </div>
