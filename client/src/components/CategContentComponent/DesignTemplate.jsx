@@ -71,6 +71,8 @@ function DesignTemplate(props) {
         // Open the request with the provided URL
         xhr.open('GET', props.item.storage_url[0]);
 
+        toast.success("Downloading Started...")
+
         // Set up the onload event to handle the downloaded image
         xhr.onload = () => {
             // Create a link element
