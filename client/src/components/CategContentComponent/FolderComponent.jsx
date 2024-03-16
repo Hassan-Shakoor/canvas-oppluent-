@@ -1,7 +1,7 @@
 import Dropdown from 'rc-dropdown';
 import React, { useEffect, useState } from 'react';
 import MoreDropDown from '../Dropdown/MoreDropdown';
-import { selectUID } from '../../store/app/User/userPreference';
+import { selectDarkMode, selectUID } from '../../store/app/User/userPreference';
 import { useSelector } from 'react-redux';
 import { getLocalStorage } from '../../services/localStorage';
 import { LOCAL_STORAGE } from '../../shared/constant';
@@ -18,6 +18,8 @@ import FoldersModal from '../Modal/FoldersModal';
 const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColumn, triggerRender, setTriggerRender,
     selectedItems, setSelectedItems }) => {
 
+    const darkMode = useSelector(selectDarkMode);
+
     const uid = useSelector(selectUID)
 
     const navigate = useNavigate()
@@ -28,6 +30,10 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
     const [showInputModal, setShowInputModal] = useState(false)
     const [overlayLoading, setOverlayLoading] = useState(false);
     const [openMoveFolderModal, setOpenMoveFolderModal] = useState(false);
+
+    useEffect(() => {
+        document.body.className = darkMode ? "theme_dark" : "";
+    }, [darkMode]);
 
     const handleOpenFolder = async () => {
         try {

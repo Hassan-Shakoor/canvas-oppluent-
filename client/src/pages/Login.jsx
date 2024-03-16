@@ -113,7 +113,7 @@ function Login() {
                     </svg>}
                   <span className="btn__text">{mode === SCREEN_MODES.LOGIN
                     ?
-                    t('Login.forgotPasswork')
+                    t('Login.forgotPassword')
                     :
                     t('Login.backToLogin')}</span>
                 </button>

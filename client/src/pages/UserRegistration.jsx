@@ -333,7 +333,7 @@ function UserRegistration() {
                             height: '70vh'
                         }}>
                             <div>
-                                <h1 style={{ fontSize: '30px', fontWeight: 'bold' }}>{t("UserRegistration.alreadyRegistered1")}</h1>
+                                <h1 style={{ fontSize: '30px', fontWeight: 'bold' }}>{t("UserRegistration.alreadyRegistered")}</h1>
                             </div>
                             <div className='separator'>
                                 <hr />
