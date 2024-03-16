@@ -27,10 +27,13 @@ function Profile() {
     const buttonElement = document.querySelector('.avatar-button');
     if (buttonElement) {
       const buttonRect = buttonElement.getBoundingClientRect();
+
+      const leftValue = `${((buttonRect.left / buttonRect.right) * 100) - 7}%`
       //   console.log(buttonRect);
       setProfileButtonPosition({
         top: buttonRect.bottom + window.scrollY + 10,
-        left: buttonRect.left - (buttonRect.right - buttonRect.left) + window.scrollY + 40,
+        left: leftValue
+        // left: '94%'
       });
     }
   };

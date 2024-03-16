@@ -31,7 +31,8 @@ function PageManagerList(props) {
         if (canvasContainer && canvasContainer.length > 0) {
           const dataURL = canvasContainer[props.index]?.toDataURL({
             format: "png",
-            multiplier: 1, // Adjust the multiplier for the screenshot size
+            multiplier: 1,
+            allowTaint: true // Adjust the multiplier for the screenshot size
           });
 
           // Set the exported image data URI in the state

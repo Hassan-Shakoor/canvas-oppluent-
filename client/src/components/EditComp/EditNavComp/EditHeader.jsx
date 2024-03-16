@@ -31,9 +31,11 @@ function EditHeader() {
     if (buttonElement) {
       const buttonRect = buttonElement.getBoundingClientRect();
       console.log(buttonRect);
+      const leftValue = `${((buttonRect.left / buttonRect.right) * 100) - 6.8}%`
+
       setlanguageButtonPosition({
         top: buttonRect.bottom + window.scrollY,
-        left: buttonRect.left - ((buttonRect.right - buttonRect.left) * 3),
+        left: leftValue,
       });
     }
   };

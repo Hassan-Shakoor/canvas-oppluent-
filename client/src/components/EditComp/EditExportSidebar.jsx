@@ -43,7 +43,7 @@ const EditExportSidebar = () => {
         { label: 'Fair Quality', description: '150 dpi' }
     ]);
 
-    const [selectedPageOption, setSelectedPageOption] = useState('all');
+    const [selectedPageOption, setSelectedPageOption] = useState('current');
     const [rangeFrom, setRangeFrom] = useState(1);
     const [rangeTo, setRangeTo] = useState(1);
 

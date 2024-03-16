@@ -57,7 +57,7 @@ function ProfileBody({ profile }) {
       setShowInputModal(true);
     } else {
       dispatch(saveProfile(data));
-      toast.success(t("profileChangedSuccess"))
+      toast.success(t("accountInfo.profileChangedSuccess"))
     }
   };
 

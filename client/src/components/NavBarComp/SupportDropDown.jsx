@@ -9,9 +9,9 @@ function SupportDropDown(props) {
   const dropdownStyle = {
     position: 'fixed',
     // top: props.position.top + 'px',
-    // left: props.position.left + 'px',
     top: '66px',
-    left: '1100px',
+    left: props.position.left,
+    // left: '1100px',
     "min-width": props.width,
   };
 

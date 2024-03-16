@@ -34,9 +34,11 @@ function Header(props) {
     if (buttonElement) {
       const buttonRect = buttonElement.getBoundingClientRect();
       console.log(buttonRect);
+      const leftValue = `${((buttonRect.left / buttonRect.right) * 100) - 6.8}%`
+
       setlanguageButtonPosition({
         top: buttonRect.bottom + window.scrollY + 15,
-        left: buttonRect.left - ((buttonRect.right - buttonRect.left) * 3) + window.screenY - 20,
+        left: leftValue,
       });
     }
   };

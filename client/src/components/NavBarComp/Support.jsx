@@ -18,9 +18,11 @@ function Support() {
         const buttonElement = document.querySelector('[data-test="support-button"]');
         if (buttonElement) {
             const buttonRect = buttonElement.getBoundingClientRect();
+            const leftValue = `${((buttonRect.left / buttonRect.right) * 100) - 16}%`
+
             setSupportButtonPosition({
                 top: buttonRect.bottom + window.scrollY + 10,
-                left: buttonRect.left + window.scrollX,
+                left: leftValue,
                 width: buttonRect.width
             });
         }
