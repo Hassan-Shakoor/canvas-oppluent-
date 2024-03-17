@@ -117,10 +117,10 @@ const SendBackFrontObject = () => {
                     <FontAwesomeIcon icon="fa-solid fa-arrow-down-long" />
                 </div>
                 <div className="tool-button" data-tooltip='Bring to Front' onClick={bringToFront}>
-                    <img src={arrowDownToLine} alt="Bring To Front" style={{ width: '20px', opacity: 0.72, transform: 'rotate(180deg)' }} />
+                    <img src={arrowDownToLine} alt="Bring To Front" style={{ width: '20px', opacity: 0.72, transform: 'rotate(180deg)', filter: 'invert(1)' }} />
                 </div>
                 <div className="tool-button" data-tooltip='Send to Back' onClick={sendToBack}>
-                    <img src={arrowDownToLine} alt="Send to Back" style={{ width: '20px', opacity: 0.72, }} />
+                    <img src={arrowDownToLine} alt="Send to Back" style={{ width: '20px', opacity: 0.72, filter: 'invert(1)' }} />
                 </div>
             </div>
             <div className="toolbar__divider" />

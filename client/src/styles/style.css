@@ -34814,6 +34814,7 @@ span.CodeMirror-selectedtext {
 
 .dashboard-header__right-panel {
   flex-wrap: nowrap;
+  position: relative;
 }
 
 .dashboard-header__bottom-panel {
@@ -34903,6 +34904,7 @@ span.CodeMirror-selectedtext {
   line-height: 22px;
   min-width: 100px;
   display: flex;
+  margin: auto !important;
   flex-direction: column;
   justify-content: center;
   position: relative;
@@ -37924,7 +37926,8 @@ svg.icon.v2-icon.v2-icon-chevron-down {
 
 .sort-dropdown-container {
   position: absolute;
-  top: 82px;
+  top: 42px;
+  right: 14%;
   display: flex;
   flex-flow: column wrap;
   max-width: 120px;

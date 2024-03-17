@@ -29,7 +29,6 @@ function PageManagerList(props) {
     const handlePreviewRender = (time) => {
       setTimeout(() => {
 
-        console.log("first")
         if (canvasContainer && canvasContainer.length > 0) {
           const dataURL = canvasContainer[props.index]?.toDataURL({
             format: "png",

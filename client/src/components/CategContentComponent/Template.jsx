@@ -50,12 +50,12 @@ function Template(props) {
       title: "Open in new Tab",
       link: `share/${props.userId}/${props.categoryId}/${props.item.id}`
     },
-    {
-      key: "add-to-my-design",
-      iconClass: "fa-solid fa-star",
-      title: props.item.isMyDesign ? "Remove from My Designs" : "Add to My Designs",
-      function: handleAddMyDesign
-    },
+    // {
+    //   key: "add-to-my-design",
+    //   iconClass: "fa-solid fa-star",
+    //   title: props.item.isMyDesign ? "Remove from My Designs" : "Add to My Designs",
+    //   function: handleAddMyDesign
+    // },
   ];
 
   function handleCreateDesign(id) {
