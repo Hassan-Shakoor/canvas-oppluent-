@@ -16,6 +16,11 @@ function NavUndoRedoButtonSet() {
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
 
+    const [undoStatus, setUndoStatus] = useState(false);
+    const [redoStatus, setRedoStatus] = useState(false);
+
+    const [previousState, setPreviousState] = useState(null);
+
     useEffect(() => {
         const canvas = canvasContainer[selectedCanvas];
 
@@ -28,17 +33,27 @@ function NavUndoRedoButtonSet() {
 
         const handleObjectModified = () => {
             console.log("Object modified");
-            const currentState = JSON.parse(JSON.stringify(canvas.toJSON()));
-            setUndoStack((prevStack) => [...prevStack, currentState]);
+
+            if (!undoStatus && !redoStatus && canvas) {
+                const currentState = canvas.toJSON();
+                if (currentState !== previousState) {
+                    setUndoStack(prevStack => [...prevStack, currentState]);
+                    setPreviousState(currentState);
+                    setRedoStack([]);
+                }
+            }
+
+            setUndoStatus(false);
+            setRedoStatus(false);
         };
 
         // Handle object deletion and other custom events as needed
         const handleObjectRemoved = handleObjectModified;
-        const handleObjectAdded = handleObjectModified;
+        // const handleObjectAdded = handleObjectModified;
 
         canvas.on("object:modified", handleObjectModified);
-        canvas.on("object:removed", handleObjectRemoved);
-        canvas.on("object:added", handleObjectAdded);
+        // canvas.on("object:removed", handleObjectRemoved);
+        // canvas.on("object:added", handleObjectAdded);
 
         setMyCanvas(canvas);
         setUndoStack([canvas.toJSON()]); // Initialize with initial state
@@ -51,12 +66,13 @@ function NavUndoRedoButtonSet() {
     }, [canvasContainer, selectedCanvas]);
 
     const handleUndo = () => {
-        if (undoStack.length > 1) {
+        if (undoStack.length > 2) {
             const lastState = undoStack.pop();
             const prevState = undoStack[undoStack.length - 1];
 
             if (prevState) {
                 setRedoStack((prevStack) => [lastState, ...prevStack]);
+                setUndoStatus(true);
                 myCanvas.loadFromJSON(prevState, () => myCanvas.renderAll());
             } else {
                 console.log("No more changes to undo");
@@ -70,6 +86,7 @@ function NavUndoRedoButtonSet() {
         if (redoStack.length > 0) {
             const nextState = redoStack.shift();
             setUndoStack([...undoStack, myCanvas.toJSON()]);
+            setRedoStatus(true);
             myCanvas.loadFromJSON(nextState, () => myCanvas.renderAll());
         } else {
             console.log("Redo stack is empty");
