@@ -166,7 +166,7 @@ function CategoryContent() {
       }
     }
     if (id !== undefined) {
-      console.log(categoriesData)
+      // console.log(categoriesData)
       const fetchedCategory = categoriesData.find(category => category.id === parseInt(id));
 
       if (fetchedCategory) {
@@ -182,23 +182,35 @@ function CategoryContent() {
 
   // Sorting Effect
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     if (sortTemplate === 'Modified') {
-      let tempHold = [...category.template].sort((a, b) => new Date(b.modified) - new Date(a.modified));
-      setCategory(prevCategory => ({
-        ...prevCategory,
-        template: tempHold
-      }))
+      // Sort the templates by modified date
+      const sortedTemplates = (id ? [...category?.template] : [...category]).sort((a, b) => new Date(b.modified) - new Date(a.modified));
+      if (id) {
+        setCategory(prevCategory => ({
+          ...prevCategory,
+          template: sortedTemplates
+        }))
+      } else {
+        setCategory([...sortedTemplates])
+      }
+
     } else if (sortTemplate === 'Created') {
-      let tempHold = [...category.template].sort((a, b) => new Date(a.created) - new Date(b.created));
-      setCategory(prevCategory => ({
-        ...prevCategory,
-        template: tempHold
-      }))
+      // Sort the templates by created date
+      const sortedTemplates = (id ? [...category?.template] : [...category]).sort((a, b) => new Date(a.created) - new Date(b.created));
+      if (id) {
+        setCategory(prevCategory => ({
+          ...prevCategory,
+          template: sortedTemplates
+        }))
+      } else {
+        setCategory(sortedTemplates)
+      }
     } else if (sortTemplate === 'Default') {
+      // Fetch category data only once on component mount
       const fetchCategoryData = async () => {
         try {
-          const fetchedCategory = await categoriesData.find(category => category.id === parseInt(id));
+          const fetchedCategory = await categoriesData?.find(category => category.id === parseInt(id));
           if (fetchedCategory) {
             setCategory(fetchedCategory);
           }
@@ -208,20 +220,31 @@ function CategoryContent() {
       };
       fetchCategoryData();
     } else if (sortTemplate === 'Name A - Z') {
-      let tempHold = [...category.template].sort((a, b) => a.cardTitle.localeCompare(b.cardTitle));
-      setCategory(prevCategory => ({
-        ...prevCategory,
-        template: tempHold
-      }))
+      // Sort the templates by card title in ascending order
+      const sortedTemplates = (id ? [...category?.template] : [...category]).sort((a, b) => a.cardTitle.localeCompare(b.cardTitle));
+      if (id) {
+        setCategory(prevCategory => ({
+          ...prevCategory,
+          template: sortedTemplates
+        }))
+      } else {
+        setCategory([...sortedTemplates])
+      }
     } else {
-      let tempHold = [...category.template].sort((a, b) => b.cardTitle.localeCompare(a.cardTitle));
-      setCategory(prevCategory => ({
-        ...prevCategory,
-        template: tempHold
-      }))
+      // Sort the templates by card title in descending order
+      const sortedTemplates = (id ? [...category?.template] : [...category]).sort((a, b) => b.cardTitle.localeCompare(a.cardTitle));
+      if (id) {
+        setCategory(prevCategory => ({
+          ...prevCategory,
+          template: sortedTemplates
+        }))
+      } else {
+        setCategory(sortedTemplates)
+      }
     }
-    setLoading(false)
-  }, [sortTemplate])
+    setLoading(false);
+  }, [sortTemplate]);
+
   return (
     <div className="page__content">
       {id && !isFoldersKeywordPresent && (!loading ?

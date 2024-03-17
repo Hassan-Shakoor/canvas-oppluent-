@@ -130,6 +130,10 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
 
     }, [searchInput])
 
+    useEffect(() => {
+        setSearchedTemplates(category)
+    }, [category])
+
     return (
         <>
             {!isFoldersKeywordPresent ? (

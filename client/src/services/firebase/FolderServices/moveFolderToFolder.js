@@ -40,23 +40,23 @@ export async function moveFolderToFolder(authId, folderId, folderDestinationId) 
                     folderDestination.folders = []
                 }
                 // Add the duplicated folder to the destination folder's template array
-                folderDestination.folders.push(duplicatedFolder);
 
 
                 const folderToRemoveIndex = data.findIndex(folder => folder && folder.id === folderToMove.id);
-                if (!folderToRemoveIndex || folderToRemoveIndex === -1) {
+                if (typeof folderToRemoveIndex === 'undefined' || folderToRemoveIndex === -1) {
+                    // if (!folderToRemoveIndex || folderToRemoveIndex === -1) {
 
-                    for (const folder of data) {
-                        const response = await deleteFolderFromFoldersRecursive(folder.folders, folderToMove.id)
-                        if (response) {
-
-                            await set(databaseRef, data);
-                            console.log("Folder moved successfully");
-                            return true;
-                        }
+                    const response = await deleteFolderFromFoldersRecursive(data, folderToMove.id)
+                    if (response) {
+                        folderDestination.folders.push(duplicatedFolder);
+                        await set(databaseRef, data);
+                        console.log("Folder moved successfully");
+                        return true;
                     }
+
                 } else {
                     const newData = data.filter(folder => folder.id !== folderId);
+                    folderDestination.folders.push(duplicatedFolder);
                     await set(databaseRef, newData);
                     console.log("Folder moved successfully");
                     return true;
@@ -65,8 +65,6 @@ export async function moveFolderToFolder(authId, folderId, folderDestinationId) 
                 // Remove the original folder from the data array
 
                 // Update the database with the modified data
-
-                return true;
             } else {
                 console.log("Folder not found.");
             }
@@ -92,7 +90,7 @@ export const deleteFolderFromFoldersRecursive = async (folders, folderId) => {
             }
 
             if (folder.folders) {
-                const recursiveMatch = await deleteTemplateFromFoldersRecursive(folder.folders, folderId);
+                const recursiveMatch = await deleteFolderFromFoldersRecursive(folder.folders, folderId);
                 if (recursiveMatch) {
                     return recursiveMatch;
                 }

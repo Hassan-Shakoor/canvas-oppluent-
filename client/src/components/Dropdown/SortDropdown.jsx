@@ -49,6 +49,10 @@ function SortDropDown({ dropdown, handleSortTemplate, setOpenSortDropDown }) {
                             tabIndex="-1"
                             data-menu-id={`rc-menu-uuid-15312-1-${index}`}
                             key={index}
+                            onClick={() => {
+                                handleSortTemplate(item.title);
+                                setOpenSortDropDown(false);
+                            }}
                         >
                             {/* <Link
                                 Link

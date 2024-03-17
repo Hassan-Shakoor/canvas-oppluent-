@@ -33,7 +33,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove, re
                 const response = await moveFoldertoDashboard(uid, templateId);
                 if (response) {
                     toast.success("Folder Moved Successfully")
-                    setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
+                    // setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
                 } else {
                     toast.error("Error Moving Folder.")
                 }
@@ -41,7 +41,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove, re
                 const response = await moveFolderToFolder(uid, templateId, selectedFolderId)
                 if (response) {
                     toast.success("Folder Moved Successfully")
-                    setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
+                    // setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
                 } else {
                     toast.error("Error Moving Folder.")
                 }
