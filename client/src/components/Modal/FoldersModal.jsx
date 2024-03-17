@@ -9,7 +9,7 @@ import { moveFromFolderToFolder } from '../../services/firebase/TemplateServices
 import { moveFolderToFolder } from '../../services/firebase/FolderServices/moveFolderToFolder';
 import { moveFoldertoDashboard } from '../../services/firebase/FolderServices/moveFoldertoDashboard';
 
-const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) => {
+const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove, renderTriggerFromDashboard, setRenderTriggerFromDashboard }) => {
 
     const uid = useSelector(selectUID);
     const isFoldersKeywordPresent = window.location.href.includes('folders');
@@ -30,9 +30,21 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
 
         if (thingToMove === 'Folder') {
             if (selectedFolderId === 'Dashboard') {
-                await moveFoldertoDashboard(uid, templateId)
+                const response = await moveFoldertoDashboard(uid, templateId);
+                if (response) {
+                    toast.success("Folder Moved Successfully")
+                    setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
+                } else {
+                    toast.error("Error Moving Folder.")
+                }
             } else {
-                await moveFolderToFolder(uid, templateId, selectedFolderId)
+                const response = await moveFolderToFolder(uid, templateId, selectedFolderId)
+                if (response) {
+                    toast.success("Folder Moved Successfully")
+                    setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
+                } else {
+                    toast.error("Error Moving Folder.")
+                }
             }
         }
         else {
@@ -40,6 +52,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
                 const response = await moveToDashboard(uid, templateId);
                 if (response) {
                     toast.success("Template Moved Successfully")
+                    setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
                 } else {
                     toast.error("Error Moving Template.")
                 }
@@ -48,6 +61,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
                     const response = await moveFromFolderToFolder(uid, templateId, selectedFolderId);
                     if (response) {
                         toast.success("Template Moved Successfully")
+                        setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
                     } else {
                         toast.error("Error Moving Template.")
                     }
@@ -56,6 +70,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
                     const response = await moveToFolder(uid, templateId, selectedFolderId);
                     if (response) {
                         toast.success("Template Moved Successfully")
+                        setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
                     } else {
                         toast.error("Error Moving Template.")
                     }
@@ -118,6 +133,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove }) 
                     }
                 }
             })
+            setRenderTriggerFromDashboard(!renderTriggerFromDashboard);
         }
         closeMoveFolderModal();
     }

@@ -1,5 +1,6 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 import { v4 as uuidv4 } from 'uuid';
+import { getFolderinFoldersRecursive } from "../FolderServices/createFolderinFolder";
 
 export async function moveToFolder(authId, templateId, folderId) {
     const database = getDatabase();
@@ -19,7 +20,12 @@ export async function moveToFolder(authId, templateId, folderId) {
                     const templateIndex = item.template.findIndex(template => template.id === templateId);
                     console.log(templateIndex)
                     if (typeof templateIndex !== 'undefined' && (templateIndex !== -1 || templateIndex === 0)) {
-                        const destinationFolder = folderData.find(folder => folder.id === folderId);
+
+                        let destinationFolder = folderData.find(folder => folder.id === folderId);
+
+                        if (!destinationFolder) {
+                            destinationFolder = await getFolderinFoldersRecursive(folderData, folderId)
+                        }
 
                         if (destinationFolder) {
                             // Add the item to the destination folder
@@ -36,7 +42,7 @@ export async function moveToFolder(authId, templateId, folderId) {
                             await set(templateDataRef, templateData);
 
                             console.log("Item Moved to Folder Successfully.");
-                            return;
+                            return true;
                         } else {
                             console.log("Destination folder not found.");
                         }
@@ -53,4 +59,5 @@ export async function moveToFolder(authId, templateId, folderId) {
         console.error('Error updating data in Firebase:', error);
         throw error;
     }
+    return false;
 }

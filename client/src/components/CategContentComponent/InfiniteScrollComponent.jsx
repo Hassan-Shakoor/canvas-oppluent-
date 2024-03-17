@@ -169,7 +169,9 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                                                         userId={userId}
                                                         categoryId={category.id}
                                                         selectedItems={selectedItems}
-                                                        setSelectedItems={setSelectedItems} />
+                                                        setSelectedItems={setSelectedItems}
+                                                        renderTriggerFromDashboard={renderTriggerFromDashboard}
+                                                        setRenderTriggerFromDashboard={setRenderTriggerFromDashboard} />
                                                 </div>
                                             </div>
                                         </div>
@@ -229,7 +231,9 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                                                     userId={userId}
                                                     categoryId={category.id}
                                                     selectedItems={selectedItems}
-                                                    setSelectedItems={setSelectedItems} />
+                                                    setSelectedItems={setSelectedItems}
+                                                    renderTriggerFromDashboard={renderTriggerFromDashboard}
+                                                    setRenderTriggerFromDashboard={setRenderTriggerFromDashboard} />
                                             </div>
                                         </div>
                                     </div>

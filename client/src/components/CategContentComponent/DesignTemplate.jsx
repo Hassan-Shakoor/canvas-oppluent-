@@ -299,6 +299,8 @@ function DesignTemplate(props) {
                 <FoldersModal
                     closeMoveFolderModal={closeMoveFolderModal}
                     templateId={props.item.id}
+                    renderTriggerFromDashboard={props.renderTriggerFromDashboard}
+                    setRenderTriggerFromDashboard={props.setRenderTriggerFromDashboard}
                 />}
 
 
