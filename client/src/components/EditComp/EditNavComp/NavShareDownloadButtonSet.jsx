@@ -21,12 +21,12 @@ function NavShareDownloadButtonSet() {
             <li className="header__text-button" data-test="download-button" onClick={handleOpenDownload}>
                 {t("download")}
             </li>
-            <li
+            {/* <li
                 className="header__text-button header__text-button"
                 data-test="share-button"
             >
                 {t("share")}
-            </li>
+            </li> */}
         </ul>
     )
 }

@@ -37924,7 +37924,7 @@ svg.icon.v2-icon.v2-icon-chevron-down {
 
 .sort-dropdown-container {
   position: absolute;
-  top: 70px;
+  top: 82px;
   display: flex;
   flex-flow: column wrap;
   max-width: 120px;
@@ -38025,6 +38025,18 @@ svg.icon.v2-icon.v2-icon-chevron-down {
 
 .theme_dark .font-icon {
   color: #2F2F2F !important;
+}
+
+.theme_dark .folder__panel-title {
+  color: #efefef !important;
+}
+
+.theme_dark .folder__preview:before {
+  background-color: rgb(130 130 130 / 15%) !important;
+}
+
+.theme_dark .rc-menu-item button {
+  color: #efefef !important;
 }
 
 .upload-multimedia-container {

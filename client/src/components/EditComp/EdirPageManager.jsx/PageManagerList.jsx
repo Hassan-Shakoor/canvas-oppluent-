@@ -6,10 +6,11 @@ import canvas, { selectCanvasContainer, selectResolution, selectSelectedCanvas, 
 function PageManagerList(props) {
 
   const dispatch = useDispatch();
-  const canvasRef = useRef(null);
   const { width, height } = useSelector(selectResolution);
   const [previewWidth, setPreviewWidth] = useState(55);
   const [previewHeight, setPreviewHeight] = useState(30);
+
+  const [firstTime, setFirstTime] = useState(true);
 
   const [snapshotURI, setSnapshotURI] = useState(null);
 
@@ -28,11 +29,11 @@ function PageManagerList(props) {
     const handlePreviewRender = (time) => {
       setTimeout(() => {
 
+        console.log("first")
         if (canvasContainer && canvasContainer.length > 0) {
           const dataURL = canvasContainer[props.index]?.toDataURL({
             format: "png",
-            multiplier: 1,
-            allowTaint: true // Adjust the multiplier for the screenshot size
+            multiplier: 0.5,
           });
 
           // Set the exported image data URI in the state
@@ -41,7 +42,12 @@ function PageManagerList(props) {
       }, time);
     }
 
-    handlePreviewRender(1000);
+    handlePreviewRender(500);
+
+    if (firstTime) {
+      handlePreviewRender(4000);
+      setFirstTime(false);
+    }
 
     // const canvas = new fabric.Canvas('canvas-1');
 
@@ -76,7 +82,7 @@ function PageManagerList(props) {
       // canvas.off('object:modified');
       // canvas.off('object:removed');
     };
-  }, [selectedObject, selectedCanvas]);
+  }, [selectedObject, canvasContainer, selectedCanvas]);
 
   const handleListClick = () => {
     dispatch(updateSelectedCanvas(props.index));

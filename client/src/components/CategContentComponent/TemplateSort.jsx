@@ -5,7 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Icon } from "@iconify/react";
 
-const SortJSON = [{ sort: 0, "title": "Default" }, { sort: 1, "title": "Created" }, { sort: 2, "title": "Modified" }, { sort: 3, "title": "Name A - Z" }, { sort: 4, "title": "Name Z - A" }]
+const SortJSON = [
+    { sort: 0, "title": "Default" },
+    { sort: 1, "title": "Created" },
+    { sort: 2, "title": "Modified" },
+    { sort: 3, "title": "Name A - Z" },
+    { sort: 4, "title": "Name Z - A" }]
 
 // item-selected-dropdown
 function SortDropDown(props) {
@@ -33,7 +38,10 @@ function SortDropDown(props) {
         <div className="sort-dropdown-container" ref={dropdownRef}>
             {SortJSON.map((item, index) => (
                 <li key={index} className="sort-dropdown-list" role="menuitem" tabIndex="-1" data-menu-id={item.sort}>
-                    <button type="button" className="sort-dropdown-button" onClick={() => props.handleSortTemplate(item.title)}>
+                    <button type="button" className="sort-dropdown-button" onClick={() => {
+                        props.handleSortTemplate(item.title);
+                        props.setSortDropDownOpen(false);
+                    }}>
                         <span className="sort-dropdown-title">{item.title}</span>
                     </button>
                 </li>
