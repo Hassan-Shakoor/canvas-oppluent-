@@ -48,7 +48,6 @@ function Canvas(props) {
           if (imageIndex < propertyInfo?.selectedImages?.length) {
             // Return the updated object
             return { ...object, src: propertyInfo.selectedImages[imageIndex++] };
-            // return { ...object, src: 'https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074' };
           }
         } else if (object.type === 'Text') {
           if (Object.keys(propertyInfo).includes(object.name)) {
@@ -78,24 +77,13 @@ function Canvas(props) {
           height: props.height,
 
           backgroundImageStretch: 'uniform'
-          // width: 634,
-          // height: 634
+
         }, { crossOrigin: 'Anonymous' });
 
 
-        // console.log("canvas.getZoom(): ", canvas.getZoom())
         canvas?.loadFromJSON(canvasDataWithoutObjects, function () {
-          // if (canvas.backgroundImage) {
-          //   canvas.backgroundImage.set({ crossOrigin: 'Anonymous' });
-          //   canvas.requestRenderAll();
-          // }
-          // canvas?.objects?.set(canvasData.objects);
-          // canvas.requestRenderAll();
 
         })
-
-        // Objects Addition to Canvas
-        // setTimeout(() => {
 
         let fabricObjects = [];
 
@@ -127,26 +115,6 @@ function Canvas(props) {
             fabricObjects.push(new fabric.Textbox(templateData.description));
           }
         }
-
-        // const images = canvas.getObjects().filter(obj => obj.type === 'Image'); // Select all image objects
-
-        // if (propertyInfo && propertyInfo.selectedImages) {
-        //   // Handle cases where the number of images and selected images match
-        //   if (images.length === propertyInfo.selectedImages.length) {
-        //     for (let i = 0; i < images.length; i++) {
-        //       images[i].setSrc('https://firebasestorage.googleapis.com/v0/b/clarious-f4f45.appspot.com/o/Untitled%20design-9.png?alt=media&token=943839e2-6ebc-4251-aadd-465aa6093074', () => {
-        //         canvas.renderAll()
-        //       })
-        //     }
-        //   } else {
-        //     console.warn(`Number of images on canvas (${images.length}) does not match selected images length (${propertyInfo.selectedImages.length})`);
-        //   }
-        //   // Update the canvas
-        //   canvas.renderAll();
-        // } else {
-        //   console.warn("Missing propertyInfo or selectedImages data");
-        // }
-
         // Add objects to canvas
         canvas.add(...fabricObjects);
         canvas.setZoom(zoom);
