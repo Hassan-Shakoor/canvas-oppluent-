@@ -25,18 +25,13 @@ function EditTextTab() {
   const selectedCanvas = useSelector(selectSelectedCanvas)
   const selectedObject = useSelector(selectSelectedObject)
 
+  const [strokeColorActive, setStrokeColorActive] = useState(false);
   const [strokeColor, setStrokeColor] = useState('rgb(131, 23, 26)');
   const [strokeSize, setStrokeSize] = useState(2);
   const [fillStrokeFirst, setFillStrokeFirst] = useState(false);
   const [openStrokeSizeDropdown, setOpenStrokeSizeDropdown] = useState(false)
 
   const strokeOptions = [1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
-
-  const handleToggleFillStrokeFirst = () => {
-    setFillStrokeFirst((prevFillStrokeFirst) => !prevFillStrokeFirst);
-    // updateCanvasStroke();
-    // Add logic to toggle fill stroke first in Fabric.js canvas
-  };
 
   const handleStrokeSizeChange = (size) => {
     const canvas = canvasContainer[selectedCanvas];
@@ -45,7 +40,7 @@ function EditTextTab() {
 
     if (activeObject) {
       activeObject.set({
-        strokeWidth: size,
+        strokeWidth: size / 10,
         // fill: fillStrokeFirst ? strokeColor : activeObject.fill,
       });
 
@@ -81,13 +76,46 @@ function EditTextTab() {
     }
   };
 
+  // const handleStrokeColorChange = (color) => {
+  //   setStrokeColor(color);
+  //   const activeObject = canvas.getActiveObject();
+  //   if (activeObject) {
+  //     activeObject.set(fillStrokeFirst ? "fill" : "stroke", color);
+  //     canvas.renderAll();
+  //   }
+  // };
+
+  // const handleStrokeSizeChange = (size) => {
+  //   setStrokeSize(size);
+  //   const activeObject = canvas.getActiveObject();
+  //   if (activeObject) {
+  //     activeObject.set("strokeWidth", size);
+  //     canvas.renderAll();
+  //   }
+  // };
+
+  const handleToggleFillStrokeFirst = () => {
+    setFillStrokeFirst(!fillStrokeFirst);
+    const canvas = canvasContainer[selectedCanvas];
+    const activeObject = canvas.getActiveObject();
+    if (activeObject) {
+      // const fillColor = activeObject.get("fill");
+      const strokeColor = activeObject.get("stroke");
+      activeObject.set({
+        // fill: strokeColor,
+        stroke: strokeColor ? strokeColor : '#000',
+      });
+      canvas.renderAll();
+    }
+  };
+
   // ** Hooks 
   const openDrawer = useSelector(selectOpenDrawer)
 
   useEffect(() => {
     setTransparency(selectedObject?.opacity * 100)
     setStrokeColor(selectedObject?.stroke)
-    setStrokeSize(selectedObject?.strokeWidth)
+    setStrokeSize(selectedObject?.strokeWidth * 10)
     // setFillStrokeFirst(selectedObject?.fill)
   }, [selectedObject])
 
@@ -106,7 +134,7 @@ function EditTextTab() {
         className={openDrawer === 'TextEdit'
           ? "colorize-module vertical-switch-content-enter-done"
           : "colorize-module vertical-switch-content-exit-done"} >
-        <BackgroundColorPicker />
+        <BackgroundColorPicker title={strokeColorActive ? 'Stroke' : ''} onColorChange={setStrokeColor} />
 
         <div className="slider-box__hokeys-wrapper">
           <div className="slider-box">
@@ -129,7 +157,9 @@ function EditTextTab() {
 
         <div class="sidebar__tool-title">Stroke</div>
         <div className="colorize-module__stroke-container">
-          <div className="colorize-module__stroke-color colorize-module__stroke-color_active">
+          <div className={`colorize-module__stroke-color ${strokeColorActive ? "colorize-module__stroke-color_active" : ''}`}
+            style={{ cursor: 'pointer' }}
+            onClick={() => setStrokeColorActive(true)}>
             <div
               className="colorize-module__stroke-color-inner"
               style={{ backgroundColor: strokeColor }}
@@ -147,7 +177,7 @@ function EditTextTab() {
                 type="text"
                 value={strokeSize}
                 onChange={(e) => handleStrokeSizeChange(e.target.value)}
-                
+
               />
             </label>
             {openStrokeSizeDropdown && (

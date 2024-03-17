@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject } from '../../../../store/app/Edit/Canvas/canvas';
 import arrowDownToLine from '../../../../assets/icons/arrow-down-to-line.png';
 import { toast } from 'react-toastify';
+import { selectDarkMode } from '../../../../store/app/User/userPreference';
 
 
 
@@ -16,6 +17,8 @@ const SendBackFrontObject = () => {
     const [isLocked, setIsLocked] = useState(false)
     const [openHyperlinkDropdown, setOpenHyperlinkDropdown] = useState(false)
     const [hyperlinkText, setHyperlinkText] = useState('')
+
+    const darkMode = useSelector(selectDarkMode);
 
     const selectedObject = useSelector(selectSelectedObject)
 
@@ -117,10 +120,10 @@ const SendBackFrontObject = () => {
                     <FontAwesomeIcon icon="fa-solid fa-arrow-down-long" />
                 </div>
                 <div className="tool-button" data-tooltip='Bring to Front' onClick={bringToFront}>
-                    <img src={arrowDownToLine} alt="Bring To Front" style={{ width: '20px', opacity: 0.72, transform: 'rotate(180deg)', filter: 'invert(1)' }} />
+                    <img src={arrowDownToLine} alt="Bring To Front" style={{ width: '20px', opacity: 0.72, transform: 'rotate(180deg)', filter: darkMode ? 'invert(1)' : '' }} />
                 </div>
                 <div className="tool-button" data-tooltip='Send to Back' onClick={sendToBack}>
-                    <img src={arrowDownToLine} alt="Send to Back" style={{ width: '20px', opacity: 0.72, filter: 'invert(1)' }} />
+                    <img src={arrowDownToLine} alt="Send to Back" style={{ width: '20px', opacity: 0.72, filter: darkMode ? 'invert(1)' : '' }} />
                 </div>
             </div>
             <div className="toolbar__divider" />

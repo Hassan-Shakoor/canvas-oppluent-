@@ -169,6 +169,30 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
         }
         canvas.requestRenderAll();
       }
+    } else if (title === 'Stroke') {
+
+      const canvas = canvasContainer[selectedCanvas];
+      if (canvas?.getActiveObject()) {
+        const activeObject = canvas?.getActiveObject();
+
+        const existingStroke = activeObject?.get('stroke');
+
+        if (existingStroke) {
+          console.log('Stroke is applied to the text.');
+
+          activeObject.set({ stroke: getRgbaCSS(color) })
+
+          console.log(existingStroke)
+        }
+        else {
+          activeObject.set({
+            shadow: '#000',
+          });
+        }
+        onColorChange(getRgbaCSS(color));
+
+        canvas.requestRenderAll();
+      }
     } else {
       if (color?.r === prevColor?.r && color?.g === prevColor?.g && color?.b === prevColor?.b && color?.a === prevColor?.a) {
         // Update the previous color
