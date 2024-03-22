@@ -227,6 +227,26 @@ const GradientModule = () => {
         }
     }
 
+    useEffect(() => {
+        const canvas = canvasContainer[selectedCanvas];
+        if (canvas?.getActiveObject()) {
+            const activeObject = canvas?.getActiveObject();
+            const existingFill = activeObject.get('fill');
+    
+            if (existingFill && existingFill.coords) { 
+                const values = existingFill.coords;
+    
+                if ('r1' in values) setHorizontalOffset(values.r1 / 100);
+                if ('r2' in values) setVerticalOffset(values.r2 / 100);
+                if ('x1' in values) setFromX(values.x1 / 100);
+                if ('y1' in values) setFromY(values.y1 / 100);
+                if ('x2' in values) setToX(values.x2 / selectedObject.width);
+                if ('y2' in values) setToY(values.y2 / selectedObject.height);
+            }
+        }
+    }, []);
+    
+
     const handleChange = (value, property, multiplier = 100) => {
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
@@ -243,6 +263,7 @@ const GradientModule = () => {
 
                 activeObject.set({
                     fill: existingFill,
+                    dirty: true
                 });
 
                 // Update the corresponding state
@@ -274,6 +295,7 @@ const GradientModule = () => {
                 }
 
                 canvas.renderAll();
+                canvas.requestRenderAll();
             }
         }
     };
