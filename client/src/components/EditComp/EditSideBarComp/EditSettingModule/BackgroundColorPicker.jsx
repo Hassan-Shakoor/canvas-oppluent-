@@ -199,7 +199,7 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
         // Perform other actions if needed
         return;
       } else {
-        console.log('Color changed:', color);
+        // console.log('Color changed:', color);
         setPrevColor(color);
       }
 
@@ -228,24 +228,21 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
         if (selectedObject.type === 'Text') {
           // selectedObject.fill = getRgbaCSS(color);
           if (selectedObject.selectionStart !== selectedObject.selectionEnd) {
-            for (let i = selectedObject.selectionStart; i < selectedObject.selectionEnd; i++) {
-              selectedObject.styles[0][i] = {
-                fill: getRgbaCSS(color),
-              };
-            }
+            // Prepare new styles for the selected characters
+            let newStyles = {
+              fill: getRgbaCSS(color) // Change the fill color to blue (replace 'blue' with your desired color)
+            };
+
+            // Apply new styles to the selected range
+            selectedObject.setSelectionStyles(newStyles, selectedObject.selectionStart, selectedObject.selectionEnd);
           }
           else {
             if (selectedObject?.textLines?.length > 0) {
-              for (let i = 0; i < selectedObject.textLines?.length; i++) {
-                for (let j = 0; j < selectedObject?.textLines[i].length; j++) {
+              let newStyles = {
+                fill: getRgbaCSS(color) // Change the fill color to blue (replace 'blue' with your desired color)
+              };
+              selectedObject.setSelectionStyles(newStyles, 0, selectedObject?.text?.length);
 
-                  if (selectedObject?.styles?.length > 0) {
-                    selectedObject.styles[i][j] = {
-                      fill: getRgbaCSS(color),
-                    };
-                  }
-                }
-              }
             }
             selectedObject.set({ fill: getRgbaCSS(color) })
           }

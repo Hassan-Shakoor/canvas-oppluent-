@@ -37,22 +37,22 @@ function TextInput() {
       cursorColor: '#000',
       textWrapping: true,
       textAlign: 'left',
-      styles: {
-        0: {
-          0: {
-            fill: 'black',
-          },
-        },
-      },
+      // styles: {
+      //   0: {
+      //     0: {
+      //       fill: 'black',
+      //     },
+      //   },
+      // },
       isBulletsEnabled: false,
       isNumbersEnabled: false
     });
-    for (let i = 0; i < fabricText.text.length; i++) {
-      // Set color based on the index (even or odd)
-      const color = '#000';
+    // for (let i = 0; i < fabricText.text.length; i++) {
+    //   // Set color based on the index (even or odd)
+    //   const color = '#000';
 
-      fabricText.styles[0][i] = { fill: color };
-    }
+    //   fabricText.styles[0][i] = { fill: color };
+    // }
 
     canvas.add(fabricText);
     canvas.setActiveObject(fabricText);
