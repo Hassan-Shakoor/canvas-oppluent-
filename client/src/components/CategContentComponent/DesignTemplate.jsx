@@ -203,7 +203,7 @@ function DesignTemplate(props) {
                 const updatedCategories = snapshot.val();
 
                 if (updatedCategories) {
-                    console.log(updatedCategories);
+                    // console.log(updatedCategories);
 
                     // Assuming subTitle is an array of objects with 'name' and 'id' properties
                     const transformedArray = updatedCategories
@@ -213,7 +213,7 @@ function DesignTemplate(props) {
                             return accumulator.concat(categoryItems);
                         }, []);
 
-                    console.log(transformedArray);
+                    // console.log(transformedArray);
                     setDesignCategories(transformedArray);
                 }
             } catch (error) {
@@ -226,7 +226,7 @@ function DesignTemplate(props) {
     useEffect(() => {
         fetchDataFromDatabase()
 
-        console.log(dropdownMenu)
+        // console.log(dropdownMenu)
 
         setFileName(props.item.cardTitle);
     }, [])
@@ -310,18 +310,23 @@ function DesignTemplate(props) {
             >
                 <div className="template__preview-wrapper">
                     <div className="template__preview">
-                        <img
-                            alt="Email Signature"
-                            className="template__preview-image"
-                            src={props.item.storage_url[0]}
-                            style={
-                                {
-                                    display: loading ? "none" : "block",
-                                    width: "100%",
-                                    animation: "fadeIn 1s",
-                                }
-                            } onLoad={(e) => { setLoading(false) }} />
-                        <SpinnerContainer loading={loading} height={'auto'} />
+                        {props.item.storage_url?.length > 0 ?
+                            <>
+                                <img
+                                    alt="Email Signature"
+                                    className="template__preview-image"
+                                    src={props.item.storage_url?.length > 0 ? props.item.storage_url[0] : ''}
+                                    style={
+                                        {
+                                            display: loading ? "none" : "block",
+                                            width: "100%",
+                                            animation: "fadeIn 1s",
+                                        }
+                                    } onLoad={(e) => { setLoading(false) }} />
+                                <SpinnerContainer loading={loading} height={'auto'} />
+                            </>
+                            : <FontAwesomeIcon icon="fa-solid fa-image" size="2xl" style={{ textAlign: 'center' }} />}
+
                         <button
                             type="button"
                             className="btn btn_no-min-width template__edit-btn"

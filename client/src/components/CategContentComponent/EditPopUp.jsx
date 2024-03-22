@@ -7,6 +7,7 @@ import { createMyDesign } from "../../services/firebase/createMyDesign";
 import { isTemplateInMyDesigns } from "../../services/firebase/TemplateServices/isTemplateInMyDesigns";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
 import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function EditPopUp(props) {
     const { t } = useTranslation()
@@ -117,12 +118,15 @@ function EditPopUp(props) {
                                                                 style={{ width: "100%", display: "inline-block" }}
                                                             >
                                                                 <div className="template-preview">
-                                                                    <img
-                                                                        className="template-preview__image"
-                                                                        title={props.item.cardTitle}
-                                                                        src={props.item.storage_url[0]}
-                                                                        alt={props.item.cardTitle}
-                                                                    />
+                                                                    {props.item.storage_url?.length > 0 ?
+                                                                        <img
+                                                                            className="template-preview__image"
+                                                                            title={props.item.cardTitle}
+                                                                            src={props.item.storage_url?.length > 0 ? props.item.storage_url[0] : ''}
+                                                                            alt={props.item.cardTitle}
+                                                                        /> :
+                                                                        <FontAwesomeIcon icon="fa-solid fa-image" size="2xl" style={{ textAlign: 'center' }} />
+                                                                    }
                                                                 </div>
                                                             </div>
                                                         </div>

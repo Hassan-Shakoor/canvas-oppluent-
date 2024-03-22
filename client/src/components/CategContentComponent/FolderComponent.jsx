@@ -240,7 +240,7 @@ const FolderComponent = ({ folderTitle, folderId, itemCount, templates, gridColu
                             templates?.slice(0, 4).map((template, index) => (
                                 <>
                                     <div className="folder__preview-box">
-                                        <img src={template?.storage_url?.length ? template?.storage_url[0] : ""} alt="" style={{
+                                        <img src={template?.storage_url?.length > 0 ? template?.storage_url[0] : ""} alt="" style={{
                                             objectFit: 'contain',
                                             width: '100%',
                                             height: '100%'

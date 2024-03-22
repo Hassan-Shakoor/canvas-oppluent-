@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import SpinnerContainer from '../components/Loader/SpinnerContainer'
 import uploadTemplateImage from '../services/uploadTemplateImage'
 import { useTranslation } from 'react-i18next';
+import InputModal from '../components/Modal/InputModal'
 
 
 let currentUserId = null;
@@ -51,7 +52,10 @@ const TemplateRequest = () => {
     const [isPropertySearch, setIsPropertySearch] = useState(false);
     const [openCategoryOption, setOpenCategoryOptions] = useState(false);
 
+    const [templateWidth, setTemplateWidth] = useState(800);
+    const [templateHeight, setTemplateHeight] = useState(800);
 
+    const [showInputModal, setShowInputModal] = useState(false);
 
     const [selectedUser, setSelectedUser] = useState(null);
     const [users, setUsers] = useState(false);
@@ -196,9 +200,14 @@ const TemplateRequest = () => {
             return
         }
 
+        if (!showInputModal && imageDimensions.length <= 0) {
+            setShowInputModal(true);
+            return;
+        }
+
         setLoading(true);
         try {
-            console.log('submit');
+            // console.log('submit');
             const database = getDatabase();
             const databaseRef = ref(database, `${currentUserId}/templateData`);
 
@@ -216,7 +225,7 @@ const TemplateRequest = () => {
             const snapshot = await get(databaseRef);
             const templateData = snapshot.val();
 
-            console.log(templateData)
+            // console.log(templateData)
             // console.log(dbJson.currentUserId.templateData)
             // console.log(currentUserId)
 
@@ -238,8 +247,8 @@ const TemplateRequest = () => {
                             minPages: 1,
                             pageCountDivisible: 1,
                             resolution: {
-                                width: imageDimensions[0].width,
-                                height: imageDimensions[0].height,
+                                width: imageDimensions?.length > 0 ? imageDimensions[0].width : parseInt(templateWidth, 10),
+                                height: imageDimensions?.length > 0 ? imageDimensions[0].height : parseInt(templateHeight, 10),
                             },
                         },
                         fabricData,
@@ -249,7 +258,7 @@ const TemplateRequest = () => {
                         published: false,
                         visible: true,
                         allowedUsers: selectedUser,
-                        imageUrl: `${files[0].name}`,
+                        // imageUrl: `${files[0].name}`,
                         designedBy: currentUserId,
                         modified: formatDate(Date.now()),
                         isPropertySearchEnabled: isPropertySearch,
@@ -360,6 +369,47 @@ const TemplateRequest = () => {
             {/* <SpinnerOverlay loading={loading} /> */}
             <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme={darkMode ? 'dark' : 'light'} />
             <Header />
+            {showInputModal && (
+                <InputModal
+                    title="Template Dimensions"
+                    body={
+                        <div className="template-dimensions-input">
+                            {/* <h3>Template Dimensions</h3> */}
+                            <div className="input-group">
+                                <label className="input">
+                                    <span className="input__label">Width</span>
+                                    <input
+                                        placeholder="Enter width"
+                                        type="number"
+                                        className="simple-input"
+                                        value={templateWidth}
+                                        onChange={(e) => setTemplateWidth(e.target.value)}
+                                    />
+                                </label>
+                                <label className="input">
+                                    <span className="input__label">Height</span>
+                                    <input
+                                        placeholder="Enter height"
+                                        type="number"
+                                        className="simple-input"
+                                        value={templateHeight}
+                                        onChange={(e) => setTemplateHeight(e.target.value)}
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    }
+                    secondayBtnTxt={t("cancel")}
+                    primaryBtnTxt={t("submit")}
+                    onClose={() => setShowInputModal(false)}
+                    handleSecodnaryBtn={() => setShowInputModal(false)}
+                    handlePrimaryBtn={async (e) => {
+                        e.preventDefault();
+                        handleUploadTemplate();
+                    }}
+                />
+
+            )}
             <div className="page">
                 <div className="dashboard-header dashboard-header_margin-bottom">
                     <div className="dashboard-header__top-panel flex-row">

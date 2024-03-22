@@ -71,18 +71,22 @@ function Template(props) {
       <div className="template__preview-wrapper">
         <div className="template__preview">
           {/* {!loading ? */}
-          <img
-            alt="Email Signature"
-            className="template__preview-image"
-            src={props.item.storage_url[0]}
-            style={
-              {
-                display: loading ? "none" : "block",
-                width: "100%",
-                animation: "fadeIn 1s",
-              }
-            } onLoad={(e) => { setLoading(false) }}></img>
-          <SpinnerContainer loading={loading} height={'auto'} />
+          {props.item.storage_url?.length > 0 ?
+            <>
+              <img
+                alt="Email Signature"
+                className="template__preview-image"
+                src={props.item.storage_url?.length > 0 ? props.item.storage_url[0] : ''}
+                style={
+                  {
+                    display: loading ? "none" : "block",
+                    width: "100%",
+                    animation: "fadeIn 1s",
+                  }
+                } onLoad={(e) => { setLoading(false) }}></img>
+              <SpinnerContainer loading={loading} height={'auto'} />
+            </>
+            : <FontAwesomeIcon icon="fa-solid fa-image" size="2xl" style={{ textAlign: 'center' }} />}
           {/* } */}
           <button
             type="button"

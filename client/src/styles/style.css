@@ -34115,6 +34115,7 @@ span.CodeMirror-selectedtext {
   max-height: 440px;
   margin: 0 auto;
   padding: 10px 0;
+  text-align: center;
 }
 
 .template-preview__image {

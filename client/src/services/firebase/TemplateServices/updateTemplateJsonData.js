@@ -11,10 +11,10 @@ export async function updateTemplateJsonData(authId, updatedObject, templateURL)
     const snapshot = await get(databaseRef);
     const folderDataSnapshot = await get(folderDataRef);
 
-    const updatedStorageURLs = updatedObject.storage_url.map((url, index) =>
+    const updatedStorageURLs = updatedObject?.storage_url?.length > 0 ? (updatedObject.storage_url.map((url, index) =>
       index === 0 ? templateURL : url
-    );
-    
+    )) : [templateURL];
+
     if (snapshot.exists()) {
       const data = snapshot.val();
       for (const item of data) {
