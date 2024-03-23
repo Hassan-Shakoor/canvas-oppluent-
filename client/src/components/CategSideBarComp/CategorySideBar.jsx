@@ -250,7 +250,8 @@ function CategorySideBar() {
                     id="search"
                     name="search"
                     type="search"
-                    placeholder={isPlaceholder === null ? "Search" : "Search in " + isPlaceholder}
+                    // placeholder={isPlaceholder === null ? "Search" : "Search in " + isPlaceholder}
+                    placeholder={"Search"}
                     className="search-input__input"
                     value={searchText}
                     onChange={(e) => handleSearchChange(e)} />
