@@ -1,8 +1,13 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 
-export async function publishTemplate(authId, templateObject) {
+export async function publishTemplate(authId, templateObject, templateURL) {
     const database = getDatabase();
     const databaseRef = ref(database);
+
+    const updatedStorageURLs = templateObject?.storage_url?.length > 0 ? (templateObject.storage_url.map((url, index) =>
+        index === 0 ? templateURL : url
+    )) : [templateURL];
+
 
     try {
         const snapshot = await get(databaseRef);
@@ -26,6 +31,7 @@ export async function publishTemplate(authId, templateObject) {
                             ...templateObject,
                             published: true,
                             visible: true,
+                            storage_url: updatedStorageURLs
                         };
 
                         // Push the templateObject to the data.template array

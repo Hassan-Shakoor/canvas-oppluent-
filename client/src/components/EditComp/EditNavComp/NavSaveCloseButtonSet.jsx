@@ -109,7 +109,7 @@ function NavSaveCloseButtonSet() {
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
-    await publishTemplate(userData?.uid, updatedData)
+    await publishTemplate(userData?.uid, updatedData, templateImageUrl)
     await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrl)
     toast.success(t("EditHeader.publishTemplateError"))
     setLoading(false);
