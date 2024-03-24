@@ -155,7 +155,7 @@ function EditTextTab() {
           </div>
         </div>
 
-        <div class="sidebar__tool-title">Stroke</div>
+        <div className="sidebar__tool-title">Stroke</div>
         <div className="colorize-module__stroke-container">
           <div className={`colorize-module__stroke-color ${strokeColorActive ? "colorize-module__stroke-color_active" : ''}`}
             style={{ cursor: 'pointer' }}

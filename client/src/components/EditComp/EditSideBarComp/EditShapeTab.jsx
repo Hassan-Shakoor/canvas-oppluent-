@@ -29,7 +29,7 @@ function EditShapeTab() {
       // // Calculate the offset to center the scaled SVG
       // const offsetX = canvasCenter.left - (svgCenter.left + (svgCenter.width * svg.scaleX) / 2);
       // const offsetY = canvasCenter.top - (svgCenter.top + (svgCenter.height * svg.scaleY) / 2);
-      
+
       svg.set({
         left: canvasCenter.left,
         top: canvasCenter.top,
@@ -40,6 +40,7 @@ function EditShapeTab() {
         type: 'Shape',
         originX: 'left',
         originY: 'top',
+        svgUrl: shape.url
       });
 
       // Adjust the dimensions if needed

@@ -28,8 +28,8 @@ function DashboardHeader(props) {
 
     return (
         <div className="container">
-            <div class="announcement mt-3">
-                <h1 class="announcement__welcome">{t("Home.welcome")} {userName}.</h1>
+            <div className="announcement mt-3">
+                <h1 className="announcement__welcome">{t("Home.welcome")} {userName}.</h1>
             </div>
             {/* <div className="announcement__slider">
                 <div className="react-slider">

@@ -28,6 +28,11 @@ export const serializeCanvasContainer = (canvasContainer) => {
                 id: obj.id,
                 // Add any other custom attributes you want to retain
             };
+
+            if (obj.type === 'Shape') {
+                allAttributes.svgUrl = obj.svgUrl;
+            }
+
             return allAttributes;
         });
 

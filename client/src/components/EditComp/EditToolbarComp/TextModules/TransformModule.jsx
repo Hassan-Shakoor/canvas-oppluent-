@@ -303,7 +303,7 @@ const TransformModule = () => {
           </>
       }
 
-      <div class="sidebar__tool-title mt-2">Tools</div>
+      <div className="sidebar__tool-title mt-2">Tools</div>
       <div className="transform-module__button-set">
         <div className="tool-button" data-tooltip='Duplicate' onClick={handleDuplicate}>
           <FontAwesomeIcon icon="fa-solid fa-clone" />
@@ -316,8 +316,8 @@ const TransformModule = () => {
         </div>
       </div>
 
-      <div class="sidebar__tool-title mt-3">Alignment</div>
-      <p class="sidebar__tool-sub-title">Align to Artboard</p>
+      <div className="sidebar__tool-title mt-3">Alignment</div>
+      <p className="sidebar__tool-sub-title">Align to Artboard</p>
 
       <div className="transform-module__button-set">
         <div className="tool-button" data-tooltip='Left' onClick={() => handleAlignment('left')}>

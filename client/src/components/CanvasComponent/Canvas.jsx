@@ -54,6 +54,8 @@ function Canvas(props) {
             const newTextValue = propertyInfo[object.name];
             return { ...object, text: newTextValue }
           }
+        } else if (object.type === 'Shape') {
+          return { ...object };
         }
         else {
           console.error("Unsupported object type:", object.type);
@@ -87,28 +89,138 @@ function Canvas(props) {
 
         let fabricObjects = [];
 
-        canvasObjectsWithPropertySearch.map((object, index) => {
+        // for (let i = 0; i < canvasObjectsWithPropertySearch.length; i++) {
+
+        //   const object = canvasObjectsWithPropertySearch[i];
+
+        //   if (object.type === 'Text') {
+        //     // fabricObjects.push(new fabric.Textbox(object.text, object));
+        //     const textbox = new fabric.Textbox(object.text, object);
+        //     canvas.add(textbox);
+
+        //   } else if (object.type === 'Shape') {
+        //     // fabricObjects.push(new fabric.Path(object.path, object));
+        //     if (object?.path?.length > 0) {
+        //       // fabricObjects.push(new fabric.Path(object.path, object));
+        //       const path = new fabric.Path(object.path, object);
+        //       canvas.add(path);
+
+        //     } else if (object?.objects?.length > 0) {
+        //       let svgPaths = [];
+        //       object.objects.forEach(svgObject => {
+        //         // Check if the SVG path data is available
+        //         if (svgObject.path) {
+        //           try {
+        //             // Create a Fabric.js path object for the SVG path data
+        //             const path = new fabric.Path(svgObject.path, {
+        //               ...svgObject
+        //             });
+        //             svgPaths.push(path);
+        //           } catch (error) {
+        //             console.error('Error creating Fabric.js path:', error);
+        //           }
+        //         }
+        //       });
+
+        //       if (svgPaths.length > 0) {
+        //         // Create a Fabric.js group from the added paths
+        //         const group = new fabric.Group(svgPaths, {
+        //           ...object
+        //         });
+
+        //         // Add the group to the canvas
+        //         canvas.add(group);
+        //       }
+        //     } else if (object?.svgUrl) {
+        //       fabric.loadSVGFromURL(object.svgUrl, function (objects, options) {
+        //         const svg = fabric.util.groupSVGElements(objects, options);
+        //         svg.set({
+        //           ...object
+        //         });
+        //         canvas.add(svg);
+        //       })
+        //     }
+        //   } else if (object.type === 'Image') {
+        //     fabric.Image.fromURL(object.src, function (img) {
+        //       // img is an instance of fabric.Image
+        //       // You can add it to the canvas or perform other operations
+        //       img.set({
+        //         ...object,
+        //         crossOrigin: 'anonymous'
+        //       });
+
+        //       canvas.add(img); // Add the image to the canvas
+        //       // })
+        //     }, { crossOrigin: 'anonymous' });
+        //   }
+        //   else {
+        //     console.error("Unsupported object type:", object.type);
+        //   }
+
+
+        // }
+
+        async function processObjects(objects, index) {
+          if (index >= objects.length) {
+            // End of objects array
+            return;
+          }
+
+          const object = objects[index];
+
           if (object.type === 'Text') {
-            fabricObjects.push(new fabric.Textbox(object.text, object));
+            const textbox = new fabric.Textbox(object.text, object);
+            canvas.add(textbox);
           } else if (object.type === 'Shape') {
-            fabricObjects.push(new fabric.Path(object.path, object));
-          } else if (object.type === 'Image') {
-            fabric.Image.fromURL(object.src, function (img) {
-              // img is an instance of fabric.Image
-              // You can add it to the canvas or perform other operations
-              img.set({
-                ...object,
-                crossOrigin: 'anonymous'
+            if (object?.path?.length > 0) {
+              const path = new fabric.Path(object.path, object);
+              canvas.add(path);
+            } else if (object?.objects?.length > 0) {
+              let svgPaths = [];
+              object.objects.forEach(svgObject => {
+                if (svgObject.path) {
+                  try {
+                    const path = new fabric.Path(svgObject.path, { ...svgObject });
+                    svgPaths.push(path);
+                  } catch (error) {
+                    console.error('Error creating Fabric.js path:', error);
+                  }
+                }
               });
 
-              canvas.add(img); // Add the image to the canvas
-            // })
-            }, { crossOrigin: 'anonymous' });
-          }
-          else {
+              if (svgPaths.length > 0) {
+                const group = new fabric.Group(svgPaths, { ...object });
+                canvas.add(group);
+              }
+            } else if (object?.svgUrl) {
+              const svg = await new Promise((resolve, reject) => {
+                fabric.loadSVGFromURL(object.svgUrl, function (objects, options) {
+                  const svg = fabric.util.groupSVGElements(objects, options);
+                  svg.set({ ...object });
+                  resolve(svg);
+                });
+              });
+              canvas.add(svg);
+            }
+          } else if (object.type === 'Image') {
+            const img = await new Promise((resolve, reject) => {
+              fabric.Image.fromURL(object.src, function (img) {
+                img.set({ ...object, crossOrigin: 'anonymous' });
+                resolve(img);
+              }, { crossOrigin: 'anonymous' });
+            });
+            canvas.add(img);
+          } else {
             console.error("Unsupported object type:", object.type);
           }
-        })
+
+          // Process next object
+          await processObjects(objects, index + 1);
+        }
+
+        // Start processing objects
+        processObjects(canvasObjectsWithPropertySearch, 0);
+
 
         if (templateData.description && !templateData.published) {
           if (templateData.description.length > 0) {

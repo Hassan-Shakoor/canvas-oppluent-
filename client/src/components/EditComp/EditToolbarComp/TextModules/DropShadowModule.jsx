@@ -106,7 +106,7 @@ const DropShadowModule = () => {
 
 
         <>
-            <div class="sidebar-module__divider"></div>
+            <div className="sidebar-module__divider"></div>
             <label className={`toggle toggle-shadow`}>
                 <input type="checkbox" className="toggle__input" checked={isChecked} onChange={handleToggle} />
                 <span className="toggle__background">
@@ -116,7 +116,7 @@ const DropShadowModule = () => {
                     <span>Drop Shadow</span>
                 </span>
             </label>
-            <div class="sidebar-module__divider"></div>
+            <div className="sidebar-module__divider"></div>
             {
                 isChecked && (
                     <>

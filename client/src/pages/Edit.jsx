@@ -95,7 +95,7 @@ function Edit() {
         setHeight(newHeight);
     }
 
-    console.log(canvasContainer)
+    // console.log(canvasContainer)
 
     return (
         <div>

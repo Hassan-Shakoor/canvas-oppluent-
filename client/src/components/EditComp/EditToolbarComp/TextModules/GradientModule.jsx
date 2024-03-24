@@ -448,7 +448,7 @@ const GradientModule = () => {
 
 
         <>
-            <div class="sidebar-module__divider"></div>
+            <div className="sidebar-module__divider"></div>
             <label className={`toggle toggle-gradient`}>
                 <input type="checkbox" className="toggle__input" checked={isChecked} onChange={handleToggle} />
                 <span className="toggle__background">
@@ -458,7 +458,7 @@ const GradientModule = () => {
                     <span>Gradient</span>
                 </span>
             </label>
-            <div class="sidebar-module__divider"></div>
+            <div className="sidebar-module__divider"></div>
             {
                 isChecked && (
                     <>
