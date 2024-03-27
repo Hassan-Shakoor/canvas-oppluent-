@@ -10,7 +10,7 @@ function EditLanguageDropDown(props) {
     i18n.changeLanguage(lng);
   };
 
-  console.log(props.position);
+  // console.log(props.position);
   const dropdownStyle = {
     top: props.position.top + 'px',
     left: props.position.left + 'px',

@@ -102,7 +102,7 @@ const GradientModule = () => {
             const existingFill = activeObject.get('fill');
 
             // Check if the fill is a gradient
-            console.log(value)
+            // console.log(value)
             if (existingFill && existingFill.type === 'linear') {
                 // Modify the color stops
                 existingFill.coords = {
@@ -134,7 +134,7 @@ const GradientModule = () => {
                     y1: value,
                 }
 
-                console.log(existingFill)
+                // console.log(existingFill)
 
                 activeObject.set({
                     fill: existingFill,
@@ -159,7 +159,7 @@ const GradientModule = () => {
                     x2: value * activeObject.width,
                 }
 
-                console.log(existingFill)
+                // console.log(existingFill)
 
                 activeObject.set({
                     fill: existingFill,
@@ -184,7 +184,7 @@ const GradientModule = () => {
                     y2: value * activeObject.height,
                 }
 
-                console.log(value * activeObject.height)
+                // console.log(value * activeObject.height)
 
                 activeObject.set({
                     fill: existingFill,
@@ -198,7 +198,7 @@ const GradientModule = () => {
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
             const activeObject = canvas?.getActiveObject();
-            console.log('linear')
+            // console.log('linear')
             // Create a linear gradient
             const linearGradient = new fabric.Gradient({
                 type: 'linear',
@@ -259,7 +259,7 @@ const GradientModule = () => {
                     [property]: value * multiplier,
                 };
 
-                console.log('value')
+                // console.log('value')
 
                 activeObject.set({
                     fill: existingFill,
@@ -305,7 +305,7 @@ const GradientModule = () => {
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
             const activeObject = canvas?.getActiveObject();
-            console.log('radial');
+            // console.log('radial');
 
             // Create a radial gradient
             const radialGradient = new fabric.Gradient({
@@ -412,10 +412,10 @@ const GradientModule = () => {
 
     const handlePointMove = (index, offsetX) => {
 
-        console.log(offsetX)
+        // console.log(offsetX)
         const newColorStops = [...colorStops];
         const newPosition = ((offsetX) / gradientContainerWidth) - 0.41; // Adjust based on the width of the container
-        console.log("NewPosition: ", newPosition)
+        // console.log("NewPosition: ", newPosition)
 
         newColorStops[index] = {
             ...newColorStops[index],

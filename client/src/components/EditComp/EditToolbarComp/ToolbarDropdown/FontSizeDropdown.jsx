@@ -24,7 +24,7 @@ const FontSizeDropdown = () => {
             const textObject = canvas?.getActiveObject()
             if (size) {
                 textObject.set({ fontSize: size })
-                console.log('dakdn')
+                // console.log('dakdn')
                 canvas.requestRenderAll()
             }
             if (!size) {

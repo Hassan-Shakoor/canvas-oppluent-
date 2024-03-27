@@ -168,7 +168,7 @@ const FoldersModal = ({ closeMoveFolderModal, templateId, items, thingToMove, re
 
                 await getFoldersinFolder(fetchedFolders);
 
-                console.log('Folders fetched successfully:', fetchedFolders);
+                // console.log('Folders fetched successfully:', fetchedFolders);
             } catch (error) {
                 console.error('Error fetching folders:', error);
             }

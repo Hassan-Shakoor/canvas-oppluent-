@@ -38,7 +38,7 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
     // updateCanvasRef(canvasArr, selectedCanvas, canvas)
     // dispatch(updateText(''));
 
-    console.log(searchMap);
+    // console.log(searchMap);
 
     const canvasArr = getCanvasRef();
     const canvas = canvasArr[selectedCanvas];

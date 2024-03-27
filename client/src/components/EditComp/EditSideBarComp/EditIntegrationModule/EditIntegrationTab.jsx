@@ -20,7 +20,7 @@ function EditIntegrationTab(props) {
   const openDrawer = useSelector(selectOpenDrawer)
 
   const toggleModal = () => {
-    console.log('templateObj: ', templateObject)
+    // console.log('templateObj: ', templateObject)
     if (templateObject.isPropertySearchEnabled) {
       setIsModalOpen(!isModalOpen)
     }

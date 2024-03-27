@@ -122,7 +122,7 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
             },
           })
 
-          console.log(existingFill)
+          // console.log(existingFill)
 
           textObject.set({
             fill: existingFill,
@@ -155,7 +155,7 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
 
           activeObject.set(existingShadow)
 
-          console.log(existingShadow)
+          // console.log(existingShadow)
         }
         else {
           activeObject.set({
@@ -182,7 +182,7 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
 
           activeObject.set({ stroke: getRgbaCSS(color) })
 
-          console.log(existingStroke)
+          // console.log(existingStroke)
         }
         else {
           activeObject.set({
@@ -206,7 +206,7 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
       if (color.r === 51 && color.g === 51 && color.b === 51 && color.a === 1) {
         if (!selectedObject) {
           setColor({ r: 51, g: 51, b: 51, a: 1 })
-          console.log('asansjx', canvasContainer[selectedCanvas].getBackgroundColor, "<-->")
+          // console.log('asansjx', canvasContainer[selectedCanvas].getBackgroundColor, "<-->")
         }
         else {
           if (selectedObject.type === 'Text') {
@@ -220,7 +220,7 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
       }
 
       if (color && !selectedObject) {
-        console.log("color: ", color)
+        // console.log("color: ", color)
 
         canvasContainer[selectedCanvas].setBackgroundColor(getRgbaCSS(color), render(selectedCanvas, canvasContainer))
       }

@@ -24,7 +24,7 @@ function DashboardHeader(props) {
         setSearchInput(value)
     }
 
-    console.log(selectedItems)
+    // console.log(selectedItems)
 
     return (
         <div className="container">

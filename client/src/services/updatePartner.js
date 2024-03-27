@@ -37,7 +37,7 @@ const fetchPartner = async (fetchData) => {
                     }
                     partnerData.push(keyValue)
                 })
-                console.log(partnerData)
+                // console.log(partnerData)
                 fetchData(partnerData)
             })
         }
@@ -68,7 +68,7 @@ const updatePrimaryPartner = async (partnerData) => {
         const database = getDatabase();
         let existingPrimaryPartner;
         let currentPartner;
-        console.log(partnerData, "Partner Data")
+        // console.log(partnerData, "Partner Data")
         if(partnerData?.length > 1 ){
             existingPrimaryPartner = partnerData[0]
             currentPartner = partnerData[1]
@@ -76,7 +76,7 @@ const updatePrimaryPartner = async (partnerData) => {
             currentPartner = partnerData[0]
         }
         
-        console.log(existingPrimaryPartner, currentPartner)
+        // console.log(existingPrimaryPartner, currentPartner)
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const uid = user.uid

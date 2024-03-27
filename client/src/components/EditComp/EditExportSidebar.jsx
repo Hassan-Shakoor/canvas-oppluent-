@@ -166,7 +166,7 @@ const EditExportSidebar = () => {
         link.download = fileName;
         link.click();
 
-        console.log('Download button clicked!');
+        // console.log('Download button clicked!');
     };
 
 

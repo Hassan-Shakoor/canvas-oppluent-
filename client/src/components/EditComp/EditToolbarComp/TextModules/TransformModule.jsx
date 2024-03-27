@@ -33,7 +33,7 @@ const TransformModule = () => {
     setLineSpacing(spacing);
     const canvas = canvasContainer[selectedCanvas];
     if (canvas?.getActiveObject()) {
-      console.log(spacing)
+      // console.log(spacing)
       const textObject = canvas?.getActiveObject();
       textObject.set({ lineHeight: spacing });
       canvas.requestRenderAll();
@@ -44,7 +44,7 @@ const TransformModule = () => {
     setLetterSpacing(spacing);
     const canvas = canvasContainer[selectedCanvas];
     if (canvas?.getActiveObject()) {
-      console.log(spacing)
+      // console.log(spacing)
       const textObject = canvas?.getActiveObject();
       textObject.set({ charSpacing: spacing });
       canvas.requestRenderAll();
@@ -55,7 +55,7 @@ const TransformModule = () => {
     setRotate(rotate);
     const canvas = canvasContainer[selectedCanvas];
     if (canvas?.getActiveObject()) {
-      console.log(rotate)
+      // console.log(rotate)
       const textObject = canvas?.getActiveObject();
       textObject.set({ angle: rotate });
       canvas.requestRenderAll();
@@ -136,7 +136,7 @@ const TransformModule = () => {
       const textObject = canvas?.getActiveObject();
 
       if (value === 'X') {
-        console.log(!textObject.flipX)
+        // console.log(!textObject.flipX)
         textObject.set({ flipX: !textObject.flipX });
       } else if (value === 'Y') {
         textObject.set({ flipY: !textObject.flipY });

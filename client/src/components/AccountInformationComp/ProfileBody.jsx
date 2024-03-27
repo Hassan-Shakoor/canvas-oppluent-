@@ -190,7 +190,7 @@ function ProfileBody({ profile }) {
                   accept=".png, .jpg, .jpeg"
                   autoComplete="off"
                   onChange={(event) => {
-                    console.log('Profile Image: ', event.target.files[0])
+                    // console.log('Profile Image: ', event.target.files[0])
                     if (event.target.files[0]) {
                       const reader = new FileReader();
 
@@ -198,7 +198,7 @@ function ProfileBody({ profile }) {
                         // The result contains the base64 image data
                         const base64ImageData = reader.result;
                         setBase64Image(base64ImageData);
-                        console.log(base64ImageData)
+                        // console.log(base64ImageData)
                       };
 
                       // Read the file as a data URL (base64)
@@ -218,7 +218,7 @@ function ProfileBody({ profile }) {
                     accept=".png, .jpg, .jpeg"
                     autoComplete="off"
                     onChange={(event) => {
-                      console.log('Profile Image: ', event.target.files[0])
+                      // console.log('Profile Image: ', event.target.files[0])
                       if (event.target.files[0]) {
                         const reader = new FileReader();
 
@@ -226,7 +226,7 @@ function ProfileBody({ profile }) {
                           // The result contains the base64 image data
                           const base64ImageData = reader.result;
                           setBase64Image(base64ImageData);
-                          console.log(base64ImageData)
+                          // console.log(base64ImageData)
                         };
 
                         // Read the file as a data URL (base64)

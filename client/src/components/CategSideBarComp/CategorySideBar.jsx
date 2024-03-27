@@ -37,7 +37,7 @@ function addObjectToFavorites(categories, id) {
     // Append the copied object to the "subTitle" array of the "Favorites" category
     categories[favoritesIndex].subTitle.push(copiedObject);
   } else {
-    console.log("Category or object not found.");
+    // console.log("Category or object not found.");
   }
   return categories;
 }
@@ -49,7 +49,7 @@ function removeObjectFromFavorites(categories, idToRemove) {
   if (favoritesIndex !== -1) {
     // Find the index of the object to remove in the "subTitle" array of the "Favorites" category
     const itemIndex = categories[favoritesIndex].subTitle.findIndex(subItem => subItem.id === idToRemove);
-    console.log(itemIndex);
+    // console.log(itemIndex);
     if (itemIndex !== -1) {
       // Remove the object from the "subTitle" array of the "Favorites" category
       categories[favoritesIndex].subTitle.splice(itemIndex, 1);
@@ -201,7 +201,7 @@ function CategorySideBar() {
       if (updatedCategories) {
         setCategories(updatedCategories);
         setTotalCategories(updatedCategories);
-        console.log("Updated Categories:  ", updatedCategories)
+        // console.log("Updated Categories:  ", updatedCategories)
 
         // Update the isFavorite state based on fetched data
         const favorites = updatedCategories.find(category => category.title === 'Favorites');

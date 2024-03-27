@@ -29,7 +29,7 @@ const DropShadowModule = () => {
             if (canvas?.getActiveObject()) {
                 const activeObject = canvas?.getActiveObject();
                 const existingShadow = activeObject?.get('shadow');
-                console.log("ExistingShadow: ", existingShadow)
+                // console.log("ExistingShadow: ", existingShadow)
                 if (existingShadow) {
                     setChecked(true)
                     console.log('Shadow is applied to the text.');
@@ -56,7 +56,7 @@ const DropShadowModule = () => {
 
     const handleOffsetByY = (value) => {
         setOffsetByY(value);
-        console.log(value)
+        // console.log(value)
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
             const activeObject = canvas?.getActiveObject();
@@ -90,7 +90,7 @@ const DropShadowModule = () => {
         if (canvas?.getActiveObject()) {
             const activeObject = canvas?.getActiveObject();
             const existingShadow = activeObject?.get('shadow');
-            console.log("ExistingShadow: ", existingShadow)
+            // console.log("ExistingShadow: ", existingShadow)
             if (existingShadow) {
                 setChecked(true)
                 setOffsetByX(existingShadow.offsetX);

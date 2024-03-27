@@ -80,8 +80,8 @@ const TemplateRequest = () => {
             // Set up a function to be called when the image is loaded
             img.onload = function () {
                 // Log the width and height of the image
-                console.log('Width:', img.width);
-                console.log('Height:', img.height);
+                // console.log('Width:', img.width);
+                // console.log('Height:', img.height);
 
                 // Add the dimensions to the state
                 setImageDimensions([...imageDimensions, { width: img.width, height: img.height }]);
@@ -237,11 +237,11 @@ const TemplateRequest = () => {
             if (!entryExists) {
                 const newData = [...templateData, entryToAdd];
                 set(ref(database, `${currentUserId}/templateData`), newData);
-                console.log('Added entry:', entryToAdd);
+                // console.log('Added entry:', entryToAdd);
                 handleUploadTemplate();
                 return;
             } else {
-                console.log('Entry already exists:', entryToAdd);
+                // console.log('Entry already exists:', entryToAdd);
             }
 
             // console.log(templateData)
@@ -252,8 +252,8 @@ const TemplateRequest = () => {
             for (const [index, data] of templateData?.entries()) {
                 if (data?.id === selectedCategory.value) {
                     // console.log(dbJson);
-                    console.log(selectedCategory);
-                    console.log(selectedUser);
+                    // console.log(selectedCategory);
+                    // console.log(selectedUser);
 
 
                     const templateObject = {
@@ -355,13 +355,13 @@ const TemplateRequest = () => {
         onValue(userJsonRef, (snapshot) => {
             const updatedCategories = snapshot.val();
             if (updatedCategories) {
-                console.log(updatedCategories)
+                // console.log(updatedCategories)
                 const transformedArray = updatedCategories
                     .filter(category => category.title !== 'Favorites')
                     .flatMap(category =>
                         category.subTitle.map(item => ({ label: item.name, value: item.id }))
                     );
-                console.log(transformedArray)
+                // console.log(transformedArray)
                 setDesignCategories(transformedArray)
             }
         });

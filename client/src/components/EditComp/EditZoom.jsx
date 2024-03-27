@@ -46,7 +46,7 @@ function EditZoom(props) {
             if (canvasContainer && canvasContainer.length > 0) {
                 canvasContainer.map((canvas, index) => {
                     if (canvas) {
-                        console.log("props.zoom", props.zoom)
+                        // console.log("props.zoom", props.zoom)
                         canvas?.setZoom(props.zoom);
                         // canvas.setWidth(canvas.width * zoom)
                         // canvas.setHeight(canvas.height * zoom)
@@ -84,7 +84,7 @@ function EditZoom(props) {
             const currentZoom = canvasContainer[0].getZoom();
             canvasContainer.map((canvas, index) => {
                 if (canvas) {
-                    console.log("currentZoom: ", currentZoom)
+                    // console.log("currentZoom: ", currentZoom)
                     const newZoom = currentZoom * zoomFactor;
                     canvas.setZoom(newZoom);
                     canvas.setWidth(canvas.width * zoomFactor)

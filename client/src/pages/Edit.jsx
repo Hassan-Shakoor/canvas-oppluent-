@@ -50,7 +50,7 @@ function Edit() {
         setLoading(true);
         const response = await getTemplateJsonData(userData?.uid, id)
         if (response) {
-            console.log(response);
+            // console.log(response);
             dispatch(updateTemplateData(response));
             // Will store data of fabric resolution
             const resolution = response?.docSpecs?.resolution

@@ -81,14 +81,14 @@ function CategoryContent() {
     updatedCategoriesData.forEach(category => {
       const template = category.template?.find(template => template.id === id);
       if (template) {
-        console.log(template.favorite);
+        // console.log(template.favorite);
         const originalFavoriteStatus = template.favorite; // Store the original favorite status
         template.favorite = !template.favorite;
 
         // If the template is now marked as favorite and was previously not in id:53, move it to the category with id 53
         if (template.favorite && category.id !== 53) {
           const targetCategory = updatedCategoriesData.find(cat => cat.id === 53);
-          console.log(targetCategory);
+          // console.log(targetCategory);
           if (targetCategory) {
             targetCategory.template = targetCategory.template || []; // Create an empty array if template is undefined
             targetCategory.template.push(template);
@@ -155,14 +155,14 @@ function CategoryContent() {
       template: [],
     })
     if (id === undefined) {
-      console.log(categoriesData)
+      // console.log(categoriesData)
       const fetchedCategory = categoriesData
         .flatMap(category => category?.template?.filter(template => template.isMyDesign === true) || []);
 
 
       if (fetchedCategory) {
         setCategory(fetchedCategory);
-        console.log(fetchedCategory)
+        // console.log(fetchedCategory)
       }
     }
     if (id !== undefined) {
@@ -171,7 +171,7 @@ function CategoryContent() {
 
       if (fetchedCategory) {
         setCategory(fetchedCategory);
-        console.log(fetchedCategory)
+        // console.log(fetchedCategory)
       }
     }
     setTimeout(() => {

@@ -42,12 +42,11 @@ function NavSaveCloseButtonSet() {
     const userProfile = await getUserInformation()
     if (userProfile) {
       setIsAdmin(userProfile?.isAdmin);
-      console.log(userProfile)
+      // console.log(userProfile)
     }
   }
 
   const handleSaveCheck = () => {
-    console.log('first')
     if (isAdmin) {
       if (!templateData.published) {
         setShowConfirmationModal(true);

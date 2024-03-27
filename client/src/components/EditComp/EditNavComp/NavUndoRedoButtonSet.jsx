@@ -24,15 +24,15 @@ function NavUndoRedoButtonSet() {
     useEffect(() => {
         const canvas = canvasContainer[selectedCanvas];
 
-        console.log("canvas: ", canvas)
+        // console.log("canvas: ", canvas)
 
         if (!canvas) {
-            console.error(`Canvas not found for selectedCanvas: ${selectedCanvas}`);
+            // console.error(`Canvas not found for selectedCanvas: ${selectedCanvas}`);
             return;
         }
 
         const handleObjectModified = () => {
-            console.log("Object modified");
+            // console.log("Object modified");
 
             if (!undoStatus && !redoStatus && canvas) {
                 const currentState = canvas.toJSON();
@@ -66,17 +66,89 @@ function NavUndoRedoButtonSet() {
     }, [canvasContainer, selectedCanvas]);
 
     const handleUndo = () => {
-        if (undoStack.length > 2) {
+        if (undoStack.length > 1) {
             const lastState = undoStack.pop();
             const prevState = undoStack[undoStack.length - 1];
 
+            const prevStateObjects = prevState.objects;
+
+            const canvas = canvasContainer[selectedCanvas]
+
+            const prevStateWithoutObjects = {
+                ...prevState,
+                // objects: canvasObjectsWithPropertySearch.filter((object) => object.type !== "Shape")
+                objects: []
+            }
+
+            async function processObjects(objects, index) {
+                if (index >= objects.length) {
+                    // End of objects array
+                    return;
+                }
+
+                const object = objects[index];
+
+                if (object.type === 'Text') {
+                    const textbox = new fabric.Textbox(object.text, object);
+                    canvas.add(textbox);
+                } else if (object.type === 'Shape') {
+                    if (object?.path?.length > 0) {
+                        const path = new fabric.Path(object.path, object);
+                        canvas.add(path);
+                    } else if (object?.objects?.length > 0) {
+                        let svgPaths = [];
+                        object.objects.forEach(svgObject => {
+                            if (svgObject.path) {
+                                try {
+                                    const path = new fabric.Path(svgObject.path, { ...svgObject });
+                                    svgPaths.push(path);
+                                } catch (error) {
+                                    console.error('Error creating Fabric.js path:', error);
+                                }
+                            }
+                        });
+
+                        if (svgPaths.length > 0) {
+                            const group = new fabric.Group(svgPaths, { ...object });
+                            canvas.add(group);
+                        }
+                    } else if (object?.svgUrl) {
+                        const svg = await new Promise((resolve, reject) => {
+                            fabric.loadSVGFromURL(object.svgUrl, function (objects, options) {
+                                const svg = fabric.util.groupSVGElements(objects, options);
+                                svg.set({ ...object });
+                                resolve(svg);
+                            });
+                        });
+                        canvas.add(svg);
+                    }
+                } else if (object.type === 'Image') {
+                    const img = await new Promise((resolve, reject) => {
+                        fabric.Image.fromURL(object.src, function (img) {
+                            img.set({ ...object, crossOrigin: 'anonymous' });
+                            resolve(img);
+                        }, { crossOrigin: 'anonymous' });
+                    });
+                    canvas.add(img);
+                } else {
+                    console.error("Unsupported object type:", object.type);
+                }
+
+                // Process next object
+                await processObjects(objects, index + 1);
+            }
             if (prevState) {
+                processObjects(prevStateObjects, 0);
+
+
                 setRedoStack((prevStack) => [lastState, ...prevStack]);
                 setUndoStatus(true);
-                myCanvas.loadFromJSON(prevState, () => myCanvas.renderAll());
+                myCanvas.loadFromJSON(prevStateWithoutObjects, () => myCanvas.renderAll());
             } else {
                 console.log("No more changes to undo");
             }
+            // Start processing objects
+
         } else {
             console.log("Undo stack is empty");
         }

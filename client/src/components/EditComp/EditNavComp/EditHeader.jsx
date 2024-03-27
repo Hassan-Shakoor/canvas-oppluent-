@@ -30,7 +30,7 @@ function EditHeader() {
     const buttonElement = document.querySelector('.language-switcher');
     if (buttonElement) {
       const buttonRect = buttonElement.getBoundingClientRect();
-      console.log(buttonRect);
+      // console.log(buttonRect);
       const leftValue = `${((buttonRect.left / buttonRect.right) * 100) - 6.8}%`
 
       setlanguageButtonPosition({

@@ -60,7 +60,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
         const fetchData = async () => {
             if (id === undefined || isFoldersKeywordPresent) {
                 try {
-                    console.log('Fetching folders...');
+                    // console.log('Fetching folders...');
                     const fetchedFolders = await getFolders(uid);
                     if (isFoldersKeywordPresent) {
                         // const folder = fetchedFolders.find(folder => folder.id === id)
@@ -72,14 +72,14 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
                     setFetchedFolders(fetchedFolders);
                     setSearchedTemplates(category);
 
-                    console.log('Folders fetched successfully:', fetchedFolders);
+                    // console.log('Folders fetched successfully:', fetchedFolders);
                 } catch (error) {
                     console.error('Error fetching folders:', error);
                 }
             }
         };
         fetchData();
-        console.log(category)
+        // console.log(category)
         setSelectedItems([]);
 
     }, [triggerRender, renderTriggerFromDashboard])
@@ -126,7 +126,7 @@ const InfiniteScrollComponent = ({ category, gridColumn, userId, searchInput, se
         findItemsByName();
 
         setSelectedItems([]);
-        console.log(searchInput);
+        // console.log(searchInput);
 
     }, [searchInput])
 

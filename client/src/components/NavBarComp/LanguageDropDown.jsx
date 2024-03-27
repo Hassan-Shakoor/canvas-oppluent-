@@ -10,7 +10,7 @@ function LanguageDropDown(props) {
     i18n.changeLanguage(lng);
   };
 
-  console.log(props.position);
+  // console.log(props.position);
   const dropdownStyle = {
     position: 'fixed',
     // top: props.position.top + 'px',

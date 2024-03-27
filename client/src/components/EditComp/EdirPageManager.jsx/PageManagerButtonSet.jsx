@@ -37,7 +37,7 @@ function PageManagerButtonSet() {
     const handleRotateClick = () => {
 
         if (canvasContainer) {
-            console.log("Rotate Button Clicked")
+            // console.log("Rotate Button Clicked")
             canvasContainer[selectedCanvas].set({ angle: canvasContainer[selectedCanvas].angle === 0 ? 180 : 0 });
             const backgroundImage = canvasContainer[selectedCanvas].backgroundImage;
             backgroundImage.set({

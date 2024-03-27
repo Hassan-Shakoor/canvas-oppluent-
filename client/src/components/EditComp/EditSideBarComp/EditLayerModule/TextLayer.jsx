@@ -49,9 +49,9 @@ const TextLayer = ({ object, updateObjects, index }) => {
 
   const activateObject = (event) => {
     // We check if 'icon' isn't in the class name to prevent this function from triggering and causing an error when deleting the object.
-    console.log(event.target.classList)
+    // console.log(event.target.classList)
     if (event.target.classList.contains('icon') || event.target.classList.length === 0) return;
-    console.log("triggered")
+    // console.log("triggered")
     dispatch(updateSelectedObject(object))
     canvas.setActiveObject(object)
     canvas.renderAll()
@@ -71,7 +71,7 @@ const TextLayer = ({ object, updateObjects, index }) => {
       title: object?.name ? object?.name : object?.text,
       isLocked: !object?.selectable && !object?.hasControls && object?.lockMovementX && object?.lockMovementY,
     });
-    console.log("Object --> ", object)
+    // console.log("Object --> ", object)
   }, [object]);
 
   return (

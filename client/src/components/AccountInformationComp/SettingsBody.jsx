@@ -36,7 +36,7 @@ function SettingsBody({ setting }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSaveClick = async () => {
-    console.log(setting, "--------");
+    // console.log(setting, "--------");
     const updatedObject = {
       email,
       language,

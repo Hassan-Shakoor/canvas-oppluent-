@@ -449,8 +449,8 @@ function EditToolbar() {
           <div className="toolbar__container-tools">
             <div className="toolbar__color-picker__button" onClick={() => {
               dispatch(updateOpenDrawer('TextEdit'));
-              console.log("TextEdit")
-              console.log(openDrawer);
+              // console.log("TextEdit")
+              // console.log(openDrawer);
             }}>
               <div className="toolbar__color-picker__flare" />
               <div className="toolbar__color-picker" />

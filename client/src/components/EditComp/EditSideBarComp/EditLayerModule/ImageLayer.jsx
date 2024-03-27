@@ -48,7 +48,7 @@ const ImageLayer = ({ object, updateObjects }) => {
 
   const activateObject = (event) => {
     // We check if 'icon' isn't in the class name to prevent this function from triggering and causing an error when deleting the object.
-    console.log(event.target.classList)
+    // console.log(event.target.classList)
     if (event.target.classList.contains('icon') || event.target.classList.length === 0) return;
     dispatch(updateSelectedObject(object))
     canvas.setActiveObject(object)
@@ -65,7 +65,7 @@ const ImageLayer = ({ object, updateObjects }) => {
   }
 
   useEffect(() => {
-    console.log("ObjectImageLayer --> ", object)
+    // console.log("ObjectImageLayer --> ", object)
 
     setLayer({
       title: object?.name ? object?.name : object?.text,

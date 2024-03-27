@@ -20,7 +20,7 @@ const FontStyleDropdown = () => {
 
 
   useEffect(() => {
-    console.log('fontstyle')
+    // console.log('fontstyle')
     const canvas = canvasContainer[selectedCanvas]
     if (canvas?.getActiveObject()) {
       const textObject = canvas?.getActiveObject()

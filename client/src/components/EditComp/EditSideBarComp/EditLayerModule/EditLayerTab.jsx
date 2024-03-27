@@ -35,11 +35,11 @@ function EditLayerTab() {
     const fromIndex = active?.id
     const toIndex = over?.id
     if(fromIndex !== toIndex && toIndex !== undefined && fromIndex !== undefined){
-      console.log(fromIndex, toIndex)
+      // console.log(fromIndex, toIndex)
       const updatedObjects = [...objects];
-      console.log({updateObjects})
+      // console.log({updateObjects})
       const [movedObject] = updatedObjects.splice(fromIndex, 1);
-      console.log({movedObject})
+      // console.log({movedObject})
       updatedObjects.splice(toIndex, 0, movedObject);
       setObjects(updatedObjects)
     }
@@ -49,7 +49,7 @@ function EditLayerTab() {
 
   useEffect(() => {
     setObjects(canvasContainer[selectedCanvas].getObjects());
-    console.log("Objects --> ", objects)
+    // console.log("Objects --> ", objects)
   }, [selectedCanvas, canvasContainer]);
 
   return (

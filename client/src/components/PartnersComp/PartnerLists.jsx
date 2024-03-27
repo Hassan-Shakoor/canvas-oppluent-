@@ -75,7 +75,7 @@ function PartnerLists() {
 
   const handlePrimary = (event, partnerData, id) => {
     event.preventDefault();
-    console.log(id, partnerData);
+    // console.log(id, partnerData);
     const existingPrimaryPartner = partnerList.find(
       (partner) => partner.primary
     );

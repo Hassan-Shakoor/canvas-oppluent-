@@ -7,7 +7,7 @@ import { deletePartnerById, updatePrimaryPartner, updatePartnerInformation , fet
 export const createPartner = createAsyncThunk(
   "partner/createPartner",
   async (partnerData) => {
-    console.log(partnerData)
+    // console.log(partnerData)
     return new Promise(async (resolve, reject) => {
       try {
         const response = await createPartnerData(partnerData)
