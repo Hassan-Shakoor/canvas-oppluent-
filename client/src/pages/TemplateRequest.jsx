@@ -205,6 +205,11 @@ const TemplateRequest = () => {
             return;
         }
 
+        if (!selectedCategory) {
+            toast.error('Select a Category.')
+            return;
+        }
+
         setLoading(true);
         try {
             // console.log('submit');
@@ -224,6 +229,20 @@ const TemplateRequest = () => {
 
             const snapshot = await get(databaseRef);
             const templateData = snapshot.val();
+
+
+            const entryToAdd = { id: selectedCategory.value };
+            const entryExists = templateData.some(entry => entry.id === selectedCategory.value);
+
+            if (!entryExists) {
+                const newData = [...templateData, entryToAdd];
+                set(ref(database, `${currentUserId}/templateData`), newData);
+                console.log('Added entry:', entryToAdd);
+                handleUploadTemplate();
+                return;
+            } else {
+                console.log('Entry already exists:', entryToAdd);
+            }
 
             // console.log(templateData)
             // console.log(dbJson.currentUserId.templateData)
@@ -269,38 +288,53 @@ const TemplateRequest = () => {
 
                     // Push the templateObject to the data.template array
                     const templateDataRef = ref(database, `${currentUserId}/templateData/${index}/template`);
-                    console.log(Object.keys(data.template).length);
+                    // console.log(Object.keys(data.template).length);
 
                     // // Set the templateObject to the templateData node
                     // update(templateDataRef, {
                     //     [Object.keys(data.template).length]: templateObject,
                     // });
 
-
-                    // console.log(templateDataRef);
-                    const nextKey = Object.keys(data.template).length;
-
                     // Use set to append the new object with the calculated key
-                    set(templateDataRef, {
-                        ...data.template,
-                        [nextKey]: templateObject,
+                    get(templateDataRef).then((snapshot) => {
+                        if (snapshot.exists()) {
+                            // If the template directory exists, get the number of keys
+                            const nextKey = Object.keys(data.template).length;
+                            set(templateDataRef, {
+                                ...data.template,
+                                [nextKey]: templateObject,
+                            });
+                            toast.success('Template added successfully!\n Navigating to Edit Template...', {
+                                position: toast.POSITION.TOP_RIGHT,
+                            });
+
+                            setLoading(false);
+
+                            setTimeout(() => {
+                                navigate(`/edit/${templateId}`)
+                            }, 3000);
+                        } else {
+                            // If the template directory does not exist, initialize it with the publishTemplate object
+                            set(templateDataRef, { 0: templateObject });
+                            toast.success('Template added successfully!\n Navigating to Edit Template...', {
+                                position: toast.POSITION.TOP_RIGHT,
+                            });
+
+                            setLoading(false);
+
+                            setTimeout(() => {
+                                navigate(`/edit/${templateId}`)
+                            }, 3000);
+                        }
+                    }).catch((error) => {
+                        // Handle errors
+                        console.error('Error getting template data:', error);
                     });
 
                     // Use break to exit the loop after the first iteration
                     break;
                 }
             }
-            // }
-            toast.success('Template added successfully!\n Navigating to Edit Template...', {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-
-            setLoading(false);
-
-            setTimeout(() => {
-                navigate(`/edit/${templateId}`)
-            }, 3000);
-
 
         } catch (error) {
             console.error('Error handling template upload:', error);

@@ -17,9 +17,24 @@ export async function publishTemplate(authId, templateObject, templateURL) {
             const selectedCategory = templateObject.docSpecs.designID;
             const allowedUsers = templateObject.allowedUsers;
 
+
+
             for (const [userId, { templateData }] of Object.entries(dataJson)) {
                 if (userId === authId || (allowedUsers?.length > 0 && !allowedUsers?.includes(userId))) {
                     continue;
+                }
+
+                const entryToAdd = { id: selectedCategory };
+                const entryExists = templateData?.some(category => category.id === selectedCategory);
+
+                if (!entryExists) {
+                    const newData = [...templateData, entryToAdd];
+                    set(ref(database, `${userId}/templateData`), newData);
+                    console.log('Added entry:', entryToAdd);
+                    publishTemplate(authId, templateObject, templateURL)
+                    return;
+                } else {
+                    console.log('Entry already exists:', entryToAdd);
                 }
 
                 for (const [index, data] of templateData?.entries()) {
@@ -36,13 +51,31 @@ export async function publishTemplate(authId, templateObject, templateURL) {
 
                         // Push the templateObject to the data.template array
                         const templateDataRef = ref(database, `${userId}/templateData/${index}/template`);
-                        console.log(Object.keys(data.template).length);
+                        // console.log(Object.keys(data.template).length);
 
-                        const nextKey = Object.keys(data.template).length;
+                        // const nextKey = Object.keys(data.template).length;
 
-                        set(templateDataRef, {
-                            ...data.template,
-                            [nextKey]: publishTemplate,
+                        // set(templateDataRef, {
+                        //     ...data.template,
+                        //     [nextKey]: publishTemplate,
+                        // });
+
+                        get(templateDataRef).then((snapshot) => {
+                            if (snapshot.exists()) {
+                                // If the template directory exists, get the number of keys
+                                const nextKey = Object.keys(data.template).length;
+                                // Update the template data with the new key
+                                set(templateDataRef, {
+                                    ...data.template,
+                                    [nextKey]: publishTemplate,
+                                });
+                            } else {
+                                // If the template directory does not exist, initialize it with the publishTemplate object
+                                set(templateDataRef, { 0: publishTemplate });
+                            }
+                        }).catch((error) => {
+                            // Handle errors
+                            console.error('Error getting template data:', error);
                         });
 
                         break;
