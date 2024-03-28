@@ -15,6 +15,10 @@ import { useSelector } from "react-redux";
 import { selectOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 import { selectMlsPropertyInfo, selectUseMlsInfo } from "../../../../store/app/PropertySearch/property";
 import { CLAIRCIUS_LOGO, SHAPES, SOCIAL_MEDIA_ICONS } from "../../../../shared/constant";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../../configs/firebase";
+import { selectUID } from "../../../../store/app/User/userPreference";
+import getUploadImages from "../../../../services/getUploadImages";
 
 // ** Vars
 const Modes = {
@@ -27,6 +31,8 @@ const Modes = {
 }
 
 function EditUploadTab() {
+
+  const userId = useSelector(selectUID);
   // ** States
   const [showPanel, setShowPanel] = useState(Modes.Main);
   const [imgContainer, setImgContainer] = useState([]);
@@ -95,7 +101,7 @@ function EditUploadTab() {
     const fetchData = async () => {
       if (showPanel === Modes.MyUploads) {
         try {
-          const urls = await getUploadImage();
+          const urls = await getUploadImages(userId);
           setImgContainer(urls);
           setLoading(false)
         } catch (error) {
@@ -173,7 +179,7 @@ function EditUploadTab() {
               <span className="btn__text">Back</span>
             </button>
           ) : (
-            <UploadImageBox triggerRender={triggerRender} setTriggerRender={setTriggerRender} />
+            <UploadImageBox userId={userId} triggerRender={triggerRender} setTriggerRender={setTriggerRender} />
           )}
           <EditUploadSearch
             showPanel={showPanel}
@@ -186,7 +192,7 @@ function EditUploadTab() {
             <div className="sidebar-module__title">Multimedia</div>
           )}
           {showPanel !== Modes.Main && showPanel !== Modes.Pixabay && (
-            <UploadImageLinear triggerRender={triggerRender} setTriggerRender={setTriggerRender}/>
+            <UploadImageLinear userId={userId} triggerRender={triggerRender} setTriggerRender={setTriggerRender} />
           )}
           <div className="sidebar-module__divider" />
           <div className="media-library__container-wrapper">

@@ -73,7 +73,7 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
           // selectedImage = img;
           img.set({ selectable: false });
           canvas.setActiveObject(img);
-          img.crop();
+          // img.crop();
           canvas.renderAll();
         });
 

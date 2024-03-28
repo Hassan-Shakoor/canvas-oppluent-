@@ -7,8 +7,9 @@ import uploadFileAndGetURL from "../../../../services/uploadFileAndGetURL";
 // ** Icon Imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Icon } from "@iconify/react";
+import uploadImageinUploadsAndGetUrl from "../../../../services/uploadImageinUploadsAndGetUrl";
 
-function UploadImageBox({ triggerRender, setTriggerRender }) {
+function UploadImageBox({ userId, triggerRender, setTriggerRender }) {
   // ** States
   const [selectedUploadFile, setSelectedUploadFile] = useState(null);
 
@@ -17,7 +18,8 @@ function UploadImageBox({ triggerRender, setTriggerRender }) {
     const uploadImage = async () => {
       if (selectedUploadFile) {
         console.log("File Chosen");
-        await uploadFileAndGetURL(selectedUploadFile);
+        // await uploadFileAndGetURL(selectedUploadFile);
+        await uploadImageinUploadsAndGetUrl(userId, selectedUploadFile);
         setTriggerRender(!triggerRender);
       } else {
         console.log("No File Chosen");
@@ -59,7 +61,7 @@ function UploadImageBox({ triggerRender, setTriggerRender }) {
   );
 }
 
-function UploadImageLinear({triggerRender, setTriggerRender}) {
+function UploadImageLinear({ userId, triggerRender, setTriggerRender }) {
   // ** States
   const [selectedUploadFile, setSelectedUploadFile] = useState(null); // Initialize with null
 
@@ -68,7 +70,7 @@ function UploadImageLinear({triggerRender, setTriggerRender}) {
     const uploadImage = async () => {
       if (selectedUploadFile) {
         console.log("File Chosen");
-        await uploadFileAndGetURL(selectedUploadFile);
+        await uploadImageinUploadsAndGetUrl(userId, selectedUploadFile);
         setTriggerRender(!triggerRender);
       } else {
         console.log("No File Chosen");
