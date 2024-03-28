@@ -6,7 +6,7 @@ import { fabric } from "fabric";
 import SpinnerOverlay from '../../../Loader/SpinnerOverlay'
 
 // ** Store
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas"
 import { updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 
@@ -17,9 +17,9 @@ import { fetchQrCode } from "../../../../api/qrCodeGenerator"
 import { getCanvasRef, updateCanvasRef } from "../../../../shared/utils/fabric"
 import { generateRandomId } from "../../../../shared/utils";
 
-function QrCodeModule (){
+function QrCodeModule() {
     // ** State
-    const [url,setUrl] = useState('')
+    const [url, setUrl] = useState('')
     const [loading, setLoading] = useState(false)
     const [update, setUpdate] = useState(false)
 
@@ -40,39 +40,39 @@ function QrCodeModule (){
                 scaleY: activeObject.scaleY,
                 angle: activeObject.angle,
                 name: url,
-                url:url,
+                url: url,
                 isQrCode: true,
                 id: generateRandomId()
             });
             canvas.add(img);
             canvas.renderAll();
-            updateCanvasRef(canvasContainer, selectedCanvas,canvas)
-          });
+            updateCanvasRef(canvasContainer, selectedCanvas, canvas)
+        });
     }
 
     const generateQrCode = (qrCodeDataURL) => {
         fabric.Image.fromURL(qrCodeDataURL, (img) => {
             img.set({
-              left: 50,
-              top: 50,
-              scaleX: 0.5,
-              scaleY: 0.5,
-              name: url,
-              url:url,
-              isQrCode: true,
-              id: generateRandomId()
+                left: 50,
+                top: 50,
+                scaleX: 0.5,
+                scaleY: 0.5,
+                name: url,
+                url: url,
+                isQrCode: true,
+                id: generateRandomId()
             });
             canvas.add(img);
             canvas.renderAll();
-            updateCanvasRef(canvasContainer, selectedCanvas,canvas)
-          });
+            updateCanvasRef(canvasContainer, selectedCanvas, canvas)
+        });
     }
 
     const generateQR = async () => {
         setLoading(true)
         try {
             const response = await fetchQrCode(url)
-            if(response?.qrCodeDataURL){
+            if (response?.qrCodeDataURL) {
                 update ? updateQrCode(response?.qrCodeDataURL) : generateQrCode(response.qrCodeDataURL)
                 setUrl('')
             }
@@ -86,28 +86,28 @@ function QrCodeModule (){
     useEffect(() => {
         setUpdate((activeObject?.type === "image" && activeObject?.isQrCode) ? true : false)
         setUrl(activeObject?.url ?? "")
-    },[])
+    }, [])
 
-    return(
+    return (
         <>
-        <SpinnerOverlay loading={loading}/>
-        <div className="mb-3 text-info">
-        Add a URL and we’ll create a QR code for you to add to your design. People can
-        scan the QR code to reach the URL
-        </div>
-        <label className="input mb-3">
-            <span className="input__label">URL</span>
-            <input
-                placeholder="https://..."
-                type="text"
-                className="simple-input"
-                value={url}
-                onChange={(event) => setUrl(event.target.value)}
-            />
-        </label>
-        <span className={url === "" ? "btn btn_disabled btn_wide" : "btn btn_wide"} onClick={url !== "" ? generateQR : undefined}>
-            <span className="btn__text">{!update ? "Generate Code": "Update Code"}</span>
-        </span>
+            <SpinnerOverlay loading={loading} />
+            <div className="mb-3 text-info">
+                Add a URL and we’ll create a QR code for you to add to your design. People can
+                scan the QR code to reach the URL
+            </div>
+            <label className="input mb-3">
+                <span className="input__label">URL</span>
+                <input
+                    placeholder="https://..."
+                    type="text"
+                    className="simple-input"
+                    value={url}
+                    onChange={(event) => setUrl(event.target.value)}
+                />
+            </label>
+            <span className={url === "" ? "btn btn_disabled btn_wide" : "btn btn_wide"} onClick={url !== "" ? generateQR : undefined}>
+                <span className="btn__text">{!update ? "Generate Code" : "Update Code"}</span>
+            </span>
         </>
     )
 }
