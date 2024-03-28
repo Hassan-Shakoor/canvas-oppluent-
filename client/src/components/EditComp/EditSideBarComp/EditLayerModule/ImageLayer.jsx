@@ -77,7 +77,7 @@ const ImageLayer = ({ object, updateObjects }) => {
     <div
       className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''}
        ${layer.isLocked && "layers__item_user-lock"}`}
-      onClick={event => activateObject(event)}
+      onMouseDown={event => activateObject(event)}
     >
       <div className="tree__root-box" draggable="true">
         <div className="tree__indent-box" />
@@ -106,7 +106,7 @@ const ImageLayer = ({ object, updateObjects }) => {
                     }
                     className="icon icon-lock lock lock_user lock_locked cursor-pointer"
                     style={{ margin: "0 5px", fontSize: "medium" }}
-                    onClick={lockObject}
+                    onMouseDown={lockObject}
                   />
                 </div>
               </div>
@@ -114,7 +114,7 @@ const ImageLayer = ({ object, updateObjects }) => {
                 icon="material-symbols:delete-outline"
                 className="icon layers__remove-button"
                 style={{ fontSize: "13px", cursor: "pointer" }}
-                onClick={deleteObject}
+                onMouseDown={deleteObject}
               />
             </div>
           </div>

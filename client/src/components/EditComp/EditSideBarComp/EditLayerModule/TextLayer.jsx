@@ -79,7 +79,7 @@ const TextLayer = ({ object, updateObjects, index }) => {
     <div
       className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''}
        ${layer.isLocked && "layers__item_user-lock"}`}
-      onClick={event => activateObject(event)}
+      onMouseDown={event => activateObject(event)}
     >
       <div className="tree__root-box" draggable="true">
         <div className="tree__indent-box" />
@@ -96,6 +96,7 @@ const TextLayer = ({ object, updateObjects, index }) => {
                   className="layers__title-input"
                   value={layer.title ?? ""}
                   onChange={(event) => handleNameChange(event.target.value)}
+                  style={{ zIndex: 300 }}
                 />
               </div>
               <div className="layers__options">
@@ -108,7 +109,7 @@ const TextLayer = ({ object, updateObjects, index }) => {
                     }
                     className="icon icon-lock lock lock_user lock_locked cursor-pointer"
                     style={{ margin: "0 5px", fontSize: "medium" }}
-                    onClick={lockObject}
+                    onMouseDown={lockObject}
                   />
                 </div>
               </div>
@@ -116,7 +117,7 @@ const TextLayer = ({ object, updateObjects, index }) => {
                 icon="material-symbols:delete-outline"
                 className="icon layers__remove-button"
                 style={{ fontSize: "13px", cursor: "pointer" }}
-                onClick={deleteObject}
+                onMouseDown={deleteObject}
               />
             </div>
           </div>

@@ -19,8 +19,10 @@ export const LOCAL_STORAGE = {
 
 
 export const OBJECT_TYPE = {
-    ITEXT: 'i-text',
-    IMAGE: 'image'
+    ITEXT: 'Text',
+    IMAGE: 'Image',
+    SHAPE: 'Shape',
+    GROUP: 'Group',
 }
 
 export const BASE_URL = 'https://claircius-frontend.vercel.app/';
