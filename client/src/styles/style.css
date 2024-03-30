@@ -18227,6 +18227,38 @@ input[type="submit"] {
   color: var(--designer-layers-module-empty-icon);
 }
 
+/* Add styles for the tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  padding: 1px;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  /* width: 120px; */
+  background-color: #000000bb;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 3px 10px;
+  white-space: nowrap;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 55%;
+  margin-left: -40px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+
 .tree {
   height: 100%;
   width: 100%;
@@ -18282,8 +18314,8 @@ input[type="submit"] {
   width: 40px;
 }
 
-.tree__item_selected>.tree__root-box {
-  box-shadow: 0 0 0 1px var(--primary-color) inset;
+.tree__item_selected .tree__root-box {
+  box-shadow: 0 0 0 1px var(--primary-color) inset !important;
 }
 
 .tree__item_expanded>.tree__children-box {

@@ -72,7 +72,7 @@ const TextLayer = ({ object, updateObjects, index }) => {
       isLocked: !object?.selectable && !object?.hasControls && object?.lockMovementX && object?.lockMovementY,
     });
     // console.log("Object --> ", object)
-  }, [object]);
+  }, [object, canvasContainer, selectedObject]);
 
   return (
     // <Draggable id={index}>
@@ -81,48 +81,54 @@ const TextLayer = ({ object, updateObjects, index }) => {
        ${layer.isLocked && "layers__item_user-lock"}`}
       onMouseDown={event => activateObject(event)}
     >
-      <div className="tree__root-box" draggable="true">
-        <div className="tree__indent-box" />
-        <div className="tree__root">
-          <div className="layers__item">
-            <div className="layers__root">
-              <div className="layers__title">
-                <Icon
-                  icon="solar:layers-linear"
-                  className="icon"
-                  style={{ margin: "0 5px" }}
-                />
-                <input
-                  className="layers__title-input"
-                  value={layer.title ?? ""}
-                  onChange={(event) => handleNameChange(event.target.value)}
-                  style={{ zIndex: 300 }}
-                />
-              </div>
-              <div className="layers__options">
-                <div className="d-flex flex-nowrap">
+      <Draggable key={index.toString()} id={index.toString()} data={object}>
+        <div className="tree__root-box " draggable="true">
+          <div className="tree__indent-box" />
+          <div className="tree__root">
+            <div className="layers__item">
+              <div className="layers__root">
+                <div className="layers__title">
                   <Icon
-                    icon={
-                      layer.isLocked
-                        ? "material-symbols-light:lock-open"
-                        : "material-symbols-light:lock-outline"
-                    }
-                    className="icon icon-lock lock lock_user lock_locked cursor-pointer"
-                    style={{ margin: "0 5px", fontSize: "medium" }}
-                    onMouseDown={lockObject}
+                    icon="solar:layers-linear"
+                    className="icon"
+                    style={{ margin: "0 5px" }}
+                  />
+                  <input
+                    className="layers__title-input"
+                    value={layer.title ?? ""}
+                    onChange={(event) => handleNameChange(event.target.value)}
+                    style={{ zIndex: 300 }}
+                    onMouseDown={(event) => {
+                      event.stopPropagation(); // Stop propagation to prevent Draggable's behavior
+                      event.target.focus();
+                    }}
                   />
                 </div>
+                <div className="layers__options">
+                  <div className="d-flex flex-nowrap">
+                    <Icon
+                      icon={
+                        layer.isLocked
+                          ? "material-symbols-light:lock-open"
+                          : "material-symbols-light:lock-outline"
+                      }
+                      className="icon icon-lock lock lock_user lock_locked cursor-pointer"
+                      style={{ margin: "0 5px", fontSize: "medium" }}
+                      onMouseDown={lockObject}
+                    />
+                  </div>
+                </div>
+                <Icon
+                  icon="material-symbols:delete-outline"
+                  className="icon layers__remove-button"
+                  style={{ fontSize: "13px", cursor: "pointer" }}
+                  onMouseDown={deleteObject}
+                />
               </div>
-              <Icon
-                icon="material-symbols:delete-outline"
-                className="icon layers__remove-button"
-                style={{ fontSize: "13px", cursor: "pointer" }}
-                onMouseDown={deleteObject}
-              />
             </div>
           </div>
         </div>
-      </div>
+      </Draggable>
       <div className="tree__children-box" />
     </div>
     // </Draggable>

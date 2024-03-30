@@ -15,9 +15,12 @@ import {
 // ** Icon
 import { Icon } from "@iconify/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Draggable } from "../../../DragnDrop/Draggable";
+import GroupObjectsLayer from "./GroupObjectsLayer";
 
-const GroupLayer = ({ object, updateObjects }) => {
+const GroupLayer = ({ object, updateObjects, index }) => {
     const [layer, setLayer] = useState({ title: "", isLocked: false });
+    const [isExpanded, setIsExpanded] = useState(false);
 
     // ** Var
     const dispatch = useDispatch()
@@ -65,6 +68,10 @@ const GroupLayer = ({ object, updateObjects }) => {
         canvas.renderAll()
     }
 
+    const handleGroupObjectNameChange = (text) => {
+
+    }
+
     useEffect(() => {
         // console.log("ObjectImageLayer --> ", object)
 
@@ -75,98 +82,62 @@ const GroupLayer = ({ object, updateObjects }) => {
     }, [object]);
 
     return (
-        <div
-            className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''}
-       ${layer.isLocked && "layers__item_user-lock"}`}>
-            <div className="tree__root-box" draggable="true" onMouseDown={event => activateObject(event)}>
-                <div className="tree__indent-box" onMouseDown={event => activateObject(event)} />
-                <div className="tree__root">
-                    <div className="layers__item">
-                        <div className="layers__root">
-                            <div className="layers__chevron-box">
-                                <FontAwesomeIcon icon="fa-solid fa-chevron-up" rotation={90} size="xs" />
-                            </div>
-                            <div className="layers__title">
-                                <FontAwesomeIcon icon="fa-regular fa-folder" style={{ marginLeft: 5 }} size="2xs" />
-                                <input
-                                    className="layers__title-input"
-                                    value={layer.title ?? ""}
-                                    onChange={(event) => handleNameChange(event.target.value)}
-                                />
-                            </div>
-                            <div className="layers__options">
-                                <div className="d-flex flex-nowrap">
-                                    <Icon
-                                        icon={
-                                            layer.isLocked
-                                                ? "material-symbols-light:lock-open"
-                                                : "material-symbols-light:lock-outline"
-                                        }
-                                        className="icon icon-lock lock lock_user lock_locked cursor-pointer"
-                                        style={{ margin: "0 5px", fontSize: "medium" }}
-                                        onMouseDown={lockObject}
+        <div className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''} ${layer.isLocked ? "layers__item_user-lock" : ''} ${isExpanded ? 'tree__item_expanded' : ''}`}>
+
+
+            <Draggable key={index.toString()} id={index.toString()} data={object}>
+                <div className="tree__root-box" draggable="true" onMouseDown={event => activateObject(event)}>
+                    <div className="tree__indent-box" onMouseDown={event => activateObject(event)} />
+                    <div className="tree__root">
+                        <div className="layers__item">
+                            <div className="layers__root">
+                                <div className="layers__chevron-box" onClick={() => setIsExpanded(!isExpanded)} style={{ cursor: 'pointer' }}>
+                                    <FontAwesomeIcon icon="fa-solid fa-chevron-up" rotation={isExpanded ? 180 : 90} size="xs" />
+                                </div>
+                                <div className="layers__title">
+                                    <FontAwesomeIcon icon="fa-regular fa-folder" style={{ marginLeft: 5, marginRight: 5 }} size="2xs" />
+                                    <input
+                                        className="layers__title-input"
+                                        value={layer.title ?? ""}
+                                        draggable={false}
+                                        aria-selected
+                                        onChange={(event) => handleNameChange(event.target.value)}
+                                        onClick={(event) => {
+                                            // event.preventDefault();
+                                            event.target.focus();
+                                        }}
                                     />
                                 </div>
-                            </div>
-                            <Icon
-                                icon="material-symbols:delete-outline"
-                                className="icon layers__remove-button"
-                                style={{ fontSize: "13px", cursor: "pointer" }}
-                                onMouseDown={deleteObject}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="tree__children-box">
-                {object?._objects?.length > 0 && object?._objects?.map((item, index) => (
-                    <div key={index} className="tree__item" >
-                        <div className="tree__root-box" draggable="true">
-                            <div className="tree__indent-box">
-                                <div className="tree__indent"></div>
-                            </div>
-                            <div className="tree__root">
-                                <div className="layers__item">
-                                    <div className="layers__root">
-                                        <div className="layers__title">
-                                            <Icon
-                                                icon="solar:layers-linear"
-                                                className="icon"
-                                                style={{ margin: "0 5px" }}
-                                            />
-                                            <input
-                                                className="layers__title-input"
-                                                draggable="true"
-                                                value={layer.title ?? ""}
-                                                onChange={(event) => handleNameChange(event.target.value)}
-                                            />
-                                        </div>
-                                        <div className="layers__options">
-                                            <div className="d-flex flex-nowrap">
-                                                <Icon
-                                                    icon={
-                                                        layer.isLocked
-                                                            ? "material-symbols-light:lock-open"
-                                                            : "material-symbols-light:lock-outline"
-                                                    }
-                                                    className="icon icon-lock lock lock_user lock_locked cursor-pointer"
-                                                    style={{ margin: "0 5px", fontSize: "medium" }}
-                                                    onMouseDown={lockObject}
-                                                />
-                                            </div>
-                                        </div>
+                                <div className="layers__options">
+                                    <div className="d-flex flex-nowrap">
                                         <Icon
-                                            icon="material-symbols:delete-outline"
-                                            className="icon layers__remove-button"
-                                            style={{ fontSize: "13px", cursor: "pointer" }}
-                                            onMouseDown={deleteObject}
+                                            icon={
+                                                layer.isLocked
+                                                    ? "material-symbols-light:lock-open"
+                                                    : "material-symbols-light:lock-outline"
+                                            }
+                                            className="icon icon-lock lock lock_user lock_locked cursor-pointer"
+                                            style={{ margin: "0 5px", fontSize: "medium" }}
+                                            onMouseDown={lockObject}
                                         />
                                     </div>
                                 </div>
+                                <Icon
+                                    icon="material-symbols:delete-outline"
+                                    className="icon layers__remove-button"
+                                    style={{ fontSize: "13px", cursor: "pointer" }}
+                                    onMouseDown={deleteObject}
+                                />
                             </div>
                         </div>
-                        <div className="tree__children-box"></div>
                     </div>
+                </div>
+            </Draggable>
+
+
+            <div className="tree__children-box">
+                {object?._objects?.length > 0 && object?._objects?.map((groupObject, index) => (
+                    <GroupObjectsLayer key={index.toString()} index={index.toString()} object={groupObject} group={object} updateObjects={updateObjects} />
                 ))}
             </div>
         </div>
