@@ -37,6 +37,7 @@ function TextInput() {
       cursorColor: '#000',
       textWrapping: true,
       textAlign: 'left',
+      lockScalingY: true,
       // styles: {
       //   0: {
       //     0: {

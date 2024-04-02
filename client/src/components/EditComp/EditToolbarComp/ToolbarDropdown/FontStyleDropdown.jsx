@@ -8,7 +8,7 @@ import Select, { StylesConfig } from "react-select";
 
 // ** Shared
 import { getCanvasRef } from "../../../../shared/utils/fabric";
-import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
+import { selectSelectedCanvas, selectSelectedObject } from "../../../../store/app/Edit/Canvas/canvas";
 
 const FontStyleDropdown = () => {
   // ** State
@@ -17,6 +17,7 @@ const FontStyleDropdown = () => {
   // ** Vars
   const canvasContainer = getCanvasRef() || []
   const selectedCanvas = useSelector(selectSelectedCanvas)
+  const selectedObject = useSelector(selectSelectedObject)
 
 
   useEffect(() => {
@@ -24,6 +25,19 @@ const FontStyleDropdown = () => {
     const canvas = canvasContainer[selectedCanvas]
     if (canvas?.getActiveObject()) {
       const textObject = canvas?.getActiveObject()
+      if (textObject?.fontFamily) {
+        setFont(textObject.fontFamily)
+      }
+    }
+  }, [selectedObject])
+
+  useEffect(() => {
+    // console.log('fontstyle')
+    const canvas = canvasContainer[selectedCanvas]
+    if (canvas?.getActiveObject()) {
+      const textObject = canvas?.getActiveObject()
+      const fontsText = textObject.get('fontFamily');
+      console.log(fontsText);
       if (font) {
         textObject?.set({ fontFamily: font })
         canvas.requestRenderAll();

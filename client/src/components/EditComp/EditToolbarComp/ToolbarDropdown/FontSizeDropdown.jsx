@@ -8,7 +8,7 @@ import Select, { StylesConfig } from "react-select";
 
 // ** Shared
 import { getCanvasRef } from "../../../../shared/utils/fabric";
-import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
+import { selectSelectedCanvas, selectSelectedObject } from "../../../../store/app/Edit/Canvas/canvas";
 
 const FontSizeDropdown = () => {
     // ** state
@@ -17,6 +17,18 @@ const FontSizeDropdown = () => {
     // ** Vars
     const canvasContainer = getCanvasRef() || []
     const selectedCanvas = useSelector(selectSelectedCanvas)
+    const selectedObject = useSelector(selectSelectedObject)
+
+    useEffect(() => {
+        // console.log('fontstyle')
+        const canvas = canvasContainer[selectedCanvas]
+        if (canvas?.getActiveObject()) {
+            const textObject = canvas?.getActiveObject()
+            if (textObject?.fontSize) {
+                setSize(textObject.fontSize)
+            }
+        }
+    }, [selectedObject])
 
     useEffect(() => {
         const canvas = canvasContainer[selectedCanvas]
