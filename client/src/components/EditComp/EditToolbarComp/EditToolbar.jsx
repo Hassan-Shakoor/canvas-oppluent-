@@ -448,9 +448,15 @@ function EditToolbar() {
         <>
           <div className="toolbar__container-tools">
             <div className="toolbar__color-picker__button" onClick={() => {
-              dispatch(updateOpenDrawer('TextEdit'));
-              // console.log("TextEdit")
-              // console.log(openDrawer);
+              if (selectedObject.type === 'Image') {
+
+                dispatch(updateOpenDrawer('Image-Color'));
+                // console.log("TextEdit")
+                // console.log(openDrawer);
+              } else {
+
+                dispatch(updateOpenDrawer('TextEdit'));
+              }
             }}>
               <div className="toolbar__color-picker__flare" />
               <div className="toolbar__color-picker" />

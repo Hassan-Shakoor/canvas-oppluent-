@@ -193,6 +193,21 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
 
         canvas.requestRenderAll();
       }
+    } else if (title === 'Image') {
+      const canvas = canvasContainer[selectedCanvas];
+      const activeObject = canvas?.getActiveObject();
+
+      let orangeColorFilter = new fabric.Image.filters.BlendColor({
+        color: getRgbaCSS(color), // Set the color to orange
+        mode: 'tint' // Use 'tint' mode to fill the image with color
+      });
+
+      if (activeObject?.type === 'Image') {
+        activeObject.filters.push(orangeColorFilter);
+        activeObject.applyFilters();
+      }
+      canvas.renderAll();
+      // Apply the orange color filter to the image
     } else {
       if (color?.r === prevColor?.r && color?.g === prevColor?.g && color?.b === prevColor?.b && color?.a === prevColor?.a) {
         // Update the previous color

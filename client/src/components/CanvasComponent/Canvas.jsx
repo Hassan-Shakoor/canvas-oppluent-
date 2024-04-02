@@ -236,7 +236,7 @@ function Canvas(props) {
         canvas?.on("mouse:down", (event) => {
           // Check if the clicked area have object and set it active
           const target = event.target
-          // console.log("Target: ", target)
+          console.log("Target: ", target)
           if (target) {
             canvas.setActiveObject(target)
           }
