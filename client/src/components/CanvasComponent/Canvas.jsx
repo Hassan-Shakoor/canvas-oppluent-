@@ -258,6 +258,11 @@ function Canvas(props) {
           }
         });
 
+        canvas.on('after:render', function () {
+          props.handleCanvasLoaded();
+        });
+
+
         newCanvases.push(canvas);
       } catch (error) {
         console.error('Error Creating Canvas. ', error)

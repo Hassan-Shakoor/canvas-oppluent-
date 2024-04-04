@@ -15,6 +15,7 @@ function EditZoom(props) {
 
     // ** State
     const [zoomPercentage, setZoomPercentage] = useState(100)
+    const [firstTime, setFirstTime] = useState(true)
 
     // ** Vars
     const dispatch = useDispatch()
@@ -31,13 +32,54 @@ function EditZoom(props) {
 
     useEffect(() => {
 
+        const setCanvasZoomOnStart = () => {
+            // if (firstTime) {
 
-        // return () => {
-        //     console.log('Zoom removed')
-        //     dispatch(updateZoom(1))
-        // }
 
-    }, [])
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            console.log('Width:', width);
+            console.log('Height:', height);
+            console.log('Screen width:', screenWidth);
+            console.log('Screen height:', screenHeight);
+
+            setTimeout(() => {
+                if (canvasContainer && canvasContainer.length > 0) {
+                    const zoomWidth = width / screenWidth;
+                    const zoomHeight = height / screenHeight;
+
+                    if (zoomWidth > 0.85 || zoomHeight > 0.85) {
+
+                        let zoomValue;
+                        if (zoomWidth > zoomHeight) {
+                            zoomValue = 0.85 / zoomWidth;
+                        } else {
+                            zoomValue = 0.85 / zoomHeight;
+                        }
+
+
+                        const newZoomPercentage = Math.round(zoomValue * 100);
+                        if (zoomPercentage === newZoomPercentage) {
+                            return;
+                        }
+
+                        // Set the zoom level and percentage
+
+                        if (!firstTime) {
+                            zoomCanvas(zoomValue);
+                            setZoomPercentage(newZoomPercentage);
+                        }
+                    }
+                }
+            }, 1000);
+            setFirstTime(false)
+            // }
+        }
+
+        setCanvasZoomOnStart();
+
+    }, [props.isCanvasLoaded])
 
     useEffect(() => {
 
@@ -59,8 +101,10 @@ function EditZoom(props) {
                     }
                 })
             }
+
         }, 100);
-    }, [canvasContainer.length])
+
+    }, [canvasContainer?.length])
 
     const handleZoomIn = () => {
         // zoomCanvas(0.1); // Increase the zoom level by 10%
@@ -78,28 +122,24 @@ function EditZoom(props) {
     };
 
     const zoomCanvas = (zoomFactor) => {
-
-
         if (canvasContainer) {
-            const currentZoom = canvasContainer[0].getZoom();
-            canvasContainer.map((canvas, index) => {
+            const currentZoom = canvasContainer[0]?.getZoom(); // Ensure canvasContainer[0] is not undefined
+            canvasContainer.forEach((canvas) => {
                 if (canvas) {
-                    // console.log("currentZoom: ", currentZoom)
                     const newZoom = currentZoom * zoomFactor;
-                    canvas.setZoom(newZoom);
-                    canvas.setWidth(canvas.width * zoomFactor)
-                    canvas.setHeight(canvas.height * zoomFactor)
                     const newWidth = props.width * zoomFactor;
                     const newHeight = props.height * zoomFactor;
+                    canvas?.setZoom(newZoom);
+                    canvas?.setWidth(canvas?.width * zoomFactor);
+                    canvas?.setHeight(canvas?.height * zoomFactor);
                     props.updateZoomResolution(newWidth, newHeight, newZoom);
-
-                    dispatch(updateZoom(newZoom))
-
+                    dispatch(updateZoom(newZoom));
                     canvas?.renderAll();
                 }
-            })
+            });
         }
     };
+
 
     return (
         <div className="zoom">

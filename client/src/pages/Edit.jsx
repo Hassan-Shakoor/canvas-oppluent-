@@ -45,6 +45,12 @@ function Edit() {
     const [height, setHeight] = useState(null)
     const [zoom, setZoom] = useState(1)
 
+    const [isCanvasLoaded, setIsCanvasLoaded] = useState(false);
+
+    const handleCanvasLoaded = () => {
+        setIsCanvasLoaded(true);
+    };
+
     // TODO: Remove hardcoded else condition in fetch tempate data
     const fetchTemplateData = useCallback(async () => {
         setLoading(true);
@@ -74,19 +80,19 @@ function Edit() {
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
-          const message = 'Are you sure you want to leave?';
-          event.returnValue = message;
-          return message;
+            const message = 'Are you sure you want to leave?';
+            event.returnValue = message;
+            return message;
         };
 
         window.addEventListener('beforeunload', handleBeforeUnload);
 
         return () => {
-          window.removeEventListener('beforeunload', handleBeforeUnload);
-          dispatch(updateZoom(1));
-          dispatch(updateMlsPropertyInfo({}))
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            dispatch(updateZoom(1));
+            dispatch(updateMlsPropertyInfo({}))
         };
-      }, []);
+    }, []);
 
     const updateZoomResolution = (newWidth, newHeight, newZoom) => {
         console.log("Zoom Resolution Updated...")
@@ -106,12 +112,12 @@ function Edit() {
             {selectedObject && (<EditToolbar />)}
             <EditSidebar />
             <EditExportSidebar />
-            <EditZoom width={width} height={height} zoom={zoom} updateZoomResolution={updateZoomResolution} />
+            {width && height && canvasContainer?.length > 0 && (<EditZoom width={width} height={height} zoom={zoom} updateZoomResolution={updateZoomResolution} isCanvasLoaded={isCanvasLoaded} />)}
             <div className="page-manager">
                 <PageManagerStage />
                 <PageManagerButtonSet />
             </div>
-            {width && height && (<Canvas width={width} height={height} />)}
+            {width && height && (<Canvas width={width} height={height} handleCanvasLoaded={handleCanvasLoaded} />)}
         </div>
     )
 }
