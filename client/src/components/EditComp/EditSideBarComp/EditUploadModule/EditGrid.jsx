@@ -10,7 +10,7 @@ import { getCanvasRef, updateCanvasRef } from "../../../../shared/utils/fabric";
 
 import { generateRandomId } from "../../../../shared/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { selectSelectedCanvas } from "../../../../store/app/Edit/Canvas/canvas";
+import { selectSelectedCanvas, selectSelectedObject, updateSelectedObject } from "../../../../store/app/Edit/Canvas/canvas";
 import { selectOpenDrawer, updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SpinnerContainer from "../../../Loader/SpinnerContainer";
@@ -20,6 +20,7 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
   const dispatch = useDispatch();
   const selectedCanvas = useSelector(selectSelectedCanvas);
   const openDrawer = useSelector(selectOpenDrawer);
+  const selectedObject = useSelector(selectSelectedObject);
 
   const [loading, setLoading] = useState(false);
 
@@ -49,6 +50,52 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
     // TO Add the Image to Canvas
 
     if (openDrawer === 'Uploads') {
+
+      if (selectedObject && selectedObject.type === 'Image') {
+        fabric.Image.fromURL(image, function (img) {
+
+          const scaleToFitWidth = selectedObject.width / (img.width / selectedObject.scaleX);
+          const scaleToFitHeight = selectedObject.height / (img.height / selectedObject.scaleY);
+          const scale = Math.min(scaleToFitWidth, scaleToFitHeight);
+
+
+          const canvasCenter = canvas.getCenter();
+          console.log('first')
+
+          img.set({
+            left: selectedObject.left,
+            top: selectedObject.top,
+            // width: selectedObject.width,
+            // height: selectedObject.height,
+            scaleX: scaleToFitWidth,
+            scaleY: scaleToFitHeight,
+            selectable: true,
+            hasControls: true,
+            name: 'image_' + new Date().getTime(),
+            id: generateRandomId(),
+            type: 'Image'
+          });
+
+          img.on('dblclick', () => {
+            // selectedImage = img;
+            img.set({ selectable: false });
+            canvas.setActiveObject(img);
+            // img.crop();
+            canvas.renderAll();
+          });
+
+          img.scale(scale);
+          canvas.remove(selectedObject)
+          canvas.add(img);
+          canvas.setActiveObject(img);
+          canvas.renderAll();
+          updateCanvasRef(canvasArr, selectedCanvas, canvas);
+          dispatch(updateSelectedObject(null));
+          dispatch(updateOpenDrawer(null));
+          // dispatch(updateText(''));
+        }, { crossOrigin: 'Anonymous' });
+        return;
+      }
 
       fabric.Image.fromURL(image, function (img) {
 

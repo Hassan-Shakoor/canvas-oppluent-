@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useSelector } from 'react-redux';
-import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject } from '../../../../store/app/Edit/Canvas/canvas';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject, updateSelectedObject } from '../../../../store/app/Edit/Canvas/canvas';
 import arrowDownToLine from '../../../../assets/icons/arrow-down-to-line.png';
 import { toast } from 'react-toastify';
 import { selectDarkMode } from '../../../../store/app/User/userPreference';
@@ -11,6 +11,8 @@ import { selectDarkMode } from '../../../../store/app/User/userPreference';
 
 
 const SendBackFrontObject = () => {
+
+    const dispatch = useDispatch();
 
     const canvasContainer = useSelector(selectCanvasContainer);
     const selectedCanvas = useSelector(selectSelectedCanvas)
@@ -78,6 +80,7 @@ const SendBackFrontObject = () => {
         if (canvas?.getActiveObject()) {
             const activeObject = canvas?.getActiveObject();
             canvas.remove(activeObject);
+            dispatch(updateSelectedObject(null));
             canvas.requestRenderAll();
         }
     };
