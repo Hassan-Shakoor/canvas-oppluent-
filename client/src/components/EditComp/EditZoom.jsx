@@ -39,10 +39,10 @@ function EditZoom(props) {
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
 
-            console.log('Width:', width);
-            console.log('Height:', height);
-            console.log('Screen width:', screenWidth);
-            console.log('Screen height:', screenHeight);
+            // console.log('Width:', width);
+            // console.log('Height:', height);
+            // console.log('Screen width:', screenWidth);
+            // console.log('Screen height:', screenHeight);
 
             setTimeout(() => {
                 if (canvasContainer && canvasContainer.length > 0) {
