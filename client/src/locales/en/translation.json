@@ -221,10 +221,19 @@
     "EditHeader": {
         "publishTemplateConfirmation": "Publish Template Confirmation",
         "wantToPublish": "Do you want to publish this template?",
-        "publishTemplateSuccess": "Error Publishing Template",
-        "publishTemplateError": "Template Published Successfully.",
+        "publishTemplateSuccess": "Template Published Successfully.",
+        "publishTemplateError": "Error Publishing Template",
         "savedSuccess": "Changes Saved Successfully.",
         "savedError": "Error Saving Template."
+    },
+    "Modal": {
+        "deleteTemplateConfirmation": "Delete Template Confirmation",
+        "wantToDelete": "Are you Sure you want to delete this template?",
+        "wantToDeleteAll": "Are you Sure you want to delete this Template for All?",
+        "deleteTemplateSuccess": "Template Deleted Successfully.",
+        "deleteTemplateError": "Error Deleting Template",
+        "deleteSuccess": "Template Deleted Successfully.",
+        "deleteError": "Error Deleting Template."
     },
     "Uploads": "Uploads",
     "Layers": "Layers",

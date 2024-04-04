@@ -11,15 +11,23 @@ import { toast } from "react-toastify";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
 import SpinnerContainer from "../Loader/SpinnerContainer";
 import { useTranslation } from 'react-i18next';
+import { deleteTemplateFromTemplate } from "../../services/firebase/TemplateServices/deleteTemplateFromTemplate";
+import ConfirmationModal from "../Modal/ConfirmationModal";
+import { deleteTemplateFromTemplateasAdmin } from "../../services/firebase/TemplateServices/deleteTemplateFromTemplateasAdmin";
+import { useSelector } from "react-redux";
+import { selectProfile } from "../../store/app/AccountInformation/profile";
 
 function Template(props) {
 
   const { t } = useTranslation()
 
+  const userProfile = useSelector(selectProfile);
+
   const [isCreateDesignOpen, setCreateDesginOpen] = useState(null);
   const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
   const [loading, setLoading] = useState(true);
+  const [isConfirmDeleteModal, setIsConfirmDeleteModal] = useState(false);
 
   const handleAddMyDesign = async () => {
     try {
@@ -50,6 +58,12 @@ function Template(props) {
       title: "Open in new Tab",
       link: `share/${props.userId}/${props.categoryId}/${props.item.id}`
     },
+    {
+      key: "delete",
+      iconClass: "fa-solid fa-trash",
+      title: "Delete",
+      function: () => setIsConfirmDeleteModal(true)
+    },
     // {
     //   key: "add-to-my-design",
     //   iconClass: "fa-solid fa-star",
@@ -68,6 +82,35 @@ function Template(props) {
       className="template"
       style={{ width: props.gridColumn === 2 ? "360px" : "250px" }}
     >
+      {isConfirmDeleteModal && (
+        <ConfirmationModal
+          title={<p style={{ color: '#000', margin: 0 }}>{t("Modal.deleteTemplateConfirmation")}</p>}
+          body={<p style={{ color: '#000', margin: 0 }}>{userProfile?.isAdmin ? t("Modal.wantToDeleteAll") : t("Modal.wantToDelete")}</p>}
+          secondaryBtnTxt={t("cancel")}
+          primaryBtnTxt={t("delete")}
+          close={() => { setIsConfirmDeleteModal(false) }}
+          submit={async (event) => {
+            // handlePublish(event)
+            event.preventDefault();
+            if (userProfile?.isAdmin) {
+              const response = await deleteTemplateFromTemplateasAdmin(props.item.id)
+              if (response) {
+                toast.success('Template Deleted from All Users.');
+              } else {
+                toast.error('Error Deleting Template.')
+              }
+            } else {
+              const response = await deleteTemplateFromTemplate(props.userId, props.item.id)
+              if (response) {
+                toast.success('Template Deleted.');
+              } else {
+                toast.error('Error Deleting Template.')
+              }
+
+            }
+          }}
+        />
+      )}
       <div className="template__preview-wrapper">
         <div className="template__preview">
           {/* {!loading ? */}

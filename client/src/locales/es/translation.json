@@ -204,6 +204,15 @@
         "savedSuccess": "Cambios Guardados Exitosamente.",
         "savedError": "Error al Guardar la Plantilla."
     },
+    "Modal": {
+        "deleteTemplateConfirmation": "Confirmación de eliminación de plantilla",
+        "wantToDelete": "¿Desea eliminar esta plantilla?",
+        "wantToDeleteAll": "¿Estás seguro de que deseas eliminar esta plantilla para todos?",
+        "deleteTemplateSuccess": "Plantilla eliminada correctamente.",
+        "deleteTemplateError": "Error al eliminar la plantilla.",
+        "deleteSuccess": "Plantilla eliminada correctamente.",
+        "deleteError": "Error al eliminar la plantilla."
+    },
     "Uploads": "Cargas",
     "Layers": "Capas",
     "Tools": "Herramientas",

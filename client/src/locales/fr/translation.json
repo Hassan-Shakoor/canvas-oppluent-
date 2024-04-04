@@ -204,6 +204,15 @@
         "savedSuccess": "Modifications Enregistrées avec Succès.",
         "savedError": "Erreur lors de l'Enregistrement du Modèle."
     },
+    "Modal": {
+        "deleteTemplateConfirmation": "Confirmation de suppression de modèle",
+        "wantToDelete": "Voulez-vous supprimer ce modèle ?",
+        "wantToDeleteAll": "Êtes-vous sûr de vouloir supprimer ce modèle pour tous ?",
+        "deleteTemplateSuccess": "Modèle supprimé avec succès.",
+        "deleteTemplateError": "Erreur lors de la suppression du modèle.",
+        "deleteSuccess": "Modèle supprimé avec succès.",
+        "deleteError": "Erreur lors de la suppression du modèle."
+    },
     "Uploads": "Téléchargements",
     "Layers": "Calques",
     "Tools": "Outils",
