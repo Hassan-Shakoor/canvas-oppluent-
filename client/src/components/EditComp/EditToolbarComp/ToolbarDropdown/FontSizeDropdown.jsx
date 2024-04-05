@@ -137,6 +137,16 @@ const FontSizeDropdown = () => {
         },
     ]
 
+    const handleInputChange = (inputValue, actionMeta) => {
+        if (actionMeta.action === 'input-change') {
+            // Handle input change here, set size accordingly
+            const inputValueNumber = parseInt(inputValue);
+            if (!isNaN(inputValueNumber)) {
+                setSize(inputValueNumber);
+            }
+        }
+    };
+
     const customStyles = {
         container: (provided) => ({
             ...provided,
@@ -204,6 +214,7 @@ const FontSizeDropdown = () => {
                     label: '' + size
                 }}
                 styles={customStyles}
+                onInputChange={handleInputChange}
                 onChange={(option) => setSize(option.value)} />
         </div>
     )
