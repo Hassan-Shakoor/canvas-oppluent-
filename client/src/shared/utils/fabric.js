@@ -26,6 +26,11 @@ export const serializeCanvasContainer = (canvasContainer) => {
                 ...obj.toObject(),
                 name: obj.name,
                 id: obj.id,
+                isAdminLocked: obj.isAdminLocked ? obj.isAdminLocked : false,
+                selectable: obj.isAdminLocked ? false : true,
+                hasControls: obj.isAdminLocked ? false : true,
+                lockMovementX: obj.isAdminLocked ? true : false,
+                lockMovementY: obj.isAdminLocked ? true : false,
                 // Add any other custom attributes you want to retain
             };
 

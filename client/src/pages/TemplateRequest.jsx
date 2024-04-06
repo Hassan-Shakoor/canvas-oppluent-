@@ -57,7 +57,7 @@ const TemplateRequest = () => {
 
     const [showInputModal, setShowInputModal] = useState(false);
 
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUsers, setSelectedUsers] = useState(null);
     const [users, setUsers] = useState(false);
 
     const [files, setFiles] = useState([]);
@@ -153,7 +153,7 @@ const TemplateRequest = () => {
     //             if (data?.id === 5) {
     //                 console.log(dbJson);
     //                 console.log(selectedCategory);
-    //                 console.log(selectedUser);
+    //                 console.log(selectedUsers);
 
     //                 const templateObject = {
     //                     cardTitle: `${templateType}`,
@@ -253,7 +253,7 @@ const TemplateRequest = () => {
                 if (data?.id === selectedCategory.value) {
                     // console.log(dbJson);
                     // console.log(selectedCategory);
-                    // console.log(selectedUser);
+                    // console.log(selectedUsers);
 
 
                     const templateObject = {
@@ -276,7 +276,7 @@ const TemplateRequest = () => {
                         id: templateId,
                         published: false,
                         visible: true,
-                        allowedUsers: selectedUser,
+                        allowedUsers: selectedUsers,
                         // imageUrl: `${files[0].name}`,
                         designedBy: currentUserId,
                         modified: formatDate(Date.now()),
@@ -587,7 +587,7 @@ const TemplateRequest = () => {
                                                     isMulti
                                                     placeholder='Select users'
                                                     styles={customStyles}
-                                                    onChange={(option) => { setSelectedUser(option); console.log(selectedUser) }} />
+                                                    onChange={(option) => { setSelectedUsers(option.value); console.log(selectedUsers) }} />
                                             </div>
                                         </div>
                                     )}

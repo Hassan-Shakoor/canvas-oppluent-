@@ -17,15 +17,17 @@ import { Icon } from "@iconify/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Draggable } from "../../../DragnDrop/Draggable";
 import GroupObjectsLayer from "./GroupObjectsLayer";
+import { selectProfile } from "../../../../store/app/AccountInformation/profile";
 
 const GroupLayer = ({ object, updateObjects, index }) => {
-    const [layer, setLayer] = useState({ title: "", isLocked: false });
+    const [layer, setLayer] = useState({ title: "", isLocked: false, isAdminLocked: false });
     const [isExpanded, setIsExpanded] = useState(false);
 
     // ** Var
     const dispatch = useDispatch()
     const canvasContainer = getCanvasRef();
     const selectedCanvas = useSelector(selectSelectedCanvas);
+    const userProfile = useSelector(selectProfile);
     const canvas = canvasContainer[selectedCanvas];
     const selectedObject = useSelector(selectSelectedObject);
 
@@ -38,16 +40,38 @@ const GroupLayer = ({ object, updateObjects, index }) => {
 
     const lockObject = () => {
         object.set({
-            selectable: object?.selectable ? false : true,
-            hasControls: object?.hasControls ? false : true,
-            lockMovementX: object?.lockMovementX ? false : true,
-            lockMovementY: object?.lockMovementY ? false : true
+            selectable: !layer.isLocked ? false : true,
+            hasControls: !layer.isLocked ? false : true,
+            lockMovementX: !layer.isLocked ? true : false,
+            lockMovementY: !layer.isLocked ? true : false,
+            isLocked: !layer.isLocked,
+            isAdminLocked: false
         });
         setLayer(prevState => ({
             ...prevState,
-            isLocked: !prevState.isLocked
+            isLocked: !prevState.isLocked,
+            isAdminLocked: false
         }));
         canvas.renderAll();
+    };
+
+    const lockAdminObject = () => {
+        object.set({
+            selectable: !layer.isAdminLocked ? false : true,
+            hasControls: !layer.isAdminLocked ? false : true,
+            lockMovementX: !layer.isAdminLocked ? true : false,
+            lockMovementY: !layer.isAdminLocked ? true : false,
+            isLocked: !layer.isAdminLocked,
+            isAdminLocked: !layer.isAdminLocked
+        });
+
+        setLayer(prevState => ({
+            ...prevState,
+            isLocked: !prevState.isAdminLocked,
+            isAdminLocked: !prevState.isAdminLocked
+        }));
+
+        canvas?.renderAll();
     };
 
     const activateObject = (event) => {
@@ -74,16 +98,28 @@ const GroupLayer = ({ object, updateObjects, index }) => {
 
     useEffect(() => {
         // console.log("ObjectImageLayer --> ", object)
-
+        if (object?.isAdminLocked) {
+            object?.set({
+                selectable: false,
+                hasControls: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                isLocked: true,
+                isAdminLocked: true
+            })
+        }
+        
         setLayer({
             title: object?.name ? object?.name : object?.text,
-            isLocked: !object?.selectable && !object?.hasControls && object?.lockMovementX && object?.lockMovementY,
+            isLocked: object?.isLocked,
+            isAdminLocked: object?.isAdminLocked,
         });
     }, [object]);
 
     return (
-        <div className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''} ${layer.isLocked ? "layers__item_user-lock" : ''} ${isExpanded ? 'tree__item_expanded' : ''}`}>
-
+        <div className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''} 
+        ${layer.isLocked ? "layers__item_user-lock" : ''} ${isExpanded ? 'tree__item_expanded' : ''}`}
+            style={{ background: layer.isAdminLocked && '#ffdcdc' }}>
 
             <Draggable key={index.toString()} id={index.toString()} data={object}>
                 <div className="tree__root-box" draggable="true" onMouseDown={event => activateObject(event)}>
@@ -110,6 +146,19 @@ const GroupLayer = ({ object, updateObjects, index }) => {
                                 </div>
                                 <div className="layers__options">
                                     <div className="d-flex flex-nowrap">
+                                        {userProfile?.isAdmin && (
+                                            <Icon
+                                                icon={
+                                                    layer.isAdminLocked
+                                                        ? "material-symbols-light:lock-open"
+                                                        : "material-symbols-light:lock-outline"
+                                                }
+                                                className="icon icon-lock lock lock_user lock_locked cursor-pointer"
+                                                style={{ margin: "0 5px", fontSize: "medium", color: 'maroon' }}
+                                                onMouseDown={lockAdminObject}
+                                            />
+                                        )}
+
                                         <Icon
                                             icon={
                                                 layer.isLocked

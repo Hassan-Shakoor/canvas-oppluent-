@@ -75,6 +75,7 @@ function NavSaveCloseButtonSet() {
       toast.error(t("EditHeader.savedError"))
       setLoading(false);
       setShowConfirmationModal(false)
+      return;
     }
 
     const serializedData = serializeCanvasContainer(canvasContainer)
@@ -100,17 +101,22 @@ function NavSaveCloseButtonSet() {
     const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
 
     if (!templateImageUrl) {
-      toast.error(t("EditHeader.publishTemplateSuccess"))
+      toast.error(t("EditHeader.publishTemplateError"))
       setLoading(false);
       setShowConfirmationModal(false)
+      return;
     }
 
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
-    await publishTemplate(userData?.uid, updatedData, templateImageUrl)
+    const response = await publishTemplate(userData?.uid, updatedData, templateImageUrl)
+    if (!response) {
+      toast.error(t("EditHeader.publishTemplateError"))
+      return;
+    }
     await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrl)
-    toast.success(t("EditHeader.publishTemplateError"))
+    toast.success(t("EditHeader.publishTemplateSuccess"));
     setLoading(false);
     setShowConfirmationModal(false)
   }
