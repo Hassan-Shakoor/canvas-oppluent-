@@ -42,7 +42,8 @@ function QrCodeModule() {
                 name: url,
                 url: url,
                 isQrCode: true,
-                id: generateRandomId()
+                id: generateRandomId(),
+                type: 'Image'
             });
             canvas.add(img);
             canvas.renderAll();
@@ -60,7 +61,8 @@ function QrCodeModule() {
                 name: url,
                 url: url,
                 isQrCode: true,
-                id: generateRandomId()
+                id: generateRandomId(),
+                type: 'Image'
             });
             canvas.add(img);
             canvas.renderAll();
@@ -84,7 +86,7 @@ function QrCodeModule() {
     }
 
     useEffect(() => {
-        setUpdate((activeObject?.type === "image" && activeObject?.isQrCode) ? true : false)
+        setUpdate((activeObject?.type === "Image" && activeObject?.isQrCode) ? true : false)
         setUrl(activeObject?.url ?? "")
     }, [])
 
