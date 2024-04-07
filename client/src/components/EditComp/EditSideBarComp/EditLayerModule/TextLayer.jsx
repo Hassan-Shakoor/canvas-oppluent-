@@ -17,6 +17,7 @@ import { Icon } from "@iconify/react";
 import { Draggable } from "../../../DragnDrop/Draggable";
 
 import { selectProfile } from "../../../../store/app/AccountInformation/profile";
+import { toast } from "react-toastify";
 
 
 const TextLayer = ({ object, updateObjects, index }) => {
@@ -38,6 +39,11 @@ const TextLayer = ({ object, updateObjects, index }) => {
   };
 
   const lockObject = () => {
+    if (object?.isAdminLocked) {
+      toast.info('This Layer is Locked by Admin')
+      return;
+    }
+
     object.set({
       selectable: !layer.isLocked ? false : true,
       hasControls: !layer.isLocked ? false : true,

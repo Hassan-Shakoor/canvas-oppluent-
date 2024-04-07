@@ -1,11 +1,10 @@
-import { get, set, ref, getDatabase, runTransaction } from "firebase/database";
-import { deleteTemplateFromTemplate } from "./deleteTemplateFromTemplate";
+import { get, set, ref, getDatabase } from "firebase/database";
 
 export async function deleteTemplateFromTemplateasAdmin(templateId) {
-    const database = getDatabase();
-    const databaseRef = ref(database);
-
     try {
+        const database = getDatabase();
+        const databaseRef = ref(database);
+
         const snapshot = await get(databaseRef);
 
         if (!snapshot.exists()) {
@@ -13,33 +12,45 @@ export async function deleteTemplateFromTemplateasAdmin(templateId) {
             return false;
         }
 
-        const dataJson = snapshot.val();
+        const currentData = snapshot.val();
+        if (!currentData) {
+            console.log("Data is null");
+            return false;
+        }
 
-        const transactionResult = await runTransaction(databaseRef, (currentData) => {
-            if (!currentData) {
-                console.log("Data does not exist");
-                return;
-            }
+        const updatedData = { ...currentData };
+        let deleteSuccess = true;
 
-            for (const [userId, userData] of Object.entries(currentData)) {
-                const { templateData } = userData;
-                if (templateData) {
-                    const response = deleteTemplateFromTemplate(userId, templateId);
-                    if (!response) {
-                        console.log("Error in Template delete for user:", userId);
-                        return;
+        for (const [userId, userData] of Object.entries(updatedData)) {
+            const { templateData } = userData;
+            if (templateData) {
+                try {
+                    for (const key in templateData) {
+                        const item = templateData[key];
+                        if (item.template && item.template?.length > 0) {
+                            const templateIndex = item.template?.findIndex(template => template.id === templateId);
+                            if (templateIndex !== -1) {
+                                item.template?.splice(templateIndex, 1);
+                                console.log("Template Deleted Successfully");
+                            }
+                        }
                     }
+                } catch (error) {
+                    console.log("Error in Template delete for user:", userId);
+                    deleteSuccess = false;
+                    break;
                 }
+
+                updatedData[userId].templateData = templateData;
             }
+        }
 
-            return currentData;
-        });
-
-        if (transactionResult.committed) {
+        if (deleteSuccess) {
+            await set(databaseRef, updatedData);
             console.log("All template deletions committed successfully");
             return true;
         } else {
-            console.log("Transaction aborted:", transactionResult.error);
+            console.log("Transaction aborted due to errors");
             return false;
         }
     } catch (error) {

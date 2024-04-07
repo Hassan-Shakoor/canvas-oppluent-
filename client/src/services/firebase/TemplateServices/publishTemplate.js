@@ -84,11 +84,13 @@ export async function publishTemplate(authId, templateObject, templateURL) {
             }
 
             console.log("Template Published Successfully.");
+            return true;
         } else {
             console.log("Data does not exist");
+            return false;
         }
     } catch (error) {
         console.error('Error updating data in Firebase:', error);
-        throw error;
+        return false;
     }
 }

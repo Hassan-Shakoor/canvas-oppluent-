@@ -28,7 +28,11 @@ function TextInput() {
   const handleAddBtn = () => {
     const canvasArr = getCanvasRef();
     const canvas = canvasArr[selectedCanvas];
+    const canvasCenter = canvas.getCenter();
+
     const fabricText = new fabric.Textbox(text.trim(), {
+      left: canvasCenter.left - canvasCenter.left / 10,
+      top: canvasCenter.top - canvasCenter.top / 10,
       selectable: true,
       hasControls: true,
       id: generateRandomId(),

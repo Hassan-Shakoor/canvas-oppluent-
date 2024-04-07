@@ -4,9 +4,9 @@ import { storage } from "../configs/firebase"; // Import your Firebase configura
 // ** Config
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
-async function uploadTemplateImage(file, templateID) {
+async function uploadTemplateImage(file, templateID, index = 0, isThumbnail = false) {
     try {
-        const storageRef = ref(storage, `template-image-${templateID}.png`);
+        const storageRef = ref(storage, `template-image-${templateID}-${isThumbnail ? 'thumbnail' : index}.png`);
 
         // Attempt to get the download URL for the existing file
         let existingFileURL;

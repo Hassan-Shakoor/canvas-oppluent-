@@ -4,7 +4,7 @@ export async function deleteTemplateFromTemplate(authId, templateId) {
     try {
         const database = getDatabase();
         const databaseRef = ref(database, `${authId}/templateData`);
-        
+
         const snapshot = await get(databaseRef);
 
         if (snapshot.exists()) {
@@ -28,7 +28,7 @@ export async function deleteTemplateFromTemplate(authId, templateId) {
         }
 
         console.log("Data does not exist");
-        return false;
+        return true;
     } catch (error) {
         console.error('Error deleting template in Firebase:', error);
         throw error;

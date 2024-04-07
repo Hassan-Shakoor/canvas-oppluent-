@@ -61,10 +61,14 @@ const SendBackFrontObject = () => {
     };
 
     const handleLockObject = () => {
-        setIsLocked(!isLocked)
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
             const activeObject = canvas?.getActiveObject();
+            if (activeObject?.isAdminLocked) {
+                toast.info('This Layer is Locked by Admin')
+                return;
+            }
+            setIsLocked(!isLocked)
             activeObject.set({
                 lockMovementX: !activeObject.lockMovementX,
                 lockMovementY: !activeObject.lockMovementY,

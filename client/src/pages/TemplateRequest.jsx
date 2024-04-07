@@ -18,6 +18,10 @@ import uploadTemplateImage from '../services/uploadTemplateImage'
 import { useTranslation } from 'react-i18next';
 import InputModal from '../components/Modal/InputModal'
 
+import { jsPDF } from 'jspdf';
+import { PDFDocument } from 'pdf-lib'
+
+
 
 let currentUserId = null;
 onAuthStateChanged(auth, (user) => {
@@ -66,6 +70,64 @@ const TemplateRequest = () => {
     const [fabricData, setFabricData] = useState({})
     const [storageUrl, setStorageUrl] = useState({})
 
+    // const handleFileInputChange = async (event) => {
+    //     const newFiles = Array.from(event.target.files);
+
+    //     newFiles.forEach(async (file) => {
+    //         const reader = new FileReader();
+
+    //         // Check the file type
+    //         if (file.type.includes('image')) {
+    //             // For images
+    //             reader.onload = function (e) {
+    //                 const img = new Image();
+    //                 img.onload = function () {
+    //                     setImageDimensions((prevDimensions) => [
+    //                         ...prevDimensions,
+    //                         { width: img.width, height: img.height }
+    //                     ]);
+    //                 };
+    //                 img.src = e.target.result;
+    //             };
+    //             reader.readAsDataURL(newFiles[0]);
+
+    //         } else if (file.type === 'application/pdf') {
+    //             // For PDFs
+    //             reader.onload = async function (e) {
+    //                 try {
+    //                     // Load PDF using pdf-lib
+    //                     const pdfDoc = await PDFDocument.load(new Uint8Array(e.target.result));
+
+    //                     // Extract images from PDF
+    //                     const images = await extractImagesFromPDF(pdfDoc);
+
+    //                     // Convert images to files
+    //                     const imageFiles = images.map((image, index) => {
+    //                         const blob = new Blob([image.bytes], { type: 'image/png' });
+    //                         return new File([blob], `page_${index + 1}.png`, { type: 'image/png' });
+    //                     });
+
+    //                     // Handle the extracted image files
+    //                     handleExtractedImageFiles(imageFiles);
+    //                 } catch (error) {
+    //                     console.error('Error extracting images from PDF:', error);
+    //                 }
+    //             };
+    //             reader.readAsArrayBuffer(file);
+    //         } else {
+    //             // Unsupported file type
+    //             console.error('Unsupported file type:', file.type);
+    //             return;
+    //         }
+
+    //         // Read the file as an ArrayBuffer
+    //     });
+
+    //     // Update the files state with the new files
+    //     console.log(newFiles)
+    //     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    // };
+
     const handleFileInputChange = (event) => {
         const newFiles = Array.from(event.target.files);
         setFiles([...files, ...newFiles]);
@@ -96,6 +158,33 @@ const TemplateRequest = () => {
     };
 
 
+
+
+    // // Function to extract images from PDF using pdf-lib
+    // const extractImagesFromPDF = async (pdfDoc) => {
+    //     const images = [];
+    //     const pageCount = pdfDoc.getPageCount();
+
+    //     for (let i = 0; i < pageCount; i++) {
+    //         const page = pdfDoc.getPage(i);
+    //         const imagesOnPage = await page.getImages();
+
+    //         for (const [key, image] of Object.entries(imagesOnPage)) {
+    //             images.push(image);
+    //         }
+    //     }
+
+    //     return images;
+    // };
+
+    // // Function to handle the extracted image files
+    // const handleExtractedImageFiles = (imageFiles) => {
+    //     // Handle the extracted image files as needed
+    //     console.log('Extracted image files:', imageFiles);
+    // };
+
+
+
     const handleRemoveFile = (index) => {
         const updatedFiles = [...files];
         const dimensions = [...imageDimensions];
@@ -120,81 +209,6 @@ const TemplateRequest = () => {
         return `${year}-${month}-${day}`;
     }
 
-
-    // const handleUploadTemplate = async () => {
-    //     console.log('submit');
-    //     const database = getDatabase();
-    //     const databaseRef = ref(database);
-
-    //     let imageUrl = [];
-
-    //     if (files.length > 0) {
-    //         await Promise.all(files.map(async (file, index) => {
-    //             console.log('File: ', file)
-    //             const url = await uploadFileAndGetURL(file); // Assuming uploadFileAndGetURL is an asynchronous function
-    //             imageUrl.push(url);
-    //             setFabricData({
-    //                 ...fabricData,
-    //                 [index]: `{"version":"5.3.0","objects":[],"backgroundImage":{"type":"image","version":"5.3.0","originX":"left","originY":"top","left":0,"top":0,"width":${imageDimensions[index].width},"height":${imageDimensions[index].height},"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"cropX":0,"cropY":0,"src":"${url}","crossOrigin":"Anonymous","filters":[]}}`
-    //             })
-    //             setStorageUrl({
-    //                 ...storageUrl,
-    //                 [index]: url
-    //             })
-    //         }));
-    //     }
-
-
-    //     const snapshot = await get(databaseRef);
-    //     const dbJson = snapshot.val();
-
-    //     for (const [userId, { templateData }] of Object.entries(dbJson)) {
-    //         for (const [index, data] of templateData?.entries()) {
-    //             if (data?.id === 5) {
-    //                 console.log(dbJson);
-    //                 console.log(selectedCategory);
-    //                 console.log(selectedUsers);
-
-    //                 const templateObject = {
-    //                     cardTitle: `${templateType}`,
-    //                     created: formatDate(Date.now()),
-    //                     docSpecs: {
-    //                         designType: `${selectedCategory.label}`,
-    //                         maxPages: "unlimited",
-    //                         minPages: 1,
-    //                         pageCountDivisible: 1,
-    //                         resolution: {
-    //                             width: imageDimensions[0].width,
-    //                             height: imageDimensions[0].height
-    //                         }
-    //                     },
-    //                     fabricData: fabricData,
-    //                     favorite: false,
-    //                     id: uuidv4(),
-    //                     imageUrl: `/images/${files[0].name}`,
-    //                     modified: formatDate(Date.now()),
-    //                     storage_url: storageUrl
-    //                 };
-
-    //                 // Push the templateObject to the data.template array
-    //                 const templateDataRef = ref(database, `dcGWmanuIsg6gsRdbnuiv6Ajo503/templateData/${index}/template`);
-    //                 console.log(Object.keys(data.template).length);
-
-    //                 // Set the templateObject to the templateData node
-    //                 set(templateDataRef, {
-    //                     ...data.template,
-    //                     [Object.keys(data.template).length]: templateObject,
-    //                 });
-
-    //                 console.log(templateDataRef);
-    //                 // Use break to exit the loop after the first iteration
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // };
-
-
     const handleUploadTemplate = async () => {
         if (loading) {
             return
@@ -217,7 +231,11 @@ const TemplateRequest = () => {
             const databaseRef = ref(database, `${currentUserId}/templateData`);
 
             let templateId = uuidv4();
-            const imageUrl = await Promise.all(files.map(async (file) => await uploadTemplateImage(file, templateId)));
+            
+            const imageUrl = await Promise.all(files.map(async (file, index) => {
+                const isThumbnail = index === 0 ? true : false;
+                return uploadTemplateImage(file, templateId, index, isThumbnail);
+            }));
 
             const fabricData = {};
             const storageUrl = {};
@@ -647,14 +665,29 @@ const TemplateRequest = () => {
                                                 </label>
                                             </div>
                                             {files.map((file, index) => (
-                                                <div key={index} className="picture-box__item picture-box_with-removing">
-                                                    <div className="picture-box__icon remove-button" onClick={() => handleRemoveFile(index)}>
-                                                        <svg className="icon v2-icon v2-icon-minus-circle-light">
-                                                            <use href="#v2-icon-minus-circle-light" xlinkHref="#v2-icon-minus-circle-light"></use>
-                                                        </svg>
+                                                file.type !== 'application/pdf' ?
+                                                    <div key={index} className="picture-box__item picture-box_with-removing">
+                                                        <div className="picture-box__icon remove-button" onClick={() => handleRemoveFile(index)}>
+                                                            <svg className="icon v2-icon v2-icon-minus-circle-light">
+                                                                <use href="#v2-icon-minus-circle-light" xlinkHref="#v2-icon-minus-circle-light"></use>
+                                                            </svg>
+                                                        </div>
+                                                        <img className="picture-box__image image" alt={file.name} src={URL.createObjectURL(file)} />
                                                     </div>
-                                                    <img className="picture-box__image image" alt={file.name} src={URL.createObjectURL(file)} />
-                                                </div>
+                                                    :
+                                                    <div key={index} className="picture-box__item picture-box_with-removing">
+                                                        <div className="picture-box__icon remove-button" onClick={() => handleRemoveFile(index)}>
+                                                            <svg className="icon v2-icon v2-icon-minus-circle-light">
+                                                                <use href="#v2-icon-minus-circle-light" xlinkHref="#v2-icon-minus-circle-light" />
+                                                            </svg>
+                                                        </div>
+                                                        <div className="picture-box__image picture-box__file image pdf">
+                                                            <svg className="icon v2-icon v2-icon-adobe">
+                                                                <use href="#v2-icon-adobe" xlinkHref="#v2-icon-adobe" />
+                                                            </svg>
+                                                            <div className="picture-box__filename">{file.name}</div>
+                                                        </div>
+                                                    </div>
                                             ))}
                                         </div>
                                         {files.length > 0 && (

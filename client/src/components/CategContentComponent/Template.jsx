@@ -27,6 +27,7 @@ function Template(props) {
   const userData = getLocalStorage(LOCAL_STORAGE.USER_DATA)
 
   const [loading, setLoading] = useState(true);
+  const [isOverlayLoading, setIsOverlayLoading] = useState(false);
   const [isConfirmDeleteModal, setIsConfirmDeleteModal] = useState(false);
 
   const handleAddMyDesign = async () => {
@@ -92,6 +93,7 @@ function Template(props) {
           submit={async (event) => {
             // handlePublish(event)
             event.preventDefault();
+            setIsOverlayLoading(true);
             if (userProfile?.isAdmin) {
               const response = await deleteTemplateFromTemplateasAdmin(props.item.id)
               if (response) {
@@ -106,11 +108,13 @@ function Template(props) {
               } else {
                 toast.error('Error Deleting Template.')
               }
-
             }
+            setIsOverlayLoading(false);
+            setIsConfirmDeleteModal(false);
           }}
         />
       )}
+      <SpinnerOverlay loading={isOverlayLoading} />
       <div className="template__preview-wrapper">
         <div className="template__preview">
           {/* {!loading ? */}

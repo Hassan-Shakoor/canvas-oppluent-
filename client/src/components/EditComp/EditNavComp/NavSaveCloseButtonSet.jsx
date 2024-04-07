@@ -112,6 +112,8 @@ function NavSaveCloseButtonSet() {
     const updatedData = { ...templateData, fabricData: serializedData }
     const response = await publishTemplate(userData?.uid, updatedData, templateImageUrl)
     if (!response) {
+      setLoading(false);
+      setShowConfirmationModal(false)
       toast.error(t("EditHeader.publishTemplateError"))
       return;
     }

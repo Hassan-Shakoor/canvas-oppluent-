@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Draggable } from "../../../DragnDrop/Draggable";
 import GroupObjectsLayer from "./GroupObjectsLayer";
 import { selectProfile } from "../../../../store/app/AccountInformation/profile";
+import { toast } from "react-toastify";
 
 const GroupLayer = ({ object, updateObjects, index }) => {
     const [layer, setLayer] = useState({ title: "", isLocked: false, isAdminLocked: false });
@@ -39,6 +40,11 @@ const GroupLayer = ({ object, updateObjects, index }) => {
     };
 
     const lockObject = () => {
+        if (object?.isAdminLocked) {
+            toast.info('This Layer is Locked by Admin')
+            return;
+        }
+
         object.set({
             selectable: !layer.isLocked ? false : true,
             hasControls: !layer.isLocked ? false : true,
@@ -108,7 +114,7 @@ const GroupLayer = ({ object, updateObjects, index }) => {
                 isAdminLocked: true
             })
         }
-        
+
         setLayer({
             title: object?.name ? object?.name : object?.text,
             isLocked: object?.isLocked,
