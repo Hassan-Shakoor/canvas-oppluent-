@@ -31,10 +31,10 @@ function NavUndoRedoButtonSet() {
             return;
         }
 
-        const handleObjectModified = () => {
+        const handleObjectModified = (event) => {
             // console.log("Object modified");
 
-            if (!undoStatus && !redoStatus && canvas) {
+            if (canvas && event) {
                 const currentState = canvas.toJSON();
                 if (currentState !== previousState) {
                     setUndoStack(prevStack => [...prevStack, currentState]);
@@ -65,8 +65,69 @@ function NavUndoRedoButtonSet() {
         };
     }, [canvasContainer, selectedCanvas]);
 
+
+    async function processObjects(objects, index) {
+        if (index >= objects.length) {
+            // End of objects array
+            return;
+        }
+
+        const object = objects[index];
+
+        const canvas = canvasContainer[selectedCanvas];
+
+        if (object.type === 'Text') {
+            const textbox = new fabric.Textbox(object.text, object);
+            canvas.add(textbox);
+        } else if (object.type === 'Shape') {
+            if (object?.path?.length > 0) {
+                const path = new fabric.Path(object.path, object);
+                canvas.add(path);
+            } else if (object?.objects?.length > 0) {
+                let svgPaths = [];
+                object.objects.forEach(svgObject => {
+                    if (svgObject.path) {
+                        try {
+                            const path = new fabric.Path(svgObject.path, { ...svgObject });
+                            svgPaths.push(path);
+                        } catch (error) {
+                            console.error('Error creating Fabric.js path:', error);
+                        }
+                    }
+                });
+
+                if (svgPaths.length > 0) {
+                    const group = new fabric.Group(svgPaths, { ...object });
+                    canvas.add(group);
+                }
+            } else if (object?.svgUrl) {
+                const svg = await new Promise((resolve, reject) => {
+                    fabric.loadSVGFromURL(object.svgUrl, function (objects, options) {
+                        const svg = fabric.util.groupSVGElements(objects, options);
+                        svg.set({ ...object });
+                        resolve(svg);
+                    });
+                });
+                canvas.add(svg);
+            }
+        } else if (object.type === 'Image') {
+            const img = await new Promise((resolve, reject) => {
+                fabric.Image.fromURL(object.src, function (img) {
+                    img.set({ ...object, crossOrigin: 'anonymous' });
+                    resolve(img);
+                }, { crossOrigin: 'anonymous' });
+            });
+            canvas.add(img);
+        } else {
+            console.error("Unsupported object type:", object.type);
+        }
+
+        // Process next object
+        await processObjects(objects, index + 1);
+    }
+
     const handleUndo = () => {
-        if (undoStack.length > 1) {
+        if (undoStack.length > 2) {
             const lastState = undoStack.pop();
             const prevState = undoStack[undoStack.length - 1];
 
@@ -80,70 +141,11 @@ function NavUndoRedoButtonSet() {
                 objects: []
             }
 
-            async function processObjects(objects, index) {
-                if (index >= objects.length) {
-                    // End of objects array
-                    return;
-                }
-
-                const object = objects[index];
-
-                if (object.type === 'Text') {
-                    const textbox = new fabric.Textbox(object.text, object);
-                    canvas.add(textbox);
-                } else if (object.type === 'Shape') {
-                    if (object?.path?.length > 0) {
-                        const path = new fabric.Path(object.path, object);
-                        canvas.add(path);
-                    } else if (object?.objects?.length > 0) {
-                        let svgPaths = [];
-                        object.objects.forEach(svgObject => {
-                            if (svgObject.path) {
-                                try {
-                                    const path = new fabric.Path(svgObject.path, { ...svgObject });
-                                    svgPaths.push(path);
-                                } catch (error) {
-                                    console.error('Error creating Fabric.js path:', error);
-                                }
-                            }
-                        });
-
-                        if (svgPaths.length > 0) {
-                            const group = new fabric.Group(svgPaths, { ...object });
-                            canvas.add(group);
-                        }
-                    } else if (object?.svgUrl) {
-                        const svg = await new Promise((resolve, reject) => {
-                            fabric.loadSVGFromURL(object.svgUrl, function (objects, options) {
-                                const svg = fabric.util.groupSVGElements(objects, options);
-                                svg.set({ ...object });
-                                resolve(svg);
-                            });
-                        });
-                        canvas.add(svg);
-                    }
-                } else if (object.type === 'Image') {
-                    const img = await new Promise((resolve, reject) => {
-                        fabric.Image.fromURL(object.src, function (img) {
-                            img.set({ ...object, crossOrigin: 'anonymous' });
-                            resolve(img);
-                        }, { crossOrigin: 'anonymous' });
-                    });
-                    canvas.add(img);
-                } else {
-                    console.error("Unsupported object type:", object.type);
-                }
-
-                // Process next object
-                await processObjects(objects, index + 1);
-            }
             if (prevState) {
-                processObjects(prevStateObjects, 0);
-
-
                 setRedoStack((prevStack) => [lastState, ...prevStack]);
                 setUndoStatus(true);
                 myCanvas.loadFromJSON(prevStateWithoutObjects, () => myCanvas.renderAll());
+                processObjects(prevStateObjects, 0);
             } else {
                 console.log("No more changes to undo");
             }
@@ -157,13 +159,41 @@ function NavUndoRedoButtonSet() {
     const handleRedo = () => {
         if (redoStack.length > 0) {
             const nextState = redoStack.shift();
-            setUndoStack([...undoStack, myCanvas.toJSON()]);
-            setRedoStatus(true);
-            myCanvas.loadFromJSON(nextState, () => myCanvas.renderAll());
+            const nextStateObjects = nextState.objects;
+
+            const canvas = canvasContainer[selectedCanvas];
+
+            const nextStateWithoutObjects = {
+                ...nextState,
+                objects: []
+            };
+
+            if (nextState) {
+                setUndoStack([...undoStack, myCanvas.toJSON()]);
+                setRedoStatus(true);
+                myCanvas.loadFromJSON(nextStateWithoutObjects, () => myCanvas.renderAll());
+                processObjects(nextStateObjects, 0);
+            } else {
+                console.log("No more changes to redo");
+            }
         } else {
             console.log("Redo stack is empty");
         }
     };
+
+
+    // const handleRedo = () => {
+    //     if (redoStack.length > 0) {
+    //         const nextState = redoStack.shift();
+    //         setUndoStack([...undoStack, myCanvas.toJSON()]);
+    //         setRedoStatus(true);
+    //         myCanvas.loadFromJSON(nextState, () => myCanvas.renderAll());
+    //     } else {
+    //         console.log("Redo stack is empty");
+    //     }
+    // };
+
+
 
     return (
         <ul className="header__button-set">
