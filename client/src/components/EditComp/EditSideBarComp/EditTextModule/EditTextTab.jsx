@@ -242,26 +242,29 @@ function EditTextTab() {
         </div>
       </div >
 
-      <div
-        className={openDrawer === 'TextTransform'
-          ? "transform-module vertical-switch-content-enter-done"
-          : "transform-module vertical-switch-content-exit-done"} >
-        <TransformModule />
-      </div>
+      {openDrawer === 'TextTransform' &&
+        (<div
+          className={openDrawer === 'TextTransform'
+            ? "transform-module vertical-switch-content-enter-done"
+            : "transform-module vertical-switch-content-exit-done"} >
+          <TransformModule />
+        </div>)}
 
-      <div
-        className={openDrawer === 'TextGradient'
-          ? "gradient-module sidebar-module  vertical-switch-content-enter-done"
-          : "gradient-module sidebar-module  vertical-switch-content-exit-done"} >
-        <GradientModule />
-      </div>
+      {openDrawer === 'TextGradient' &&
+        (<div
+          className={openDrawer === 'TextGradient'
+            ? "gradient-module sidebar-module  vertical-switch-content-enter-done"
+            : "gradient-module sidebar-module  vertical-switch-content-exit-done"} >
+          <GradientModule />
+        </div>)}
 
-      <div
-        className={openDrawer === 'TextDropShadow'
-          ? "shadow-module colorize-module vertical-switch-content-enter-done"
-          : "shadow-module colorize-module vertical-switch-content-exit-done"} >
-        <DropShadowModule />
-      </div>
+      {openDrawer === 'TextDropShadow' &&
+        (<div
+          className={openDrawer === 'TextDropShadow'
+            ? "shadow-module colorize-module vertical-switch-content-enter-done"
+            : "shadow-module colorize-module vertical-switch-content-exit-done"} >
+          <DropShadowModule />
+        </div >)}
     </>
   )
 }

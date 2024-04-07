@@ -42,32 +42,33 @@ function EditImageColorTab() {
 
     return (
         <>
-            <div
-                className={openDrawer === 'Image-Color'
-                    ? "colorize-module vertical-switch-content-enter-done"
-                    : "colorize-module vertical-switch-content-exit-done"} >
-                <BackgroundColorPicker title={'Image'} />
+            {openDrawer === 'Image-Color' && (
+                <div
+                    className={openDrawer === 'Image-Color'
+                        ? "colorize-module vertical-switch-content-enter-done"
+                        : "colorize-module vertical-switch-content-exit-done"} >
+                    <BackgroundColorPicker title={'Image'} />
 
-                <div className="slider-box__hokeys-wrapper">
-                    <div className="slider-box">
-                        <p className="slider-box__title">Transparency</p>
-                        <Slider
-                            min={0}
-                            max={100}
-                            step={1}
-                            value={transparency}
-                            onChange={handleTransparencyChange}
-                        />
-                        <input
-                            inputMode="numeric"
-                            className="simple-input slider-box__input"
-                            type="text"
-                            value={transparency + '%'}
-                        />
+                    <div className="slider-box__hokeys-wrapper">
+                        <div className="slider-box">
+                            <p className="slider-box__title">Transparency</p>
+                            <Slider
+                                min={0}
+                                max={100}
+                                step={1}
+                                value={transparency}
+                                onChange={handleTransparencyChange}
+                            />
+                            <input
+                                inputMode="numeric"
+                                className="simple-input slider-box__input"
+                                type="text"
+                                value={transparency + '%'}
+                            />
+                        </div>
                     </div>
-                </div>
 
-            </div >
+                </div >)}
 
         </>
     )

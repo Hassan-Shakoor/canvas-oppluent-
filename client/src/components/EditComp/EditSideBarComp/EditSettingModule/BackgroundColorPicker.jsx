@@ -198,9 +198,10 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
       const activeObject = canvas?.getActiveObject();
 
       let orangeColorFilter = new fabric.Image.filters.BlendColor({
-        color: getRgbaCSS(color), // Set the color to orange
-        mode: 'tint' // Use 'tint' mode to fill the image with color
+        color: getRgbaCSS(color), 
+        mode: 'tint'
       });
+      console.log('first')
 
       if (activeObject?.type === 'Image') {
         activeObject.filters.push(orangeColorFilter);
