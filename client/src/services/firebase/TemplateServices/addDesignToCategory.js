@@ -25,10 +25,16 @@ export async function addDesignToCategory(authId, templateObject, categoryId) {
                     continue;
                 }
 
+                const categoryIndex = templateData?.findIndex(data => data.id === categoryId);
+
+                if (categoryIndex !== -1) {
+                    templateData.push({ id: categoryId, template: [] })
+                }
+
                 for (const [index, data] of templateData?.entries()) {
                     if (data?.id === categoryId) {
                         // console.log(dbJson);
-                        console.log(categoryId);
+                        // console.log(categoryId);
 
 
 
