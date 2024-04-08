@@ -26,6 +26,7 @@ import Select from "react-select";
 import { getDatabase, onValue, ref } from 'firebase/database'
 
 import { selectProfile } from "../../store/app/AccountInformation/profile";
+import SpinnerOverlay from "../Loader/SpinnerOverlay";
 
 function DesignTemplate(props) {
 
@@ -36,6 +37,7 @@ function DesignTemplate(props) {
     const navigate = useNavigate();
     const [isCreateDesignOpen, setCreateDesignOpen] = useState(null);
     const [loading, setLoading] = useState(true)
+    const [overlayLoading, setOverlayLoading] = useState(false)
     const [showInputModal, setShowInputModal] = useState(false)
     const [showSelectModal, setShowSelectModal] = useState(false)
     const [designCategories, setDesignCategories] = useState(['Business Category', 'Instagram Stories', 'Facebook Banner']);
@@ -285,13 +287,19 @@ function DesignTemplate(props) {
                     handleSecodnaryBtn={() => setShowSelectModal(false)}
                     handlePrimaryBtn={async (e) => {
                         e.preventDefault();
-                        const response = await addDesignToCategory(uid, props.item, selectedCategory);
+                        if (!selectedCategory) {
+                            toast.warn('Please Select a Category.')
+                            return
+                        }
+                        setOverlayLoading(true);
+                        const response = await addDesignToCategory(uid, props.item, selectedCategory?.value);
                         if (response) {
                             setShowSelectModal(false);
-                            toast.success("File Name Updated Successfully.")
+                            toast.success("Template Added to Category Successfully.")
                         } else {
                             toast.error('Error Moving to Category..')
                         }
+                        setOverlayLoading(false);
                     }}
                 />)}
 
@@ -303,7 +311,7 @@ function DesignTemplate(props) {
                     setRenderTriggerFromDashboard={props.setRenderTriggerFromDashboard}
                 />}
 
-
+            <SpinnerOverlay loading={overlayLoading} />
             <div
                 className={`template ${props.selectedItems?.findIndex(template => template.id === props.item.id) !== -1 ? 'design_selected' : ''}`}
                 style={{ width: props.gridColumn === 2 ? "360px" : "240px" }}

@@ -13,8 +13,15 @@ export async function addDesignToCategory(authId, templateObject, categoryId) {
             // const selectedCategory = templateObject.docSpecs.designID;
             const allowedUsers = templateObject.allowedUsers;
 
+            const publishTemplate = {
+                ...templateObject,
+                published: true,
+                visible: true,
+                id: uuidv4()
+            };
+
             for (const [userId, { templateData }] of Object.entries(dataJson)) {
-                if (userId === authId || (allowedUsers?.length > 0 && !allowedUsers?.includes(userId))) {
+                if ((allowedUsers?.length > 0 && !allowedUsers?.includes(userId))) {
                     continue;
                 }
 
@@ -23,12 +30,7 @@ export async function addDesignToCategory(authId, templateObject, categoryId) {
                         // console.log(dbJson);
                         console.log(categoryId);
 
-                        const publishTemplate = {
-                            ...templateObject,
-                            published: true,
-                            visible: true,
-                            id: uuidv4()
-                        };
+
 
                         // Push the templateObject to the data.template array
                         const templateDataRef = ref(database, `${userId}/templateData/${index}/template`);
