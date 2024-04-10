@@ -22647,7 +22647,23 @@ input[type="submit"] {
   background-color: var(--secondary-bg-color);
   border-radius: 5px;
   z-index: 200;
-  min-width: 250px;
+  min-width: 200px;
+  position: fixed;
+}
+
+.context-menu .contexify_item {
+  margin: 4px 0;
+  padding: 6px 16px;
+}
+
+.context-menu .contexify_item:hover {
+  background: #e6e6e6 !important;
+  cursor: pointer;
+}
+
+.context-menu .contexify_item .contexify_itemContent {
+  display: flex;
+  align-items: center;
 }
 
 .context-menu .react-contexify__submenu {

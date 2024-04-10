@@ -15,6 +15,7 @@ const initialState = {
   zoom: 1,
   displayDirection: DISPLAY_DIRECTION.VERTICAL,
   selectedObject: {},
+  copiedObject: {}
 };
 
 export const canvas = createSlice({
@@ -45,6 +46,9 @@ export const canvas = createSlice({
     updateTemplateData: (state, action) => {
       state.templateData = action.payload;
     },
+    updateCopiedObject: (state, action) => {
+      state.copiedObject = action.payload;
+    },
   },
 });
 
@@ -57,6 +61,7 @@ export const {
   updateDisplayDirection,
   updateTemplateData,
   updateSelectedObject,
+  updateCopiedObject
 } = canvas.actions;
 export const selectFabricData = (state) => state.canvas.fabricData;
 export const selectSelectedCanvas = (state) => state.canvas.selectedCanvas;
@@ -66,4 +71,5 @@ export const selectCanvasContainer = (state) => state.canvas.canvasContainer;
 export const selectDisplayDirection = (state) => state.canvas.displayDirection;
 export const selectSelectedObject = (state) => state.canvas.selectedObject;
 export const selectTemplateData = (state) => state.canvas.templateData;
+export const selectCopiedObject = (state) => state.canvas.copiedObject;
 export default canvas.reducer;

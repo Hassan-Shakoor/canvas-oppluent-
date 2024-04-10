@@ -15,10 +15,14 @@ import { selectCanvasContainer, selectDisplayDirection, selectFabricData, select
 import { updateOpenDrawer } from "../../store/app/Edit/EditDrawer";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
 import { selectMlsPropertyInfo } from "../../store/app/PropertySearch/property";
+import ContextMenu from "./ContextMenu";
 
 function Canvas(props) {
 
   const [loading, setLoading] = useState(true);
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextLeftPosition, setContextLeftPosition] = useState(100);
+  const [contextTopPosition, setContextTopPosition] = useState(100);
   // ** Hooks
   const dispatch = useDispatch()
   const fabricData = useSelector(selectFabricData)
@@ -248,6 +252,48 @@ function Canvas(props) {
           dispatch(updateSelectedCanvas(Number(i)))
         })
 
+        const handleContextMenu = (e) => {
+          if (e.target.closest("canvas")) {
+            console.log("You've tried to open context menu");
+            e.preventDefault();
+            setContextLeftPosition(e?.x - 92);
+            setContextTopPosition(e?.y - 82);
+            // setContextLeftPosition(e?.offsetX);
+            // setContextTopPosition(e?.offsetY);
+            setShowContextMenu(true);
+          }
+        };
+
+        document.addEventListener('contextmenu', handleContextMenu, false);
+
+
+        canvas?.on("mouse:down:before", (event) => {
+          // Check if the clicked area have object and set it active
+          const target = event.target
+          console.log("Target: ", target)
+          if (event.button == 0) { // left click for mouse
+            console.log("left click");
+          } else if (event.button == 1) { // wheel click for mouse
+            console.log("wheel click");
+            console.log("right click");
+            if (target) {
+              canvas.setActiveObject(target)
+              dispatch(updateSelectedObject(target))
+              setShowContextMenu(true);
+            }
+          } else if (event.button == 2) {
+          }
+        })
+
+        document.addEventListener("mousedown", event => {
+          if (event.button == 0) { // left click for mouse
+            console.log("left click");
+          } else if (event.button == 2) {
+            event.preventDefault();
+            console.log("right click");
+          }
+        });
+
         document.addEventListener('keydown', (event) => {
           const selectedObject = canvas?.getActiveObject();
           if (event.key === 'Delete' && selectedObject) {
@@ -307,6 +353,11 @@ function Canvas(props) {
           ))}
         </div>
       </div>
+      {showContextMenu && (<ContextMenu
+        left={contextLeftPosition}
+        top={contextTopPosition}
+        showContextMenu={showContextMenu}
+        setShowContextMenu={setShowContextMenu} />)}
     </div>
   )
 }
