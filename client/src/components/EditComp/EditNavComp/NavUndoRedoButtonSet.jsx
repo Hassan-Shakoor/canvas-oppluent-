@@ -37,9 +37,9 @@ function NavUndoRedoButtonSet() {
             if (canvas && event) {
                 const currentState = canvas.toJSON();
                 if (currentState !== previousState) {
-                    setUndoStack(prevStack => [...prevStack, currentState]);
+                    setUndoStack(prevStack => ({ ...prevStack, [selectedCanvas]: [...prevStack[selectedCanvas], currentState] }));
+                    setRedoStack(prevStack => ({ ...prevStack, [selectedCanvas]: [] }));
                     setPreviousState(currentState);
-                    setRedoStack([]);
                 }
             }
 
@@ -56,7 +56,12 @@ function NavUndoRedoButtonSet() {
         // canvas.on("object:added", handleObjectAdded);
 
         setMyCanvas(canvas);
-        setUndoStack([canvas.toJSON()]); // Initialize with initial state
+        canvasContainer.forEach((canvas, index) => {
+            setUndoStack(prevStack => ({
+                ...prevStack,
+                [index]: [canvas.toJSON()] // Initialize with initial state
+            }));
+        });
 
         return () => {
             //   canvas.off("object:modified", handleObjectModified);
@@ -126,58 +131,97 @@ function NavUndoRedoButtonSet() {
         await processObjects(objects, index + 1);
     }
 
+    // const handleUndo = () => {
+
+    //     if (undoStack.length > 2) {
+    //         const lastState = undoStack.pop();
+    //         const prevState = undoStack[undoStack.length - 1];
+
+    //         const prevStateObjects = prevState.objects;
+
+    //         const canvas = canvasContainer[selectedCanvas]
+
+    //         const prevStateWithoutObjects = {
+    //             ...prevState,
+    //             // objects: canvasObjectsWithPropertySearch.filter((object) => object.type !== "Shape")
+    //             objects: []
+    //         }
+
+    //         if (prevState) {
+    //             setRedoStack((prevStack) => [lastState, ...prevStack]);
+    //             setUndoStatus(true);
+    //             myCanvas.loadFromJSON(prevStateWithoutObjects, () => myCanvas.renderAll());
+    //             processObjects(prevStateObjects, 0);
+    //         } else {
+    //             console.log("No more changes to undo");
+    //         }
+    //         // Start processing objects
+
+    //     } else {
+    //         console.log("Undo stack is empty");
+    //     }
+    // };
+
     const handleUndo = () => {
-        if (undoStack.length > 2) {
-            const lastState = undoStack.pop();
-            const prevState = undoStack[undoStack.length - 1];
+        if (canvasContainer[selectedCanvas]) {
+            const canvasId = selectedCanvas;
+            const stack = undoStack[canvasId];
+            if (stack.length > 2) {
+                const lastState = stack.pop();
+                const prevState = stack[stack.length - 1];
 
-            const prevStateObjects = prevState.objects;
+                const prevStateObjects = prevState.objects;
 
-            const canvas = canvasContainer[selectedCanvas]
+                const canvas = canvasContainer[selectedCanvas]
 
-            const prevStateWithoutObjects = {
-                ...prevState,
-                // objects: canvasObjectsWithPropertySearch.filter((object) => object.type !== "Shape")
-                objects: []
-            }
+                const prevStateWithoutObjects = {
+                    ...prevState,
+                    // objects: canvasObjectsWithPropertySearch.filter((object) => object.type !== "Shape")
+                    objects: []
+                }
 
-            if (prevState) {
-                setRedoStack((prevStack) => [lastState, ...prevStack]);
-                setUndoStatus(true);
-                myCanvas.loadFromJSON(prevStateWithoutObjects, () => myCanvas.renderAll());
-                processObjects(prevStateObjects, 0);
+                if (prevState) {
+                    setRedoStack(prevStack => ({ ...prevStack, [canvasId]: [lastState, ...prevStack[canvasId]] }));
+                    setUndoStatus(true);
+                    canvas.loadFromJSON(prevStateWithoutObjects, () => canvas.renderAll());
+                    processObjects(prevStateObjects, 0);
+                } else {
+                    console.log("No more changes to undo");
+                }
             } else {
-                console.log("No more changes to undo");
+                console.log("Undo stack is empty");
             }
-            // Start processing objects
-
-        } else {
-            console.log("Undo stack is empty");
         }
     };
 
+
     const handleRedo = () => {
-        if (redoStack.length > 0) {
-            const nextState = redoStack.shift();
-            const nextStateObjects = nextState.objects;
+        if (canvasContainer[selectedCanvas]) {
+            const canvasId = selectedCanvas;
+            const stack = redoStack[canvasId];
+            if (stack.length > 0) {
+                const nextState = stack.shift();
+                const nextStateObjects = nextState.objects;
 
-            const canvas = canvasContainer[selectedCanvas];
+                const canvas = canvasContainer[selectedCanvas];
 
-            const nextStateWithoutObjects = {
-                ...nextState,
-                objects: []
-            };
+                const nextStateWithoutObjects = {
+                    ...nextState,
+                    objects: []
+                };
 
-            if (nextState) {
-                setUndoStack([...undoStack, myCanvas.toJSON()]);
-                setRedoStatus(true);
-                myCanvas.loadFromJSON(nextStateWithoutObjects, () => myCanvas.renderAll());
-                processObjects(nextStateObjects, 0);
+                if (nextState) {
+                    setUndoStack(prevStack => ({ ...prevStack, [canvasId]: [...prevStack[canvasId], canvas.toJSON()] }));
+                    setRedoStack({ ...redoStack, [canvasId]: stack });
+                    setRedoStatus(true);
+                    canvas.loadFromJSON(nextStateWithoutObjects, () => canvas.renderAll());
+                    processObjects(nextStateObjects, 0);
+                } else {
+                    console.log("No more changes to redo");
+                }
             } else {
-                console.log("No more changes to redo");
+                console.log("Redo stack is empty");
             }
-        } else {
-            console.log("Redo stack is empty");
         }
     };
 
