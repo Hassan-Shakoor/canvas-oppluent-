@@ -202,7 +202,9 @@
         "publishTemplateSuccess": "Erreur lors de la Publication du Modèle",
         "publishTemplateError": "Modèle Publié avec Succès.",
         "savedSuccess": "Modifications Enregistrées avec Succès.",
-        "savedError": "Erreur lors de l'Enregistrement du Modèle."
+        "savedError": "Erreur lors de l'Enregistrement du Modèle.",
+        "deletePageConfirmation": "Confirmation de Suppression de Page",
+        "deletePageConfirmationMessage": "Voulez-vous supprimer cette page ? Cette action est irréversible."
     },
     "Modal": {
         "deleteTemplateConfirmation": "Confirmation de suppression de modèle",

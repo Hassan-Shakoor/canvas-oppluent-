@@ -202,7 +202,9 @@
         "publishTemplateSuccess": "Error al Publicar la Plantilla",
         "publishTemplateError": "Plantilla Publicada Exitosamente.",
         "savedSuccess": "Cambios Guardados Exitosamente.",
-        "savedError": "Error al Guardar la Plantilla."
+        "savedError": "Error al Guardar la Plantilla.",
+        "deletePageConfirmation": "Confirmación de Eliminación de Página",
+        "deletePageConfirmationMessage": "¿Desea eliminar esta página? No se puede deshacer."
     },
     "Modal": {
         "deleteTemplateConfirmation": "Confirmación de eliminación de plantilla",

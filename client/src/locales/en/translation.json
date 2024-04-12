@@ -224,7 +224,9 @@
         "publishTemplateSuccess": "Template Published Successfully.",
         "publishTemplateError": "Error Publishing Template",
         "savedSuccess": "Changes Saved Successfully.",
-        "savedError": "Error Saving Template."
+        "savedError": "Error Saving Template.",
+        "deletePageConfirmation": "Delete Page Confirmation",
+        "deletePageConfirmationMessage": "Do you want to Delete this page? It cannot be undone."
     },
     "Modal": {
         "deleteTemplateConfirmation": "Delete Template Confirmation",
