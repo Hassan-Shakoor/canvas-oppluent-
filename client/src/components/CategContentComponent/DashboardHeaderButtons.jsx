@@ -17,6 +17,7 @@ import FoldersModal from '../Modal/FoldersModal';
 import { getFolders } from '../../services/firebase/FolderServices/getFolders';
 
 import { useTranslation } from 'react-i18next';
+import { deleteTemplatesinBatch } from '../../services/firebase/TemplateServices/deleteTemplatesinBatch';
 
 
 const DashboardHeaderButtons = (props) => {
@@ -101,22 +102,35 @@ const DashboardHeaderButtons = (props) => {
       iconClass: "fa-regular fa-trash-can",
       title: t("delete"),
       function: async () => {
+        if (props.selectedItems?.length === 0) {
+          toast.warn('No Item Selected.');
+          return;
+        }
         try {
-          await Promise.all(
-            props.selectedItems?.map(async (item) => {
-              if (item.type === 'folder') {
-                return deleteFolder(uid, item.id);
-              } else if (item.type === 'template') {
-                return deleteTemplate(uid, item.id);
-              }
-            })
-          );
-          // await deleteTemplate(uid, props.item.id)
-          props.setRenderTriggerFromDashboard(!props.renderTriggerFromDashboard)
-          toast.success("Files Deleted Successfully.")
+          setOverlayLoading(true);
+
+          const templateIds = props.selectedItems?.filter(item => item.type === 'template').map(item => item.id);
+
+          await Promise.all(props.selectedItems?.map(async (item) => {
+            if (item.type === 'folder') {
+              await deleteFolder(uid, item.id);
+            }
+          }));
+
+          const deleteTemplatesResponse = await deleteTemplatesinBatch(uid, templateIds);
+
+          if (deleteTemplatesResponse) {
+            toast.success("Files Deleted Successfully.");
+          }
+          else {
+            toast.error('Error Deleting Templates')
+          }
+          setOverlayLoading(false);
+          props.setRenderTriggerFromDashboard(prevState => !prevState);
         } catch (error) {
-          console.error("Error: ", error)
-          toast.error("Error Deleting Files.")
+          console.error("Error: ", error);
+          toast.error("Error Deleting Files.");
+          setOverlayLoading(false);
         }
       }
     },

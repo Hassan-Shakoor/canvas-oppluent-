@@ -214,6 +214,11 @@ const TemplateRequest = () => {
             return
         }
 
+        if (!templateType) {
+            toast.error('Please Enter a Type of Template.')
+            return;
+        }
+
         if (!showInputModal && imageDimensions.length <= 0) {
             setShowInputModal(true);
             return;
