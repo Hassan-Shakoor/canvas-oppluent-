@@ -14,7 +14,7 @@ import { getLocalStorage } from "../../../services/localStorage";
 
 // ** Constant
 import { LOCAL_STORAGE } from "../../../shared/constant";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../Modal/ConfirmationModal";
 import { selectProfile } from "../../../store/app/AccountInformation/profile";
 import { publishTemplate } from "../../../services/firebase/TemplateServices/publishTemplate";
@@ -27,6 +27,8 @@ function NavSaveCloseButtonSet() {
   const { t } = useTranslation()
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   // vars 
   const dispatch = useDispatch()
   const templateData = useSelector(selectTemplateData);
@@ -124,7 +126,15 @@ function NavSaveCloseButtonSet() {
   }
 
   const handleClose = async () => {
-    navigate('/')
+
+    // Check if we can navigate back
+    const canGoBack = location.key !== 'default';
+    if (canGoBack) {
+      navigate(-1)
+    } else {
+      navigate('/')
+    }
+
   }
 
   useEffect(() => {
