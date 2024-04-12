@@ -21,55 +21,140 @@ function NavUndoRedoButtonSet() {
 
     const [previousState, setPreviousState] = useState(null);
 
+    // useEffect(() => {
+    //     const canvas = canvasContainer[selectedCanvas];
+
+    //     // console.log("canvas: ", canvas)
+
+    //     if (!canvas) {
+    //         // console.error(`Canvas not found for selectedCanvas: ${selectedCanvas}`);
+    //         return;
+    //     }
+
+    //     canvasContainer?.forEach((canvas, index) => {
+    //         setUndoStack(prevStack => ({
+    //             ...prevStack,
+    //             [index]: [canvas?.toJSON()] // Initialize with initial state
+    //         }));
+    //     });
+
+    //     const handleObjectModified = (event) => {
+    //         // console.log("Object modified");
+
+    //         if (canvas && event) {
+    //             const currentState = canvas.toJSON();
+    //             if (currentState !== previousState) {
+    //                 setUndoStack(prevStack => ({ ...prevStack, [selectedCanvas]: [...prevStack[selectedCanvas], currentState] }));
+    //                 setRedoStack(prevStack => ({ ...prevStack, [selectedCanvas]: [] }));
+    //                 setPreviousState(currentState);
+    //             }
+    //         }
+
+    //         setUndoStatus(false);
+    //         setRedoStatus(false);
+    //     };
+
+    //     // Handle object deletion and other custom events as needed
+    //     const handleObjectRemoved = handleObjectModified;
+    //     // const handleObjectAdded = handleObjectModified;
+
+    //     canvas.on("object:modified", handleObjectModified);
+    //     // canvas.on("object:removed", handleObjectRemoved);
+    //     // canvas.on("object:added", handleObjectAdded);
+
+    //     setMyCanvas(canvas);
+    //     canvasContainer.forEach((canvas, index) => {
+    //         setUndoStack(prevStack => ({
+    //             ...prevStack,
+    //             [index]: [canvas.toJSON()] // Initialize with initial state
+    //         }));
+    //     });
+
+    //     return () => {
+    //         //   canvas.off("object:modified", handleObjectModified);
+    //         //   canvas.off("object:removed", handleObjectRemoved);
+    //         //   canvas.off("object:added", handleObjectAdded);
+    //     };
+    // }, [canvasContainer, selectedCanvas]);
+
     useEffect(() => {
         const canvas = canvasContainer[selectedCanvas];
 
-        // console.log("canvas: ", canvas)
-
         if (!canvas) {
-            // console.error(`Canvas not found for selectedCanvas: ${selectedCanvas}`);
+            console.error(`Canvas not found for selectedCanvas: ${selectedCanvas}`);
             return;
         }
 
-        const handleObjectModified = (event) => {
-            // console.log("Object modified");
+        try {
+            // Set initial undo stack for each canvas in canvasContainer
+            const initialUndoStack = canvasContainer.reduce((stack, c, index) => {
+                stack[index] = [c.toJSON()];
+                return stack;
+            }, {});
+            setUndoStack(initialUndoStack);
 
-            if (canvas && event) {
-                const currentState = canvas.toJSON();
-                if (currentState !== previousState) {
-                    setUndoStack(prevStack => ({ ...prevStack, [selectedCanvas]: [...prevStack[selectedCanvas], currentState] }));
-                    setRedoStack(prevStack => ({ ...prevStack, [selectedCanvas]: [] }));
-                    setPreviousState(currentState);
+            const handleObjectModified = (event) => {
+
+                const canvasClass = event.target?.canvas?.lowerCanvasEl?.id;
+                const canvasId = canvasClass.split('-')[1];
+                const canvas = canvasContainer[canvasId - 1];
+
+                if (canvas && event) {
+                    // const currentState = canvas.toJSON();
+                    const currentState = {
+                        background: canvas.backgroundColor ? canvas.backgroundColor : canvas.backgroundImage,
+                        objects: canvas.getObjects().map((obj) => {
+                            // Extract all object attributes and include custom attributes
+                            const allAttributes = {
+                                ...obj,
+                                name: obj.name,
+                                id: obj.id,
+                                isAdminLocked: obj.isAdminLocked ? obj.isAdminLocked : false,
+                                selectable: obj.isAdminLocked ? false : true,
+                                hasControls: obj.isAdminLocked ? false : true,
+                                lockMovementX: obj.isAdminLocked ? true : false,
+                                lockMovementY: obj.isAdminLocked ? true : false,
+                                // Add any other custom attributes you want to retain
+                            };
+
+                            if (obj.type === 'Shape') {
+                                allAttributes.svgUrl = obj.svgUrl;
+                            }
+
+                            return allAttributes;
+                        }),
+                        version: canvas.version
+                    }
+                    if (currentState !== previousState) {
+                        setUndoStack(prevStack => ({
+                            ...prevStack,
+                            [canvasId - 1]: [...prevStack[canvasId - 1], currentState]
+                        }));
+                        setRedoStack(prevStack => ({
+                            ...prevStack,
+                            [canvasId - 1]: []
+                        }));
+                        setPreviousState(currentState);
+                    }
                 }
-            }
 
-            setUndoStatus(false);
-            setRedoStatus(false);
-        };
+                setUndoStatus(false);
+                setRedoStatus(false);
+            };
 
-        // Handle object deletion and other custom events as needed
-        const handleObjectRemoved = handleObjectModified;
-        // const handleObjectAdded = handleObjectModified;
+            // Handle object modification event
+            canvasContainer.map((canvas, index) => {
+                canvas.on("object:modified", handleObjectModified);
+            })
 
-        canvas.on("object:modified", handleObjectModified);
-        // canvas.on("object:removed", handleObjectRemoved);
-        // canvas.on("object:added", handleObjectAdded);
-
-        setMyCanvas(canvas);
-        canvasContainer.forEach((canvas, index) => {
-            setUndoStack(prevStack => ({
-                ...prevStack,
-                [index]: [canvas.toJSON()] // Initialize with initial state
-            }));
-        });
-
-        return () => {
-            //   canvas.off("object:modified", handleObjectModified);
-            //   canvas.off("object:removed", handleObjectRemoved);
-            //   canvas.off("object:added", handleObjectAdded);
-        };
+            // Clean up event listener
+            return () => {
+                // canvas.off("object:modified", handleObjectModified);
+            };
+        } catch (error) {
+            console.error("Error in useEffect:", error);
+        }
     }, [canvasContainer, selectedCanvas]);
-
 
     async function processObjects(objects, index) {
         if (index >= objects.length) {

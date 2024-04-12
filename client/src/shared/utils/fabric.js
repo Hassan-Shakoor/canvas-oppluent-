@@ -55,7 +55,37 @@ export const serializeCanvasContainer = (canvasContainer) => {
 }
 
 export const serializeCanvas = (canvas) => {
+    const canvasAttributes = {
+        ...canvas.toObject()
+    }
 
+    const objects = canvas.getObjects().map((obj) => {
+        // Extract all object attributes and include custom attributes
+        const allAttributes = {
+            ...obj.toObject(),
+            name: obj.name,
+            id: obj.id,
+            isAdminLocked: obj.isAdminLocked ? obj.isAdminLocked : false,
+            selectable: obj.isAdminLocked ? false : true,
+            hasControls: obj.isAdminLocked ? false : true,
+            lockMovementX: obj.isAdminLocked ? true : false,
+            lockMovementY: obj.isAdminLocked ? true : false,
+            // Add any other custom attributes you want to retain
+        };
+
+        if (obj.type === 'Shape') {
+            allAttributes.svgUrl = obj.svgUrl;
+        }
+
+        return allAttributes;
+    });
+
+    const serializedCanvas = JSON.stringify({
+        ...canvasAttributes,
+        objects,
+    });
+
+    return serializedCanvas;
 };
 
 export const updateCanvasRef = (oldCanvas, selectedCanvas, updateCanvas) => {

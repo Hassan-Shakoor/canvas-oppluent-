@@ -247,6 +247,7 @@ function Canvas(props) {
           else {
             dispatch(updateOpenDrawer(target))
           }
+          setShowContextMenu(false);
           dispatch(updateSelectedObject(target))
           // Update the selected canvas
           dispatch(updateSelectedCanvas(Number(i)))
@@ -279,7 +280,7 @@ function Canvas(props) {
             if (target) {
               canvas.setActiveObject(target)
               dispatch(updateSelectedObject(target))
-              setShowContextMenu(true);
+              // setShowContextMenu(true);
             }
           } else if (event.button == 2) {
           }
