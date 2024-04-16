@@ -96,6 +96,41 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
         }, { crossOrigin: 'Anonymous' });
         return;
       }
+      if (selectedObject && selectedObject.type === 'Shape') {
+        fabric.util.loadImage(image, function (img) {
+          // Calculate scaling factors
+          const scaleX = selectedObject.width / img.width;
+          const scaleY = selectedObject.height / img.height;
+
+          // Use the minimum scaling factor to maintain aspect ratio and fit the image inside the shape
+          const scale = Math.max(scaleX, scaleY);
+
+          // Create a canvas to hold the pattern source
+          // const patternSourceCanvas = new fabric.StaticCanvas();
+          // patternSourceCanvas.setDimensions({
+          //   width: img.width * scale,
+          //   height: img.height * scale
+          // });
+          // patternSourceCanvas.add(img);
+
+          // Set the image as a pattern fill for the shape
+          selectedObject.set('fill', new fabric.Pattern({
+            source: img,
+            repeat: 'no-repeat',
+            crossOrigin: 'anonymous',
+            width: img.width * scale, // Adjust width of the pattern
+            height: img.height * scale,
+            // offsetX: 'left',
+            // offsetY: 'top'
+          }));
+
+          canvas.renderAll();
+        }, null,
+          'anonymous');
+        return
+      }
+
+
 
       fabric.Image.fromURL(image, function (img) {
 
