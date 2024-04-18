@@ -94,6 +94,31 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
   }
 
   useEffect(() => {
+    if (title === 'Image') {
+      const canvas = canvasContainer[selectedCanvas];
+      const activeObject = canvas?.getActiveObject();
+
+      if (activeObject?.filters?.length > 0) {
+        const rgbaString = activeObject.filters[0]?.color;
+        const numbers = rgbaString.match(/\d+/g);
+        const oldColor = {
+          r: parseInt(numbers[0], 10),
+          g: parseInt(numbers[1], 10),
+          b: parseInt(numbers[2], 10),
+          a: parseInt(numbers[3], 10)
+        }
+        setColor(oldColor);
+        setColorInput(getHexColor(oldColor))
+      }
+
+      // if (activeObject?.type === 'Image') {
+      // }
+      canvas.renderAll();
+      // Apply the orange color filter to the image
+    }
+  }, [])
+
+  useEffect(() => {
     if (title === 'Gradient') {
       const canvas = canvasContainer[selectedCanvas];
       if (canvas?.getActiveObject()) {
@@ -197,14 +222,14 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
       const canvas = canvasContainer[selectedCanvas];
       const activeObject = canvas?.getActiveObject();
 
-      let orangeColorFilter = new fabric.Image.filters.BlendColor({
-        color: getRgbaCSS(color), 
+      let colorFilter = new fabric.Image.filters.BlendColor({
+        color: getRgbaCSS(color),
         mode: 'tint'
       });
       console.log('first')
 
       if (activeObject?.type === 'Image') {
-        activeObject.filters.push(orangeColorFilter);
+        activeObject.filters = [colorFilter];
         activeObject.applyFilters();
       }
       canvas.renderAll();

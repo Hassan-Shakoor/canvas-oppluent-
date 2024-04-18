@@ -20,8 +20,9 @@ import InputModal from '../components/Modal/InputModal'
 
 import { jsPDF } from 'jspdf';
 import { PDFDocument } from 'pdf-lib'
+import pdfjs from 'pdfjs-dist';
 
-
+const PDFJS = window.pdfjsLib;
 
 let currentUserId = null;
 onAuthStateChanged(auth, (user) => {
@@ -128,60 +129,174 @@ const TemplateRequest = () => {
     //     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     // };
 
-    const handleFileInputChange = (event) => {
+    // const handleFileInputChange = (event) => {
+    //     const newFiles = Array.from(event.target.files);
+    //     setFiles([...files, ...newFiles]);
+
+    //     const reader = new FileReader();
+
+    //     // Set up a function to be called when the file is loaded
+    //     reader.onload = function (e) {
+    //         // Create an Image object
+    //         const img = new Image();
+
+    //         // Set up a function to be called when the image is loaded
+    //         img.onload = function () {
+    //             // Log the width and height of the image
+    //             // console.log('Width:', img.width);
+    //             // console.log('Height:', img.height);
+
+    //             // Add the dimensions to the state
+    //             setImageDimensions([...imageDimensions, { width: img.width, height: img.height }]);
+    //         };
+
+    //         // Set the source of the Image object to the data URL obtained from FileReader
+    //         img.src = e.target.result;
+    //     };
+
+    //     // Read the first file as a data URL
+    //     reader.readAsDataURL(newFiles[0]);
+    // };
+
+    // const handleFileInputChange = async (e) => {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //         const file = e.target.files[0];
+    //         const uri = URL.createObjectURL(file);
+    //         var pdf = await PDFJS.getDocument({ url: uri });
+    //         const imgArray = [];
+
+    //         for (let i = 1; i <= pdf.numPages; i++) {
+    //             const page = await pdf.getPage(i);
+    //             const canvas = document.createElement('canvas');
+    //             const canvasContext = canvas.getContext('2d');
+
+    //             const viewport = page.getViewport({ scale: 1.5 });
+    //             canvas.width = viewport.width;
+    //             canvas.height = viewport.height;
+
+    //             await page.render({ canvasContext, viewport }).promise;
+
+    //             const imageData = canvas.toDataURL('image/png');
+    //             imgArray.push(imageData);
+    //         }
+    //     }
+    // };
+
+    const handleFileInputChange = async (event) => {
         const newFiles = Array.from(event.target.files);
         setFiles([...files, ...newFiles]);
 
+        for (const file of newFiles) {
+            if (file.type.startsWith('image/')) {
+                // Handle image file
+                handleImageFile(file);
+            } else if (file.type === 'application/pdf') {
+                // Handle PDF file
+                await handlePdfFile(file);
+            } else {
+                console.error(`${file.name} is not supported.`);
+            }
+        }
+    };
+
+    const handleImageFile = (file) => {
         const reader = new FileReader();
-
-        // Set up a function to be called when the file is loaded
         reader.onload = function (e) {
-            // Create an Image object
             const img = new Image();
-
-            // Set up a function to be called when the image is loaded
             img.onload = function () {
-                // Log the width and height of the image
-                // console.log('Width:', img.width);
-                // console.log('Height:', img.height);
-
-                // Add the dimensions to the state
                 setImageDimensions([...imageDimensions, { width: img.width, height: img.height }]);
             };
-
-            // Set the source of the Image object to the data URL obtained from FileReader
             img.src = e.target.result;
         };
+        reader.readAsDataURL(file);
+    };
 
-        // Read the first file as a data URL
-        reader.readAsDataURL(newFiles[0]);
+    // const handlePdfFile = async (file) => {
+    //     const uri = await URL.createObjectURL(file);
+    //     try {
+    //         const pdf = await PDFJS.getDocument({ url: uri });
+    //         const imgArray = [];
+
+    //         for (let i = 1; i <= pdf.numPages; i++) {
+    //             const page = await pdf.getPage(i);
+    //             const canvas = document.createElement('canvas');
+    //             const canvasContext = canvas.getContext('2d');
+
+    //             const viewport = page.getViewport({ scale: 1 });
+    //             canvas.width = viewport.width;
+    //             canvas.height = viewport.height;
+
+    //             await page.render({ canvasContext, viewport }).promise;
+
+    //             const imageData = canvas.toDataURL('image/png');
+    //             imgArray.push(imageData);
+    //         }
+    //         setFiles((prevFiles) => [...prevFiles, ...imgArray]);
+    //     } catch (error) {
+    //         console.error(`Error loading PDF: ${error}`);
+    //     }
+    // };
+
+    // const handlePdfFile = async (file) => {
+    //     const uri = URL.createObjectURL(file);
+    //     try {
+    //         const pdf = await PDFJS.getDocument({ url: uri });
+    //         const imgArray = [];
+
+    //         for (let i = 1; i <= pdf.numPages; i++) {
+    //             const page = await pdf.getPage(i);
+    //             const canvas = document.createElement('canvas');
+    //             const canvasContext = canvas.getContext('2d');
+
+    //             const viewport = page.getViewport({ scale: 1 });
+    //             canvas.width = viewport.width;
+    //             canvas.height = viewport.height;
+
+    //             await page.render({ canvasContext, viewport }).promise;
+
+    //             const imageData = canvas.toDataURL('image/png');
+    //             imgArray.push(imageData);
+    //         }
+    //         setFiles((prevFiles) => [...prevFiles, ...imgArray]);
+    //     } catch (error) {
+    //         console.error(`Error loading PDF: ${error}`);
+    //     } finally {
+    //         URL.revokeObjectURL(uri);
+    //     }
+    // };
+    const handlePdfFile = async (file) => {
+        const uri = URL.createObjectURL(file);
+        try {
+            const pdf = await PDFJS.getDocument({ url: uri });
+            const imgArray = [];
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const canvas = document.createElement('canvas');
+                const canvasContext = canvas.getContext('2d');
+
+                const viewport = page.getViewport({ scale: 1 });
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                setImageDimensions([...imageDimensions, { width: viewport.width, height: viewport.height }]);
+
+
+                await page.render({ canvasContext, viewport }).promise;
+
+                const imageData = canvas.toDataURL('image/png');
+                imgArray.push(imageData);
+            }
+            setFiles((prevFiles) => [...prevFiles, ...imgArray]);
+        } catch (error) {
+            console.error(`Error loading PDF: ${error}`);
+        } finally {
+            URL.revokeObjectURL(uri);
+        }
     };
 
 
-
-
-    // // Function to extract images from PDF using pdf-lib
-    // const extractImagesFromPDF = async (pdfDoc) => {
-    //     const images = [];
-    //     const pageCount = pdfDoc.getPageCount();
-
-    //     for (let i = 0; i < pageCount; i++) {
-    //         const page = pdfDoc.getPage(i);
-    //         const imagesOnPage = await page.getImages();
-
-    //         for (const [key, image] of Object.entries(imagesOnPage)) {
-    //             images.push(image);
-    //         }
-    //     }
-
-    //     return images;
-    // };
-
-    // // Function to handle the extracted image files
-    // const handleExtractedImageFiles = (imageFiles) => {
-    //     // Handle the extracted image files as needed
-    //     console.log('Extracted image files:', imageFiles);
-    // };
 
 
 
@@ -236,7 +351,7 @@ const TemplateRequest = () => {
             const databaseRef = ref(database, `${currentUserId}/templateData`);
 
             let templateId = uuidv4();
-            
+
             const imageUrl = await Promise.all(files.map(async (file, index) => {
                 const isThumbnail = index === 0 ? true : false;
                 return uploadTemplateImage(file, templateId, index, isThumbnail);
@@ -578,7 +693,7 @@ const TemplateRequest = () => {
                                                 className="radiobutton__input radiobutton__input_checked"
                                                 value=""
                                                 checked={access === ""}
-                                                onChange={() => setAccess("")}
+                                                onChange={() => {setAccess(""); setSelectedUsers(null);}}
                                             />
                                             <label htmlFor="whereAvailable-" className="radiobutton__label">
                                                 {t("TemplateRequest.availableToAll")}
@@ -610,7 +725,7 @@ const TemplateRequest = () => {
                                                     isMulti
                                                     placeholder='Select users'
                                                     styles={customStyles}
-                                                    onChange={(option) => { setSelectedUsers(option.value); console.log(selectedUsers) }} />
+                                                    onChange={(option) => { setSelectedUsers(option.map(val => { return val.value })); console.log(selectedUsers) }} />
                                             </div>
                                         </div>
                                     )}
