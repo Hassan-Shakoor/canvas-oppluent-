@@ -20,7 +20,6 @@ import InputModal from '../components/Modal/InputModal'
 
 import { jsPDF } from 'jspdf';
 import { PDFDocument } from 'pdf-lib'
-import pdfjs from 'pdfjs-dist';
 
 const PDFJS = window.pdfjsLib;
 
@@ -205,7 +204,8 @@ const TemplateRequest = () => {
         reader.onload = function (e) {
             const img = new Image();
             img.onload = function () {
-                setImageDimensions([...imageDimensions, { width: img.width, height: img.height }]);
+                const newDimension = { width: img.width, height: img.height }
+                setImageDimensions((prevDimensions) => [...prevDimensions, newDimension]);
             };
             img.src = e.target.result;
         };
@@ -265,37 +265,116 @@ const TemplateRequest = () => {
     //         URL.revokeObjectURL(uri);
     //     }
     // };
-    const handlePdfFile = async (file) => {
-        const uri = URL.createObjectURL(file);
-        try {
-            const pdf = await PDFJS.getDocument({ url: uri });
-            const imgArray = [];
 
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const canvas = document.createElement('canvas');
-                const canvasContext = canvas.getContext('2d');
+    //   ---------
+    // const handlePdfFile = async (file) => {
 
-                const viewport = page.getViewport({ scale: 1 });
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
+    //     const reader = new FileReader();
 
-                setImageDimensions([...imageDimensions, { width: viewport.width, height: viewport.height }]);
+    //     reader.onload = async function (e) {
+    //         try {
+
+    //             const typedArray = new Uint8Array(e.target.result);
+    //             // Load PDF using pdf-lib
+    //             const pdfDoc = await PDFJS.getDocument(typedArray).promise;
+
+    //             // Handle the extracted image files
+    //         } catch (error) {
+    //             console.error('Error extracting images from PDF:', error);
+    //         }
+    //     };
+    //     reader.readAsArrayBuffer(file);
+    //     const uri = URL.createObjectURL(file);
+    //     try {
+    //         const pdf = await PDFJS.getDocument({ url: uri });
+    //         const imgArray = [];
+
+    //         for (let i = 1; i <= pdf.numPages; i++) {
+    //             const page = await pdf.getPage(i);
+    //             const canvas = document.createElement('canvas');
+    //             const canvasContext = canvas.getContext('2d');
+
+    //             const viewport = page.getViewport({ scale: 1 });
+    //             canvas.width = viewport.width;
+    //             canvas.height = viewport.height;
+
+    //             setImageDimensions([...imageDimensions, { width: viewport.width, height: viewport.height }]);
 
 
-                await page.render({ canvasContext, viewport }).promise;
+    //             await page.render({ canvasContext, viewport }).promise;
 
-                const imageData = canvas.toDataURL('image/png');
-                imgArray.push(imageData);
-            }
-            setFiles((prevFiles) => [...prevFiles, ...imgArray]);
-        } catch (error) {
-            console.error(`Error loading PDF: ${error}`);
-        } finally {
-            URL.revokeObjectURL(uri);
+    //             const imageData = canvas.toDataURL('image/png');
+    //             imgArray.push(imageData);
+    //         }
+    //         setFiles((prevFiles) => [...prevFiles, ...imgArray]);
+    //     } catch (error) {
+    //         console.error(`Error loading PDF: ${error}`);
+    //     } finally {
+    //         URL.revokeObjectURL(uri);
+    //     }
+    // };
+
+
+    const base64ToFile = (base64Data, fileName) => {
+        // Remove the data URL prefix (e.g., "data:image/png;base64,")
+        const base64WithoutPrefix = base64Data.replace(/^data:image\/[a-z]+;base64,/, '');
+
+        // Convert the base64 data to a Blob
+        const byteCharacters = atob(base64WithoutPrefix);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
         }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/png' });
+
+        // Create a File object from the Blob
+        const file = new File([blob], fileName || 'image.png', { type: 'image/png' });
+
+        return file;
     };
 
+    const handlePdfFile = async (file) => {
+        const reader = new FileReader();
+
+        reader.onload = async function (e) {
+            try {
+                // Get the array buffer from the loaded file
+                const arrayBuffer = e.target.result;
+
+                // Load the PDF document using pdfjsLib
+                const pdf = await PDFJS.getDocument({ data: arrayBuffer }).promise;
+
+                // Now you can handle the PDF document as needed
+                // For example, you can iterate through the pages and render them to canvas
+                for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+                    const page = await pdf.getPage(pageNumber);
+                    const viewport = page.getViewport({ scale: 1 });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    await page.render({ canvasContext: context, viewport }).promise;
+
+                    const newDimension = { width: viewport.width, height: viewport.height }
+
+                    setImageDimensions((prevDimensions) => [...prevDimensions, newDimension]);
+                    console.log('dimensions: ', imageDimensions)
+                    const imageDataURL = canvas.toDataURL('image/png');
+
+                    const file = base64ToFile(imageDataURL, 'example.png');
+
+                    setFiles((prevFiles) => [...prevFiles, file]);
+                }
+                setFiles((prevFiles) => prevFiles.filter((f) => f !== file));
+
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    };
 
 
 
@@ -693,7 +772,7 @@ const TemplateRequest = () => {
                                                 className="radiobutton__input radiobutton__input_checked"
                                                 value=""
                                                 checked={access === ""}
-                                                onChange={() => {setAccess(""); setSelectedUsers(null);}}
+                                                onChange={() => { setAccess(""); setSelectedUsers(null); }}
                                             />
                                             <label htmlFor="whereAvailable-" className="radiobutton__label">
                                                 {t("TemplateRequest.availableToAll")}

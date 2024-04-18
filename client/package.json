@@ -24,7 +24,6 @@
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^4.1.392",
     "rc-dropdown": "^4.1.0",
     "rc-menu": "^9.12.2",
     "rc-slider": "^10.2.1",
