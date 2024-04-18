@@ -1,12 +1,13 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 
-export async function publishTemplate(authId, templateObject, templateURL) {
+export async function publishTemplate(authId, templateObject, templateURLs) {
     const database = getDatabase();
     const databaseRef = ref(database);
 
-    const updatedStorageURLs = templateObject?.storage_url?.length > 0 ? (templateObject.storage_url.map((url, index) =>
-        index === 0 ? templateURL : url
-    )) : [templateURL];
+    const updatedStorageURLs =
+        templateObject?.storage_url?.length > 0
+            ? templateObject.storage_url.map((url, index) => templateURLs[index])
+            : templateURLs;
 
 
     try {
@@ -31,7 +32,7 @@ export async function publishTemplate(authId, templateObject, templateURL) {
                     const newData = [...templateData, entryToAdd];
                     set(ref(database, `${userId}/templateData`), newData);
                     console.log('Added entry:', entryToAdd);
-                    publishTemplate(authId, templateObject, templateURL)
+                    publishTemplate(authId, templateObject, templateURLs)
                     return;
                 } else {
                     console.log('Entry already exists:', entryToAdd);

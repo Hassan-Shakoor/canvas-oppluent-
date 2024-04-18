@@ -64,26 +64,39 @@ function NavSaveCloseButtonSet() {
     setLoading(true);
     const canvasContainer = getCanvasRef()
 
-    const dataURL = canvasContainer[0]?.toDataURL({
-      format: "png",
-      quality: 1,
-    });
+    const templateImageUrls = [];
 
-    // Convert the data URL to a Blob
-    const blob = await fetch(dataURL).then((res) => res.blob());
-    const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
+    // Iterate through each canvas element in the canvasContainer array
+    for (let i = 0; i < canvasContainer.length; i++) {
+      const canvas = canvasContainer[i];
 
-    if (!templateImageUrl) {
-      toast.error(t("EditHeader.savedError"))
-      setLoading(false);
-      setShowConfirmationModal(false)
-      return;
+      // Get the data URL of the canvas
+      const dataURL = canvas.toDataURL({
+        format: "png",
+        quality: 1,
+      });
+
+      // Convert the data URL to a Blob
+      const blob = await fetch(dataURL).then((res) => res.blob());
+
+      // Upload the template image and get the URL
+      const templateImageUrl = await uploadTemplateImage(blob, templateData.id, i);
+
+      // Push the template image URL to the array
+      if (templateImageUrl) {
+        templateImageUrls.push(templateImageUrl);
+      } else {
+        toast.error(t("EditHeader.savedError"));
+        setLoading(false);
+        setShowConfirmationModal(false);
+        return;
+      }
     }
 
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
-    await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrl)
+    await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrls)
     toast.success(t("EditHeader.savedSuccess"))
     setLoading(false);
   }
@@ -93,33 +106,46 @@ function NavSaveCloseButtonSet() {
     event.preventDefault()
     const canvasContainer = getCanvasRef()
 
-    const dataURL = canvasContainer[0]?.toDataURL({
-      format: "png",
-      quality: 1,
-    });
+    const templateImageUrls = [];
 
-    // Convert the data URL to a Blob
-    const blob = await fetch(dataURL).then((res) => res.blob());
-    const templateImageUrl = await uploadTemplateImage(blob, templateData.id)
+    // Iterate through each canvas element in the canvasContainer array
+    for (let i = 0; i < canvasContainer.length; i++) {
+      const canvas = canvasContainer[i];
 
-    if (!templateImageUrl) {
-      toast.error(t("EditHeader.publishTemplateError"))
-      setLoading(false);
-      setShowConfirmationModal(false)
-      return;
+      // Get the data URL of the canvas
+      const dataURL = canvas.toDataURL({
+        format: "png",
+        quality: 1,
+      });
+
+      // Convert the data URL to a Blob
+      const blob = await fetch(dataURL).then((res) => res.blob());
+
+      // Upload the template image and get the URL
+      const templateImageUrl = await uploadTemplateImage(blob, templateData.id, i);
+
+      // Push the template image URL to the array
+      if (templateImageUrl) {
+        templateImageUrls.push(templateImageUrl);
+      } else {
+        toast.error(t("EditHeader.savedError"));
+        setLoading(false);
+        setShowConfirmationModal(false);
+        return;
+      }
     }
 
     const serializedData = serializeCanvasContainer(canvasContainer)
     dispatch(updateFabricData(serializedData))
     const updatedData = { ...templateData, fabricData: serializedData }
-    const response = await publishTemplate(userData?.uid, updatedData, templateImageUrl)
+    const response = await publishTemplate(userData?.uid, updatedData, templateImageUrls)
     if (!response) {
       setLoading(false);
       setShowConfirmationModal(false)
       toast.error(t("EditHeader.publishTemplateError"))
       return;
     }
-    await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrl)
+    await updateTemplateJsonData(userData?.uid, updatedData, templateImageUrls)
     toast.success(t("EditHeader.publishTemplateSuccess"));
     setLoading(false);
     setShowConfirmationModal(false)

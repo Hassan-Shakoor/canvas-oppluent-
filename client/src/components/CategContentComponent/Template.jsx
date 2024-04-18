@@ -101,6 +101,8 @@ function Template(props) {
               } else {
                 toast.error('Error Deleting Template.')
               }
+              setIsOverlayLoading(false);
+              setIsConfirmDeleteModal(false);
             } else {
               const response = await deleteTemplateFromTemplate(props.userId, props.item.id)
               if (response) {
@@ -108,9 +110,9 @@ function Template(props) {
               } else {
                 toast.error('Error Deleting Template.')
               }
+              setIsOverlayLoading(false);
+              setIsConfirmDeleteModal(false);
             }
-            setIsOverlayLoading(false);
-            setIsConfirmDeleteModal(false);
           }}
         />
       )}

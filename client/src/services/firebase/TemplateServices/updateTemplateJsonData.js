@@ -1,7 +1,7 @@
 import { get, set, ref, getDatabase } from "firebase/database";
 import { getTemplateFromFoldersRecursive } from "./getTemplateFromFolders";
 
-export async function updateTemplateJsonData(authId, updatedObject, templateURL) {
+export async function updateTemplateJsonData(authId, updatedObject, templateURLs) {
   const database = getDatabase();
   const databaseRef = ref(database, `${authId}/templateData`);
   const folderDataRef = ref(database, `${authId}/folderData`);
@@ -11,9 +11,11 @@ export async function updateTemplateJsonData(authId, updatedObject, templateURL)
     const snapshot = await get(databaseRef);
     const folderDataSnapshot = await get(folderDataRef);
 
-    const updatedStorageURLs = updatedObject?.storage_url?.length > 0 ? (updatedObject.storage_url.map((url, index) =>
-      index === 0 ? templateURL : url
-    )) : [templateURL];
+    const updatedStorageURLs =
+      updatedObject?.storage_url?.length > 0
+        ? updatedObject.storage_url.map((url, index) => templateURLs[index])
+        : templateURLs;
+
 
     if (snapshot.exists()) {
       const data = snapshot.val();
@@ -47,7 +49,7 @@ export async function updateTemplateJsonData(authId, updatedObject, templateURL)
 
           if (matchingTemplate) {
             // const updatedStorageURLs = updatedObject.storage_url.map((url, index) =>
-            //   index === 0 ? templateURL : url
+            //   index === 0 ? templateURLs : url
             // );
 
             const updatedTemplate = {
@@ -69,7 +71,7 @@ export async function updateTemplateJsonData(authId, updatedObject, templateURL)
           if (matchingTemplate) {
 
             // const updatedStorageURLs = updatedObject.storage_url.map((url, index) =>
-            //   index === 0 ? templateURL : url
+            //   index === 0 ? templateURLs : url
             // );
 
             const updatedTemplate = {

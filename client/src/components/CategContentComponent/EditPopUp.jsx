@@ -16,6 +16,8 @@ function EditPopUp(props) {
 
     const navigate = useNavigate()
 
+    const [selectedImage, setSelectedImage] = useState(0);
+
     const [overlayLoading, setOverlayLoading] = useState(false)
 
     const id = props.item.id; // Replace with the actual ID value
@@ -46,6 +48,22 @@ function EditPopUp(props) {
             }, 40);
         }
 
+    }
+
+    const handlePrev = () => {
+        if (selectedImage <= 0) {
+            setSelectedImage(props.item?.storage_url?.length - 1)
+        } else {
+            setSelectedImage(selectedImage - 1)
+        }
+    }
+
+    const handleNext = () => {
+        if (selectedImage >= props.item?.storage_url?.length - 1) {
+            setSelectedImage(0)
+        } else {
+            setSelectedImage(selectedImage + 1)
+        }
     }
 
     function handleClose() {
@@ -88,69 +106,46 @@ function EditPopUp(props) {
                             </button>
                         </div>
                         <div className="modal__body">
-                            <div className="row justify-content-center align-items-center px-4">
-                                <div className="react-slider mb-3 col-auto template-preview__slider">
-                                    <div>
-                                        <div className="slick-slider slick-initialized">
-                                            <div className="slick-list">
-                                                <div
-                                                    className="slick-track"
-                                                    style={{ width: 420, opacity: 1 }}
-                                                >
-                                                    <div
-                                                        data-index={0}
-                                                        className="slick-slide slick-active slick-current"
-                                                        tabIndex={-1}
-                                                        aria-hidden="false"
-                                                        style={{
-                                                            outline: "none",
-                                                            width: 420,
-                                                            position: "relative",
-                                                            left: 0,
-                                                            opacity: 1,
-                                                            transition:
-                                                                "opacity 500ms ease 0s, visibility 500ms ease 0s"
-                                                        }}
-                                                    >
-                                                        <div>
-                                                            <div
-                                                                tabIndex={-1}
-                                                                style={{ width: "100%", display: "inline-block" }}
-                                                            >
-                                                                <div className="template-preview">
-                                                                    {props.item.storage_url?.length > 0 ?
-                                                                        <img
-                                                                            className="template-preview__image"
-                                                                            title={props.item.cardTitle}
-                                                                            src={props.item.storage_url?.length > 0 ? props.item.storage_url[0] : ''}
-                                                                            alt={props.item.cardTitle}
-                                                                        /> :
-                                                                        <FontAwesomeIcon icon="fa-solid fa-image" size="2xl" style={{ textAlign: 'center' }} />
-                                                                    }
+                            <div className="row justify-content-center align-items-center px-4" style={{ textAlignLast: 'center' }}>
+                                <div className="thumbnail-slider px-4">
+
+                                    <img
+                                        className='thumbnail-slider__preview mb-5'
+                                        src={props.item?.storage_url[selectedImage]}
+                                        alt={``}
+                                        // style={{ width: '200px' }}
+                                    />
+
+                                    <div className="react-slider thumbnail-slider__slider mb-3">
+                                        <div>
+                                            <div className="slick-slider slick-initialized">
+                                                <div className="slick-list">
+                                                    <div className="slick-track" style={{ width: `${props.item?.storage_url?.length * 130}px`, opacity: 1, transform: 'translate3d(0px, 0px, 0px)', margin: 'auto', justifyContent: 'center' }}>
+                                                        {props.item?.storage_url?.map((imageUrl, index) => (
+                                                            <div key={index} data-index={index} className={`slick-slide slick-active ${index === selectedImage ? 'slick-current' : ''}`} tabIndex="-1" aria-hidden="false">
+                                                                <div onClick={() => setSelectedImage(index)}>
+                                                                    <img
+                                                                        className={`thumbnail-slider__thumbnail thumbnail-slider__thumbnail-img ${index === selectedImage ? 'thumbnail-slider__thumbnail_active' : ''}`}
+                                                                        src={imageUrl}
+                                                                        alt={`Image ${index + 1}`}
+                                                                        tabIndex="-1"
+                                                                        style={{ width: '80px', display: 'inline-block', margin: '0 10px' }}
+                                                                    />
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        ))}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <button className="react-slider__btn react-slider__btn_next" onClick={handleNext}>
+                                            <FontAwesomeIcon icon="fa-solid fa-chevron-right" />
+                                        </button>
+                                        <button className="react-slider__btn react-slider__btn_prev" onClick={handlePrev}>
+                                            <FontAwesomeIcon icon="fa-solid fa-chevron-left" />
+                                        </button>
                                     </div>
-                                    <div className="react-slider__btn react-slider__btn_next react-slider__btn_disabled">
-                                        <svg className="icon v2-icon v2-icon-chevron-right-light">
-                                            <use
-                                                href="#v2-icon-chevron-right-light"
-                                                xlinkHref="#v2-icon-chevron-right-light"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="react-slider__btn react-slider__btn_prev react-slider__btn_disabled">
-                                        <svg className="icon v2-icon v2-icon-chevron-left-light">
-                                            <use
-                                                href="#v2-icon-chevron-left-light"
-                                                xlinkHref="#v2-icon-chevron-left-light"
-                                            />
-                                        </svg>
-                                    </div>
+                                    <div className="thumbnail-slider__counter mb-3">{selectedImage + 1} / {props.item?.storage_url?.length}</div>
                                 </div>
                             </div>
                             <div className="row justify-content-end">
