@@ -96,37 +96,33 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
         }, { crossOrigin: 'Anonymous' });
         return;
       }
+
       if (selectedObject && selectedObject.type === 'Shape') {
-        fabric.util.loadImage(image, function (img) {
-          // Calculate scaling factors
-          const scaleX = selectedObject.width / img.width;
-          const scaleY = selectedObject.height / img.height;
+        fabric.Image.fromURL(image, function (img) {
 
-          // Use the minimum scaling factor to maintain aspect ratio and fit the image inside the shape
-          const scale = Math.max(scaleX, scaleY);
+          const scaleToFitWidth = selectedObject.width / (img.width / 0.5);
+          const scaleToFitHeight = selectedObject.height / (img.height / 0.5);
+          const scale = Math.max(scaleToFitWidth, scaleToFitHeight);
+          img.scale(scale)
 
-          // Create a canvas to hold the pattern source
-          // const patternSourceCanvas = new fabric.StaticCanvas();
-          // patternSourceCanvas.setDimensions({
-          //   width: img.width * scale,
-          //   height: img.height * scale
-          // });
-          // patternSourceCanvas.add(img);
+          var patternSourceCanvas = new fabric.StaticCanvas();
+          patternSourceCanvas.add(img);
+          patternSourceCanvas.setWidth(selectedObject.width)
+          patternSourceCanvas.setHeight(selectedObject.height)
+          patternSourceCanvas.renderAll();
 
+          console.log('firstdasd')
           // Set the image as a pattern fill for the shape
           selectedObject.set('fill', new fabric.Pattern({
-            source: img,
+            source: patternSourceCanvas.getElement(),
             repeat: 'no-repeat',
             crossOrigin: 'anonymous',
-            width: img.width * scale, // Adjust width of the pattern
-            height: img.height * scale,
-            // offsetX: 'left',
-            // offsetY: 'top'
+            offsetX: 0,
+            offsetY: 0
           }));
 
           canvas.renderAll();
-        }, null,
-          'anonymous');
+        }, { crossOrigin: 'Anonymous' });
         return
       }
 

@@ -15,6 +15,7 @@ import { selectCanvasContainer, selectSelectedCanvas, selectSelectedObject } fro
 import Slider from "rc-slider";
 import Select from "react-select";
 import DropShadowModule from "../../EditToolbarComp/TextModules/DropShadowModule";
+import UploadZoneSideModule from "../../EditToolbarComp/UploadZoneModules/UploadZoneSideModule";
 
 function EditTextTab() {
   // States
@@ -265,6 +266,13 @@ function EditTextTab() {
             : "shadow-module colorize-module vertical-switch-content-exit-done"} >
           <DropShadowModule />
         </div >)}
+
+      {openDrawer === 'UploadZone' && (<div
+        className={openDrawer === 'UploadZone'
+          ? "shadow-module colorize-module vertical-switch-content-enter-done"
+          : "shadow-module colorize-module vertical-switch-content-exit-done"} >
+        <UploadZoneSideModule />
+      </div >)}
     </>
   )
 }

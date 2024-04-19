@@ -481,6 +481,12 @@ function EditToolbar() {
                 <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextDropShadow'))}>Drop Shadow</div>
               </>
             )}
+
+            {(selectedObject && selectedObject.type === 'Shape' && selectedObject.fill instanceof fabric.Pattern) && (
+              <>
+                <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('UploadZone'))}>Upload Zone</div>
+              </>)}
+
             {selectedObject.type === 'Image' && (
               <>
                 {/* <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div> */}
