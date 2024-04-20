@@ -346,12 +346,12 @@ function Canvas(props) {
           const target = event.target
           console.log("Target: ", target)
           if (event.button == 0) { // left click for mouse
-            console.log("left click");
+            // console.log("left click");
           } else if (event.button == 1) { // wheel click for mouse
-            console.log("wheel click");
-            console.log("right click");
+            // console.log("wheel click");
+            // console.log("right click");
             if (target) {
-              canvas.setActiveObject(target)
+              // canvas.setActiveObject(target)
               dispatch(updateSelectedObject(target))
               // setShowContextMenu(true);
             }
