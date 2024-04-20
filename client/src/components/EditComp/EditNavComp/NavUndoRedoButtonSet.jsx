@@ -102,7 +102,7 @@ function NavUndoRedoButtonSet() {
                 if (canvas && event) {
                     // const currentState = canvas.toJSON();
                     const currentState = {
-                        background: canvas.backgroundColor ? canvas.backgroundColor : canvas.backgroundImage,
+                        [canvas.backgroundColor ? 'background' : 'backgroundImage']: canvas.backgroundColor ? canvas.backgroundColor : canvas.backgroundImage,
                         objects: canvas.getObjects().map((obj) => {
                             // Extract all object attributes and include custom attributes
                             const allAttributes = {

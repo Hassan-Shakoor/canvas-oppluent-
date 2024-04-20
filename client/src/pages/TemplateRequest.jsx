@@ -217,7 +217,7 @@ const TemplateRequest = () => {
             let templateId = uuidv4();
 
             const imageUrl = await Promise.all(files.map(async (file, index) => {
-                const isThumbnail = index === 0 ? true : false;
+                const isThumbnail = true;
                 return uploadTemplateImage(file, templateId, index, isThumbnail);
             }));
 

@@ -179,6 +179,30 @@ function Canvas(props) {
             if (object?.path?.length > 0) {
               const path = new fabric.Path(object.path, object);
               canvas.add(path);
+
+              if (object.fill?.type === 'pattern') {
+                fabric.Image.fromURL(object.fill?.imageURL, function (img) {
+
+                  const scaleToFitWidth = object.width / (img.width / 0.5);
+                  const scaleToFitHeight = object.height / (img.height / 0.5);
+                  const scale = Math.max(scaleToFitWidth, scaleToFitHeight);
+                  img.scale(scale)
+
+                  var patternSourceCanvas = new fabric.StaticCanvas();
+                  patternSourceCanvas.add(img);
+                  patternSourceCanvas.setWidth(object.width)
+                  patternSourceCanvas.setHeight(object.height)
+                  patternSourceCanvas.renderAll();
+
+                  // Set the image as a pattern fill for the shape
+                  path.set('fill', new fabric.Pattern({
+                    ...object.fill,
+                    source: patternSourceCanvas.getElement(),
+                  }));
+
+                  canvas.renderAll();
+                }, { crossOrigin: 'Anonymous' });
+              }
             } else if (object?.objects?.length > 0) {
               let svgPaths = [];
               object.objects.forEach(svgObject => {
@@ -195,6 +219,30 @@ function Canvas(props) {
               if (svgPaths.length > 0) {
                 const group = new fabric.Group(svgPaths, { ...object });
                 canvas.add(group);
+                if (object.fill?.type === 'pattern') {
+
+                  fabric.Image.fromURL(object.fill?.imageURL, function (img) {
+
+                    const scaleToFitWidth = object.width / (img.width / 0.5);
+                    const scaleToFitHeight = object.height / (img.height / 0.5);
+                    const scale = Math.max(scaleToFitWidth, scaleToFitHeight);
+                    img.scale(scale)
+
+                    var patternSourceCanvas = new fabric.StaticCanvas();
+                    patternSourceCanvas.add(img);
+                    patternSourceCanvas.setWidth(object.width)
+                    patternSourceCanvas.setHeight(object.height)
+                    patternSourceCanvas.renderAll();
+
+                    // Set the image as a pattern fill for the shape
+                    group.set('fill', new fabric.Pattern({
+                      ...object.fill,
+                      source: patternSourceCanvas.getElement(),
+                    }));
+
+                    canvas.renderAll();
+                  }, { crossOrigin: 'Anonymous' });
+                }
               }
             } else if (object?.svgUrl) {
               const svg = await new Promise((resolve, reject) => {
@@ -205,6 +253,31 @@ function Canvas(props) {
                 });
               });
               canvas.add(svg);
+
+              if (object.fill?.type === 'pattern') {
+
+                fabric.Image.fromURL(object.fill?.imageURL, function (img) {
+
+                  const scaleToFitWidth = object.width / (img.width / 0.5);
+                  const scaleToFitHeight = object.height / (img.height / 0.5);
+                  const scale = Math.max(scaleToFitWidth, scaleToFitHeight);
+                  img.scale(scale)
+
+                  var patternSourceCanvas = new fabric.StaticCanvas();
+                  patternSourceCanvas.add(img);
+                  patternSourceCanvas.setWidth(object.width)
+                  patternSourceCanvas.setHeight(object.height)
+                  patternSourceCanvas.renderAll();
+
+                  // Set the image as a pattern fill for the shape
+                  svg.set('fill', new fabric.Pattern({
+                    ...object.fill,
+                    source: patternSourceCanvas.getElement(),
+                  }));
+
+                  canvas.renderAll();
+                }, { crossOrigin: 'Anonymous' });
+              }
             }
           } else if (object.type === 'Image') {
             const img = await new Promise((resolve, reject) => {

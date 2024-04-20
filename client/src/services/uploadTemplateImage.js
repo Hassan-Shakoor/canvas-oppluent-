@@ -6,7 +6,7 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage
 
 async function uploadTemplateImage(file, templateID, index = 0, isThumbnail = false) {
     try {
-        const storageRef = ref(storage, `template-image-${templateID}-${isThumbnail ? 'thumbnail' : index}.png`);
+        const storageRef = ref(storage, `template-image-${templateID}-${isThumbnail ? 'thumbnail-' : ''}${index}.png`);
 
         // Attempt to get the download URL for the existing file
         let existingFileURL;

@@ -1,3 +1,4 @@
+import { fabric } from 'fabric';
 let _canvases
 
 export const setCanvasRef = (canvas) => {
@@ -36,6 +37,9 @@ export const serializeCanvasContainer = (canvasContainer) => {
 
             if (obj.type === 'Shape') {
                 allAttributes.svgUrl = obj.svgUrl;
+                if (obj.fill instanceof fabric.Pattern) {
+                    allAttributes.fill.imageURL = obj.fill.imageURL;
+                }
             }
 
             return allAttributes;
@@ -75,6 +79,9 @@ export const serializeCanvas = (canvas) => {
 
         if (obj.type === 'Shape') {
             allAttributes.svgUrl = obj.svgUrl;
+            if (obj.fill instanceof fabric.Pattern) {
+                allAttributes.fill.imageURL = obj.fill.imageURL;
+            }
         }
 
         return allAttributes;

@@ -118,7 +118,8 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
             repeat: 'no-repeat',
             crossOrigin: 'anonymous',
             offsetX: 0,
-            offsetY: 0
+            offsetY: 0,
+            imageURL: image
           }));
 
           canvas.renderAll();
