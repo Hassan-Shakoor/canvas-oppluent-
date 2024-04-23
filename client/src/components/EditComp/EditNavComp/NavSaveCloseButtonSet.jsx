@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
+import { fabric } from 'fabric';
 
 // ** Utils
 import { getCanvasRef, serializeCanvasContainer } from "../../../shared/utils/fabric";
@@ -48,6 +49,25 @@ function NavSaveCloseButtonSet() {
     }
   }
 
+  const copyFabricCanvas = async (originalCanvas) => {
+    // Create a new fabric canvas with the same properties as the original
+    const copyCanvas = new fabric.Canvas(null, {
+      width: originalCanvas.width,
+      height: originalCanvas.height,
+      backgroundColor: originalCanvas.backgroundColor,
+      backgroundImage: originalCanvas.backgroundImage ? originalCanvas.backgroundImage : null
+      // Add any other properties you need to copy
+    });
+
+    // Clone objects from the original canvas to the copy canvas
+    await originalCanvas.getObjects().forEach(obj => {
+      const clonedObj = fabric.util.object.clone(obj);
+      copyCanvas.add(clonedObj);
+    });
+
+    return copyCanvas;
+  };
+
   const handleSaveCheck = () => {
     if (isAdmin) {
       if (!templateData.published) {
@@ -70,8 +90,18 @@ function NavSaveCloseButtonSet() {
     for (let i = 0; i < canvasContainer.length; i++) {
       const canvas = canvasContainer[i];
 
+      const copiedCanvas = await copyFabricCanvas(canvas);
+
+      // Reset the dimensions and zoom of the copied canvas
+      const scaleFactor = canvas.getZoom();
+      copiedCanvas.setDimensions({
+        width: canvas.width / scaleFactor,
+        height: canvas.height / scaleFactor
+      });
+      copiedCanvas.setZoom(1);
+
       // Get the data URL of the canvas
-      const dataURL = canvas.toDataURL({
+      const dataURL = copiedCanvas.toDataURL({
         format: "png",
         quality: 1,
       });
@@ -112,8 +142,18 @@ function NavSaveCloseButtonSet() {
     for (let i = 0; i < canvasContainer.length; i++) {
       const canvas = canvasContainer[i];
 
+      const copiedCanvas = await copyFabricCanvas(canvas);
+
+      // Reset the dimensions and zoom of the copied canvas
+      const scaleFactor = canvas.getZoom();
+      copiedCanvas.setDimensions({
+        width: canvas.width / scaleFactor,
+        height: canvas.height / scaleFactor
+      });
+      copiedCanvas.setZoom(1);
+
       // Get the data URL of the canvas
-      const dataURL = canvas.toDataURL({
+      const dataURL = copiedCanvas.toDataURL({
         format: "png",
         quality: 1,
       });

@@ -7,8 +7,8 @@ import { getCanvasRef } from '../../shared/utils/fabric';
 import Slider from 'rc-slider';
 import jsPDF from 'jspdf';
 import JSZip from 'jszip';
-import { selectCanvasContainer, selectSelectedCanvas } from '../../store/app/Edit/Canvas/canvas';
-
+import canvas, { selectCanvasContainer, selectSelectedCanvas } from '../../store/app/Edit/Canvas/canvas';
+import { fabric } from 'fabric';
 import { useTranslation } from 'react-i18next';
 
 
@@ -59,6 +59,26 @@ const EditExportSidebar = () => {
         setCompressFile(!compressFile);
     };
 
+    const copyFabricCanvas = async (originalCanvas) => {
+        // Create a new fabric canvas with the same properties as the original
+        const copyCanvas = new fabric.Canvas(null, {
+            width: originalCanvas.width,
+            height: originalCanvas.height,
+            backgroundColor: originalCanvas.backgroundColor,
+            backgroundImage: originalCanvas.backgroundImage ? originalCanvas.backgroundImage : null
+            // Add any other properties you need to copy
+        });
+
+        // Clone objects from the original canvas to the copy canvas
+        await originalCanvas.getObjects().forEach(obj => {
+            const clonedObj = fabric.util.object.clone(obj);
+            copyCanvas.add(clonedObj);
+        });
+
+        return copyCanvas;
+    };
+
+
     const handleDownload = async () => {
         const canvasContainer = getCanvasRef();
 
@@ -71,16 +91,28 @@ const EditExportSidebar = () => {
 
             if (selectedPageOption === 'all') {
                 const zip = new JSZip();
-                canvasContainer.forEach((canvas, index) => {
+                for (let index = 0; index < canvasContainer.length; index++) {
+                    const canvas = canvasContainer[index];
+
+                    const copiedCanvas = await copyFabricCanvas(canvas);
+
+                    // Reset the dimensions and zoom of the copied canvas
+                    const scaleFactor = canvas.getZoom();
+                    copiedCanvas.setDimensions({
+                        width: canvas.width / scaleFactor,
+                        height: canvas.height / scaleFactor
+                    });
+                    copiedCanvas.setZoom(1);
+
                     // Convert canvas to data URL
-                    const dataURL = canvas.toDataURL(`image/${fileType.value}`);
+                    const dataURL = copiedCanvas.toDataURL(`image/${fileType.value}`);
 
                     // Extract base64 data from data URL
                     const base64Data = dataURL.split(',')[1];
 
                     // Add image to zip file
                     zip.file(`image_${index}.${fileType.value}`, base64Data, { base64: true });
-                });
+                };
 
                 // Generate the zip file asynchronously
                 zip.generateAsync({ type: 'blob' }).then((content) => {
@@ -93,8 +125,21 @@ const EditExportSidebar = () => {
                 return;
             } else if (selectedPageOption === 'current') {
 
+                const canvas = canvasContainer[selectedCanvas];
+
+                const copiedCanvas = await copyFabricCanvas(canvas);
+
+                // Reset the dimensions and zoom of the copied canvas
+                const scaleFactor = canvas.getZoom();
+                copiedCanvas.setDimensions({
+                    width: canvas.width / scaleFactor,
+                    height: canvas.height / scaleFactor
+                });
+                copiedCanvas.setZoom(1);
+
+
                 fileName = `image.${fileType.value}`;
-                dataURL = canvasContainer[0]?.toDataURL({
+                dataURL = copiedCanvas?.toDataURL({
                     format: fileType.value,
                     quality: fileType.value === 'jpg' ? jpgQuality : 1,
                     multiplier: 1, // Set multiplier to maintain original size
@@ -102,10 +147,22 @@ const EditExportSidebar = () => {
                 });
             } else if (selectedPageOption === 'range') {
                 const zip = new JSZip();
-                canvasContainer.forEach((canvas, index) => {
+                for (let index = 0; index < canvasContainer.length; index++) {
                     if (index >= rangeFrom - 1 && index <= rangeTo - 1) {
+
+                        const canvas = canvasContainer[index];
+
+                        const copiedCanvas = await copyFabricCanvas(canvas);
+
+                        // Reset the dimensions and zoom of the copied canvas
+                        const scaleFactor = canvas.getZoom();
+                        copiedCanvas.setDimensions({
+                            width: canvas.width / scaleFactor,
+                            height: canvas.height / scaleFactor
+                        });
+                        copiedCanvas.setZoom(1);
                         // Convert canvas to data URL
-                        const dataURL = canvas.toDataURL(`image/${fileType.value}`);
+                        const dataURL = copiedCanvas.toDataURL(`image/${fileType.value}`);
 
                         // Extract base64 data from data URL
                         const base64Data = dataURL.split(',')[1];
@@ -113,7 +170,7 @@ const EditExportSidebar = () => {
                         // Add image to zip file
                         zip.file(`image_${index}.${fileType.value}`, base64Data, { base64: true });
                     }
-                });
+                };
 
                 // Generate the zip file asynchronously
                 zip.generateAsync({ type: 'blob' }).then((content) => {
@@ -128,24 +185,71 @@ const EditExportSidebar = () => {
 
 
         } else if (fileType.value === 'pdf') {
+
+            const mainCanvas = canvasContainer[0];
+            const zoomInCanvas = mainCanvas.getZoom();
+            const originalWidth = mainCanvas.width / zoomInCanvas;
+            const originalHeight = mainCanvas.height / zoomInCanvas;
             fileName = `document.${fileType.value}`;
             // Convert canvas to PDF
-            const pdf = new jsPDF('l', 'px', [canvasContainer[0].width, canvasContainer[0].height]);
+            const orientation = originalWidth > originalHeight ? 'l' : 'p';
+
+            const pdf = new jsPDF(orientation, 'px', [originalWidth, originalHeight]);
             if (selectedPageOption === 'all') {
                 // Export all pages
                 for (let i = 0; i < canvasContainer.length; i++) {
-                    pdf.addImage(canvasContainer[i].toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, canvasContainer[i].width, canvasContainer[i].height);
+                    const canvas = canvasContainer[i];
+
+                    const copiedCanvas = await copyFabricCanvas(canvas);
+
+                    // Reset the dimensions and zoom of the copied canvas
+                    const scaleFactor = canvas.getZoom();
+                    copiedCanvas.setDimensions({
+                        width: canvas.width / scaleFactor,
+                        height: canvas.height / scaleFactor
+                    });
+
+                    copiedCanvas.setZoom(1);
+
+                    pdf.addImage(copiedCanvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, copiedCanvas.width, copiedCanvas.height);
                     if (i !== canvasContainer.length - 1) {
                         pdf.addPage();
                     }
                 }
             } else if (selectedPageOption === 'current') {
                 // Export current page only
-                pdf.addImage(canvasContainer[selectedCanvas].toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, canvasContainer[selectedCanvas].width, canvasContainer[selectedCanvas].height);
+                const canvas = canvasContainer[selectedCanvas];
+
+                const copiedCanvas = await copyFabricCanvas(canvas);
+
+                // Reset the dimensions and zoom of the copied canvas
+                const scaleFactor = canvas.getZoom();
+                copiedCanvas.setDimensions({
+                    width: canvas.width / scaleFactor,
+                    height: canvas.height / scaleFactor
+                });
+
+                copiedCanvas.setZoom(1);
+
+                pdf.addImage(copiedCanvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, copiedCanvas.width, copiedCanvas.height);
             } else if (selectedPageOption === 'range') {
                 // Export page range
                 for (let i = rangeFrom - 1; i <= rangeTo - 1; i++) {
-                    pdf.addImage(canvasContainer[i].toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, canvasContainer[i].width, canvasContainer[i].height);
+
+                    const canvas = canvasContainer[i];
+
+                    const copiedCanvas = await copyFabricCanvas(canvas);
+
+                    // Reset the dimensions and zoom of the copied canvas
+                    const scaleFactor = canvas.getZoom();
+                    copiedCanvas.setDimensions({
+                        width: canvas.width / scaleFactor,
+                        height: canvas.height / scaleFactor
+                    });
+
+                    copiedCanvas.setZoom(1);
+
+                    pdf.addImage(copiedCanvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, copiedCanvas.width, copiedCanvas.height);
                     if (i !== rangeTo - 1) {
                         pdf.addPage();
                     }
