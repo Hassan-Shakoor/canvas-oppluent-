@@ -90,7 +90,7 @@ function Edit() {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
             dispatch(updateZoom(1));
-            dispatch(updateMlsPropertyInfo({}))
+            // dispatch(updateMlsPropertyInfo({}))
         };
     }, []);
 

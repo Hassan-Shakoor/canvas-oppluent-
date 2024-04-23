@@ -3,6 +3,7 @@ import arrowDownToLine from '../../assets/icons/arrow-down-to-line.png';
 import arrowUpToLine from '../../assets/icons/arrow-up-to-line.png';
 import React, { useEffect } from "react";
 import { fabric } from 'fabric';
+import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from "react-redux";
 import { selectCanvasContainer, selectCopiedObject, selectSelectedCanvas, selectSelectedObject, updateCopiedObject } from "../../store/app/Edit/Canvas/canvas";
 
@@ -82,17 +83,17 @@ const ContextMenu = ({ left, top, showContextMenu, setShowContextMenu }) => {
             let duplicatedObject;
 
             if (selectedObject.type === 'Text') {
-                duplicatedObject = new fabric.Textbox(object.text, object);
+                duplicatedObject = new fabric.Textbox(object.text, { ...object, id: uuidv4() });
             } else if (selectedObject.type === 'Shape') {
                 if (object.path?.length > 0) {
-                    duplicatedObject = new fabric.Path(object.path, object);
+                    duplicatedObject = new fabric.Path(object.path, { ...object, id: uuidv4() });
                 } else if (object.objects?.length > 0) {
                     const svgObjects = object.objects.map(svgObject => {
                         if (svgObject.path) {
                             return new fabric.Path(svgObject.path, { ...svgObject });
                         }
                     }).filter(Boolean);
-                    duplicatedObject = new fabric.Group(svgObjects, object);
+                    duplicatedObject = new fabric.Group(svgObjects, { ...object, id: uuidv4() });
                 } else if (object.svgUrl) {
                     const svg = await new Promise((resolve, reject) => {
                         fabric.loadSVGFromURL(object.svgUrl, function (objects, options) {
@@ -100,12 +101,12 @@ const ContextMenu = ({ left, top, showContextMenu, setShowContextMenu }) => {
                             resolve(group);
                         });
                     });
-                    duplicatedObject = svg.set({ ...object });
+                    duplicatedObject = svg.set({ ...object, id: uuidv4() });
                 }
             } else if (selectedObject.type === 'Image') {
                 const img = await new Promise((resolve, reject) => {
                     fabric.Image.fromURL(object.src, function (img) {
-                        resolve(img.set({ ...object, crossOrigin: 'anonymous' }));
+                        resolve(img.set({ ...object, id: uuidv4(), crossOrigin: 'anonymous' }));
                     }, { crossOrigin: 'anonymous' });
                 });
                 duplicatedObject = img;
@@ -116,8 +117,8 @@ const ContextMenu = ({ left, top, showContextMenu, setShowContextMenu }) => {
 
             if (duplicatedObject) {
                 duplicatedObject.set({
-                    left: object.left + 10, // Adjust position so the duplicate doesn't overlap with the original
-                    top: object.top + 10,
+                    left: object.left + 20, // Adjust position so the duplicate doesn't overlap with the original
+                    top: object.top + 20,
                 });
                 canvas.add(duplicatedObject);
                 canvas.renderAll(); // Ensure canvas is rerendered after adding the duplicated object
@@ -135,17 +136,17 @@ const ContextMenu = ({ left, top, showContextMenu, setShowContextMenu }) => {
             let duplicatedObject;
 
             if (copiedObject.type === 'Text') {
-                duplicatedObject = new fabric.Textbox(object.text, object);
+                duplicatedObject = new fabric.Textbox(object.text, { ...object, id: uuidv4() });
             } else if (copiedObject.type === 'Shape') {
                 if (object.path?.length > 0) {
-                    duplicatedObject = new fabric.Path(object.path, object);
+                    duplicatedObject = new fabric.Path(object.path, { ...object, id: uuidv4() });
                 } else if (object.objects?.length > 0) {
                     const svgObjects = object.objects.map(svgObject => {
                         if (svgObject.path) {
                             return new fabric.Path(svgObject.path, { ...svgObject });
                         }
                     }).filter(Boolean);
-                    duplicatedObject = new fabric.Group(svgObjects, object);
+                    duplicatedObject = new fabric.Group(svgObjects, { ...object, id: uuidv4() });
                 } else if (object.svgUrl) {
                     const svg = await new Promise((resolve, reject) => {
                         fabric.loadSVGFromURL(object.svgUrl, function (objects, options) {
@@ -153,12 +154,12 @@ const ContextMenu = ({ left, top, showContextMenu, setShowContextMenu }) => {
                             resolve(group);
                         });
                     });
-                    duplicatedObject = svg.set({ ...object });
+                    duplicatedObject = svg.set({ ...object, id: uuidv4() });
                 }
             } else if (copiedObject.type === 'Image') {
                 const img = await new Promise((resolve, reject) => {
                     fabric.Image.fromURL(object.src, function (img) {
-                        resolve(img.set({ ...object, crossOrigin: 'anonymous' }));
+                        resolve(img.set({ ...object, id: uuidv4(), crossOrigin: 'anonymous' }));
                     }, { crossOrigin: 'anonymous' });
                 });
                 duplicatedObject = img;
@@ -169,8 +170,8 @@ const ContextMenu = ({ left, top, showContextMenu, setShowContextMenu }) => {
 
             if (duplicatedObject) {
                 duplicatedObject.set({
-                    left: object.left + 10, // Adjust position so the duplicate doesn't overlap with the original
-                    top: object.top + 10,
+                    left: object.left + 20, // Adjust position so the duplicate doesn't overlap with the original
+                    top: object.top + 20,
                 });
                 canvas.add(duplicatedObject);
                 canvas.renderAll(); // Ensure canvas is rerendered after adding the duplicated object

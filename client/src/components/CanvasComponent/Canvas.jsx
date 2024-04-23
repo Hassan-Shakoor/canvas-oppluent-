@@ -56,7 +56,7 @@ function Canvas(props) {
         } else if (object.type === 'Text') {
           if (Object.keys(propertyInfo).includes(object.name)) {
             const newTextValue = propertyInfo[object.name];
-            return { ...object, text: newTextValue }
+            return { ...object, text: newTextValue.toString() }
           }
         } else if (object.type === 'Shape') {
           return { ...object };
