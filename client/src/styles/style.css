@@ -10320,7 +10320,7 @@ table {
   -o-object-fit: contain;
   object-fit: contain;
   max-height: 250px;
-  max-width: 250px;
+  max-width: 200px;
   width: 100%;
 }
 

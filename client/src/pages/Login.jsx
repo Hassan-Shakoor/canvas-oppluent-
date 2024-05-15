@@ -18,6 +18,8 @@ import { auth } from '../configs/firebase';
 import { setLocalStorage } from '../services/localStorage';
 import { useTranslation } from 'react-i18next';
 
+import goldLogo from '../assets/logo/ORI-gold logo.png'
+
 // ** Constant
 import { LOCAL_STORAGE } from '../shared/constant';
 
@@ -90,7 +92,7 @@ function Login() {
           ></div>
           <div className="login-page__content-section login-page__content-section_login-form">
             <div className="login-page__firm-banner">
-              <img src="images/login_logo.png" alt="account logo" className="login-page__account-logo" />
+              <img src={goldLogo} alt="account logo" className="login-page__account-logo" />
             </div>
             <form className="login-page__form" onSubmit={handleLogin} data-custom-attribute={mode === SCREEN_MODES.LOGIN ? SCREEN_MODES.LOGIN : SCREEN_MODES.RESET_PASSWORD}>
               <div className="login-page__form-header">

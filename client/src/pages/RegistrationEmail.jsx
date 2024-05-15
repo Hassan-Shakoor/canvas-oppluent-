@@ -10,6 +10,8 @@ import { LOCAL_STORAGE } from '../shared/constant';
 import { useTranslation } from 'react-i18next';
 import { APIS } from '../shared/routes';
 
+import goldLogo from '../assets/logo/ORI-gold logo.png'
+
 function RegistrationEmail() {
     const { t } = useTranslation()
 
@@ -51,6 +53,9 @@ function RegistrationEmail() {
                     <div className="login-page__content-section login-page__content-section_login-form">
                         <div className="login-page__firm-banner">{/* Your firm banner goes here */}</div>
                         <form className="login-page__form" onSubmit={handleSendRegistrationEmail} data-custom-attribute="addUser">
+                            <div className="login-page__form-header" style={{ textAlign: 'center' }}>
+                                <img src={goldLogo} alt="" />
+                            </div>
                             <div className="login-page__form-header" style={{ textAlign: 'center' }}>
                                 <p className="login-page__title">{t("RegistrationEmail.addNewUser")}</p>
                                 <p className="login-page__description">{t("RegistrationEmail.sendLink")}</p>

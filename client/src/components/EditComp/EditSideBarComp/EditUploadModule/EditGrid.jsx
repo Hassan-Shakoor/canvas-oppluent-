@@ -310,7 +310,7 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
               else if (showPanel === 'Social Media Icons') {
                 handleUploadImage(item.url);
               }
-              else if (showPanel === 'Claircius Logo') {
+              else if (showPanel === 'Opulent Logo') {
                 handleUploadImage(item.url);
               }
               else if (showPanel === 'pixabay') {

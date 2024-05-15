@@ -1,3 +1,9 @@
+
+import blackLogo from '../assets/logo/ORI-black logo.png'
+import whiteLogo from '../assets/logo/ORI-white logo.png'
+import blueLogo from '../assets/logo/ORI-blue logo.png'
+import goldLogo from '../assets/logo/ORI-gold logo.png'
+
 export const DISPLAY_DIRECTION = {
     VERTICAL: 'vertical',
     HORIZONTAL: 'horizontal'
@@ -399,28 +405,20 @@ export const SOCIAL_MEDIA_ICONS = [
 export const CLAIRCIUS_LOGO = [
     {
         title: "Logo_White.png",
-        url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/9396/thumb/Logo_White.png?1660595625"
+        url: whiteLogo
     },
     {
         title: "Logo_Gold.png",
-        url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/9395/thumb/Logo_Gold.png?1660595624"
+        url: goldLogo
     },
     {
         title: "Logo_Black.png",
-        url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/9394/thumb/Logo_Black.png?1660595624"
+        url: blackLogo
     },
     {
-        title: "Icon_White.png",
-        url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/9393/thumb/Icon_White.png?1660595624"
+        title: "Logo_Blue.png",
+        url: blueLogo
     },
-    {
-        title: "Icon_Gold.png",
-        url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/9392/thumb/Icon_Gold.png?1660595624"
-    },
-    {
-        title: "Icon_Black.png",
-        url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/9391/thumb/Icon_Black.png?1660595624"
-    }
 ];
 
 

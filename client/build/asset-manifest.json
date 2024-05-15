@@ -1,21 +1,35 @@
 {
   "files": {
-    "main.css": "/static/css/main.120e607e.css",
-    "main.js": "/static/js/main.bfefc490.js",
+    "main.css": "/static/css/main.e2b42007.css",
+    "main.js": "/static/js/main.e8dc9b65.js",
+    "static/js/498.19933ac1.chunk.js": "/static/js/498.19933ac1.chunk.js",
+    "static/js/703.43b57384.chunk.js": "/static/js/703.43b57384.chunk.js",
+    "static/js/513.13f40780.chunk.js": "/static/js/513.13f40780.chunk.js",
     "static/media/fa-solid-900.ttf": "/static/media/fa-solid-900.4a2cd718d7031b732e76.ttf",
     "static/media/fa-brands-400.ttf": "/static/media/fa-brands-400.150de8eaa454d669c405.ttf",
     "static/media/fa-solid-900.woff2": "/static/media/fa-solid-900.bb975c966c37455a1bc3.woff2",
+    "index.html": "/index.html",
     "static/media/fa-brands-400.woff2": "/static/media/fa-brands-400.e033a13ee751afc1860c.woff2",
+    "static/media/ORI-gold logo.png": "/static/media/ORI-gold logo.b1edd5e9996fc510d38a.png",
+    "static/media/ORI-blue logo.png": "/static/media/ORI-blue logo.733ad5445a58616a68fa.png",
     "static/media/fa-regular-400.ttf": "/static/media/fa-regular-400.d87474231f4192884802.ttf",
+    "static/media/ORI-black logo.png": "/static/media/ORI-black logo.8c73032658f23f8e8fab.png",
+    "static/media/ORI-white logo.png": "/static/media/ORI-white logo.5850940ed297889d0e7c.png",
     "static/media/fa-regular-400.woff2": "/static/media/fa-regular-400.3223dc79c1adee56370b.woff2",
     "static/media/fa-v4compatibility.ttf": "/static/media/fa-v4compatibility.0e3a648be390bd8cb094.ttf",
     "static/media/fa-v4compatibility.woff2": "/static/media/fa-v4compatibility.68577e40f3e70067b5da.woff2",
-    "index.html": "/index.html",
-    "main.120e607e.css.map": "/static/css/main.120e607e.css.map",
-    "main.bfefc490.js.map": "/static/js/main.bfefc490.js.map"
+    "static/media/slick.svg": "/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
+    "main.e2b42007.css.map": "/static/css/main.e2b42007.css.map",
+    "main.e8dc9b65.js.map": "/static/js/main.e8dc9b65.js.map",
+    "498.19933ac1.chunk.js.map": "/static/js/498.19933ac1.chunk.js.map",
+    "703.43b57384.chunk.js.map": "/static/js/703.43b57384.chunk.js.map",
+    "513.13f40780.chunk.js.map": "/static/js/513.13f40780.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.120e607e.css",
-    "static/js/main.bfefc490.js"
+    "static/css/main.e2b42007.css",
+    "static/js/main.e8dc9b65.js"
   ]
 }

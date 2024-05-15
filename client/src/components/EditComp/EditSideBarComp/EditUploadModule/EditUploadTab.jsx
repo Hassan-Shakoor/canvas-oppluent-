@@ -27,7 +27,7 @@ const Modes = {
   MyUploads: 'My Uploads',
   Shapes: 'Shapes',
   Icons: 'Social Media Icons',
-  Logo: "Claircius Logo"
+  Logo: "Opulent Logo"
 }
 
 function EditUploadTab() {
@@ -49,7 +49,7 @@ function EditUploadTab() {
       icon: "fluent-mdl2:shapes",
     },
     {
-      title: "Claircius Logo",
+      title: "Opulent Logo",
       icon: "ph:folder-open",
     },
     {
@@ -75,7 +75,7 @@ function EditUploadTab() {
       data: SHAPES
     },
     [Modes.Logo]: {
-      placeholder: "Search in Claircius Logo",
+      placeholder: "Search in Opulent Logo",
       data: CLAIRCIUS_LOGO,
     },
     [Modes.Icons]: {

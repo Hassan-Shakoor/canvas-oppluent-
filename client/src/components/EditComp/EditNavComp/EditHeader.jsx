@@ -12,6 +12,8 @@ import NavUndoRedoButtonSet from "./NavUndoRedoButtonSet";
 import EditAnnouncement from "./EditAnnouncement";
 import Profile from "../../NavBarComp/Profile";
 
+import whiteLogo from '../../../assets/logo/ORI-white logo.png'
+
 function EditHeader() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isFlag, setIsFlag] = useState('url("https://tcgimarketing.com/images/flags/en.svg")');
@@ -42,7 +44,7 @@ function EditHeader() {
   return (
     <div className="header" style={{ background: 'linear-gradient(90deg, rgb(202, 182, 125), rgb(31, 31, 31))' }}>
       <Link className="header__image-box" to='/categories'>
-        <img className="header__logo" alt="Claircius Group International" src="https://dnhf8bus4lv8r.cloudfront.net/system/tcgimarketing.com/account/platform_logo/original/platform_logo_login_1-1-1.png?1661778656" />
+        <img className="header__logo" alt="Opulent Reality International" src={whiteLogo} />
       </Link>
       <NavSaveCloseButtonSet />
       <RenameEditBar />
