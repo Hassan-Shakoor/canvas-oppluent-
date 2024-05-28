@@ -3,14 +3,15 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAK9qTAirpx9Pi9cSbQ9XKbrWfutoyW7hA",
-  authDomain: "clarious-f4f45.firebaseapp.com",
-  projectId: "clarious-f4f45",
-  storageBucket: "clarious-f4f45.appspot.com",
-  messagingSenderId: "427609388747",
-  appId: "1:427609388747:web:c1de4f8128634a273d4d4e",
-  measurementId: "G-EZV6DTFQPM",
+  apiKey: "AIzaSyA-YniD3GoGtUXkfHBDLygrfuREpvj8b1U",
+  authDomain: "opulent-reality.firebaseapp.com",
+  projectId: "opulent-reality",
+  storageBucket: "opulent-reality.appspot.com",
+  messagingSenderId: "427202311465",
+  appId: "1:427202311465:web:65ba25684ec401cbd5f338",
+  measurementId: "G-VDPSNE92CB"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
