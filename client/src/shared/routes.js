@@ -1,4 +1,5 @@
-const baseUrl = "https://claircius-backend.vercel.app"
+// const baseUrl = "https://claircius-backend.vercel.app"
+const baseUrl = "https://canvas-oppluent-uvcx.vercel.app"
 // const baseUrl = "http://localhost:5000"
 
 export const APIS = {
