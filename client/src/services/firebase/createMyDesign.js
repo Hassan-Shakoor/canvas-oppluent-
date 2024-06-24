@@ -27,7 +27,9 @@ export async function createMyDesign(authId, templateObject, templateId) {
                         visible: true,
                         isMyDesign: true,
                         id: templateId,
-                        modified: formatDate(Date.now())
+                        // modified: formatDate(Date.now())
+                        created: new Date().toLocaleString(),
+                        modified: new Date().toLocaleString()
                     };
 
                     // Push the templateObject to the data.template array
