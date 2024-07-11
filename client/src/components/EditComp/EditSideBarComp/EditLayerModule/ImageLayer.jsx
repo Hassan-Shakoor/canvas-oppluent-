@@ -147,8 +147,8 @@ const ImageLayer = ({ object, updateObjects, index }) => {
                       <Icon
                         icon={
                           layer.isAdminLocked
-                            ? "material-symbols-light:lock-open"
-                            : "material-symbols-light:lock-outline"
+                            ? "material-symbols-light:lock"
+                            : "material-symbols-light:lock-open-outline"
                         }
                         className="icon icon-lock lock lock_user lock_locked cursor-pointer"
                         style={{ margin: "0 5px", fontSize: "medium", color: 'maroon' }}
@@ -158,8 +158,8 @@ const ImageLayer = ({ object, updateObjects, index }) => {
                     <Icon
                       icon={
                         layer.isLocked
-                          ? "material-symbols-light:lock-open"
-                          : "material-symbols-light:lock-outline"
+                          ? "material-symbols-light:lock"
+                          : "material-symbols-light:lock-open-outline"
                       }
                       className="icon icon-lock lock lock_user lock_locked cursor-pointer"
                       style={{ margin: "0 5px", fontSize: "medium" }}
