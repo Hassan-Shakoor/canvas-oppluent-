@@ -81,7 +81,7 @@ function Canvas(props) {
         const canvas = new fabric.Canvas(`canvas-${i + 1}`, {
           width: props.width,
           height: props.height,
-
+          preserveObjectStacking: true,
           backgroundImageStretch: 'uniform'
 
         }, { crossOrigin: 'Anonymous' });

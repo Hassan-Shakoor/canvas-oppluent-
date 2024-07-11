@@ -22,7 +22,7 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
   const openDrawer = useSelector(selectOpenDrawer);
   const selectedObject = useSelector(selectSelectedObject);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleUploadImage = (image) => {
     // const canvasArr = getCanvasRef();
@@ -52,50 +52,86 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
     if (openDrawer === 'Uploads') {
 
       if (selectedObject && selectedObject.type === 'Image') {
-        fabric.Image.fromURL(image, function (img) {
 
-          const scaleToFitWidth = selectedObject.width / (img.width / selectedObject.scaleX);
-          const scaleToFitHeight = selectedObject.height / (img.height / selectedObject.scaleY);
-          const scale = Math.min(scaleToFitWidth, scaleToFitHeight);
-
-
-          const canvasCenter = canvas.getCenter();
-          console.log('first')
-
-          img.set({
-            left: selectedObject.left,
-            top: selectedObject.top,
-            // width: selectedObject.width,
-            // height: selectedObject.height,
-            scaleX: scaleToFitWidth,
-            scaleY: scaleToFitHeight,
-            selectable: true,
-            hasControls: true,
-            name: 'image_' + new Date().getTime(),
-            id: generateRandomId(),
-            type: 'Image'
+        const insertImgFile = (fileStr) => {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              resolve(img);
+            };
+            img.src = fileStr;
           });
+        };
 
-          img.on('dblclick', () => {
-            // selectedImage = img;
-            img.set({ selectable: false });
-            canvas.setActiveObject(img);
-            // img.crop();
+        const replaceImage = async () => {
+          const insertImgFile = (fileStr) => {
+            return new Promise((resolve) => {
+              const img = new Image();
+              img.onload = () => {
+                resolve(img);
+              };
+              img.src = fileStr;
+            });
+          };
+
+          const imgEl = await insertImgFile(image);
+          const originalWidth = selectedObject.get('width');
+          const originalHeight = selectedObject.get('height');
+          const originalScaleX = selectedObject.get('scaleX');
+          const originalScaleY = selectedObject.get('scaleY');
+
+          const previousWidth = originalWidth * originalScaleX;
+          const previousHeight = originalHeight * originalScaleY;
+
+          const originalAspectRatio = previousWidth / previousHeight;
+          const newImageAspectRatio = imgEl.width / imgEl.height;
+
+          let scaleX = 1, scaleY = 1;
+
+          // if (imgEl.width < previousWidth || imgEl.height < previousHeight) {
+          //   scaleX = previousWidth / imgEl.width;
+          //   scaleY = previousHeight / imgEl.height;
+          // }
+
+          let newWidth = previousWidth;
+          let newHeight = previousHeight;
+
+          if (imgEl.width > previousWidth && imgEl.height > previousHeight) {
+            if (imgEl.width < imgEl.height) {
+              scaleX = previousWidth / imgEl.width;
+              scaleY = scaleX
+            } else {
+              scaleY = previousHeight / imgEl.height;
+              scaleX = scaleY
+            }
+            newWidth = previousWidth / scaleX;
+            newHeight = previousHeight / scaleY;
+          }
+
+          let cropRatio = Math.min(newWidth / imgEl.width, newHeight / imgEl.height);
+
+          console.log('cropRatio: ', cropRatio)
+
+          selectedObject.setSrc(imgEl.src, () => {
+            selectedObject.set({
+              cropX: 0,
+              cropY: 0,
+              width: newWidth,
+              height: newHeight,
+              scaleX,
+              scaleY,
+            });
             canvas.renderAll();
-          });
+          }, { crossOrigin: 'anonymous' });
+        };
 
-          img.scale(scale);
-          canvas.remove(selectedObject)
-          canvas.add(img);
-          canvas.setActiveObject(img);
-          canvas.renderAll();
-          updateCanvasRef(canvasArr, selectedCanvas, canvas);
-          dispatch(updateSelectedObject(null));
-          dispatch(updateOpenDrawer(null));
-          // dispatch(updateText(''));
-        }, { crossOrigin: 'Anonymous' });
+
+        replaceImage();
+
+
         return;
       }
+
 
       if (selectedObject && selectedObject.type === 'Shape') {
         fabric.Image.fromURL(image, function (img) {
