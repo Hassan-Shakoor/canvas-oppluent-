@@ -19,7 +19,7 @@ import { selectProfile } from "../../../../store/app/AccountInformation/profile"
 import { toast } from "react-toastify";
 
 const ImageLayer = ({ object, updateObjects, index }) => {
-  const [layer, setLayer] = useState({ title: "", isLocked: false, isAdminLocked: false });
+  const [layer, setLayer] = useState({ title: "", isLocked: false, isAdminLocked: false, isHardLocked: false });
 
   // ** Var
   const dispatch = useDispatch()
@@ -56,6 +56,27 @@ const ImageLayer = ({ object, updateObjects, index }) => {
       isAdminLocked: false
     }));
     canvas.renderAll();
+  };
+
+  const lockHardObject = () => {
+    object.set({
+      selectable: !layer.isAdminLocked ? false : true,
+      hasControls: !layer.isAdminLocked ? false : true,
+      lockMovementX: !layer.isAdminLocked ? true : false,
+      lockMovementY: !layer.isAdminLocked ? true : false,
+      isLocked: !layer.isAdminLocked,
+      isAdminLocked: !layer.isAdminLocked,
+      isHardLocked: !layer.isHardLocked
+    });
+
+    setLayer(prevState => ({
+      ...prevState,
+      isLocked: !prevState.isAdminLocked,
+      isHardLocked: !prevState.isHardLocked,
+      isAdminLocked: !prevState.isAdminLocked
+    }));
+
+    canvas?.renderAll();
   };
 
   const lockAdminObject = () => {
@@ -109,10 +130,17 @@ const ImageLayer = ({ object, updateObjects, index }) => {
       })
     }
 
+    if (object?.isHardLocked) {
+      object?.set({
+        isHardLocked: true
+      })
+    }
+
     setLayer({
       title: object?.name ? object?.name : object?.text,
       isLocked: object?.isLocked,
-      isAdminLocked: object?.isAdminLocked
+      isAdminLocked: object?.isAdminLocked,
+      isHardLocked: object?.isHardLocked
     });
   }, [object, canvasContainer]);
 
@@ -120,7 +148,7 @@ const ImageLayer = ({ object, updateObjects, index }) => {
     <div
       className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''}
        ${layer.isLocked && "layers__item_user-lock"}`}
-      style={{ background: layer.isAdminLocked && '#ffdcdc' }}
+      style={{ background: layer.isHardLocked && '#d6c0ff' || layer.isAdminLocked && '#ffdcdc' }}
       onMouseDown={event => activateObject(event)}
     >
       <Draggable key={index.toString()} id={index.toString()} data={object}>
@@ -144,16 +172,28 @@ const ImageLayer = ({ object, updateObjects, index }) => {
                 <div className="layers__options">
                   <div className="d-flex flex-nowrap">
                     {userProfile?.isAdmin && (
-                      <Icon
-                        icon={
-                          layer.isAdminLocked
-                            ? "material-symbols-light:lock"
-                            : "material-symbols-light:lock-open-outline"
-                        }
-                        className="icon icon-lock lock lock_user lock_locked cursor-pointer"
-                        style={{ margin: "0 5px", fontSize: "medium", color: 'maroon' }}
-                        onMouseDown={lockAdminObject}
-                      />
+                      <>
+                        <Icon
+                          icon={
+                            layer.isHardLocked
+                              ? "material-symbols-light:lock"
+                              : "material-symbols-light:lock-open-outline"
+                          }
+                          className="icon icon-lock lock lock_user lock_locked cursor-pointer"
+                          style={{ margin: "0 5px", fontSize: "medium", color: 'purple' }}
+                          onMouseDown={lockHardObject}
+                        />
+                        <Icon
+                          icon={
+                            layer.isAdminLocked
+                              ? "material-symbols-light:lock"
+                              : "material-symbols-light:lock-open-outline"
+                          }
+                          className="icon icon-lock lock lock_user lock_locked cursor-pointer"
+                          style={{ margin: "0 5px", fontSize: "medium", color: 'maroon' }}
+                          onMouseDown={lockAdminObject}
+                        />
+                      </>
                     )}
                     <Icon
                       icon={
