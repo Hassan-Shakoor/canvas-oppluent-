@@ -1,12 +1,15 @@
 // ** Firebase
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { v4 as uuidv4 } from 'uuid';
 
 // ** Config
 import { storage } from '../configs/firebase'
 
 async function uploadImageinUploadsAndGetUrl(authID, file) {
   // Get a reference to the Firebase Storage bucket where you want to store the file
-  const storageRef = ref(storage, `${authID}/uploads/${file.name}`);
+  const uniqueFileName = `${uuidv4()}_${file.name}`;
+
+  const storageRef = ref(storage, `${authID}/uploads/${uniqueFileName}`);
 
   try {
     // Upload the file to Firebase Storage
