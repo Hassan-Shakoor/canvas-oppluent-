@@ -83,6 +83,10 @@ const SendBackFrontObject = () => {
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
             const activeObject = canvas?.getActiveObject();
+            if (activeObject.isAdminLocked) {
+                toast.info(`Can't Delete Object. Locked by Admin.`)
+                return;
+            }
             canvas.remove(activeObject);
             dispatch(updateSelectedObject(null));
             canvas.requestRenderAll();
@@ -119,21 +123,25 @@ const SendBackFrontObject = () => {
 
     return (
         <>
-            <div className="toolbar__button-set">
-                <div className="tool-button" data-tooltip="Bring Forward" onClick={bringForward}>
-                    <FontAwesomeIcon icon="fa-solid fa-arrow-up-long" />
-                </div>
-                <div className="tool-button" data-tooltip="Send Backward" onClick={sendBackward}>
-                    <FontAwesomeIcon icon="fa-solid fa-arrow-down-long" />
-                </div>
-                <div className="tool-button" data-tooltip='Bring to Front' onClick={bringToFront}>
-                    <img src={arrowDownToLine} alt="Bring To Front" style={{ width: '20px', opacity: 0.72, transform: 'rotate(180deg)', filter: darkMode ? 'invert(1)' : '' }} />
-                </div>
-                <div className="tool-button" data-tooltip='Send to Back' onClick={sendToBack}>
-                    <img src={arrowDownToLine} alt="Send to Back" style={{ width: '20px', opacity: 0.72, filter: darkMode ? 'invert(1)' : '' }} />
-                </div>
-            </div>
-            <div className="toolbar__divider" />
+            {!selectedObject.isAdminLocked && (
+                <>
+                    <div className="toolbar__button-set">
+                        <div className="tool-button" data-tooltip="Bring Forward" onClick={bringForward}>
+                            <FontAwesomeIcon icon="fa-solid fa-arrow-up-long" />
+                        </div>
+                        <div className="tool-button" data-tooltip="Send Backward" onClick={sendBackward}>
+                            <FontAwesomeIcon icon="fa-solid fa-arrow-down-long" />
+                        </div>
+                        <div className="tool-button" data-tooltip='Bring to Front' onClick={bringToFront}>
+                            <img src={arrowDownToLine} alt="Bring To Front" style={{ width: '20px', opacity: 0.72, transform: 'rotate(180deg)', filter: darkMode ? 'invert(1)' : '' }} />
+                        </div>
+                        <div className="tool-button" data-tooltip='Send to Back' onClick={sendToBack}>
+                            <img src={arrowDownToLine} alt="Send to Back" style={{ width: '20px', opacity: 0.72, filter: darkMode ? 'invert(1)' : '' }} />
+                        </div>
+                    </div>
+                    <div className="toolbar__divider" />
+                </>
+            )}
 
             {isLocked ?
                 <div data-tooltip='Lock'

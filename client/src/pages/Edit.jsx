@@ -109,7 +109,7 @@ function Edit() {
             <ToastContainer pauseOnHover={false} position="top-right" autoClose={5000} closeOnClick theme={darkMode ? 'dark' : 'light'} />
             {canvasContainer && canvasContainer?.length > 0 && (<EditHeader />)}
             {/* <button onClick={() => console.log("Edit --- selectedObject --->> ", selectedObject)} style={{ zIndex: 2000, position: 'fixed' }}>Selected Object</button> */}
-            {selectedObject && (<EditToolbar />)}
+            {selectedObject && !selectedObject?.isHardLocked && (<EditToolbar />)}
             <EditSidebar />
             <EditExportSidebar />
             {width && height && canvasContainer?.length > 0 && (<EditZoom width={width} height={height} zoom={zoom} updateZoomResolution={updateZoomResolution} isCanvasLoaded={isCanvasLoaded} />)}
