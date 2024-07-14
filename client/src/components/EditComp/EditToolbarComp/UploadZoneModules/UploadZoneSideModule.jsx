@@ -59,12 +59,13 @@ const UploadZoneSideModule = () => {
 
     const handleHorizontalPosition = (value) => {
         setHorizontalPosition(value);
+        const intValue = parseInt(value, 10)
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
             const selectedObject = canvas?.getActiveObject();
             if (selectedObject?.type === 'Shape' && selectedObject.fill instanceof fabric.Pattern) {
                 selectedObject.dirty = true;
-                const offsetX = value;
+                const offsetX = intValue;
                 selectedObject.fill.offsetX = offsetX;
                 canvas.renderAll();
                 canvas.requestRenderAll();
@@ -74,12 +75,13 @@ const UploadZoneSideModule = () => {
 
     const handleVerticalPosition = (value) => {
         setVerticalPosition(value);
+        const intValue = parseInt(value, 10)
         const canvas = canvasContainer[selectedCanvas];
         if (canvas?.getActiveObject()) {
             const selectedObject = canvas?.getActiveObject();
             if (selectedObject?.type === 'Shape' && selectedObject.fill instanceof fabric.Pattern) {
                 selectedObject.dirty = true;
-                const offsetY = value;
+                const offsetY = intValue;
                 selectedObject.fill.offsetY = offsetY;
                 canvas.renderAll();
                 canvas.requestRenderAll();
@@ -126,7 +128,7 @@ const UploadZoneSideModule = () => {
                                     value={horizontalPosition}
                                     onChange={(value) => handleHorizontalPosition(value)}
                                 />
-                                <input inputMode="numeric" className="simple-input slider-box__input" type="text" value={horizontalPosition} />
+                                <input inputMode="numeric" className="simple-input slider-box__input" type="text" onChange={(e) => handleHorizontalPosition(e.target.value)} value={horizontalPosition} />
                             </div>
                         </div>
 
@@ -140,7 +142,7 @@ const UploadZoneSideModule = () => {
                                     value={verticalPosition}
                                     onChange={(value) => handleVerticalPosition(value)}
                                 />
-                                <input inputMode="numeric" className="simple-input slider-box__input" type="text" value={verticalPosition} />
+                                <input inputMode="numeric" className="simple-input slider-box__input" type="text" onChange={(e) => handleVerticalPosition(e.target.value)} value={verticalPosition} />
                             </div>
                         </div>
 

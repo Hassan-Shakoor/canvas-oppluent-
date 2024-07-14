@@ -184,6 +184,15 @@ const TransformModule = () => {
 
     if (canvas?.getActiveObject()) {
       const activeObject = canvas?.getActiveObject();
+
+      if (activeObject?.lineHeight) {
+        setLineSpacing(activeObject?.lineHeight)
+      }
+
+      if (activeObject?.charSpacing) {
+        setLetterSpacing(activeObject?.charSpacing)
+      }
+
       if (activeObject?.scaleX) {
         setHorizontalScale(activeObject?.scaleX * 10)
       }

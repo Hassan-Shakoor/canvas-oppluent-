@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 
 
 const TextLayer = ({ object, updateObjects, index }) => {
-  const [layer, setLayer] = useState({ title: "", isLocked: false, isAdminLocked: false });
+  const [layer, setLayer] = useState({ title: "", isLocked: false, isAdminLocked: false, isHardLocked: false });
 
   // ** Var
   const dispatch = useDispatch()
@@ -79,6 +79,27 @@ const TextLayer = ({ object, updateObjects, index }) => {
     canvas?.renderAll();
   };
 
+  const lockHardObject = () => {
+    object.set({
+      selectable: !layer.isAdminLocked ? false : true,
+      hasControls: !layer.isAdminLocked ? false : true,
+      lockMovementX: !layer.isAdminLocked ? true : false,
+      lockMovementY: !layer.isAdminLocked ? true : false,
+      isLocked: !layer.isAdminLocked,
+      isAdminLocked: !layer.isAdminLocked,
+      isHardLocked: !layer.isHardLocked
+    });
+
+    setLayer(prevState => ({
+      ...prevState,
+      isLocked: !prevState.isAdminLocked,
+      isHardLocked: !prevState.isHardLocked,
+      isAdminLocked: !prevState.isAdminLocked
+    }));
+
+    canvas?.renderAll();
+  };
+
   const activateObject = (event) => {
     // We check if 'icon' isn't in the class name to prevent this function from triggering and causing an error when deleting the object.
     // console.log(event.target.classList)
@@ -108,6 +129,13 @@ const TextLayer = ({ object, updateObjects, index }) => {
         lockMovementY: true,
         isLocked: true,
         isAdminLocked: true
+      })
+    }
+
+    if (object?.isAdminLocked) {
+
+      object?.set({
+        isHardLocked: true
       })
     }
 
@@ -153,23 +181,34 @@ const TextLayer = ({ object, updateObjects, index }) => {
                 <div className="layers__options">
                   <div className="d-flex flex-nowrap">
                     {userProfile?.isAdmin && (
-                      <Icon
+                      <> <Icon
                         icon={
-                          layer.isAdminLocked
-                            ? "material-symbols-light:lock-open"
-                            : "material-symbols-light:lock-outline"
+                          layer.isHardLocked
+                            ? "material-symbols-light:lock"
+                            : "material-symbols-light:lock-open-outline"
                         }
                         className="icon icon-lock lock lock_user lock_locked cursor-pointer"
-                        style={{ margin: "0 5px", fontSize: "medium", color: 'maroon' }}
-                        onMouseDown={lockAdminObject}
+                        style={{ margin: "0 5px", fontSize: "medium", color: 'purple' }}
+                        onMouseDown={lockHardObject}
                       />
+                        <Icon
+                          icon={
+                            layer.isAdminLocked
+                              ? "material-symbols-light:lock"
+                              : "material-symbols-light:lock-open-outline"
+                          }
+                          className="icon icon-lock lock lock_user lock_locked cursor-pointer"
+                          style={{ margin: "0 5px", fontSize: "medium", color: 'maroon' }}
+                          onMouseDown={lockAdminObject}
+                        />
+                      </>
                     )}
 
                     <Icon
                       icon={
                         layer.isLocked
-                          ? "material-symbols-light:lock-open"
-                          : "material-symbols-light:lock-outline"
+                          ? "material-symbols-light:lock"
+                          : "material-symbols-light:lock-open-outline"
                       }
                       className="icon icon-lock lock lock_user lock_locked cursor-pointer"
                       style={{ margin: "0 5px", fontSize: "medium" }}

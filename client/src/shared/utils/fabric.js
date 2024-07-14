@@ -28,6 +28,7 @@ export const serializeCanvasContainer = (canvasContainer) => {
                 name: obj.name,
                 id: obj.id,
                 isAdminLocked: obj.isAdminLocked ? obj.isAdminLocked : false,
+                isHardLocked: obj.isHardLocked ? obj.isHardLocked : false,
                 selectable: obj.isAdminLocked ? false : true,
                 hasControls: obj.isAdminLocked ? false : true,
                 lockMovementX: obj.isAdminLocked ? true : false,
@@ -35,8 +36,28 @@ export const serializeCanvasContainer = (canvasContainer) => {
                 // Add any other custom attributes you want to retain
             };
 
+            if (obj.perPixelTargetFind) {
+                allAttributes.perPixelTargetFind = obj.perPixelTargetFind
+            }
+
+            if (obj.type === 'Image') {
+
+                if (obj?.filters?.length > 0) {
+                    allAttributes.filters = [...obj.filters];
+                }
+
+                if (obj?.styles) {
+                    allAttributes.styles = obj.styles;
+                }
+            }
+
             if (obj.type === 'Shape') {
                 allAttributes.svgUrl = obj.svgUrl;
+
+                if (obj?.styles) {
+                    allAttributes.styles = obj.styles;
+                }
+
                 if (obj.fill instanceof fabric.Pattern) {
                     allAttributes.fill.imageURL = obj.fill.imageURL;
                 }
@@ -70,6 +91,7 @@ export const serializeCanvas = (canvas) => {
             name: obj.name,
             id: obj.id,
             isAdminLocked: obj.isAdminLocked ? obj.isAdminLocked : false,
+            isHardLocked: obj.isHardLocked ? obj.isHardLocked : false,
             selectable: obj.isAdminLocked ? false : true,
             hasControls: obj.isAdminLocked ? false : true,
             lockMovementX: obj.isAdminLocked ? true : false,
@@ -77,8 +99,28 @@ export const serializeCanvas = (canvas) => {
             // Add any other custom attributes you want to retain
         };
 
+        if (obj.perPixelTargetFind) {
+            allAttributes.perPixelTargetFind = obj.perPixelTargetFind
+        }
+
+        if (obj.type === 'Image') {
+
+            if (obj?.filters?.length > 0) {
+                allAttributes.filters = [...obj.filters];
+            }
+
+            if (obj?.styles) {
+                allAttributes.styles = obj.styles;
+            }
+        }
+
         if (obj.type === 'Shape') {
             allAttributes.svgUrl = obj.svgUrl;
+
+            if (obj?.styles) {
+                allAttributes.styles = obj.styles;
+            }
+
             if (obj.fill instanceof fabric.Pattern) {
                 allAttributes.fill.imageURL = obj.fill.imageURL;
             }

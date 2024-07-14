@@ -29,9 +29,11 @@ function EditToolbar() {
   const [activeStrikethrought, setActiveStikethrought] = useState(false)
   const [activeUpperCase, setActiveUpperCase] = useState(false)
   const [openTextAlignDropdown, setOpenTextAlignDropdown] = useState(false)
-  const [cropRect, setCropRect] = useState(null);
+  const [currentCropRect, setCurrentCropRect] = useState(null);
 
   const [imageObjectForCrop, setImageObjectForCrop] = useState(null);
+  const [isAdjustImage, setIsAdjustImage] = useState(false);
+  const [initialObjectLayerIndex, setInitialObjectLayerIndex] = useState(false);
   // ** Vars
   const canvasContainer = getCanvasRef() || [];
   const selectedCanvas = useSelector(selectSelectedCanvas);
@@ -190,250 +192,417 @@ function EditToolbar() {
   };
 
   // const handleCropImage = () => {
+
+  //   // Create a rectangle for cropping
   //   const canvas = canvasContainer[selectedCanvas];
+
   //   if (selectedObject && selectedObject.type === 'Image') {
-  //     selectedObject.set({ selectable: true });
-  //     canvas?.setActiveObject(selectedObject);
-  //     selectedObject.crop();
-  //     canvas?.renderAll();
+  //     setImageObjectForCrop(selectedObject);
   //   }
-  // }
 
-  // const handleCropImage = () => {
-  //   const canvas = canvasContainer[selectedCanvas];
-  //   const activeObject = canvas?.getActiveObject();
+  //   const rect = new fabric.Rect({
+  //     id: generateRandomId(),
+  //     left: selectedObject?.left ? selectedObject.left : 50,
+  //     top: selectedObject?.top ? selectedObject.top : 50,
+  //     width: selectedObject?.width ? selectedObject.width : 200,
+  //     height: selectedObject?.height ? selectedObject.height : 150,
+  //     scaleX: selectedObject?.scaleX ? selectedObject.scaleX : 1,
+  //     scaleY: selectedObject?.scaleY ? selectedObject.scaleY : 1,
+  //     // fill: 'transparent',
+  //     fill: 'rgba(255, 255, 255, 0.5)',
+  //     stroke: 'red',
+  //     strokeWidth: 2 / selectedObject?.scaleX,
+  //     resizable: true,
+  //     selectable: true,
+  //     type: 'crop',
+  //     perPixelBoundary: true, // Ensure rectangle stays within pixel boundaries
+  //     cornerStyle: 'transparent',
+  //     originX: 'left',
+  //     originY: 'top',
+  //   });
 
-  //   if (activeObject && activeObject.type === 'Image') {
-  //     const { left, top, width, height } = activeObject;
+  //   rect.setControlsVisibility({
+  //     mt: true,
+  //     mb: true,
+  //     ml: true,
+  //     mr: true,
+  //     tl: true,
+  //     tr: true,
+  //     bl: true,
+  //     br: true,
+  //     mtr: false,
+  //   });
 
-  //     // Create a clipping rectangle to simulate cropping
-  //     const clipRect = new fabric.Rect({
-  //       left,
-  //       top,
-  //       width,
-  //       height,
-  //       fill: 'white', // You can set the color to match your canvas background
-  //     });
+  //   // rect.set({
+  //   //   lockScalingY: image.height / rect.height,
+  //   //   maxScaleLimit: image.height / rect.height,
+  //   // });
 
-  //     // Apply the clipPath to the image
-  //     activeObject.set({
-  //       clipPath: clipRect,
-  //       scaleX: 1,
-  //       scaleY: 1,
-  //       width,
-  //       height,
-  //     });
-
-  //     canvas.renderAll();
-  //   }
+  //   // Add the rectangle to the canvas
+  //   canvas.add(rect);
+  //   canvas.setActiveObject(rect);
+  //   setCropRect(rect);
+  //   canvas?.setActiveObject(rect);
+  //   dispatch(updateSelectedObject(rect))
   // };
 
   const handleCropImage = () => {
 
-    // Create a rectangle for cropping
     const canvas = canvasContainer[selectedCanvas];
+
+    const e = canvas.getActiveObject();
+
+    if (e && e.type === 'Image') {
+      setImageObjectForCrop(selectedObject);
+    }
+
+    const cropRect = new fabric.Rect({
+      id: "crop-rect",
+      top: e.top,
+      left: e.left,
+      angle: e.angle,
+      width: e.getScaledWidth(),
+      height: e.getScaledHeight(),
+      stroke: "rgb(42, 67, 101)",
+      strokeWidth: 2,
+      strokeDashArray: [5, 5],
+      fill: "rgba(255, 255, 255, 1)",
+      globalCompositeOperation: "overlay",
+      lockRotation: true,
+    });
+
+    const overlayRect = new fabric.Rect({
+      id: "overlay-rect",
+      top: e.top,
+      left: e.left,
+      angle: e.angle,
+      width: e.getScaledWidth(),
+      height: e.getScaledHeight(),
+      selectable: false,
+      selection: false,
+      fill: "rgba(0, 0, 0, 0.5)",
+      lockRotation: true,
+    });
+
+    const s = e.cropX,
+      o = e.cropY,
+      c = e.width,
+      l = e.height;
+
+    e.set({
+      cropX: null,
+      cropY: null,
+      left: e.left - s * e.scaleX,
+      top: e.top - o * e.scaleY,
+      width: e._originalElement.naturalWidth,
+      height: e._originalElement.naturalHeight,
+      dirty: false
+    });
+
+    cropRect.set({
+      left: e.left + s * e.scaleX,
+      top: e.top + o * e.scaleY,
+      width: c * e.scaleX,
+      height: l * e.scaleY,
+      dirty: false
+    });
+
+
+    overlayRect.set({
+      left: e.left,
+      top: e.top,
+      width: e.width * e.scaleX,
+      height: e.height * e.scaleY,
+      dirty: false
+    });
+
+    cropRect.oldScaleX = cropRect.scaleX;
+    cropRect.oldScaleY = cropRect.scaleY;
+
+    canvas.add(overlayRect);
+    canvas.add(cropRect);
+    canvas.discardActiveObject();
+    canvas.setActiveObject(cropRect);
+    setCurrentCropRect(cropRect);
+    canvas.renderAll();
+
+    cropRect.on("moving", function () {
+      if (cropRect.top < e.top || cropRect.left < e.left) {
+        cropRect.left = cropRect.left < e.left ? e.left : cropRect.left;
+        cropRect.top = cropRect.top < e.top ? e.top : cropRect.top;
+      }
+      if (cropRect.top + cropRect.getScaledHeight() > e.top + e.getScaledHeight() ||
+        cropRect.left + cropRect.getScaledWidth() > e.left + e.getScaledWidth()) {
+        cropRect.top = cropRect.top + cropRect.getScaledHeight() > e.top + e.getScaledHeight()
+          ? e.top + e.getScaledHeight() - cropRect.getScaledHeight()
+          : cropRect.top;
+        cropRect.left = cropRect.left + cropRect.getScaledWidth() > e.left + e.getScaledWidth()
+          ? e.left + e.getScaledWidth() - cropRect.getScaledWidth()
+          : cropRect.left;
+      }
+    });
+
+    cropRect.on("scaling", function () {
+      // Add scaling logic if needed
+    });
+
+    cropRect.on("deselected", function () {
+      handleDoneCrop(cropRect, e);
+      setTimeout(() => {
+        canvas.remove(overlayRect);
+      }, 400);
+      setCurrentCropRect(null);
+    });
+  };
+
+  const handleAdjustImage = () => {
+    setIsAdjustImage(true);
+    const canvas = canvasContainer[selectedCanvas];
+
+    const selectedObject = canvas.getActiveObject();
 
     if (selectedObject && selectedObject.type === 'Image') {
       setImageObjectForCrop(selectedObject);
     }
 
-    const rect = new fabric.Rect({
-      id: generateRandomId(),
-      left: selectedObject?.left ? selectedObject.left : 50,
-      top: selectedObject?.top ? selectedObject.top : 50,
-      width: selectedObject?.width ? selectedObject.width : 200,
-      height: selectedObject?.height ? selectedObject.height : 150,
-      scaleX: selectedObject?.scaleX ? selectedObject.scaleX : 1,
-      scaleY: selectedObject?.scaleY ? selectedObject.scaleY : 1,
-      // fill: 'transparent',
-      fill: 'rgba(255, 255, 255, 0.5)',
-      stroke: 'red',
-      strokeWidth: 2 / selectedObject?.scaleX,
-      resizable: true,
-      selectable: true,
-      type: 'crop',
-      perPixelBoundary: true, // Ensure rectangle stays within pixel boundaries
-      cornerStyle: 'transparent',
-      originX: 'left',
-      originY: 'top',
-    });
+    const initialLayerIndex = canvas.getObjects().indexOf(selectedObject);
 
-    rect.setControlsVisibility({
-      mt: true,
-      mb: true,
-      ml: true,
-      mr: true,
-      tl: true,
-      tr: true,
-      bl: true,
-      br: true,
-      mtr: false,
-    });
+    setInitialObjectLayerIndex(initialLayerIndex);
 
-    // rect.set({
-    //   lockScalingY: image.height / rect.height,
-    //   maxScaleLimit: image.height / rect.height,
-    // });
+    if (selectedObject) {
+      const s = selectedObject.cropX * selectedObject.scaleX;
+      const o = selectedObject.cropY * selectedObject.scaleY;
+      const p = selectedObject.getScaledWidth();
+      const q = selectedObject.getScaledHeight();
 
-    // Add the rectangle to the canvas
-    canvas.add(rect);
-    canvas.setActiveObject(rect);
-    setCropRect(rect);
-    canvas?.setActiveObject(rect);
-    dispatch(updateSelectedObject(rect))
-  };
-
-  const handleDoneCrop = () => {
-    const canvas = canvasContainer[selectedCanvas];
-
-    if (cropRect && imageObjectForCrop) {
-
-      const image = canvas.getActiveObject();
-      const scaleX = image.width / image.getScaledWidth();
-      const scaleY = image.height / image.getScaledHeight();
-      const cropLeft = cropRect.left - image.left;
-      const cropTop = cropRect.top - image.top;
-      const cropWidth = cropRect.width * scaleX;
-      const cropHeight = cropRect.height * scaleY;
-      // Convert cropRect coordinates to be relative to the image
-      // const scaleX = imageObjectForCrop.scaleX;
-      // const scaleY = imageObjectForCrop.scaleY;
-
-      // const relativeLeft = (cropRect.left - imageObjectForCrop.left) / scaleX;
-      // const relativeTop = (cropRect.top - imageObjectForCrop.top) / scaleY;
-      // const relativeWidth = cropRect.width / scaleX;
-      // const relativeHeight = cropRect.height / scaleY;
-
-      // Create a clipping rectangle
-      const clipRect = new fabric.Rect({
-        left: cropLeft,
-        top: cropTop,
-        width: cropWidth,
-        height: cropHeight,
-        fill: 'white',
-        type: 'crop', // Adjust the color to match your canvas background
-      });
-      // Apply the clipPath to the image
-      imageObjectForCrop.set({
-        clipPath: clipRect,
+      selectedObject.set({
+        clipPath: null,
+        cropX: null,
+        cropY: null,
+        left: selectedObject.left - s,
+        top: selectedObject.top - o,
+        width: selectedObject._originalElement.naturalWidth,
+        height: selectedObject._originalElement.naturalHeight,
+        dirty: false,
+        opacity: 0.5,
+        lockRotation: true,
+        selectable: true,
+        lockMovementX: false,
+        lockMovementY: false,
+        hasControls: true
       });
 
-      // Remove the crop rectangle from the canvas
-      canvas.remove(cropRect);
+      const i = new fabric.Rect({
+        id: 'crop-rect',
+        left: selectedObject.left + s,
+        top: selectedObject.top + o,
+        angle: selectedObject.angle,
+        width: p,
+        height: q,
+        stroke: 'rgb(42, 67, 101)',
+        strokeWidth: 1,
+        strokeDashArray: [5, 5],
+        fill: 'rgba(255, 255, 255, 1)',
+        lockRotation: true,
+        selectable: false,
+      });
 
-      // Render the canvas
+      canvas.add(i);
+      canvas.bringToFront(selectedObject);
       canvas.renderAll();
 
-      // Reset the cropRect state
-      setCropRect(null);
+      selectedObject.on('moving', function () {
+        if (selectedObject.left > i.left) {
+          selectedObject.left = i.left;
+        }
+        if (selectedObject.top > i.top) {
+          selectedObject.top = i.top;
+        }
+        if (selectedObject.left + selectedObject.getScaledWidth() < i.left + i.getScaledWidth()) {
+          selectedObject.left = i.left - (selectedObject.getScaledWidth() - i.getScaledWidth());
+        }
+        if (selectedObject.top + selectedObject.getScaledHeight() < i.top + i.getScaledHeight()) {
+          selectedObject.top = i.top - (selectedObject.getScaledHeight() - i.getScaledHeight());
+        }
+        setCurrentCropRect(i);
+      });
 
-      // Set the image as the active object
-      canvas.setActiveObject(imageObjectForCrop);
-      dispatch(updateSelectedObject(imageObjectForCrop));
+      selectedObject.on('scaling', function () {
+        // Improve scaling logic as needed
+        setCurrentCropRect(i);
+      });
+
+      selectedObject.on('deselected', function () {
+        handleDoneAdjust(i, selectedObject, initialLayerIndex);
+      });
+
     }
   };
 
+  const handleDoneAdjust = (cropArea, oImg, initialLayerIndex) => {
+
+    const canvas = canvasContainer[selectedCanvas];
+    //
+    var cropX = (cropArea.left - oImg.left) / oImg.scaleX,
+      cropY = (cropArea.top - oImg.top) / oImg.scaleY,
+      width = (cropArea.width * cropArea.scaleX) / oImg.scaleX,
+      height = (cropArea.height * cropArea.scaleY) / oImg.scaleY;
+
+    // console.log('FINISH CROP', cropX, oImg.scaleX, cropY, oImg.scaleY);
+
+    // crop
+    oImg.set({
+      cropX: cropX,
+      cropY: cropY,
+      width: width,
+      height: height,
+      top: cropArea.top,
+      left: cropArea.left,
+      selectable: true,
+      lockRotation: false,
+      cropped: 1,
+      opacity: 1,
+    });
+
+    // remove events
+    oImg.off('scaling');
+    oImg.off('deselected');
+    oImg.off('moving');
+
+    // remove crop area
+    canvas.remove(cropArea);
+
+    setImageObjectForCrop(null);
+    canvas.remove(selectedObject);
+    canvas.insertAt(selectedObject, initialLayerIndex);
+
+    if (selectedObject.isAdminLocked) {
+      selectedObject.set({
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false
+      })
+    }
+
+    setIsAdjustImage(false);
+    setInitialObjectLayerIndex(null);
+    setCurrentCropRect(null);
+    canvas.renderAll();
+
+  }
+
+
+
+  const handleDoneCrop = (cropRect, image) => {
+    const canvas = canvasContainer[selectedCanvas];
+
+    cropRect.off('scaling');
+    cropRect.off('deselected');
+    cropRect.off('moving');
+
+    const s = (cropRect.left - image.left) / image.scaleX,
+      o = (cropRect.top - image.top) / image.scaleY,
+      c = (cropRect.width * cropRect.scaleX) / image.scaleX,
+      l = (cropRect.height * cropRect.scaleY) / image.scaleY;
+
+    canvas.remove(cropRect);
+
+    image.set({
+      cropX: s,
+      cropY: o,
+      width: c,
+      height: l,
+      top: image.top + o * image.scaleY,
+      left: image.left + s * image.scaleX,
+      selectable: true,
+      cropped: 1
+    });
+
+    setCurrentCropRect(null);
+    setImageObjectForCrop(null);
+
+    canvas.renderAll();
+  };
+
+  // const handleResetCrop = () => {
+  //   const canvas = canvasContainer[selectedCanvas];
+  //   if (cropRect) {
+  //     // Remove the crop rectangle from the canvas
+  //     imageObjectForCrop.set({ clipPath: null })
+  //     canvas?.remove(cropRect);
+  //     setCropRect(null);
+  //     canvas?.setActiveObject(imageObjectForCrop);
+  //     dispatch(updateSelectedObject(imageObjectForCrop))
+  //   }
+  // };
 
   const handleResetCrop = () => {
     const canvas = canvasContainer[selectedCanvas];
-    if (cropRect) {
-      // Remove the crop rectangle from the canvas
-      imageObjectForCrop.set({ clipPath: null })
-      canvas?.remove(cropRect);
-      setCropRect(null);
-      canvas?.setActiveObject(imageObjectForCrop);
-      dispatch(updateSelectedObject(imageObjectForCrop))
+
+    if (imageObjectForCrop) {
+      imageObjectForCrop.set({
+        cropX: 0,
+        cropY: 0,
+        width: imageObjectForCrop._originalElement.naturalWidth,
+        height: imageObjectForCrop._originalElement.naturalHeight,
+        top: (imageObjectForCrop.height / 2) - imageObjectForCrop.getScaledHeight() / 2,
+        left: (imageObjectForCrop.width / 2) - imageObjectForCrop.getScaledWidth() / 2,
+        selectable: true,
+        cropped: 0
+      });
+      canvas.renderAll();
     }
   };
 
+  // const handleCancelCrop = () => {
+
+
+  //   const canvas = canvasContainer[selectedCanvas];
+
+  //   // canvas.remove(selectedObject);
+  //   // Reset the cropRect state without applying changes
+  //   setCurrentCropRect(null);
+  //   canvas?.setActiveObject(imageObjectForCrop);
+  //   dispatch(updateSelectedObject(imageObjectForCrop))
+  //   setImageObjectForCrop(null);
+  //   setInitialObjectLayerIndex(null);
+  // };
+
   const handleCancelCrop = () => {
-
-
     const canvas = canvasContainer[selectedCanvas];
+    const selectedObject = canvas.getActiveObject();
 
-    canvas.remove(selectedObject);
-    // Reset the cropRect state without applying changes
-    setCropRect(null);
-    canvas?.setActiveObject(imageObjectForCrop);
-    dispatch(updateSelectedObject(imageObjectForCrop))
+    if (selectedObject && selectedObject.type === 'Image') {
+      // Remove any temporary cropping elements (like crop rectangle)
+
+      // Restore the image to its original state
+      selectedObject.set({
+        clipPath: null,
+        cropX: 0,
+        cropY: 0,
+        opacity: 1,
+        selectable: true,
+      });
+
+      // Reposition the image to its original layer index if needed
+      if (initialObjectLayerIndex !== null) {
+        canvas.remove(selectedObject);
+        canvas.insertAt(selectedObject, initialObjectLayerIndex);
+      }
+
+      // Reset the cropRect state and other related state variables
+      setCurrentCropRect(null);
+      setImageObjectForCrop(null);
+      setInitialObjectLayerIndex(null);
+
+      // Update the active object in the canvas and dispatch the new selected object
+      canvas.setActiveObject(selectedObject);
+      dispatch(updateSelectedObject(selectedObject));
+
+      // Re-render the canvas
+      canvas.renderAll();
+    }
   };
-
-  // const handleMouseDown = (event) => {
-  //   const canvas = canvasContainer[selectedCanvas]
-  //   if (!event.target || event.target.type !== 'image') {
-  //     return;
-  //   }
-
-  //   const image = event.target;
-  //   const pointer = cropRect.getPointer(event.e);
-
-  //   // Create a new crop rectangle
-  //   cropRect = new fabric.Rect({
-  //     left: pointer.x,
-  //     top: pointer.y,
-  //     width: 1,
-  //     height: 1,
-  //     fill: 'rgba(255, 255, 255, 0.5)',
-  //     stroke: 'red',
-  //     strokeWidth: 2,
-  //     selectable: false,
-  //     hasControls: false,
-  //     originX: 'left',
-  //     originY: 'top',
-  //   });
-
-  //   canvas.add(cropRect);
-  //   canvas.renderAll();
-
-  //   // Event listener for mouse move to resize the crop rectangle
-  //   canvas.on('mouse:move', handleMouseMove);
-
-  //   // Event listener for mouse up to finish cropping
-  //   canvas.on('mouse:up', handleMouseUp);
-  // };
-
-  // const handleMouseMove = (event) => {
-  //   const canvas = canvasContainer[selectedCanvas]
-  //   if (!cropRect) {
-  //     return;
-  //   }
-
-  //   const pointer = canvas.getPointer(event.e);
-  //   const { left, top } = cropRect;
-
-  //   cropRect.set({
-  //     width: pointer.x - left,
-  //     height: pointer.y - top,
-  //   });
-
-  //   canvas.renderAll();
-  // };
-
-  // const handleMouseUp = () => {
-  //   const canvas = canvasContainer[selectedCanvas]
-  //   canvas.off('mouse:move', handleMouseMove);
-  //   canvas.off('mouse:up', handleMouseUp);
-
-  //   if (cropRect) {
-  //     // Perform cropping logic here
-  //     const croppedImage = handleDoneCrop(cropRect);
-  //     console.log('Cropped Image:', croppedImage);
-
-  //     // Remove the crop rectangle
-  //     canvas.remove(cropRect);
-  //     cropRect = null;
-  //   }
-  // };
-
-  // const bulletText = createBulletText();
-  // canvas.add(bulletText);
-  // canvas.renderAll();
-
-  // // Example: Toggle bullet points
-  // document.getElementById('toggleBullets').addEventListener('click', function () {
-  //   bulletText.bulletsEnabled = !bulletText.bulletsEnabled;
-  // });
-
 
 
   return (
@@ -444,7 +613,7 @@ function EditToolbar() {
       }
       aria-label="clickOutsideIgnore"
     >
-      {selectedObject.type !== 'crop' ? (
+      {!imageObjectForCrop ? (
         <>
           <div className="toolbar__container-tools">
             <div className="toolbar__color-picker__button" onClick={() => {
@@ -491,6 +660,7 @@ function EditToolbar() {
               <>
                 {/* <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextGradient'))}>Gradient</div> */}
                 <div className="toolbar__text-button" onClick={handleCropImage}>Crop Image</div>
+                <div className="toolbar__text-button" onClick={handleAdjustImage}>Adjust Image</div>
               </>
             )}
           </div>
@@ -579,7 +749,7 @@ function EditToolbar() {
                     </svg>
                     <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
                   </div>
-                  {openTextAlignDropdown && <TextAlignDropdown />}
+                  {openTextAlignDropdown && <TextAlignDropdown openTextAlignDropdown={openTextAlignDropdown} setOpenTextAlignDropdown={setOpenTextAlignDropdown} />}
                   <div className="tool-button" onClick={convertToBulletPoint}>
                     <FontAwesomeIcon icon="fa-solid fa-list-ul" />
                     {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
@@ -609,12 +779,19 @@ function EditToolbar() {
         <>
 
           <>
-            <div className="toolbar__text-button" onClick={handleDoneCrop}>
+            <div className="toolbar__text-button" onClick={() => {
+              if (isAdjustImage) {
+                handleDoneAdjust(currentCropRect, imageObjectForCrop, initialObjectLayerIndex)
+              }
+              else {
+                handleDoneCrop(currentCropRect, imageObjectForCrop)
+              }
+            }}>
               <FontAwesomeIcon icon="fa-solid fa-check" style={{ marginRight: 5 }} /> Done
             </div>
-            <div className="toolbar__text-button" onClick={handleResetCrop}>
+            {/* <div className="toolbar__text-button" onClick={handleResetCrop}>
               <FontAwesomeIcon icon="fa-solid fa-rotate-left" style={{ marginRight: 5 }} /> Reset
-            </div>
+            </div> */}
             <div className="toolbar__text-button" onClick={handleCancelCrop}>
               <FontAwesomeIcon icon="fa-solid fa-xmark" style={{ marginRight: 5 }} /> Cancel
             </div>

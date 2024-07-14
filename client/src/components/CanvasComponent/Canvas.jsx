@@ -16,6 +16,8 @@ import { updateOpenDrawer } from "../../store/app/Edit/EditDrawer";
 import SpinnerOverlay from "../Loader/SpinnerOverlay";
 import { selectMlsPropertyInfo } from "../../store/app/PropertySearch/property";
 import ContextMenu from "./ContextMenu";
+import { initAligningGuidelines } from "../../services/canvas/aligningGuidelines";
+import { initCenteringGuidelines } from "../../services/canvas/centerAlignGuidelines";
 
 function Canvas(props) {
 
@@ -40,6 +42,14 @@ function Canvas(props) {
   useEffect(() => {
 
     // if (document.getElementById('canvas-1')) {
+    fabric.Object.prototype.borderColor = 'dodgerblue';
+    fabric.Object.prototype.transparentCorners = false;
+    fabric.Object.prototype.cornerColor = 'white';
+    fabric.Object.prototype.cornerStrokeColor = 'dodgerblue';
+    fabric.Object.prototype.cornerSize = 7;
+    fabric.Object.prototype.cornerStyle = 'circle';
+
+
     const newCanvases = [];
     for (let i = 0; i < fabricData.length; i++) {
       const canvasData = JSON.parse(fabricData[i])
@@ -90,6 +100,43 @@ function Canvas(props) {
         canvas?.loadFromJSON(canvasDataWithoutObjects, function () {
 
         })
+
+        // hover border on objects code start
+
+        canvas.on('mouse:over', (event) => {
+          const { target } = event;
+          if (canvas.getActiveObjects().length) {
+            // skip group hover
+            return;
+          }
+
+          // skip group hover
+          if (target instanceof fabric.Object && !(target instanceof Array)) {
+            const bound = target.getBoundingRect();
+            const ctx = canvas.getContext();
+            ctx.strokeStyle = 'dodgerblue';
+            ctx.strokeRect(
+              bound.left,
+              bound.top,
+              bound.width,
+              bound.height
+            );
+          }
+        });
+
+        canvas.on('mouse:out', (event) => {
+          const { target } = event;
+          if (canvas.getActiveObjects().length) {
+            return;
+          }
+
+          // skipp group hover
+          if (target instanceof fabric.Object && !(target instanceof Array)) {
+            canvas.renderAll(); // render all, will clear bounds box drawed by mouse:over
+          }
+        });
+
+        // hover border on objects code end --
 
         let fabricObjects = [];
 
@@ -281,8 +328,23 @@ function Canvas(props) {
             }
           } else if (object.type === 'Image') {
             const img = await new Promise((resolve, reject) => {
+              
+              
               fabric.Image.fromURL(object.src, function (img) {
                 img.set({ ...object, crossOrigin: 'anonymous' });
+
+                // For Color Filter on image
+
+                if(object.filters?.length > 0) {
+                  let colorFilter = new fabric.Image.filters.BlendColor({
+                    color: object.filters[0]?.color,
+                    mode: 'tint',
+                    alpha: object.filters[0]?.alpha
+                  });
+                  img.filters = [colorFilter];
+                  img.applyFilters();
+                }
+                  
                 resolve(img);
               }, { crossOrigin: 'anonymous' });
             });
@@ -358,6 +420,14 @@ function Canvas(props) {
           } else if (event.button == 2) {
           }
         })
+
+
+        // guidelines start
+
+        initAligningGuidelines(canvas);
+        // initCenteringGuidelines(canvas);
+
+        // guidelines end
 
         document.addEventListener("mousedown", event => {
           if (event.button == 0) { // left click for mouse
