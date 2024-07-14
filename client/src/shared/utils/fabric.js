@@ -36,8 +36,28 @@ export const serializeCanvasContainer = (canvasContainer) => {
                 // Add any other custom attributes you want to retain
             };
 
+            if (obj.perPixelTargetFind) {
+                allAttributes.perPixelTargetFind = obj.perPixelTargetFind
+            }
+
+            if (obj.type === 'Image') {
+
+                if (obj?.filters?.length > 0) {
+                    allAttributes.filters = [...obj.filters];
+                }
+
+                if (obj?.styles) {
+                    allAttributes.styles = obj.styles;
+                }
+            }
+
             if (obj.type === 'Shape') {
                 allAttributes.svgUrl = obj.svgUrl;
+
+                if (obj?.styles) {
+                    allAttributes.styles = obj.styles;
+                }
+
                 if (obj.fill instanceof fabric.Pattern) {
                     allAttributes.fill.imageURL = obj.fill.imageURL;
                 }
@@ -79,8 +99,28 @@ export const serializeCanvas = (canvas) => {
             // Add any other custom attributes you want to retain
         };
 
+        if (obj.perPixelTargetFind) {
+            allAttributes.perPixelTargetFind = obj.perPixelTargetFind
+        }
+
+        if (obj.type === 'Image') {
+
+            if (obj?.filters?.length > 0) {
+                allAttributes.filters = [...obj.filters];
+            }
+
+            if (obj?.styles) {
+                allAttributes.styles = obj.styles;
+            }
+        }
+
         if (obj.type === 'Shape') {
             allAttributes.svgUrl = obj.svgUrl;
+
+            if (obj?.styles) {
+                allAttributes.styles = obj.styles;
+            }
+
             if (obj.fill instanceof fabric.Pattern) {
                 allAttributes.fill.imageURL = obj.fill.imageURL;
             }
