@@ -14,6 +14,7 @@ import horizontalLeftIcon from '../../../../assets/icons/horizontal-left.png'
 import horizontalRightIcon from '../../../../assets/icons/horizontal-right.png'
 import verticalCenterIcon from '../../../../assets/icons/vertical-center.png'
 import verticalDownIcon from '../../../../assets/icons/vertical-down.png'
+import { toast } from 'react-toastify';
 
 const TransformModule = () => {
 
@@ -52,21 +53,31 @@ const TransformModule = () => {
   }
 
   const handleRotate = (rotate) => {
-    setRotate(rotate);
     const canvas = canvasContainer[selectedCanvas];
     if (canvas?.getActiveObject()) {
       // console.log(rotate)
       const textObject = canvas?.getActiveObject();
+
+      if (textObject.isAdminLocked) {
+        toast.info('Locked by Admin.');
+        return;
+      }
+
+      setRotate(rotate);
       textObject.set({ angle: rotate });
       canvas.requestRenderAll();
     }
   }
 
   const handleHorizontalScale = (value) => {
-    setHorizontalScale(value);
     const canvas = canvasContainer[selectedCanvas];
     if (canvas?.getActiveObject()) {
       const textObject = canvas?.getActiveObject();
+      if (textObject.isAdminLocked) {
+        toast.info('Locked by Admin.');
+        return;
+      }
+      setHorizontalScale(value);
       textObject.set({ scaleX: value / 10 });
       if (isLockScaling) {
         textObject.set({ scaleY: value / 10 })
@@ -77,10 +88,16 @@ const TransformModule = () => {
   }
 
   const handleVerticalScale = (value) => {
-    setVerticalScale(value);
     const canvas = canvasContainer[selectedCanvas];
     if (canvas?.getActiveObject()) {
       const textObject = canvas?.getActiveObject();
+
+      if (textObject.isAdminLocked) {
+        toast.info('Locked by Admin.');
+        return;
+      }
+
+      setVerticalScale(value);
       textObject.set({ scaleY: value / 10 });
       if (isLockScaling) {
         textObject.set({ scaleX: value / 10 })
@@ -254,7 +271,13 @@ const TransformModule = () => {
                   value={rotate}
                   onChange={(value) => handleRotate(value)}
                 />
-                <input inputMode="numeric" className="simple-input slider-box__input" type="text" value={`${rotate}°`} />
+                <input
+                  inputMode="numeric"
+                  className="simple-input slider-box__input"
+                  type="text"
+                  onChange={(e) => handleRotate(e.target.value)}
+                  value={rotate}
+                />
               </div>
             </div>
           </> :
@@ -278,7 +301,12 @@ const TransformModule = () => {
                   value={horizontalScale}
                   onChange={(value) => handleHorizontalScale(value)}
                 />
-                <input inputMode="numeric" className="simple-input slider-box__input" type="text" value={horizontalScale} />
+                <input
+                  inputMode="numeric"
+                  className="simple-input slider-box__input"
+                  type="text"
+                  onChange={(e) => handleHorizontalScale(e.target.value)}
+                  value={horizontalScale} />
               </div>
             </div>
 
@@ -292,7 +320,12 @@ const TransformModule = () => {
                   value={verticalScale}
                   onChange={(value) => handleVerticalScale(value)}
                 />
-                <input inputMode="numeric" className="simple-input slider-box__input" type="text" value={verticalScale} />
+                <input
+                  inputMode="numeric"
+                  className="simple-input slider-box__input"
+                  type="text"
+                  onChange={(e) => handleVerticalScale(e.target.value)}
+                  value={verticalScale} />
               </div>
             </div>
 
@@ -306,7 +339,12 @@ const TransformModule = () => {
                   value={rotate}
                   onChange={(value) => handleRotate(value)}
                 />
-                <input inputMode="numeric" className="simple-input slider-box__input" type="text" value={`${rotate}°`} />
+                <input
+                  inputMode="numeric"
+                  className="simple-input slider-box__input"
+                  type="text"
+                  onChange={(e) => handleRotate(e.target.value)}
+                  value={rotate} />
               </div>
             </div>
           </>

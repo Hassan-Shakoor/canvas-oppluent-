@@ -28,7 +28,7 @@ const TextAlignDropdown = ({ openTextAlignDropdown, setOpenTextAlignDropdown }) 
     }, [textAlign])
 
     return (
-        <div className="rc-dropdown rc-dropdown-placement-bottomLeft" style={{ '--arrow-x': '15px', '--arrow-y': '-2px', inset: '40px auto auto 881.63px', boxSizing: 'border-box', zIndex: 200, position: 'absolute', minWidth: '30px' }}>
+        <div className="rc-dropdown rc-dropdown-placement-bottomLeft" style={{ boxSizing: 'border-box', zIndex: 200, position: 'absolute', minWidth: '30px', top: '24px', left: '-4px' }}>
             <div className="toolbar__tool-dropdown">
                 <div className={`tool-button ${textAlign === 'left' ? 'tool-button_active' : ''}`} onClick={() => {
                     setTextAlign('left');
