@@ -224,7 +224,8 @@ function BackgroundColorPicker({ title, activeColorIndex, onColorChange }) {
 
       let colorFilter = new fabric.Image.filters.BlendColor({
         color: getRgbaCSS(color),
-        mode: 'tint'
+        mode: 'tint',
+        alpha: color.a
       });
       console.log('first')
 
