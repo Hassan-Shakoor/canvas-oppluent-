@@ -141,7 +141,7 @@ export const SHAPES = [{
 },
 {
     title: "Gradient",
-    url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/6566/thumb/color_gradient.png?1620774550"
+    url: "https://firebasestorage.googleapis.com/v0/b/opulent-reality.appspot.com/o/SK8euwF7Z2PaKM2FfLUwnEYzbEG3%2Fuploads%2FLovepik_com-380148632-black-transparent-vertical-linear-gradient-gradient-element-transparency-black-color-gradient.png?alt=media&token=1caadc37-34c0-4136-ada9-52f15b6f5743"
 },
 {
     title: "line-01.svg",
@@ -217,7 +217,7 @@ export const SHAPES = [{
 },
 {
     title: "hexagon.svg",
-    url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/6298/original/hexagon.svg?1614980854"
+    url: "https://firebasestorage.googleapis.com/v0/b/opulent-reality.appspot.com/o/SK8euwF7Z2PaKM2FfLUwnEYzbEG3%2Fuploads%2Fhexagon-svgrepo-com.svg?alt=media&token=2ba7ce21-6f3c-4eb2-997a-f207bd8988c0"
 },
 {
     title: "hexagon_outline.svg",
