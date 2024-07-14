@@ -21,7 +21,7 @@ import { selectProfile } from "../../../../store/app/AccountInformation/profile"
 import { toast } from "react-toastify";
 
 const GroupLayer = ({ object, updateObjects, index }) => {
-    const [layer, setLayer] = useState({ title: "", isLocked: false, isAdminLocked: false });
+    const [layer, setLayer] = useState({ title: "", isLocked: false, isAdminLocked: false, isHardLocked: false });
     const [isExpanded, setIsExpanded] = useState(false);
 
     // ** Var
@@ -80,6 +80,27 @@ const GroupLayer = ({ object, updateObjects, index }) => {
         canvas?.renderAll();
     };
 
+    const lockHardObject = () => {
+        object.set({
+            selectable: !layer.isAdminLocked ? false : true,
+            hasControls: !layer.isAdminLocked ? false : true,
+            lockMovementX: !layer.isAdminLocked ? true : false,
+            lockMovementY: !layer.isAdminLocked ? true : false,
+            isLocked: !layer.isAdminLocked,
+            isAdminLocked: !layer.isAdminLocked,
+            isHardLocked: !layer.isHardLocked
+        });
+
+        setLayer(prevState => ({
+            ...prevState,
+            isLocked: !prevState.isAdminLocked,
+            isHardLocked: !prevState.isHardLocked,
+            isAdminLocked: !prevState.isAdminLocked
+        }));
+
+        canvas?.renderAll();
+    };
+
     const activateObject = (event) => {
         // We check if 'icon' isn't in the class name to prevent this function from triggering and causing an error when deleting the object.
         // console.log(event.target.classList)
@@ -115,17 +136,24 @@ const GroupLayer = ({ object, updateObjects, index }) => {
             })
         }
 
+        if (object?.isHardLocked) {
+            object?.set({
+                isHardLocked: true
+            })
+        }
+
         setLayer({
             title: object?.name ? object?.name : object?.text,
             isLocked: object?.isLocked,
             isAdminLocked: object?.isAdminLocked,
+            isHardLocked: object?.isHardLocked
         });
     }, [object]);
 
     return (
         <div className={`tree__item ${object?.id === selectedObject?.id ? "tree__item_selected" : ''} 
         ${layer.isLocked ? "layers__item_user-lock" : ''} ${isExpanded ? 'tree__item_expanded' : ''}`}
-            style={{ background: layer.isAdminLocked && '#ffdcdc' }}>
+            style={{ background: layer.isHardLocked && '#d6c0ff' || layer.isAdminLocked && '#ffdcdc' }}>
 
             <Draggable key={index.toString()} id={index.toString()} data={object}>
                 <div className="tree__root-box" draggable="true" onMouseDown={event => activateObject(event)}>
@@ -153,16 +181,28 @@ const GroupLayer = ({ object, updateObjects, index }) => {
                                 <div className="layers__options">
                                     <div className="d-flex flex-nowrap">
                                         {userProfile?.isAdmin && (
-                                            <Icon
-                                                icon={
-                                                    layer.isAdminLocked
-                                                        ? "material-symbols-light:lock-open"
-                                                        : "material-symbols-light:lock-outline"
-                                                }
-                                                className="icon icon-lock lock lock_user lock_locked cursor-pointer"
-                                                style={{ margin: "0 5px", fontSize: "medium", color: 'maroon' }}
-                                                onMouseDown={lockAdminObject}
-                                            />
+                                            <>
+                                                <Icon
+                                                    icon={
+                                                        layer.isHardLocked
+                                                            ? "material-symbols-light:lock"
+                                                            : "material-symbols-light:lock-open-outline"
+                                                    }
+                                                    className="icon icon-lock lock lock_user lock_locked cursor-pointer"
+                                                    style={{ margin: "0 5px", fontSize: "medium", color: 'purple' }}
+                                                    onMouseDown={lockHardObject}
+                                                />
+                                                <Icon
+                                                    icon={
+                                                        layer.isAdminLocked
+                                                            ? "material-symbols-light:lock-open"
+                                                            : "material-symbols-light:lock-outline"
+                                                    }
+                                                    className="icon icon-lock lock lock_user lock_locked cursor-pointer"
+                                                    style={{ margin: "0 5px", fontSize: "medium", color: 'maroon' }}
+                                                    onMouseDown={lockAdminObject}
+                                                />
+                                            </>
                                         )}
 
                                         <Icon

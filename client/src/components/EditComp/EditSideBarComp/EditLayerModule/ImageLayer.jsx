@@ -66,14 +66,15 @@ const ImageLayer = ({ object, updateObjects, index }) => {
       lockMovementY: !layer.isAdminLocked ? true : false,
       isLocked: !layer.isAdminLocked,
       isAdminLocked: !layer.isAdminLocked,
-      isHardLocked: !layer.isHardLocked
+      isHardLocked: !layer.isHardLocked,
+      perPixelTargetFind: !layer.isAdminLocked ? true : false
     });
 
     setLayer(prevState => ({
       ...prevState,
       isLocked: !prevState.isAdminLocked,
       isHardLocked: !prevState.isHardLocked,
-      isAdminLocked: !prevState.isAdminLocked
+      isAdminLocked: !prevState.isAdminLocked,
     }));
 
     canvas?.renderAll();
@@ -126,7 +127,7 @@ const ImageLayer = ({ object, updateObjects, index }) => {
         lockMovementX: true,
         lockMovementY: true,
         isLocked: true,
-        isAdminLocked: true
+        isAdminLocked: true,
       })
     }
 
