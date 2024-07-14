@@ -640,9 +640,11 @@ function EditToolbar() {
 
             <div className="toolbar__divider" />
 
-            <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextTransform'))}>
-              {selectedObject.type === 'Text' ? 'Format' : 'Transform'}
-            </div>
+            {!selectedObject.isAdminLocked && (
+              <div className="toolbar__text-button" onClick={() => dispatch(updateOpenDrawer('TextTransform'))}>
+                {selectedObject.type === 'Text' ? 'Format' : 'Transform'}
+              </div>
+            )}
 
             {(selectedObject.type === 'Text' || selectedObject.type === 'Shape') && (
               <>
@@ -738,9 +740,7 @@ function EditToolbar() {
                       </svg>
                     </div>
                   </div>
-                  <div className="tool-button" onClick={() => setOpenTextAlignDropdown(!openTextAlignDropdown)}>
-
-
+                  <div className="tool-button" style={{ position: 'relative' }} onClick={() => setOpenTextAlignDropdown(!openTextAlignDropdown)}>
                     <svg className={`icon v2-icon v2-icon-text-align-${selectedObject.textAlign} tool-button__icon`}>
                       <use
                         href={`#v2-icon-text-align-${selectedObject.textAlign}`}
@@ -748,8 +748,8 @@ function EditToolbar() {
                       />
                     </svg>
                     <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
+                    {openTextAlignDropdown && <TextAlignDropdown openTextAlignDropdown={openTextAlignDropdown} setOpenTextAlignDropdown={setOpenTextAlignDropdown} />}
                   </div>
-                  {openTextAlignDropdown && <TextAlignDropdown openTextAlignDropdown={openTextAlignDropdown} setOpenTextAlignDropdown={setOpenTextAlignDropdown} />}
                   <div className="tool-button" onClick={convertToBulletPoint}>
                     <FontAwesomeIcon icon="fa-solid fa-list-ul" />
                     {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
