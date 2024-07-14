@@ -14,6 +14,9 @@ import { selectSelectedCanvas, selectSelectedObject, updateSelectedObject } from
 import { selectOpenDrawer, updateOpenDrawer } from "../../../../store/app/Edit/EditDrawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SpinnerContainer from "../../../Loader/SpinnerContainer";
+import ConfirmationModal from "../../../Modal/ConfirmationModal";
+import SpinnerOverlay from "../../../Loader/SpinnerOverlay";
+import { toast } from "react-toastify";
 
 function EditGrid({ searchMap, showPanel, setShowPanel }) {
 
@@ -23,6 +26,10 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
   const selectedObject = useSelector(selectSelectedObject);
 
   const [loading, setLoading] = useState(true);
+  const [isOverlayLoading, setIsOverlayLoading] = useState(false);
+
+  const [isReplaceImageConfirmationModal, setIsReplaceImageConfirmationModal] = useState(false);
+  const [imageToReplace, setImageToReplace] = useState(null);
 
   const handleUploadImage = (image) => {
     // const canvasArr = getCanvasRef();
@@ -41,6 +48,8 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
 
     // console.log(searchMap);
 
+    setIsOverlayLoading(true);
+
     const canvasArr = getCanvasRef();
     const canvas = canvasArr[selectedCanvas];
 
@@ -52,16 +61,6 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
     if (openDrawer === 'Uploads') {
 
       if (selectedObject && selectedObject.type === 'Image') {
-
-        const insertImgFile = (fileStr) => {
-          return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-              resolve(img);
-            };
-            img.src = fileStr;
-          });
-        };
 
         const replaceImage = async () => {
           const insertImgFile = (fileStr) => {
@@ -125,15 +124,19 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
           }, { crossOrigin: 'anonymous' });
         };
 
-
         replaceImage();
-
 
         return;
       }
 
 
       if (selectedObject && selectedObject.type === 'Shape') {
+
+        if (selectedObject.isHardLocked) {
+          toast.info("Unable to Replace. Locked by Admin.")
+          return;
+        }
+
         fabric.Image.fromURL(image, function (img) {
 
           const scaleToFitWidth = selectedObject.width / (img.width / 0.5);
@@ -250,6 +253,8 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
       }, { crossOrigin: 'Anonymous' });
 
     }
+
+    setIsOverlayLoading(false);
   }
 
   const handleAddShape = (shape) => {
@@ -295,72 +300,133 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
     });
   }
 
+  const checkReplaceModal = (image) => {
+    if (openDrawer === 'Uploads') {
+      if (selectedObject && selectedObject.type === 'Image') {
+        if (selectedObject.isHardLocked) {
+          toast.info("Unable to Replace. Locked by Admin.")
+          return true;
+        }
 
-  return searchMap[showPanel]?.data?.map((item, index) => {
-    return showPanel === "default" ? (
-      <div
-        key={index}
-        className="media-library__item-container"
-        onClick={() => setShowPanel(item.title)}
-      >
-        <div className="media-library__folder">
-          <div className="media-library__folder-preview" title={item.title}>
-            <div className="media-library__folder-icon">
-              <Icon icon={item.icon} width="1.0rem" height="1.0rem" />
-            </div>
-            <div className="media-library__folder-title">{item.title}</div>
-          </div>
-        </div>
-      </div>
-    ) : (
-      <div className="media-library__item-container" key={index}>
-        <div className="media-library__image">
-          {showPanel !== 'pixabay' && <label className="checkbox media-library__image-select">
-            <input className="checkbox__input" type="checkbox" />
-            <div className="checkbox__box">
-              <div className="checkbox__tick">
-                {/* <i className="icon icon-checkbox-regular" /> */}
-                <FontAwesomeIcon icon="fa-solid fa-check" style={{ color: 'white', fontSize: '12px' }} />
+        setIsReplaceImageConfirmationModal(true);
+        setImageToReplace(image)
+        return true;
+      }
+    }
+  }
+
+
+  return (
+    <>{
+      searchMap[showPanel]?.data?.map((item, index) => {
+        return showPanel === "default" ? (
+          <div
+            key={index}
+            className="media-library__item-container"
+            onClick={() => setShowPanel(item.title)}
+          >
+            <div className="media-library__folder">
+              <div className="media-library__folder-preview" title={item.title}>
+                <div className="media-library__folder-icon">
+                  <Icon icon={item.icon} width="1.0rem" height="1.0rem" />
+                </div>
+                <div className="media-library__folder-title">{item.title}</div>
               </div>
             </div>
-          </label>}
-          <img
-            className="media-library__image-thumbnail"
-            src={item.webformatURL || item.url || item}
-            alt="spring bird, bird, tit"
-            style={
-              {
-                display: loading ? "none" : "block",
-                width: "100%",
-                animation: "fadeIn 1s",
-              }
-            }
-            onLoad={(e) => { setLoading(false) }}
-            onClick={() => {
-              if (showPanel === 'Shapes') {
-                handleAddShape(item);
-              }
-              else if (showPanel === 'My Uploads') {
-                handleUploadImage(item);
-              }
-              else if (showPanel === 'Social Media Icons') {
-                handleUploadImage(item.url);
-              }
-              else if (showPanel === 'Opulent Logo') {
-                handleUploadImage(item.url);
-              }
-              else if (showPanel === 'pixabay') {
-                handleUploadImage(item.webformatURL);
-              }
-            }
-            }
-          />
-          <SpinnerContainer loading={loading} height={'auto'} />
+          </div>
+        ) : (
+          <div className="media-library__item-container" key={index}>
+            <div className="media-library__image">
+              {showPanel !== 'pixabay' && <label className="checkbox media-library__image-select">
+                <input className="checkbox__input" type="checkbox" />
+                <div className="checkbox__box">
+                  <div className="checkbox__tick">
+                    {/* <i className="icon icon-checkbox-regular" /> */}
+                    <FontAwesomeIcon icon="fa-solid fa-check" style={{ color: 'white', fontSize: '12px' }} />
+                  </div>
+                </div>
+              </label>}
+              <img
+                className="media-library__image-thumbnail"
+                src={item.webformatURL || item.url || item}
+                alt="spring bird, bird, tit"
+                style={
+                  {
+                    display: loading ? "none" : "block",
+                    width: "100%",
+                    animation: "fadeIn 1s",
+                  }
+                }
+                onLoad={(e) => { setLoading(false) }}
+                onClick={() => {
+                  if (showPanel === 'Shapes') {
+                    handleAddShape(item);
+                  }
+                  else if (showPanel === 'My Uploads') {
 
-        </div>
-      </div>
-    );
-  });
+                    if (checkReplaceModal(item)) {
+                      return;
+                    }
+
+                    handleUploadImage(item);
+                    setIsOverlayLoading(false);
+                  }
+                  else if (showPanel === 'Social Media Icons') {
+
+                    if (checkReplaceModal(item.url)) {
+                      return;
+                    }
+
+                    handleUploadImage(item.url);
+                    setIsOverlayLoading(false);
+                  }
+                  else if (showPanel === 'Opulent Logo') {
+
+                    if (checkReplaceModal(item.url)) {
+                      return;
+                    }
+
+                    handleUploadImage(item.url);
+                    setIsOverlayLoading(false);
+                  }
+                  else if (showPanel === 'pixabay') {
+
+                    if (checkReplaceModal(item.webformatURL)) {
+                      return;
+                    }
+
+                    handleUploadImage(item.webformatURL);
+                    setIsOverlayLoading(false);
+                  }
+                }
+                }
+              />
+              <SpinnerContainer loading={loading} height={'auto'} />
+
+            </div>
+          </div>
+        );
+      })}
+
+      <SpinnerOverlay loading={isOverlayLoading} />
+
+      {isReplaceImageConfirmationModal && (
+        <ConfirmationModal
+          title={<p style={{ color: '#000', margin: 0 }}>{"Replace Image Confirmation"}</p>}
+          body={<p style={{ color: '#000', margin: 0 }}>{"Are you sure you want to replace the image?"}</p>}
+          secondaryBtnTxt={"Cancel"}
+          primaryBtnTxt={"Confirm"}
+          close={() => setIsReplaceImageConfirmationModal(false)}
+          submit={async (event) => {
+            event.preventDefault();
+            handleUploadImage(imageToReplace);
+            setIsReplaceImageConfirmationModal(false);
+            setIsOverlayLoading(false);
+          }}
+        />
+      )}
+    </>)
+
 }
 
 export default EditGrid;
