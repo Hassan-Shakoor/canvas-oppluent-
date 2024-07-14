@@ -89,35 +89,35 @@ const FontStyleDropdown = () => {
     },
     {
       value: "Poppins Black", label: (
-        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Black' }}>
+        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins', fontWeight: '800' }}>
           Poppins Black
         </p>
       )
     },
     {
       value: "Poppins Light", label: (
-        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Light' }}>
+        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins', fontWeight: '400' }}>
           Poppins Light
         </p>
       )
     },
     {
       value: "Poppins Medium", label: (
-        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Medium' }}>
+        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins', fontWeight: '500' }}>
           Poppins Medium
         </p>
       )
     },
     {
       value: "Poppins Semibold", label: (
-        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Semibold' }}>
+        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins', fontWeight: '600' }}>
           Poppins Semibold
         </p>
       )
     },
     {
       value: "Poppins Thin", label: (
-        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins Thin' }}>
+        <p className="dropdown-select__option-label" style={{ fontFamily: 'Poppins', fontWeight: '300' }}>
           Poppins Thin
         </p>
       )
