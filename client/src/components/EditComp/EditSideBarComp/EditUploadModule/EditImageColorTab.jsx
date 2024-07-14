@@ -38,6 +38,12 @@ function EditImageColorTab() {
 
     useEffect(() => {
         // setFillStrokeFirst(selectedObject?.fill)
+        const canvas = canvasContainer[selectedCanvas];
+        const activeObject = canvas.getActiveObject();
+        if (activeObject) {
+            setTransparency(activeObject?.opacity * 100);
+        }
+
     }, [])
 
     return (
