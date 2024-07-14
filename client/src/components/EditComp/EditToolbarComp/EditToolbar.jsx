@@ -348,7 +348,9 @@ function EditToolbar() {
 
     cropRect.on("deselected", function () {
       handleDoneCrop(cropRect, e);
-      canvas.remove(overlayRect);
+      setTimeout(() => {
+        canvas.remove(overlayRect);
+      }, 400);
       setCurrentCropRect(null);
     });
   };
@@ -364,6 +366,7 @@ function EditToolbar() {
     }
 
     const initialLayerIndex = canvas.getObjects().indexOf(selectedObject);
+
     setInitialObjectLayerIndex(initialLayerIndex);
 
     if (selectedObject) {
@@ -426,6 +429,7 @@ function EditToolbar() {
 
       selectedObject.on('scaling', function () {
         // Improve scaling logic as needed
+        setCurrentCropRect(i);
       });
 
       selectedObject.on('deselected', function () {
@@ -441,17 +445,17 @@ function EditToolbar() {
     //
     var cropX = (cropArea.left - oImg.left) / oImg.scaleX,
       cropY = (cropArea.top - oImg.top) / oImg.scaleY,
-      width = (cropArea.width * cropArea.scaleX) / oImg.scaleX, // correct
-      height = (cropArea.height * cropArea.scaleY) / oImg.scaleY; // correct
+      width = (cropArea.width * cropArea.scaleX) / oImg.scaleX,
+      height = (cropArea.height * cropArea.scaleY) / oImg.scaleY;
 
-    console.log('FINISH CROP', cropX, oImg.scaleX, cropY, oImg.scaleY);
+    // console.log('FINISH CROP', cropX, oImg.scaleX, cropY, oImg.scaleY);
 
     // crop
     oImg.set({
-      cropX: cropX, //
-      cropY: cropY, //
-      width: width, //
-      height: height, //
+      cropX: cropX,
+      cropY: cropY,
+      width: width,
+      height: height,
       top: cropArea.top,
       left: cropArea.left,
       selectable: true,
@@ -472,11 +476,14 @@ function EditToolbar() {
     canvas.remove(selectedObject);
     canvas.insertAt(selectedObject, initialLayerIndex);
 
-    selectedObject.set({
-      lockMovementX: true,
-      lockMovementY: true,
-      hasControls: false
-    })
+    if (selectedObject.isAdminLocked) {
+      selectedObject.set({
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false
+      })
+    }
+
     setIsAdjustImage(false);
     setInitialObjectLayerIndex(null);
     setCurrentCropRect(null);
@@ -489,12 +496,16 @@ function EditToolbar() {
   const handleDoneCrop = (cropRect, image) => {
     const canvas = canvasContainer[selectedCanvas];
 
-    canvas.remove(cropRect);
+    cropRect.off('scaling');
+    cropRect.off('deselected');
+    cropRect.off('moving');
 
     const s = (cropRect.left - image.left) / image.scaleX,
       o = (cropRect.top - image.top) / image.scaleY,
       c = (cropRect.width * cropRect.scaleX) / image.scaleX,
       l = (cropRect.height * cropRect.scaleY) / image.scaleY;
+
+    canvas.remove(cropRect);
 
     image.set({
       cropX: s,
@@ -506,6 +517,9 @@ function EditToolbar() {
       selectable: true,
       cropped: 1
     });
+
+    setCurrentCropRect(null);
+    setImageObjectForCrop(null);
 
     canvas.renderAll();
   };
@@ -540,18 +554,54 @@ function EditToolbar() {
     }
   };
 
+  // const handleCancelCrop = () => {
+
+
+  //   const canvas = canvasContainer[selectedCanvas];
+
+  //   // canvas.remove(selectedObject);
+  //   // Reset the cropRect state without applying changes
+  //   setCurrentCropRect(null);
+  //   canvas?.setActiveObject(imageObjectForCrop);
+  //   dispatch(updateSelectedObject(imageObjectForCrop))
+  //   setImageObjectForCrop(null);
+  //   setInitialObjectLayerIndex(null);
+  // };
+
   const handleCancelCrop = () => {
-
-
     const canvas = canvasContainer[selectedCanvas];
+    const selectedObject = canvas.getActiveObject();
 
-    canvas.remove(selectedObject);
-    // Reset the cropRect state without applying changes
-    setCurrentCropRect(null);
-    canvas?.setActiveObject(imageObjectForCrop);
-    dispatch(updateSelectedObject(imageObjectForCrop))
-    setImageObjectForCrop(null);
-    setInitialObjectLayerIndex(null);
+    if (selectedObject && selectedObject.type === 'Image') {
+      // Remove any temporary cropping elements (like crop rectangle)
+
+      // Restore the image to its original state
+      selectedObject.set({
+        clipPath: null,
+        cropX: 0,
+        cropY: 0,
+        opacity: 1,
+        selectable: true,
+      });
+
+      // Reposition the image to its original layer index if needed
+      if (initialObjectLayerIndex !== null) {
+        canvas.remove(selectedObject);
+        canvas.insertAt(selectedObject, initialObjectLayerIndex);
+      }
+
+      // Reset the cropRect state and other related state variables
+      setCurrentCropRect(null);
+      setImageObjectForCrop(null);
+      setInitialObjectLayerIndex(null);
+
+      // Update the active object in the canvas and dispatch the new selected object
+      canvas.setActiveObject(selectedObject);
+      dispatch(updateSelectedObject(selectedObject));
+
+      // Re-render the canvas
+      canvas.renderAll();
+    }
   };
 
 
@@ -699,7 +749,7 @@ function EditToolbar() {
                     </svg>
                     <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
                   </div>
-                  {openTextAlignDropdown && <TextAlignDropdown />}
+                  {openTextAlignDropdown && <TextAlignDropdown openTextAlignDropdown={openTextAlignDropdown} setOpenTextAlignDropdown={setOpenTextAlignDropdown} />}
                   <div className="tool-button" onClick={convertToBulletPoint}>
                     <FontAwesomeIcon icon="fa-solid fa-list-ul" />
                     {/* <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" /> */}
