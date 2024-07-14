@@ -86,7 +86,7 @@ function EditZoom(props) {
         setTimeout(() => {
 
             if (canvasContainer && canvasContainer.length > 0) {
-                canvasContainer.map((canvas, index) => {
+                canvasContainer?.map((canvas, index) => {
                     if (canvas) {
                         // console.log("props.zoom", props.zoom)
                         canvas?.setZoom(props.zoom);

@@ -18,6 +18,7 @@ import { selectMlsPropertyInfo } from "../../store/app/PropertySearch/property";
 import ContextMenu from "./ContextMenu";
 import { initAligningGuidelines } from "../../services/canvas/aligningGuidelines";
 import { initCenteringGuidelines } from "../../services/canvas/centerAlignGuidelines";
+import { toast } from "react-toastify";
 
 function Canvas(props) {
 
@@ -328,14 +329,14 @@ function Canvas(props) {
             }
           } else if (object.type === 'Image') {
             const img = await new Promise((resolve, reject) => {
-              
-              
+
+
               fabric.Image.fromURL(object.src, function (img) {
                 img.set({ ...object, crossOrigin: 'anonymous' });
 
                 // For Color Filter on image
 
-                if(object.filters?.length > 0) {
+                if (object.filters?.length > 0) {
                   let colorFilter = new fabric.Image.filters.BlendColor({
                     color: object.filters[0]?.color,
                     mode: 'tint',
@@ -344,7 +345,7 @@ function Canvas(props) {
                   img.filters = [colorFilter];
                   img.applyFilters();
                 }
-                  
+
                 resolve(img);
               }, { crossOrigin: 'anonymous' });
             });
@@ -392,6 +393,10 @@ function Canvas(props) {
           if (e.target.closest("canvas")) {
             console.log("You've tried to open context menu");
             e.preventDefault();
+            // if(activeObject?.isAdminLocked) {
+            //   return;
+            // }
+
             setContextLeftPosition(e?.x - 92);
             setContextTopPosition(e?.y - 82);
             // setContextLeftPosition(e?.offsetX);
@@ -414,6 +419,13 @@ function Canvas(props) {
             // console.log("right click");
             if (target) {
               // canvas.setActiveObject(target)
+              console.log('Context Object: ',target)
+              if(target.isAdminLocked) {
+                setTimeout(() => {
+                  setShowContextMenu(false);
+                }, 10);
+                // return;
+              }
               dispatch(updateSelectedObject(target))
               // setShowContextMenu(true);
             }
@@ -431,10 +443,10 @@ function Canvas(props) {
 
         document.addEventListener("mousedown", event => {
           if (event.button == 0) { // left click for mouse
-            console.log("left click");
+            // console.log("left click");
           } else if (event.button == 2) {
             event.preventDefault();
-            console.log("right click");
+            // console.log("right click");
           }
         });
 
@@ -442,6 +454,10 @@ function Canvas(props) {
           const selectedObject = canvas?.getActiveObject();
           if (event.key === 'Delete' && selectedObject) {
             if (selectedObject) {
+              if (selectedObject.isAdminLocked) {
+                toast.info(`Can't Delete Object. Locked by Admin`)
+                return
+              }
               canvas?.remove(selectedObject);
               canvas?.setActiveObject(null);
             }
