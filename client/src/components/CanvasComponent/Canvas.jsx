@@ -231,8 +231,8 @@ function Canvas(props) {
               if (object.fill?.type === 'pattern') {
                 fabric.Image.fromURL(object.fill?.imageURL, function (img) {
 
-                  const scaleToFitWidth = object.width / (img.width / 0.5);
-                  const scaleToFitHeight = object.height / (img.height / 0.5);
+                  const scaleToFitWidth = object.width / (img.width / 0.65);
+                  const scaleToFitHeight = object.height / (img.height / 0.65);
                   const scale = Math.max(scaleToFitWidth, scaleToFitHeight);
                   img.scale(scale)
 
@@ -420,7 +420,7 @@ function Canvas(props) {
             if (target) {
               // canvas.setActiveObject(target)
               console.log('Context Object: ',target)
-              if(target.isAdminLocked) {
+              if(target?.isAdminLocked) {
                 setTimeout(() => {
                   setShowContextMenu(false);
                 }, 10);

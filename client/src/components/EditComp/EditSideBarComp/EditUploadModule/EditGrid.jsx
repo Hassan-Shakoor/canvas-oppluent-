@@ -139,8 +139,8 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
 
         fabric.Image.fromURL(image, function (img) {
 
-          const scaleToFitWidth = selectedObject.width / (img.width / 0.5);
-          const scaleToFitHeight = selectedObject.height / (img.height / 0.5);
+          const scaleToFitWidth = selectedObject.width / (img.width / 0.65);
+          const scaleToFitHeight = selectedObject.height / (img.height / 0.65);
           const scale = Math.max(scaleToFitWidth, scaleToFitHeight);
           img.scale(scale)
 
@@ -150,7 +150,7 @@ function EditGrid({ searchMap, showPanel, setShowPanel }) {
           patternSourceCanvas.setHeight(selectedObject.height)
           patternSourceCanvas.renderAll();
 
-          console.log('firstdasd')
+          // console.log('firstdasd')
           // Set the image as a pattern fill for the shape
           selectedObject.set('fill', new fabric.Pattern({
             source: patternSourceCanvas.getElement(),
