@@ -740,14 +740,16 @@ function EditToolbar() {
                       </svg>
                     </div>
                   </div>
-                  <div className="tool-button" style={{ position: 'relative' }} onClick={() => setOpenTextAlignDropdown(!openTextAlignDropdown)}>
-                    <svg className={`icon v2-icon v2-icon-text-align-${selectedObject.textAlign} tool-button__icon`}>
-                      <use
-                        href={`#v2-icon-text-align-${selectedObject.textAlign}`}
-                        xlinkHref={`#v2-icon-text-align-${selectedObject.textAlign}`}
-                      />
-                    </svg>
-                    <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
+                  <div style={{ position: 'relative' }}>
+                    <div className="tool-button" onClick={() => setOpenTextAlignDropdown(!openTextAlignDropdown)}>
+                      <svg className={`icon v2-icon v2-icon-text-align-${selectedObject.textAlign} tool-button__icon`}>
+                        <use
+                          href={`#v2-icon-text-align-${selectedObject.textAlign}`}
+                          xlinkHref={`#v2-icon-text-align-${selectedObject.textAlign}`}
+                        />
+                      </svg>
+                      <FontAwesomeIcon icon="fa-solid fa-chevron-down" size="2xs" />
+                    </div>
                     {openTextAlignDropdown && <TextAlignDropdown openTextAlignDropdown={openTextAlignDropdown} setOpenTextAlignDropdown={setOpenTextAlignDropdown} />}
                   </div>
                   <div className="tool-button" onClick={convertToBulletPoint}>
