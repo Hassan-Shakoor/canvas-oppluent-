@@ -230,7 +230,7 @@ const ContextMenu = ({ left, top, showContextMenu, setShowContextMenu }) => {
 
 
     return (
-        <div className="contexify context-menu contexify_willEnter-fade" role="menu" style={{ left: `${left}px`, top: `${top}px`, opacity: selectedObject.isAdminLocked ? 0 : 1 }}>
+        <div className="contexify context-menu contexify_willEnter-fade" role="menu" style={{ left: `${left}px`, top: `${top}px`, opacity: selectedObject?.isAdminLocked ? 0 : 1 }}>
             <MenuItem iconClass="fa-regular fa-copy" label="Copy" hotKeys="⌘C" handleClick={handleCopy} />
             <MenuItem iconClass="fa-solid fa-scissors" label="Cut" hotKeys="⌘X" handleClick={handleCut} />
             <MenuItem iconClass="fa-solid fa-clone" label="Duplicate" hotKeys="⌘D" handleClick={handleDuplicate} />
