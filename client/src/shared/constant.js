@@ -169,7 +169,7 @@ export const SHAPES = [{
 },
 {
     title: "rectangle_rounded_corners.svg",
-    url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/6310/original/rectangle_rounded_corners.svg?1614980885"
+    url: "https://firebasestorage.googleapis.com/v0/b/opulent-reality.appspot.com/o/sadkjabsfkadasda-less-rounded-rectangle.svg?alt=media&token=f8abc6dc-10f4-4e6b-9912-ef057368d670"
 },
 {
     title: "rectangle_outline_rounded_corners.svg",
@@ -177,7 +177,7 @@ export const SHAPES = [{
 },
 {
     title: "circle.svg",
-    url: "//dnhf8bus4lv8r.cloudfront.net/system/designer_assets/images/6308/original/circle.svg?1614980885"
+    url: "https://firebasestorage.googleapis.com/v0/b/opulent-reality.appspot.com/o/g231e721he34243-circle-fill.svg?alt=media&token=7ff60486-fe3a-414e-bda1-3f41cb334b6c"
 },
 {
     title: "circle_outline.svg",
