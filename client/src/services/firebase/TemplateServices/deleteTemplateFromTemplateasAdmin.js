@@ -18,35 +18,41 @@ export async function deleteTemplateFromTemplateasAdmin(templateId) {
             return false;
         }
 
-        const updatedData = { ...currentData };
         let deleteSuccess = true;
 
-        for (const [userId, userData] of Object.entries(updatedData)) {
+        for (const [userId, userData] of Object.entries(currentData)) {
             const { templateData } = userData;
             if (templateData) {
                 try {
+                    let updatedTemplateData = { ...templateData };
+                    let userHasChanges = false;
+                    
                     for (const key in templateData) {
                         const item = templateData[key];
                         if (item.template && item.template?.length > 0) {
                             const templateIndex = item.template?.findIndex(template => template.id === templateId);
                             if (templateIndex !== -1) {
                                 item.template?.splice(templateIndex, 1);
-                                console.log("Template Deleted Successfully");
+                                userHasChanges = true;
+                                console.log("Template Deleted Successfully for user:", userId);
                             }
                         }
                     }
+
+                    if (userHasChanges) {
+                        updatedTemplateData = { ...templateData }; // Ensure deep copy
+                        await set(ref(database, `${userId}/templateData`), updatedTemplateData);
+                    }
+
                 } catch (error) {
-                    console.log("Error in Template delete for user:", userId);
+                    console.log("Error in Template delete for user:", userId, error);
                     deleteSuccess = false;
                     break;
                 }
-
-                updatedData[userId].templateData = templateData;
             }
         }
 
         if (deleteSuccess) {
-            await set(databaseRef, updatedData);
             console.log("All template deletions committed successfully");
             return true;
         } else {
