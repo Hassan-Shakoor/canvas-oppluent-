@@ -18,18 +18,18 @@ export async function addDesignToCategory(authId, templateObject, categoryId) {
                 id: uuidv4()
             };
 
-            const updatedData = { ...currentData };
             let publishSuccess = true;
 
-            for (const [userId, userData] of Object.entries(updatedData)) {
+            for (const [userId, userData] of Object.entries(currentData)) {
                 if (allowedUsers && allowedUsers.length > 0 && !allowedUsers.includes(userId)) {
                     continue; // Skip users not allowed to publish
                 }
 
                 // Find the category index or add it if not found
-                const categoryIndex = userData.templateData.findIndex(data => data.id === categoryId);
+                let categoryIndex = userData.templateData.findIndex(data => data.id === categoryId);
                 if (categoryIndex === -1) {
                     userData.templateData.push({ id: categoryId, template: [] });
+                    categoryIndex = userData.templateData.length - 1;
                 }
 
                 // Get the category object
@@ -39,6 +39,10 @@ export async function addDesignToCategory(authId, templateObject, categoryId) {
                     // Push the publishTemplate to the category's template array
                     category.template.push(publishTemplate);
                     console.log("Template Published Successfully for category:", categoryId);
+
+                    // Update the specific user's templateData in Firebase
+                    await set(ref(database, `${userId}/templateData`), userData.templateData);
+
                 } catch (error) {
                     console.error("Error publishing template for category:", categoryId, "User:", userId, error);
                     publishSuccess = false;
@@ -47,7 +51,6 @@ export async function addDesignToCategory(authId, templateObject, categoryId) {
             }
 
             if (publishSuccess) {
-                await set(databaseRef, updatedData);
                 console.log("All Templates Published successfully");
                 return true;
             } else {
