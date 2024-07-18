@@ -94,22 +94,30 @@ function Template(props) {
             // handlePublish(event)
             event.preventDefault();
             setIsOverlayLoading(true);
-            if (userProfile?.isAdmin) {
-              const response = await deleteTemplateFromTemplateasAdmin(props.item.id)
-              if (response) {
-                toast.success('Template Deleted from All Users.');
+            try {
+              if (userProfile?.isAdmin) {
+                const response = await deleteTemplateFromTemplateasAdmin(props.item.id)
+                if (response) {
+                  toast.success('Template Deleted from All Users.');
+                } else {
+                  toast.error('Error Deleting Template.')
+                }
+                setIsOverlayLoading(false);
+                setIsConfirmDeleteModal(false);
               } else {
-                toast.error('Error Deleting Template.')
+                const response = await deleteTemplateFromTemplate(props.userId, props.item.id)
+                if (response) {
+                  toast.success('Template Deleted.');
+                } else {
+                  toast.error('Error Deleting Template.')
+                }
+                // setIsOverlayLoading(false);
+                // setIsConfirmDeleteModal(false);
               }
-              setIsOverlayLoading(false);
-              setIsConfirmDeleteModal(false);
-            } else {
-              const response = await deleteTemplateFromTemplate(props.userId, props.item.id)
-              if (response) {
-                toast.success('Template Deleted.');
-              } else {
-                toast.error('Error Deleting Template.')
-              }
+            } catch (error) {
+              console.error('Error deleting template:', error);
+              toast.error('Error Deleting Template.');
+            } finally {
               setIsOverlayLoading(false);
               setIsConfirmDeleteModal(false);
             }
