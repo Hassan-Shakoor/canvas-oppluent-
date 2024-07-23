@@ -25,7 +25,7 @@ const FontSizeDropdown = () => {
         if (canvas?.getActiveObject()) {
             const textObject = canvas?.getActiveObject()
             if (textObject?.fontSize) {
-                setSize(textObject.fontSize)
+                setSize(textObject.fontSize / 4)
             }
         }
     }, [selectedObject])
@@ -35,12 +35,12 @@ const FontSizeDropdown = () => {
         if (canvas?.getActiveObject()) {
             const textObject = canvas?.getActiveObject()
             if (size) {
-                textObject.set({ fontSize: size })
+                textObject.set({ fontSize: size * 4 })
                 // console.log('dakdn')
                 canvas.requestRenderAll()
             }
             if (!size) {
-                setSize(textObject?.fontSize)
+                setSize(textObject?.fontSize / 4)
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
