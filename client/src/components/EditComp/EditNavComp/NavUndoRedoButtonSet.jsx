@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { selectCanvasContainer, selectSelectedCanvas } from "../../../store/app/Edit/Canvas/canvas";
 import { fabric } from 'fabric';
 import { useTranslation } from 'react-i18next';
+import SpinnerOverlay from "../../Loader/SpinnerOverlay";
 
 
 function NavUndoRedoButtonSet() {
@@ -13,6 +14,7 @@ function NavUndoRedoButtonSet() {
     const selectedCanvas = useSelector(selectSelectedCanvas);
 
     const [myCanvas, setMyCanvas] = useState(null);
+    const [isOverlayLoading, setIsOverlayLoading] = useState(false);
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
 
@@ -144,7 +146,9 @@ function NavUndoRedoButtonSet() {
 
             // Handle object modification event
             canvasContainer.map((canvas, index) => {
+                canvas.on("object:added", handleObjectModified);
                 canvas.on("object:modified", handleObjectModified);
+                canvas.on("object:removed", handleObjectModified);
             })
 
             // Clean up event listener
@@ -249,9 +253,10 @@ function NavUndoRedoButtonSet() {
 
     const handleUndo = () => {
         if (canvasContainer[selectedCanvas]) {
+            setIsOverlayLoading(true);
             const canvasId = selectedCanvas;
             const stack = undoStack[canvasId];
-            if (stack.length > 2) {
+            if (stack.length > 1) {
                 const lastState = stack.pop();
                 const prevState = stack[stack.length - 1];
 
@@ -270,18 +275,23 @@ function NavUndoRedoButtonSet() {
                     setUndoStatus(true);
                     canvas.loadFromJSON(prevStateWithoutObjects, () => canvas.renderAll());
                     processObjects(prevStateObjects, 0);
+                    canvas.requestRenderAll()
                 } else {
                     console.log("No more changes to undo");
                 }
             } else {
                 console.log("Undo stack is empty");
             }
+            setTimeout(() => {
+                setIsOverlayLoading(false);
+            }, 1000);
         }
     };
 
 
     const handleRedo = () => {
         if (canvasContainer[selectedCanvas]) {
+            setIsOverlayLoading(true);
             const canvasId = selectedCanvas;
             const stack = redoStack[canvasId];
             if (stack.length > 0) {
@@ -304,9 +314,13 @@ function NavUndoRedoButtonSet() {
                 } else {
                     console.log("No more changes to redo");
                 }
+                canvas.renderAll()
             } else {
                 console.log("Redo stack is empty");
             }
+            setTimeout(() => {
+                setIsOverlayLoading(false);
+            }, 1000);
         }
     };
 
@@ -326,6 +340,7 @@ function NavUndoRedoButtonSet() {
 
     return (
         <ul className="header__button-set">
+            <SpinnerOverlay loading={isOverlayLoading} />
             <li
                 className="header__text-button"
                 data-test="undo-button"
