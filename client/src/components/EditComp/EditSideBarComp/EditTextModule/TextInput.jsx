@@ -42,6 +42,7 @@ function TextInput() {
       textWrapping: true,
       textAlign: 'left',
       lockScalingY: true,
+      fontSize: 28 * 4,
       // styles: {
       //   0: {
       //     0: {
