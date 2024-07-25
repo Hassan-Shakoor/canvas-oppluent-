@@ -357,11 +357,22 @@ const TemplateRequest = () => {
         onValue(userJsonRef, (snapshot) => {
             const updatedCategories = snapshot.val();
             if (updatedCategories) {
-                // console.log(updatedCategories)
+                console.log('updatedCategories: ', updatedCategories)
                 const transformedArray = updatedCategories
                     .filter(category => category.title !== 'Favorites')
                     .flatMap(category =>
-                        category.subTitle.map(item => ({ label: item.name, value: item.id }))
+                        category.subTitle.flatMap(item => {
+                            let subCategories = [];
+                            if (item.subList?.length > 0) {
+                                subCategories = item.subList
+                                    .filter(subCategory => item.id !== subCategory.id)
+                                    .map(subCategory => ({
+                                        label: `${item.name} -> ${subCategory.name}`,
+                                        value: subCategory.id
+                                    }));
+                            }
+                            return [{ label: item.name, value: item.id }, ...subCategories];
+                        })
                     );
                 // console.log(transformedArray)
                 setDesignCategories(transformedArray)
